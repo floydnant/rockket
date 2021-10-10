@@ -1,0 +1,68 @@
+<li id="task-{{ this.data.id }}" class="task" [class.completed]="this.data.isCompleted">
+    <button class="btn btn-icon btn-complete" (click)="toggleCompleted()">
+        <i class="fa{{ this.data.isCompleted ? 's' : 'r' }} fa-check-circle"></i>
+    </button>
+    <div class="text-container">
+        <p class="cell_">
+            <span class="taskName">
+                <span style="color: var(--danger-clr)">
+                    {{ this.util.multiplyText("! ", this.data.priority || 0) }}
+                </span>
+                {{ this.data.name }}
+            </span>
+            <a
+                *ngFor="let link of this.data.meta.links"
+                class="external-link"
+                [href]="link"
+                [title]="link"
+                target="_blank"
+                ><i class="fas fa-external-link"></i
+            ></a>
+            <span *ngIf="this.data.isCompleted" style="color: var(--complete-clr)"
+                >- {{ this.util.formatTime(this.data.timeCompleted) }}</span
+            >
+        </p>
+        <p
+            *ngIf="this.data.subTasks.length != 0"
+            class="dropdown-toggle"
+            [class.open]="!this.data.collapseSubtaskList"
+            (click)="toggleSubtaskList()"
+        >
+            <i class="fas fa-chevron-down"></i> {{ this.data.subTasks.length }}
+            {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
+        </p>
+    </div>
+    <div class="btn-group">
+        <button
+            title="add sub task"
+            class="btn btn-icon btn-add-subTask"
+            [disabled]="this.data.isCompleted"
+            (click)="addSubTask()"
+            style="--btn-index: 2; --btn-index-reverse: 0"
+        >
+            <i class="fas fa-plus"></i></button
+        ><button
+            title="edit task"
+            class="btn btn-icon btn-edit"
+            [disabled]="this.data.isCompleted"
+            (click)="editTask()"
+            style="--btn-index: 1; --btn-index-reverse: 1"
+        >
+            <i class="fas fa-pencil-alt"></i></button
+        ><button
+            title="delete task"
+            class="btn btn-icon btn-delete"
+            (click)="deleteTask(this.data.id)"
+            style="--btn-index: 0; --btn-index-reverse: 2"
+        >
+            <i class="far fa-trash-alt"></i>
+        </button>
+    </div>
+</li>
+<ul
+    *ngIf="this.data.subTasks.length != 0"
+    class="subtask-list subtask-list-{{ this.data.id }}"
+    [class.hide]="this.data.collapseSubtaskList"
+>
+    <task *ngFor="let task of this.data.subTasks" [data]="task" (onDataSensitiveAction)="dataSensitiveAction()"></task>
+</ul>

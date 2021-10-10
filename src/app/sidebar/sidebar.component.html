@@ -1,0 +1,42 @@
+<div class="sidebar">
+    <h2>
+        Lists <i class="fad fa-clipboard-list-check"></i
+        ><button class="btn btn-primary btn-icon" style="float: right" (click)="createList()">
+            <i class="fas fa-plus"></i>
+        </button>
+    </h2>
+    <ul id="taskListsList" class="taskListsList">
+        <h5 *ngIf="this.data.lists.length == 0" style="text-align: center">No lists...</h5>
+        <li
+            *ngFor="let list of this.data.lists; let i = index"
+            (click)="setActiveList(i)"
+            [class.active]="this.data.activeListId == list.id"
+            [class.completed]="countOpenTasks(list) == 0 && list.list.length"
+        >
+            <span class="text">{{ list.name }}</span
+            >&nbsp;
+            <span style="color: var(--danger-clr); opacity: 0.8">{{ countOpenTasks(list) || "" }}</span>
+            <i class="fas fa-chevron-right"></i>
+        </li>
+    </ul>
+    <div class="file-interaction">
+        <button
+            class="btn btn-primary btn-icon download-btn"
+            title="Download lists as JSON file"
+            (click)="exportData()"
+        >
+            <i class="far fa-download"></i>
+        </button>
+        <label class="btn btn-primary btn-icon upload-btn" title="Import lists from JSON file" style="padding: unset">
+            <i class="fas fa-file-import"></i>
+            <input
+                id="importDataInput"
+                style="display: none"
+                type="file"
+                accept="application/json"
+                #fileInputRef
+                (click)="importData(fileInputRef)"
+            />
+        </label>
+    </div>
+</div>
