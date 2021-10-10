@@ -113,12 +113,12 @@ export class AppComponent implements OnInit {
         },
         importJson: async (inputRef: any) => {
             try {
-                const jsonData = JSON.parse(await inputRef.files[0].text());
+                const unparsed = await inputRef.files[0].text();
+                const jsonData = JSON.parse(unparsed.replace(/metaData/g, 'meta'));
                 console.log(jsonData);
 
                 if ('activeListId' in jsonData && 'lists' in jsonData) {
-                    if (jsonData.version == ACTIVE_VERSION) this.data.lists = [...this.data.lists, ...jsonData.lists];
-                    else alert('Sorry, you are not using version 2.0. It will be compatible in the future tho.');
+                    this.data.lists = [...this.data.lists, ...jsonData.lists];
                 } else alert('The JSON File does not contain the necessary data.');
             } catch (e) {
                 alert('Failed to parse JSON file. Have you modified it?');
