@@ -1,6 +1,7 @@
-# TodoApp
+<img src="./src/assets/todo-app-logo/todo-app-logo.png" height="100px">
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.4.
+# TodoApp
+A lightweight, carefully design todo app with a focus on simplicity, built with angular.
 
 ## Development server
 
