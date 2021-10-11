@@ -1,7 +1,8 @@
 <img src="./src/assets/todo-app-logo/todo-app-logo.png" height="100px">
 
 # TodoApp
-A lightweight, carefully design todo app with a focus on simplicity, built with angular.
+
+A lightweight, carefully designed todo app with a focus on simplicity, built with angular.
 
 ## Development server
 
