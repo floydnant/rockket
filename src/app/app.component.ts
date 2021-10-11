@@ -118,7 +118,10 @@ export class AppComponent implements OnInit {
                 console.log(jsonData);
 
                 if ('activeListId' in jsonData && 'lists' in jsonData) {
+                    // TODO: add a prompt wich lets the user select wich lists to import
                     this.data.lists = [...this.data.lists, ...jsonData.lists];
+
+                    this.db.save();
                 } else alert('The JSON File does not contain the necessary data.');
             } catch (e) {
                 alert('Failed to parse JSON file. Have you modified it?');
