@@ -43,7 +43,7 @@
     /* background: var(--global-color); */
     background: var(--complete-clr);
     box-shadow: var(--box-shadow-s);
-    transition: 220ms
+    transition: 220ms;
 }
 .task.completed p .taskName::before {
     width: 100%;
@@ -70,6 +70,7 @@
 }
 .task .external-link {
     color: hsl(var(--primary-clr-hue), 100%, 55%);
+    margin: 0 2.5px;
 }
 .task .dropdown-toggle {
     font-size: 0.9rem;
@@ -92,6 +93,7 @@
     box-shadow: var(--box-shadow-m), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
 }
 .task .btn-complete {
+    position: relative;
     margin-right: 10px;
 }
 .task .btn-complete:hover ~ :is(.btn-delete, .btn-edit):not(.task.completed .btn) {
@@ -100,6 +102,12 @@
 .task:not(.completed) .btn-complete:not(:hover) {
     color: gray;
 }
+.time-completed {
+    color: var(--complete-clr);
+    position: absolute;
+    bottom: 100%;
+}
+
 .task .btn-group {
     position: absolute;
     right: 12px;
@@ -107,7 +115,9 @@
     padding: 0;
     width: max-content;
 }
-.task .btn-group .btn { margin: 0 5px; }
+.task .btn-group .btn {
+    margin: 0 5px;
+}
 .task .btn:not(.task:hover .btn, .btn-complete) {
     transform: scale(0.5);
     filter: opacity(0);
