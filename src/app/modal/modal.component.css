@@ -1,0 +1,47 @@
+app-modal:not(.open) .modal-container {
+    filter: opacity(0);
+    pointer-events: none;
+}
+app-modal.open .modal-container {
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+.modal-container {
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    width: 100vw;
+
+    z-index: 1000;
+    overflow: auto; /* enables scrolling for tall modals */
+
+    display: grid;
+    place-items: center;
+
+    background: rgba(27, 27, 27, 0.5);
+
+    transition: 300ms;
+}
+.modal-body {
+    position: relative;
+
+    min-width: min(45vw, 30rem);
+
+    padding: var(--modal-padding);
+    padding-top: 50px;
+    border-radius: 12px;
+
+    background: var(--global-background);
+    box-shadow: var(--box-shadow-l);
+    transition: transform 100ms ease-in-out;
+}
+app-modal:not(.open) .modal-body {
+    transform: scale(0.7);
+}
+
+body.jw-modal-open {
+    /* body overflow is hidden to hide main scrollbar when modal window is open */
+    overflow: hidden;
+}

@@ -43,3 +43,14 @@
         </section>
     </main>
 </div>
+
+<button (click)="modalService.open('test-modal')">open modal</button>
+<button (click)="modalService.close('test-modal')">close modal</button>
+
+<app-modal id="test-modal">
+    <h1 class="test-class">test modal</h1>
+    <hr />
+    <!-- <app-edit-menu></app-edit-menu> -->
+    <hr />
+    <button (click)="modalService.close('test-modal')">close modal</button>
+</app-modal>

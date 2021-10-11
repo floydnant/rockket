@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalService } from './modal/modal.service';
 import { TaskList } from './shared/taskList.model';
 import { downloadObjectAsJson } from './shared/utility.model';
 import { Task } from './task/task.model';
@@ -24,7 +25,7 @@ export class AppComponent implements OnInit {
     activeTaskList!: TaskList;
     taskNameInput!: string;
 
-    log = console.log;
+    constructor(public modalService: ModalService) {}
 
     clearTaskNameInput = (inputRef?: HTMLElement) => {
         this.taskNameInput = '';
@@ -133,6 +134,8 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         this.db.load();
+
+        // setTimeout(() => this.modalService.open('test-modal'), 1000);
 
         // TODO: alternate the background of every 2nd task
     }

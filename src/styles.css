@@ -22,6 +22,8 @@
     --box-shadow-s: 0 0 20px rgba(0, 0, 0, 0.61);
     --box-shadow-m: 0 0 10px rgba(0, 0, 0, 0.603), 0 0 20px rgba(0, 0, 0, 0.61);
     --box-shadow-l: 0 0 20px rgba(0, 0, 0, 0.514), 0 0 40px rgba(0, 0, 0, 0.514);
+
+    --modal-padding: 20px;
 }
 body {
     min-height: 100vh;
@@ -42,7 +44,7 @@ body {
 @media (prefers-color-scheme: dark) {
     :root {
         --global-background: hsl(var(--bg-clr-hue), 14%, 14%);
-        --global-color: hsl(0, 0%, 100%)
+        --global-color: hsl(0, 0%, 100%);
     }
 }
 ::selection {
@@ -58,13 +60,14 @@ body {
 a {
     color: var(--primary-clr);
 }
-input, .btn {
+input,
+.btn {
     font-size: 16px;
     padding: 10px;
     border: 0;
     border-radius: 10px;
 
-    box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50% / .6), var(--box-shadow-s);
+    box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6), var(--box-shadow-s);
 }
 .btn {
     font-weight: 800;

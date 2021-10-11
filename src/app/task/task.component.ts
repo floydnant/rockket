@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ModalService } from '../modal/modal.service';
 import { Utility } from '../shared/utility.model';
 import { Task } from './task.model';
 
@@ -9,6 +10,8 @@ import { Task } from './task.model';
 })
 export class TaskComponent implements OnInit {
     util = new Utility();
+
+    constructor(public modalService: ModalService) {}
 
     @Output() onDataSensitiveAction = new EventEmitter();
     dataSensitiveAction = () => this.onDataSensitiveAction.emit();
@@ -39,11 +42,13 @@ export class TaskComponent implements OnInit {
     };
 
     editTask = () => {
-        const newTaskName = prompt('new task name', this.data.name); // TODO: make edit menu work
-        if (!newTaskName) return;
-        this.data.name = newTaskName;
+        this.modalService.open('modal-' + this.data.id);
 
-        this.dataSensitiveAction();
+        // const newTaskName = prompt('new task name', this.data.name); // TODO: make edit menu work
+        // if (!newTaskName) return;
+        // this.data.name = newTaskName;
+
+        // this.dataSensitiveAction();
     };
 
     @Output() onDeleteTask = new EventEmitter<string>();

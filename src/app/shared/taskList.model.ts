@@ -7,10 +7,10 @@ export class TaskList {
         this.id = generateId();
         this.list = list;
     }
-    name: string;
-    id: string;
-    list: Task[];
-    meta = {
+    public name: string;
+    public id: string;
+    public list: Task[];
+    public meta = {
         notes: '',
     };
 }
