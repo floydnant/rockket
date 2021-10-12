@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { ModalService } from '../modal/modal.service';
 import { Utility } from '../shared/utility.model';
 import { Task } from './task.model';
@@ -10,9 +10,7 @@ import { Task } from './task.model';
 })
 export class TaskComponent implements OnInit {
     util = new Utility();
-
     constructor(public modalService: ModalService) {}
-
     @Output() onDataSensitiveAction = new EventEmitter();
     dataSensitiveAction = () => this.onDataSensitiveAction.emit();
 
@@ -55,4 +53,12 @@ export class TaskComponent implements OnInit {
     deleteTask = (id: string) => this.onDeleteTask.emit(id);
 
     ngOnInit(): void {}
+
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log(changes);
+        // alternate the background of every 2nd task
+        document.querySelectorAll<HTMLElement>('.task').forEach((taskElement, i) => {
+            if (i % 2 === 1) taskElement.style.background = 'var(--alt-bg)';
+        });
+    }
 }

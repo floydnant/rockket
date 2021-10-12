@@ -1,0 +1,13 @@
+<app-modal id="custom-dialog">
+    <div class="dialogText {{ type }}">
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+    </div>
+    <div class='dialogInput' *ngIf="type == 'confirm'">
+        <button *ngFor="let btnText of buttons; let i = index" (click)="closeDialog(i)">{{btnText}}</button>
+    </div>
+    <div class='dialogInput' *ngIf="type == 'prompt'">
+        <input class="promptInput" type="text">
+        <button (click)="closeDialog(0)">OK</button>
+    </div>
+</app-modal>

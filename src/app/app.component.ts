@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { ModalService } from './modal/modal.service';
 import { TaskList } from './shared/taskList.model';
 import { downloadObjectAsJson } from './shared/utility.model';
@@ -135,8 +135,6 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         this.db.load();
 
-        // setTimeout(() => this.modalService.open('test-modal'), 1000);
-
-        // TODO: alternate the background of every 2nd task
+        setTimeout(() => this.modalService.open('custom-dialog'), 1000);
     }
 }

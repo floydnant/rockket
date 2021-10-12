@@ -27,10 +27,10 @@ app-modal.open .modal-container {
 .modal-body {
     position: relative;
 
-    min-width: min(45vw, 30rem);
+    min-width: min(45vw, 20rem);
 
     padding: var(--modal-padding);
-    padding-top: 50px;
+    /* padding-top: 50px; */
     border-radius: 12px;
 
     background: var(--global-background);

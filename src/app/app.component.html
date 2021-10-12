@@ -34,7 +34,7 @@
             <ul>
                 <h5 *ngIf="this.activeTaskList.list.length == 0" style="text-align: center">No tasks yet...</h5>
                 <task
-                    *ngFor="let task of this.activeTaskList.list"
+                    *ngFor="let task of this.activeTaskList.list; let i = index"
                     [data]="task"
                     (onDataSensitiveAction)="db.save()"
                     (onDeleteTask)="deleteTask($event)"
@@ -45,7 +45,8 @@
 </div>
 
 <button (click)="modalService.open('test-modal')">open modal</button>
-<button (click)="modalService.close('test-modal')">close modal</button>
+
+<custom-dialog title="test dialog" text="test dialog text here" type="confirm"></custom-dialog>
 
 <app-modal id="test-modal">
     <h1 class="test-class">test modal</h1>
