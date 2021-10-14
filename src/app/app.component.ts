@@ -1,18 +1,17 @@
 import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
+import { AppData } from './reducers/appData';
+import * as AppDataActions from './reducers/';
+
 import { ModalService } from './modal/modal.service';
-import { TaskList } from './shared/taskList.model';
 import { downloadObjectAsJson } from './shared/utility.model';
+import { TaskList } from './shared/taskList.model';
 import { Task } from './task/task.model';
 
-const ACTIVE_VERSION = '2.0';
-export class AppData {
-    constructor(list: TaskList) {
-        this.activeListId = list.id;
-        this.lists = [list];
-    }
-    activeListId!: string;
-    lists!: TaskList[];
-    version: string = ACTIVE_VERSION;
+interface AppState {
+    data: AppData;
 }
 
 @Component({
@@ -25,7 +24,13 @@ export class AppComponent implements OnInit {
     activeTaskList!: TaskList;
     taskNameInput!: string;
 
-    constructor(public modalService: ModalService) {}
+    constructor(public modalService: ModalService, private store: Store<AppState>) {
+        this.store.subscribe((data: unknown) => {
+            this.data = (data as { appData: AppData }).appData;
+            this.activeTaskList = this.getListById(this.data.activeListId);
+            console.log(this.data);
+        });
+    }
 
     clearTaskNameInput = (inputRef?: HTMLElement) => {
         this.taskNameInput = '';
@@ -33,31 +38,21 @@ export class AppComponent implements OnInit {
     };
 
     ///////////////////////////////////////////// Tasks ////////////////////////////////////////////////
+
     addTask = () => {
         if (!this.taskNameInput) return;
         if (this.data.lists.length == 0) alert("You don't have any lists.");
-
-        this.activeTaskList.list.push(new Task(this.taskNameInput));
+        // this.activeTaskList.list.push(new Task(this.taskNameInput));
+        this.store.dispatch(new AppDataActions.CreateTask(this.activeTaskList.id, this.taskNameInput));
         this.clearTaskNameInput();
-
-        this.db.save();
+        // this.db.save();
     };
-    deleteTask = (id: string, prompt = true) => {
-        const parentArr: any = this.getTaskById(id, this.activeTaskList.list, true);
-        const task: any = this.getTaskById(id, this.activeTaskList.list);
-        const indexOfTaskInParentArr = parentArr.indexOf(task);
-
-        if (prompt) if (!confirm('Delete this task?')) return; // TODO: make this an inline animation
-        parentArr.splice(indexOfTaskInParentArr, 1);
-
-        this.db.save();
-    };
-    getTaskById(taskId: string, taskList: Task[], parent = false) {
+    getTaskById(taskId: string, taskList: Task[], getParentArr = false) {
         const recurse = (taskId: string, arr: Task[]): Task | Task[] | void => {
             for (let i in arr) {
                 const task: Task = arr[i];
 
-                if (task.id == taskId) return parent ? arr : task;
+                if (task.id == taskId) return getParentArr ? arr : task;
                 else if (task.subTasks.length != 0) {
                     const taskRef = recurse(taskId, task.subTasks);
                     if (taskRef) return taskRef;
@@ -68,46 +63,50 @@ export class AppComponent implements OnInit {
     }
 
     ///////////////////////////////////////////// Lists ////////////////////////////////////////////////
-    getListById = (id: string): TaskList => this.data.lists.filter(list => list.id == id)[0];
-    getListIndexById = (id: string): number =>
-        this.data.lists.indexOf(this.data.lists.filter(list => list.id == id)[0]);
-    setActiveList = (index: number) => {
-        this.activeTaskList = this.data.lists[index];
-        this.data.activeListId = this.data.lists[index].id;
+    getListById = (id: string): TaskList => this.data.lists.find(list => list.id == id);
+    getListIndexById = (id: string): number => this.data.lists.indexOf(this.data.lists.find(list => list.id == id)); //prettier-ignore
 
-        this.db.save();
+    setActiveList = (listId: string) => {
+        // this.activeTaskList = this.data.lists[index];
+        // this.data.activeListId = this.data.lists[index].id;
+        // this.db.save();
+        this.store.dispatch(new AppDataActions.SetActiveList(listId));
     };
     createList = () => {
         const newListName = prompt('new list name');
         if (!newListName) return;
-        this.data.lists.push(new TaskList(newListName));
 
-        this.db.save();
+        this.store.dispatch(new AppDataActions.CreateList(newListName));
+        // this.db.save();
     };
-    editList = () => {
-        const newListName = prompt('new task name', this.activeTaskList.name); // TODO: make edit menu work
+    editList = (listId_?: string) => {
+        const listId = listId_ || this.data.activeListId;
+        const taskList = this.getListById(listId);
+
+        const newListName = prompt('new list name or "[delete]" to delete the list', taskList.name); // TODO: make edit menu work
         if (!newListName) return;
-        this.activeTaskList.name = newListName;
+        if (newListName == 'd') {
+            this.deleteList(listId);
+            return;
+        }
 
-        this.db.save();
+        this.store.dispatch(new AppDataActions.EditList(listId, { name: newListName } as TaskList));
+        // this.db.save();
     };
-    deleteList = () => {};
+    deleteList = (listId: string) => this.store.dispatch(new AppDataActions.DeleteList(listId));
 
     ////////////////////////////////////// database interaction /////////////////////////////////////////
     db = {
         localStorageKey: 'todoListData',
-        getDefaultData: () => {
-            const newList = new TaskList();
-            return new AppData(newList);
-        },
+        // getDefaultData: () => new AppData(),
         save: () => (localStorage[this.db.localStorageKey] = JSON.stringify(this.data)),
         load: () => {
             try {
                 this.data = JSON.parse(localStorage[this.db.localStorageKey]);
             } catch (err) {
-                this.data = this.db.getDefaultData();
+                // this.data = this.db.getDefaultData();
             }
-            this.setActiveList(this.getListIndexById(this.data.activeListId));
+            this.setActiveList(this.data.activeListId);
         },
         exportJson: () => {
             if (confirm('Download ToDo data as file?')) downloadObjectAsJson(this.data, 'ToDo-data', true);
@@ -125,7 +124,7 @@ export class AppComponent implements OnInit {
                     this.db.save();
                 } else alert('The JSON File does not contain the necessary data.');
             } catch (e) {
-                alert('Failed to parse JSON file. Have you modified it?');
+                alert('Failed to import JSON file. Have you modified it?');
                 console.error('Failed to parse JSON: ' + e);
             }
         },
@@ -133,8 +132,7 @@ export class AppComponent implements OnInit {
     };
 
     ngOnInit(): void {
-        this.db.load();
-
-        setTimeout(() => this.modalService.open('custom-dialog'), 1000);
+        // this.db.load();
+        // setTimeout(() => this.modalService.open('custom-dialog'), 1000);
     }
 }

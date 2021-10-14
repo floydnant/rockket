@@ -8,7 +8,7 @@
     ></sidebar>
     <main>
         <h1 class="heading">
-            {{ this.activeTaskList.name || "no list selected" }}
+            {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
             <button
                 class="btn btn-primary btn-icon"
                 style="cursor: pointer; transform: translateY(-5px)"
@@ -31,13 +31,14 @@
             <button class="btn btn-primary btn-add" (click)="addTask()">add</button>
         </section>
         <section class="task-list">
-            <ul>
-                <h5 *ngIf="this.activeTaskList.list.length == 0" style="text-align: center">No tasks yet...</h5>
+            <h5 *ngIf="!this.activeTaskList || this.activeTaskList.list.length == 0" style="text-align: center">
+                No tasks yet...
+            </h5>
+            <ul *ngIf="this.activeTaskList">
                 <task
                     *ngFor="let task of this.activeTaskList.list; let i = index"
                     [data]="task"
                     (onDataSensitiveAction)="db.save()"
-                    (onDeleteTask)="deleteTask($event)"
                 ></task>
             </ul>
         </section>

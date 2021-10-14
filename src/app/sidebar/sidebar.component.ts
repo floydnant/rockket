@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { AppData } from '../app.component';
+import { AppData } from '../reducers';
 import { TaskList } from '../shared/taskList.model';
 
 @Component({
@@ -11,8 +11,8 @@ export class SidebarComponent implements OnInit {
     constructor() {}
     @Input() @Output() data!: AppData;
 
-    @Output() onSetActiveList = new EventEmitter<number>();
-    setActiveList = (index: number) => this.onSetActiveList.emit(index);
+    @Output() onSetActiveList = new EventEmitter<string>();
+    setActiveList = (listId: string) => this.onSetActiveList.emit(listId);
 
     @Output() onCreateList = new EventEmitter();
     createList = () => this.onCreateList.emit();

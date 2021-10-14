@@ -9,7 +9,7 @@
         <h5 *ngIf="this.data.lists.length == 0" style="text-align: center">No lists...</h5>
         <li
             *ngFor="let list of this.data.lists; let i = index"
-            (click)="setActiveList(i)"
+            (click)="setActiveList(list.id)"
             [class.active]="this.data.activeListId == list.id"
             [class.completed]="countOpenTasks(list) == 0 && list.list.length"
         >
