@@ -43,23 +43,24 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
     console.log(state);
 
     switch (action.type) {
-        case AppDataActions.CREATE_LIST:
+        case AppDataActions.CREATE_LIST: {
             const newList = new TaskList(action.newListName);
             newState_.lists.push(newList);
             newState_.activeListId = newList.id;
             return newState(state, newState_);
+        }
 
-        case AppDataActions.SET_ACTIVE_LIST:
+        case AppDataActions.SET_ACTIVE_LIST: {
             newState_.activeListId = action.listId;
             return newState(state, newState_);
+        }
 
         case AppDataActions.EDIT_LIST: {
             let taskList = getListById(action.listId);
             taskList = Object.assign(taskList, action.updatedList);
             return newState(state, newState_);
         }
-
-        case AppDataActions.DELETE_LIST:
+        case AppDataActions.DELETE_LIST: {
             const taskList = getListById(action.listId);
             const listIndex = newState_.lists.indexOf(taskList);
 
@@ -68,6 +69,7 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             const nextListIndex = listIndex > 0 ? listIndex - 1 : 0;
             newState_.activeListId = listCount == 0 ? null : newState_.lists[nextListIndex].id;
             return newState_;
+        }
 
         case AppDataActions.CREATE_TASK: {
             const taskList = getListById(action.listId);
@@ -94,14 +96,17 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             task.collapseSubtaskList = !task.collapseSubtaskList;
             return newState(state, newState_);
         }
-        case AppDataActions.DELETE_TASK:
+        case AppDataActions.DELETE_TASK: {
             const taskParent = getTaskById(action.taskId, getListById(newState_.activeListId).list, true);
             const task = getTaskById(action.taskId);
             const indexOfTaskInParent = (taskParent as Task[]).indexOf(task as Task);
             (taskParent as Task[]).splice(indexOfTaskInParent, 1);
             return newState_;
+        }
 
         default:
             return state;
     }
+
+    // localStorage -> ngRX Effects?
 }

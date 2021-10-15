@@ -6,6 +6,7 @@ import { Utility } from '../shared/utility.model';
 import { Task } from './task.model';
 
 import * as AppDataActions from '../reducers';
+import { DialogService } from '../custom-dialog';
 
 @Component({
     selector: 'task',
@@ -15,68 +16,50 @@ import * as AppDataActions from '../reducers';
 export class TaskComponent implements OnInit {
     util = new Utility();
 
-    constructor(public modalService: ModalService, private store: Store<AppData>) {}
-
-    @Output() onDataSensitiveAction = new EventEmitter();
-    dataSensitiveAction = () => this.onDataSensitiveAction.emit();
+    constructor(
+        public modalService: ModalService,
+        private store: Store<AppData>,
+        private dialogService: DialogService
+    ) {}
 
     @Input() @Output() data!: Task;
 
-    setCompleted = (status: boolean) => {
-        // this.data.isCompleted = status;
-        // this.data.timeCompleted = new Date();
-        this.store.dispatch(new AppDataActions.SetCompleted(this.data.id));
-        // this.dataSensitiveAction();
-    };
-
+    setCompleted = (status: boolean) => this.store.dispatch(new AppDataActions.SetCompleted(this.data.id));
     toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
-
     addSubTask = () => {
-        const newTaskName = prompt('new task name');
-        if (!newTaskName) return;
-        // this.data.subTasks.push(new Task(newTaskName));
-        this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
-
-        this.dataSensitiveAction();
+        this.dialogService
+            .prompt({ title: 'New subtask:', buttons: ['Cancel', 'OK'] })
+            .then((newTaskName: string) => {
+                this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
+            })
+            .catch(() => {});
     };
-
-    toggleSubtaskList = () => {
-        // this.data.collapseSubtaskList = !this.data.collapseSubtaskList;
-        this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
-
-        this.dataSensitiveAction();
-    };
-
+    toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
     editTask = () => {
-        // this.modalService.open('modal-' + this.data.id);
-
-        const newTaskName = prompt('new task name', this.data.name); // TODO: make edit menu work
-        if (!newTaskName) return;
-        const updatedTask = JSON.parse(JSON.stringify(this.data));
-        updatedTask.name = newTaskName;
-
-        this.store.dispatch(new AppDataActions.EditTask(this.data.id, updatedTask));
-
-        // this.dataSensitiveAction();
+        this.dialogService
+            .prompt({ title: 'Update task name:', defaultValue: this.data.name, buttons: ['Cancel', 'Update'] })
+            .then((updatedTaskName: string) => {
+                const updatedTask = JSON.parse(JSON.stringify(this.data));
+                updatedTask.name = updatedTaskName;
+                this.store.dispatch(new AppDataActions.EditTask(this.data.id, updatedTask));
+            })
+            .catch(() => {});
     };
-
     deleteTask = (id: string, prompt = true) => {
-        // const parentArr: any = this.getTaskById(id, this.activeTaskList.list, true);
-        // const task: any = this.getTaskById(id, this.activeTaskList.list);
-        // const indexOfTaskInParentArr = parentArr.indexOf(task);
-        if (prompt) if (!confirm('Delete this task?')) return; // TODO: make this an inline animation
-        // parentArr.splice(indexOfTaskInParentArr, 1);
-        this.store.dispatch(new AppDataActions.DeleteTask(this.data.id));
-        // this.db.save();
+        const del = () => this.store.dispatch(new AppDataActions.DeleteTask(this.data.id));
+        if (prompt)
+            this.dialogService
+                .confirm({ title: 'Delete this task?', buttons: ['Cancel', 'Delete'] })
+                .then(() => {
+                    del();
+                }) // TODO: make this an inline animation
+                .catch(() => {});
+        else del();
     };
-
-    // @Output() onDeleteTask = new EventEmitter<string>();
-    // deleteTask = (id: string) => this.onDeleteTask.emit(id);
 
     ngOnInit(): void {}
 
     ngOnChanges(changes: SimpleChanges): void {
-        // console.log(changes);
         // alternate the background of every 2nd task
         document.querySelectorAll<HTMLElement>('.task').forEach((taskElement, i) => {
             if (i % 2 === 1) taskElement.style.background = 'var(--alt-bg)';

@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import url(./customDialog.css);
+/* @import url(./customDialog.css); */
 
 :root {
     --primary-clr-hue: 44;
@@ -74,6 +74,20 @@ input,
     border-radius: 10px;
 
     box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6), var(--box-shadow-s);
+}
+.input {
+    background: var(--global-background);
+    color: var(--global-color);
+
+    outline: none;
+    --outline-clr: gray;
+    --outline-weight: 1px;
+    box-shadow: 0 0 1px var(--outline-weight) var(--outline-clr), var(--box-shadow-s);
+    /* border: 1px solid var(--outline-clr); */
+    transition: 180ms;
+}
+.input:focus {
+    --outline-clr: var(--primary-clr);
 }
 .btn {
     font-weight: 800;

@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { ModalService } from '../modal/modal.service';
-import { generateId } from './../shared/utility.model';
+import { customDialogProps, defaultCustomDialogProps } from './custom-dialog.model';
+import { DialogService } from './custom-dialog.service';
 
 @Component({
     selector: 'custom-dialog',
@@ -8,19 +9,39 @@ import { generateId } from './../shared/utility.model';
     styleUrls: ['./custom-dialog.component.css'],
 })
 export class CustomDialogComponent implements OnInit {
-    constructor(public modalService: ModalService) {}
+    constructor(private modalService: ModalService, private dialogService: DialogService) {}
 
-    @Input() title: string;
-    @Input() text: string;
-    @Input() buttons: string[] = ['OK'];
-    @Input() type: 'confirm' | 'prompt' = 'confirm';
-    id = generateId();
+    promptInput: string;
+    props: customDialogProps = new defaultCustomDialogProps();
+    @ViewChild('localInputRef') inputRef: ElementRef;
 
-    closeDialog(btnIndex) {
-        // do some stuff
+    open(props: customDialogProps) {
+        this.props = props;
+        if (props.defaultValue) this.promptInput = props.defaultValue;
 
-        this.modalService.close('custom-dialog');
+        if (props.type == 'prompt') this.inputRef.nativeElement.select();
+        this.modalService.open('custom-dialog');
     }
 
-    ngOnInit(): void {}
+    closeDialog(resBtnIndex: number) {
+        this.modalService.close('custom-dialog');
+
+        this.dialogService.return({
+            buttons: this.props.buttons,
+            resBtnIndex,
+            promptInput: this.promptInput,
+        });
+
+        this.promptInput = '';
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    keyboardHandler(e: KeyboardEvent) {
+        if (e.key == 'Enter') this.closeDialog(this.props.buttons.length - 1);
+        if (e.key == 'Escape') this.closeDialog(this.props.buttons.length - 2);
+    }
+
+    ngOnInit(): void {
+        this.dialogService.dialog = this;
+    }
 }

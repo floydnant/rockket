@@ -9,6 +9,7 @@ import { ModalService } from './modal/modal.service';
 import { downloadObjectAsJson } from './shared/utility.model';
 import { TaskList } from './shared/taskList.model';
 import { Task } from './task/task.model';
+import { DialogService } from './custom-dialog/custom-dialog.service';
 
 interface AppState {
     data: AppData;
@@ -24,7 +25,11 @@ export class AppComponent implements OnInit {
     activeTaskList!: TaskList;
     taskNameInput!: string;
 
-    constructor(public modalService: ModalService, private store: Store<AppState>) {
+    constructor(
+        public modalService: ModalService,
+        private dialogService: DialogService,
+        private store: Store<AppState>
+    ) {
         this.store.subscribe((data: unknown) => {
             this.data = (data as { appData: AppData }).appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
@@ -41,7 +46,7 @@ export class AppComponent implements OnInit {
 
     addTask = () => {
         if (!this.taskNameInput) return;
-        if (this.data.lists.length == 0) alert("You don't have any lists.");
+        if (this.data.lists.length == 0) this.dialogService.confirm({ title: "You don't have any lists." });
         // this.activeTaskList.list.push(new Task(this.taskNameInput));
         this.store.dispatch(new AppDataActions.CreateTask(this.activeTaskList.id, this.taskNameInput));
         this.clearTaskNameInput();
@@ -67,30 +72,31 @@ export class AppComponent implements OnInit {
     getListIndexById = (id: string): number => this.data.lists.indexOf(this.data.lists.find(list => list.id == id)); //prettier-ignore
 
     setActiveList = (listId: string) => {
-        // this.activeTaskList = this.data.lists[index];
-        // this.data.activeListId = this.data.lists[index].id;
-        // this.db.save();
         this.store.dispatch(new AppDataActions.SetActiveList(listId));
     };
-    createList = () => {
-        const newListName = prompt('new list name');
-        if (!newListName) return;
+    createList = () =>
+        this.dialogService
+            .prompt({ title: 'New list name:' })
+            .then((newListName: string) => this.store.dispatch(new AppDataActions.CreateList(newListName)))
+            .catch(() => {});
 
-        this.store.dispatch(new AppDataActions.CreateList(newListName));
-        // this.db.save();
-    };
     editList = (listId_?: string) => {
         const listId = listId_ || this.data.activeListId;
         const taskList = this.getListById(listId);
 
-        const newListName = prompt('new list name or "[delete]" to delete the list', taskList.name); // TODO: make edit menu work
-        if (!newListName) return;
-        if (newListName == 'd') {
-            this.deleteList(listId);
-            return;
-        }
+        this.dialogService
+            .prompt({
+                title: 'Update list name:',
+                defaultValue: taskList.name,
+                buttons: ['Delete', 'Cancel', 'Update'],
+            })
+            .then((newListName: string) => {
+                this.store.dispatch(new AppDataActions.EditList(listId, { name: newListName } as TaskList));
+            })
+            .catch(res => {
+                if (res == 'Delete') this.deleteList(listId);
+            });
 
-        this.store.dispatch(new AppDataActions.EditList(listId, { name: newListName } as TaskList));
         // this.db.save();
     };
     deleteList = (listId: string) => this.store.dispatch(new AppDataActions.DeleteList(listId));
@@ -130,9 +136,19 @@ export class AppComponent implements OnInit {
         },
         delete: () => localStorage.removeItem(this.db.localStorageKey),
     };
+    showConfirm = () =>
+        this.dialogService
+            .confirm({ title: 'test dialog title', text: 'Are you sure?', buttons: ['Cancel', 'Delete', 'OK'] })
+            .then(console.info)
+            .catch(console.warn);
+    showPrompt = () =>
+        this.dialogService
+            .confirm({ title: 'test prompt title', text: 'Are you sure?', buttons: ['Cancel', 'OK'] })
+            .then(console.info)
+            .catch(console.warn);
 
     ngOnInit(): void {
         // this.db.load();
-        // setTimeout(() => this.modalService.open('custom-dialog'), 1000);
+        // setTimeout(() => this.showConfirm(), 1000);
     }
 }

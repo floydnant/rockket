@@ -1,0 +1,225 @@
+/* .dialogContainer {
+	z-index: 1090;
+
+	height: 100vh;
+	width: 100vw;
+	margin: 0;
+
+	position: fixed;
+	top: 0;
+	left: 0;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background: hsla(0, 0%, 11%, 0.5);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+
+	pointer-events: all;
+
+	opacity: 0;
+	transition: 220ms;
+}
+.dialogContainer.appear {
+	opacity: 1;
+} */
+.dialog {
+	z-index: 1100;
+
+	/* box-sizing: border-box; */
+	/* padding: 15px; */
+	/* font-family: "helvetica"; */
+	/* border-radius: 8px; */
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	min-width: 280px;
+	max-width: 30rem;
+	height: max-content;
+
+    color: var(--global-color);
+	/* background: var(--global-background);
+    box-shadow: var(--box-shadow-l); */
+
+	pointer-events: all;
+	user-select: none; /* Standard syntax */
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+
+	--defaultScale: 1;
+	--initScale: 0.7;
+	/* transform: scale(0.7);
+	opacity: 0; */
+	transition: 160ms;
+}
+@media (max-width: 600px) {
+	.dialog {
+		transform: scale(0.7);
+	}
+	.dialog.appear {
+		transform: scale(0.85);
+	}
+}
+.dialogText {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	max-width: 100%;
+
+	line-break: break-all;
+}
+.dialogText h3 {
+	margin: 0;
+}
+.dialogText p {
+	margin: 5px 0 0 0;
+
+	text-align: justify;
+	max-width: 100%;
+
+	filter: opacity(0.7);
+}
+.dialogInput {
+	/* outline: 2px solid red; */
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+
+	margin: 15px 0 0;
+}
+button {
+	background: transparent;
+	border: none;
+	border-radius: 6px;
+	padding-block: 5px !important;
+	padding-inline: 15px;
+
+	margin-inline: 7.5px;
+	max-height: 25px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	font-size: 1rem;
+	font-weight: 650;
+	color: rgb(0, 115, 255);
+
+	transition: color 110ms, background-color 115ms;
+}
+button:last-child {
+	/* btn-primary */
+	background-color: #80808048;
+}
+button:active {
+	color: var(--dialogBackground);
+}
+button:is(:hover, :focus) {
+	background-color: #48484848;
+}
+
+.dialog.prompt .dialogInput {
+	flex-direction: column;
+    width: 100%;
+    /* outline: 1px solid red; */
+}
+.btn-group {
+    display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.dialog.prompt .dialogInput input[type="text"] {
+	margin: 0 0 20px;
+	/* font-size: 0.95rem; */
+	/* font-family: menlo; */
+	width: 95%;
+    /* outline: none;
+    --color-hue: var(--primary-clr); */
+/* 
+	border: none;
+	border-radius: 6px;
+	padding: 5px; */
+
+	/* background: var(--global-background); */
+
+	/* transition: box-shadow 180ms; */
+}
+/* .dialog.prompt .dialogInput input[type="text"]:focus {
+	box-shadow: 0 0 6px 2px rgba(0, 105, 241, 0.755);
+} */
+
+.dialog.alert {
+	position: relative;
+	margin: 10px;
+
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 0 1px 4px hsl(var(--hue), 100%, 55%), 0 0 10px rgba(0, 0, 0, 0.61) inset;
+
+	background: hsla(var(--hue), 28%, 75%, 1);
+	color: hsl(var(--hue), 0%, 15%);
+}
+.dialog.alert i:not(.fa-times) {
+	position: absolute;
+	top: 15px;
+	left: 15px;
+	font-size: 2rem;
+	color: hsl(var(--hue), 100%, 45%);
+	/* text-shadow: 0 0 10px rgba(0, 0, 0, 0.603); */
+}
+.dialog.alert .dialogText :is(h1, h2, h3, h4, h5, h6) {
+	margin-top: 0;
+	margin-bottom: 10px;
+	padding-inline: calc(1.7rem + 10px);
+}
+.dialog.alert .dialogText :is(h1, h2, h3, h4, h5, h6, p) {
+	color: hsl(var(--hue), 0%, 15%);
+}
+.close-alert-box {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	margin: 0;
+	transform: translate(0, -8px);
+
+	color: hsl(var(--hue), 100%, 45%);
+	background: none;
+	border: none;
+	font-size: 2rem;
+	cursor: pointer;
+}
+.progress-bar {
+	margin-top: 20px;
+	width: 100%;
+	height: 8px;
+	background: hsl(var(--hue), 70%, 70%);
+
+	border-radius: 10px;
+}
+.progress-bar .progress {
+	background: hsl(var(--hue), 100%, 50%);
+	width: 100%;
+	height: 100%;
+
+	border-radius: 10px;
+}
+@keyframes progress {
+	0% {
+		width: 100%;
+	}
+	100% {
+		width: 00%;
+	}
+}
+/* prettier-ignore */
+.alert.success {--hue: 120;	} /* prettier-ignore */
+.alert.info {	--hue: 200	} /* prettier-ignore */
+.alert.warning {--hue: 33	} /* prettier-ignore */
+.alert.error {	--hue: 0	}

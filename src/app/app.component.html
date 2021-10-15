@@ -22,7 +22,7 @@
                 type="text"
                 placeholder="What shall it be?"
                 id="nameInput"
-                class="nameInput"
+                class="nameInput input"
                 #inputRef
                 (keydown.Enter)="addTask()"
                 (keydown.Escape)="clearTaskNameInput(inputRef)"
@@ -45,9 +45,10 @@
     </main>
 </div>
 
-<button (click)="modalService.open('test-modal')">open modal</button>
+<!-- <button (click)="this.showConfirm()">open dialog</button>
+<button (click)="this.showPrompt()">open prompt</button> -->
 
-<custom-dialog title="test dialog" text="test dialog text here" type="confirm"></custom-dialog>
+<custom-dialog></custom-dialog>
 
 <app-modal id="test-modal">
     <h1 class="test-class">test modal</h1>

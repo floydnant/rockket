@@ -17,25 +17,18 @@ export class ModalComponent implements OnInit {
         this.element = el.nativeElement;
     }
 
-    keyboardHandler = (event: KeyboardEvent) => {
-        if (event.key == 'Escape') this.close();
-    };
-
     // open modal
     open(): void {
         // this.element.style.display = 'block';
         this.element.classList.add('open');
-        document.body.classList.add('jw-modal-open');
-
-        document.addEventListener('keydown', this.keyboardHandler);
+        document.body.classList.add('modal-open');
     }
 
     // close modal
     close(): void {
         // this.element.style.display = 'none';
         this.element.classList.remove('open');
-        document.body.classList.remove('jw-modal-open');
-        document.removeEventListener('keydown', this.keyboardHandler);
+        document.body.classList.remove('modal-open');
     }
 
     ngOnInit(): void {
@@ -50,7 +43,7 @@ export class ModalComponent implements OnInit {
 
         // close modal on background click
         this.element.addEventListener('click', (el: any) => {
-            if (el.target.className === 'jw-modal') {
+            if (el.target.className === 'modal') {
                 this.close();
             }
         });
