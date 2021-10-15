@@ -102,10 +102,28 @@
 .task:not(.completed) .btn-complete:not(:hover) {
     color: gray;
 }
+
 .time-completed {
-    color: var(--complete-clr);
     position: absolute;
-    bottom: 100%;
+    bottom: calc(100% + 5px);
+    left: 0%;
+    --translateY: 5px; 
+    transform: translate(calc(-50% + 25px), var(--translateY));
+    width: max-content;
+
+    color: var(--complete-clr);
+    padding: 8px;
+    border-radius: 10px;
+    
+    background: var(--global-background);
+    box-shadow: var(--box-shadow-s);
+    opacity: 0;
+
+    transition: 200ms;
+}
+.task.completed:hover ~ .time-completed {
+    --translateY: 0;
+    opacity: 1;
 }
 
 .task .btn-group {

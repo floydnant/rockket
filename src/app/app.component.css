@@ -37,3 +37,9 @@ main {
     padding: 0;
     transition: 200ms;
 }
+
+
+task {
+    position: relative;
+    /* border: 1px solid red; */
+}

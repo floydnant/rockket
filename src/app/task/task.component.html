@@ -1,15 +1,12 @@
 <li id="task-{{ this.data.id }}" class="task" [class.completed]="this.data.isCompleted">
     <button class="btn btn-icon btn-complete" (click)="toggleCompleted()">
         <i class="fa{{ this.data.isCompleted ? 's' : 'r' }} fa-check-circle"></i>
-        <span *ngIf="this.data.isCompleted" class="time-completed">
-            {{ this.util.formatTime(this.data.timeCompleted) }}
-        </span>
     </button>
     <div class="text-container">
         <p class="cell_">
             <span class="taskName">
                 <span style="color: var(--danger-clr)">
-                    {{ this.util.multiplyText("! ", this.data.priority || 0) }}
+                    {{ this.util.multiplyString("! ", this.data.priority || 0) }}
                 </span>
                 {{ this.data.name }}
             </span>
@@ -59,6 +56,11 @@
         </button>
     </div>
 </li>
+
+<span *ngIf="this.data.isCompleted" class="time-completed">
+    {{ this.util.formatDate(this.data.timeCompleted) }}
+</span>
+
 <ul
     *ngIf="this.data.subTasks.length != 0"
     class="subtask-list subtask-list-{{ this.data.id }}"

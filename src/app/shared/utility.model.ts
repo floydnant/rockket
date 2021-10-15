@@ -1,15 +1,18 @@
 export const generateId = () => (Date.now() + Math.random()).toString().replace('.', '_');
 
-export const formatTime = (time: Date | string) =>
-    new Date(time).toLocaleString('de-DE', {
+export const formatDate = (time: Date | string) =>
+    new Date(time).toLocaleString('en-EN', {
         weekday: 'long',
         day: 'numeric',
         month: 'short',
         hour: 'numeric',
         minute: 'numeric',
-    }) + '';
+    });
+// .replace(/,/g, '');
 
-export const multiplyText = (text = '!', multiplier = 3) => {
+export const reverseString = (str: string) => str.split('').reverse().join('');
+
+export const multiplyString = (text = '!', multiplier = 3) => {
     let result = '';
     for (let i = 0; i < multiplier; i++) result += text;
     return result;
@@ -53,38 +56,8 @@ export const downloadObjectAsJson = (exportObj: object, fileName: string, readab
 };
 
 export class Utility {
-    public generateId = () => (Date.now() + Math.random()).toString().replace('.', '_');
-
-    public formatTime = (time: Date | string) =>
-        new Date(time).toLocaleString('de-DE', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'short',
-            hour: 'numeric',
-            minute: 'numeric',
-        }) + '';
-
-    public multiplyText(text = '!', multiplier = 3) {
-        let result = '';
-        for (let i = 0; i < multiplier; i++) result += text;
-        return result;
-    }
-
-    public escapeHTML = (unsafe: string) =>
-        unsafe == '' || unsafe == null
-            ? ''
-            : unsafe.replace(/[&<"']/g, match => {
-                  switch (match) {
-                      case '&':
-                          return '&amp;';
-                      case '<':
-                          return '&lt;';
-                      case '"':
-                          return '&quot;';
-                      case "'":
-                          return '&apos;';
-                      default:
-                          return match;
-                  }
-              });
+    public generateId = generateId;
+    public formatDate = formatDate;
+    public multiplyString = multiplyString;
+    public escapeHTML = escapeHTML;
 }
