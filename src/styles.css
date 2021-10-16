@@ -5,7 +5,7 @@
     --primary-clr-hue: 44;
     --primary-clr: hsl(var(--primary-clr-hue), 100%, 50%);
 
-    --test: hsl(103, 100%, 50%);
+    --: hsl(103, 100%, 50%);
 
     --danger-clr-hue: 0;
     --danger-clr: hsl(var(--danger-clr-hue), 100%, 50%);
@@ -128,8 +128,8 @@ input,
     --color: var(--primary-clr);
 }
 .btn-delete {
-    --color-hue: var(--danger-clr-hue);
-    --color: var(--danger-clr);
+    --color-hue: var(--danger-clr-hue) !important;
+    --color: var(--danger-clr) !important;
 }
 .btn-complete {
     --color-hue: var(--complete-clr-hue);

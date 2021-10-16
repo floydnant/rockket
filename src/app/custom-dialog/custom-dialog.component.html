@@ -5,24 +5,19 @@
             <p *ngIf="this.props.text">{{ this.props.text }}</p>
         </div>
 
-        <div class="dialogInput" *ngIf="this.props.type == 'confirm'">
-            <button *ngFor="let btnText of this.props.buttons; let i = index" (click)="closeDialog(i)">
-                {{ btnText }}
-            </button>
-        </div>
-        <div class="dialogInput" *ngIf="this.props.type == 'prompt'">
+        <div class="dialogInput">
             <input
+                *ngIf="this.props.type == 'prompt'"
                 class="input promptInput"
                 type="text"
                 #localInputRef
                 [(ngModel)]="this.promptInput"
             />
             <div class="btn-group">
-                <button *ngFor="let btnText of this.props.buttons; let i = index" (click)="closeDialog(i)">
-                    {{ btnText }}
+                <button *ngFor="let btnText of this.props.buttons; let i = index" [class.btn-delete]="btnText[0] == '!'" (click)="closeDialog(i)">
+                    {{ btnText.replace("!", "") }}
                 </button>
             </div>
-            <!-- <button (click)="closeDialog(0)">OK</button> -->
         </div>
     </div>
 </app-modal>

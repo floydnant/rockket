@@ -28,7 +28,7 @@ export class TaskComponent implements OnInit {
     toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
     addSubTask = () => {
         this.dialogService
-            .prompt({ title: 'New subtask:', buttons: ['Cancel', 'OK'] })
+            .prompt({ title: 'Create new subtask:', buttons: ['Cancel', 'Create'] })
             .then((newTaskName: string) => {
                 this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
             })
@@ -49,7 +49,7 @@ export class TaskComponent implements OnInit {
         const del = () => this.store.dispatch(new AppDataActions.DeleteTask(this.data.id));
         if (prompt)
             this.dialogService
-                .confirm({ title: 'Delete this task?', buttons: ['Cancel', 'Delete'] })
+                .confirm({ title: 'Delete this task?', buttons: ['Cancel', '!Delete'] })
                 .then(() => {
                     del();
                 }) // TODO: make this an inline animation

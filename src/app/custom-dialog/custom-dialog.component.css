@@ -110,19 +110,29 @@ button {
 
 	font-size: 1rem;
 	font-weight: 650;
-	color: rgb(0, 115, 255);
-
-	transition: color 110ms, background-color 115ms;
+	/* --color: hsl(0, 0%, 59%); */
+	--color: var(--global-color);
+	color: var(--color);
+	background: hsl(var(--color-hue, 213) var(--bg-clr-sat, 40%) var(--bg-clr-lightness, 45%) / var(--bg-opacity, .5));
+	
+	transition: color 110ms, background 115ms;
 }
+button:not(.btn-delete) {
+	--bg-clr-sat: 0%;
+}
+/* btn-primary */
 button:last-child {
-	/* btn-primary */
-	background-color: #80808048;
+	color: white;
+	--bg-clr-sat: 100%;
+	--bg-clr-lightness: 50%;
+	--bg-opacity: 1;
 }
 button:active {
 	color: var(--dialogBackground);
 }
 button:is(:hover, :focus) {
-	background-color: #48484848;
+	--bg-clr-lightness: 35%;
+	/* background: hsla(0, 0%, 28%, 0.282); */
 }
 
 .dialog.prompt .dialogInput {

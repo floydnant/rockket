@@ -88,13 +88,13 @@ export class AppComponent implements OnInit {
             .prompt({
                 title: 'Update list name:',
                 defaultValue: taskList.name,
-                buttons: ['Delete', 'Cancel', 'Update'],
+                buttons: ['!Delete', 'Cancel', 'Update'],
             })
             .then((newListName: string) => {
                 this.store.dispatch(new AppDataActions.EditList(listId, { name: newListName } as TaskList));
             })
             .catch(res => {
-                if (res == 'Delete') this.deleteList(listId);
+                if (res == '!Delete') this.deleteList(listId);
             });
 
         // this.db.save();
@@ -138,7 +138,7 @@ export class AppComponent implements OnInit {
     };
     showConfirm = () =>
         this.dialogService
-            .confirm({ title: 'test dialog title', text: 'Are you sure?', buttons: ['Cancel', 'Delete', 'OK'] })
+            .confirm({ title: 'test dialog title', text: 'Are you sure?', buttons: ['Cancel', '!Delete', 'OK'] })
             .then(console.info)
             .catch(console.warn);
     showPrompt = () =>
