@@ -18,6 +18,47 @@ export const multiplyString = (text = '!', multiplier = 3) => {
     return result;
 };
 
+const replacementChars = [
+    {
+        keyChar: 'E',
+        replaceChar: '3',
+    },
+    {
+        keyChar: 'A',
+        replaceChar: '4',
+    },
+    {
+        keyChar: 'O',
+        replaceChar: '0',
+    },
+    {
+        keyChar: 'S',
+        replaceChar: '5',
+    },
+    {
+        keyChar: 'I',
+        replaceChar: '1',
+    },
+];
+export const replaceCharsWithNumbers = (
+    text: string,
+    replacementArr: {
+        keyChar: string;
+        replaceChar: string;
+    }[] = replacementChars
+) => text.split('')
+        .map(char => replacementArr.some(c => c.keyChar == char) ? replacementArr.find(c => c.keyChar == char).replaceChar : char)
+        .join(''); // prettier-ignore
+
+export const generatePassword = (blockCount: number = 4) => {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let password = [];
+    const blockTemplate = 'XXXX'.split('');
+    for (let i = 0; i < blockCount; i++)
+        password.push(blockTemplate.map(_x => chars[Math.round(Math.random() * (chars.length - 1))]).join(''));
+    return password.join('-');
+};
+
 export const escapeHTML = (unsafe: string) =>
     unsafe == '' || unsafe == null
         ? ''

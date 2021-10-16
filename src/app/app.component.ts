@@ -6,7 +6,7 @@ import { AppData } from './reducers/appData';
 import * as AppDataActions from './reducers/';
 
 import { ModalService } from './modal/modal.service';
-import { downloadObjectAsJson } from './shared/utility.model';
+import { downloadObjectAsJson, replaceCharsWithNumbers, generatePassword } from './shared/utility.model';
 import { TaskList } from './shared/taskList.model';
 import { Task } from './task/task.model';
 import { DialogService } from './custom-dialog/custom-dialog.service';
@@ -150,5 +150,7 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         // this.db.load();
         // setTimeout(() => this.showConfirm(), 1000);
+        // console.log(replaceCharsWithNumbers('HELLO GUYS, I AM A TEST!'));
+        console.log('random password: ' + generatePassword());
     }
 }
