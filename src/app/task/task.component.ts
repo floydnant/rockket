@@ -7,6 +7,7 @@ import { Task } from './task.model';
 
 import * as AppDataActions from '../reducers';
 import { DialogService } from '../custom-dialog';
+import { EditMenuService } from '../edit-menu/edit-menu.service';
 
 @Component({
     selector: 'task',
@@ -19,7 +20,8 @@ export class TaskComponent implements OnInit {
     constructor(
         public modalService: ModalService,
         private store: Store<AppData>,
-        private dialogService: DialogService
+        private dialogService: DialogService,
+        private editMenuService: EditMenuService
     ) {}
 
     @Input() @Output() data!: Task;
@@ -36,14 +38,18 @@ export class TaskComponent implements OnInit {
     };
     toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
     editTask = () => {
-        this.dialogService
-            .prompt({ title: 'Update task name:', defaultValue: this.data.name, buttons: ['Cancel', 'Update'] })
-            .then((updatedTaskName: string) => {
-                const updatedTask = JSON.parse(JSON.stringify(this.data));
-                updatedTask.name = updatedTaskName;
-                this.store.dispatch(new AppDataActions.EditTask(this.data.id, updatedTask));
+        // this.dialogService
+        //     .prompt({ title: 'Update task name:', defaultValue: this.data.name, buttons: ['Cancel', 'Update'] })
+        this.editMenuService
+            .editTask(this.data)
+            .then((updatedTask: Task) => {
+                // const updatedTask = JSON.parse(JSON.stringify(this.data));
+                // updatedTask.name = updatedTaskName;
+                this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask } as any));
             })
-            .catch(() => {});
+            .catch(err => {
+                if (err == 'Deleted') this.deleteTask(this.data.id);
+            });
     };
     deleteTask = (id: string, prompt = true) => {
         const del = () => this.store.dispatch(new AppDataActions.DeleteTask(this.data.id));

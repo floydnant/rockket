@@ -15,15 +15,19 @@ export class CustomDialogComponent implements OnInit {
     props: customDialogProps = new defaultCustomDialogProps();
     @ViewChild('localInputRef') inputRef: ElementRef;
 
+    isOpen = false;
+
     open(props: customDialogProps) {
         this.props = props;
         if (props.defaultValue) this.promptInput = props.defaultValue;
 
         if (props.type == 'prompt') this.inputRef.nativeElement.select();
         this.modalService.open('custom-dialog');
+        this.isOpen = true;
     }
 
     closeDialog(resBtnIndex: number) {
+        this.isOpen = false;
         this.modalService.close('custom-dialog');
 
         this.dialogService.return({
@@ -37,6 +41,7 @@ export class CustomDialogComponent implements OnInit {
 
     @HostListener('document:keydown', ['$event'])
     keyboardHandler(e: KeyboardEvent) {
+        if (!this.isOpen) return;
         if (e.key == 'Enter') this.closeDialog(this.props.buttons.length - 1);
         if (e.key == 'Escape') this.closeDialog(this.props.buttons.length - 2);
     }

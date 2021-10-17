@@ -23,9 +23,9 @@
                 placeholder="What shall it be?"
                 id="nameInput"
                 class="nameInput input"
-                #inputRef
+                #nameInputRef
                 (keydown.Enter)="addTask()"
-                (keydown.Escape)="clearTaskNameInput(inputRef)"
+                (keydown.Escape)="clearTaskNameInput(nameInputRef)"
                 [(ngModel)]="this.taskNameInput"
             />
             <button class="btn btn-primary btn-add" (click)="addTask()">add</button>
@@ -50,10 +50,10 @@
 
 <custom-dialog></custom-dialog>
 
-<app-modal id="test-modal">
+<edit-menu></edit-menu>
+<!-- <app-modal id="test-modal">
     <h1 class="test-class">test modal</h1>
     <hr />
-    <!-- <app-edit-menu></app-edit-menu> -->
     <hr />
     <button (click)="modalService.close('test-modal')">close modal</button>
-</app-modal>
+</app-modal> -->

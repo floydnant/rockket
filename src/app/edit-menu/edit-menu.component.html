@@ -1,31 +1,40 @@
-<div class="edit-menu">
-    <button class="btn btn-icon btn-close" onclick="TODO.editMenu.buttonPressed('closed');">
-        <i class="fas fa-times"></i>
-    </button>
-    <input class="nameInput edit-item" type="text" [(ngModel)]="dataEdit.name" />
-    <label class="primary-slider-label edit-item"
-        >Priority: Normal<input type="range" id="prioritySlider" min="0" max="3" [(ngModel)]="dataEdit.priority" />
-        High</label
-    >
-    <br />
-    <textarea
-        id="notesTextarea"
-        class="notesTextarea edit-item"
-        placeholder="notes"
-        [(ngModel)]="dataEdit.meta.notes"
-    ></textarea>
-    <div class="add-link-container">
-        <input type="url" class="linkInput edit-item" id="linkInput" placeholder="Link" />
-        <button class="btn btn-primary" onclick="TODO.editMenu.linkList.add()">add</button>
-    </div>
-    <div class="link-list" style="margin-top: 10px">
-        <ul></ul>
-    </div>
-    <div class="btn-group">
-        <button class="btn btn-delete" style="float: left" onclick="TODO.editMenu.buttonPressed('delete');">
-            delete
+<app-modal id="edit-menu">
+    <div class="edit-menu">
+        <button class="btn btn-icon btn-close" (click)="close('Cancelled');">
+            <i class="fas fa-times"></i>
         </button>
-        <button class="btn" style="color: white" onclick="TODO.editMenu.buttonPressed('closed');">cancel</button>
-        <button class="btn btn-complete btn-done" onclick="TODO.editMenu.buttonPressed('done');">Done</button>
+        <input class="nameInput edit-item input" type="text" #nameInputRef [(ngModel)]="dataEdit.name" />
+        <label *ngIf="this.type == 'Task'" class="primary-slider-label edit-item"
+            >Priority: Normal<input type="range" id="prioritySlider" min="0" max="3" [(ngModel)]="dataEdit.priority" />
+            High</label
+        >
+        <br />
+        <textarea
+            id="notesTextarea"
+            class="notesTextarea edit-item input"
+            placeholder="notes"
+            [(ngModel)]="dataEdit.meta.notes"
+        ></textarea>
+
+        <div *ngIf="this.type == 'Task'" class="add-link-container">
+            <input type="url" class="linkInput edit-item input" id="linkInput" placeholder="Link" [(ngModel)]="linkInput" />
+            <button class="btn btn-primary" (click)="addLink()">add</button>
+        </div>
+        <div *ngIf="this.type == 'Task'" class="link-list" style="margin-top: 10px">
+            <ul *ngIf="'links' in this.dataEdit.meta && this.dataEdit.meta.links.length > 0">
+                <li *ngFor="let link of this.dataEdit.meta.links; let i = index">
+                    <a [href]="link" target="_blank">{{ link }}</a>
+                    <button class="btn btn-delete btn-icon" (click)="removeLink(i)" style="margin-left: 1rem;"><i class="far fa-trash-alt"></i></button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-delete" style="float: left" (click)="close('Deleted');">
+                delete
+            </button>
+            <button class="btn" style="color: white" (click)="close('Cancelled');">cancel</button>
+            <button class="btn btn-complete btn-done" (click)="close('OK');">Done</button>
+        </div>
     </div>
-</div>
+</app-modal>

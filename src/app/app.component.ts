@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -10,6 +10,7 @@ import { downloadObjectAsJson, replaceCharsWithNumbers, generatePassword } from 
 import { TaskList } from './shared/taskList.model';
 import { Task } from './task/task.model';
 import { DialogService } from './custom-dialog/custom-dialog.service';
+import { EditMenuService } from './edit-menu/edit-menu.service';
 
 interface AppState {
     data: AppData;
@@ -20,14 +21,17 @@ interface AppState {
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
     data!: AppData;
     activeTaskList!: TaskList;
     taskNameInput!: string;
 
+    @ViewChild('nameInputRef') nameInputRef: ElementRef;
+
     constructor(
         public modalService: ModalService,
         private dialogService: DialogService,
+        private editMenuService: EditMenuService,
         private store: Store<AppState>
     ) {
         this.store.subscribe((data: unknown) => {
@@ -84,17 +88,19 @@ export class AppComponent implements OnInit {
         const listId = listId_ || this.data.activeListId;
         const taskList = this.getListById(listId);
 
-        this.dialogService
-            .prompt({
-                title: 'Update list name:',
-                defaultValue: taskList.name,
-                buttons: ['!Delete', 'Cancel', 'Update'],
+        // this.dialogService
+        //     .prompt({
+        //         title: 'Update list name:',
+        //         defaultValue: taskList.name,
+        //         buttons: ['!Delete', 'Cancel', 'Update'],
+        //     })
+        this.editMenuService
+            .editTaskList(taskList)
+            .then((updatedTaskList: TaskList) => {
+                this.store.dispatch(new AppDataActions.EditList(listId, { ...taskList, ...updatedTaskList }));
             })
-            .then((newListName: string) => {
-                this.store.dispatch(new AppDataActions.EditList(listId, { name: newListName } as TaskList));
-            })
-            .catch(res => {
-                if (res == '!Delete') this.deleteList(listId);
+            .catch(err => {
+                if (err == 'Deleted') this.deleteList(listId);
             });
 
         // this.db.save();
@@ -151,6 +157,9 @@ export class AppComponent implements OnInit {
         // this.db.load();
         // setTimeout(() => this.showConfirm(), 1000);
         // console.log(replaceCharsWithNumbers('HELLO GUYS, I AM A TEST!'));
+    }
+    ngAfterViewInit() {
         console.log('random password: ' + generatePassword());
+        this.nameInputRef.nativeElement.select();
     }
 }
