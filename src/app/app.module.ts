@@ -12,6 +12,7 @@ import { ModalComponent } from './modal/modal.component';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
     declarations: [
@@ -29,6 +30,7 @@ import { environment } from '../environments/environment';
             metaReducers,
         }),
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+        EffectsModule.forRoot([]),
     ],
     providers: [],
     bootstrap: [AppComponent],
