@@ -155,11 +155,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         // this.db.load();
-        // setTimeout(() => this.showConfirm(), 1000);
-        // console.log(replaceCharsWithNumbers('HELLO GUYS, I AM A TEST!'));
     }
     ngAfterViewInit() {
-        console.log('random password: ' + generatePassword());
         this.nameInputRef.nativeElement.select();
     }
 }

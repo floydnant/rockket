@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalService } from '../modal/modal.service';
 import { TaskList } from '../shared/taskList.model';
+import { getCopyOf } from '../shared/utility.model';
 import { editmenuProps, editmenuPropsTask, editmenuPropsTasklist } from './edit-menu.model';
 import { EditMenuService } from './edit-menu.service';
 import { returnInterface } from './edit-menu.service';
@@ -12,10 +13,11 @@ interface meta {
 export class DataEdit_ {
     meta: meta;
     constructor(public name: string, meta: meta, public priority?: number) {
-        this.meta = {
-            notes: meta.notes,
-        };
-        if (meta.links) this.meta.links = [...meta.links];
+        // this.meta = {
+        //     notes: meta.notes,
+        // };
+        // if (meta.links) this.meta.links = [...meta.links];
+        this.meta = JSON.parse(JSON.stringify(meta));
     }
 }
 
@@ -25,10 +27,9 @@ export class DataEdit_ {
     styleUrls: ['./edit-menu.component.css'],
 })
 export class EditMenuComponent implements OnInit {
-    @Input() @Output() data: any; // Task | TaskList
-    dataEdit!: DataEdit_;
+    defaultData = () => new DataEdit_('', { notes: '', links: [] }, 0);
+    dataEdit: DataEdit_ = this.defaultData();
     type: editmenuProps['type'];
-    readonly defaultData = new DataEdit_('', { notes: '', links: [] }, 0);
 
     @ViewChild('nameInputRef') nameInputRef: ElementRef;
 
@@ -57,7 +58,9 @@ export class EditMenuComponent implements OnInit {
     close(btnRes: returnInterface['responseStatus']) {
         this.modalService.close('edit-menu');
         this.isOpen = false;
-        this.editMenuService.return({ updatedProps: this.dataEdit, responseStatus: btnRes });
+        this.editMenuService.return({ updatedProps: getCopyOf(this.dataEdit), responseStatus: btnRes });
+
+        this.dataEdit = this.defaultData();
     }
 
     linkInput: '';
@@ -79,7 +82,6 @@ export class EditMenuComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.dataEdit = this.defaultData;
         this.editMenuService.editMenu = this;
     }
 }
