@@ -37,6 +37,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.store.subscribe((data: unknown) => {
             this.data = (data as { appData: AppData }).appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
+            console.log('%cupdated state:', 'color: gray');
             console.log(this.data);
         });
     }
@@ -110,7 +111,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     ////////////////////////////////////// database interaction /////////////////////////////////////////
     db = {
         localStorageKey: 'todoListData',
-        // getDefaultData: () => new AppData(),
         save: () => (localStorage[this.db.localStorageKey] = JSON.stringify(this.data)),
         load: () => {
             try {

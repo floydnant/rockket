@@ -13,8 +13,8 @@ export const ADD_SUBTASK = '[Task] AddSubtask';
 export const TOGGLE_SUBTASK_LIST = '[Task] ToggleSubtaskList';
 export const DELETE_TASK = '[Task] Delete';
 
-export const DB_SAVE = '[DB] Save';
-export const DB_LOAD = '[DB] Load';
+export const SAVE_TO_DB = '[DB] Save';
+export const LOAD_FROM_DB = '[DB] Load';
 export const DB_EXPORT = '[DB] Export';
 export const DB_IMPORT = '[DB] Import';
 export const DB_DELETE = '[DB] Delete';
@@ -71,6 +71,14 @@ export class DeleteTask implements Action {
     constructor(public taskId: string) {}
 }
 
+
+export class SaveToDB implements Action {
+    readonly type = SAVE_TO_DB;
+}
+export class LoadFromDB implements Action {
+    readonly type = LOAD_FROM_DB;
+}
+
 export type All =
     | CreateList
     | SetActiveList
@@ -81,4 +89,6 @@ export type All =
     | SetCompleted
     | AddSubtask
     | ToggleSubtaskList
-    | DeleteTask;
+    | DeleteTask
+    | SaveToDB
+    | LoadFromDB;

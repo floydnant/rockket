@@ -1,3 +1,4 @@
+import { getCopyOf } from 'src/app/shared/utility.model';
 import { Task } from 'src/app/task/task.model';
 import { TaskList } from '../../shared/taskList.model';
 import * as AppDataActions from './appData.actions';
@@ -13,11 +14,24 @@ const defaultState: AppData = {
     version: ACTIVE_VERSION,
 };
 
+const db = {
+    localStorageKey: 'todoListData',
+    // save: (data) => (localStorage[db.localStorageKey] = JSON.stringify(data)),
+    // load: () => {
+    //     try {
+    //         this.data = JSON.parse(localStorage[db.localStorageKey]);
+    //     } catch (err) {
+    //         // this.data = this.db.getDefaultData();
+    //     }
+    //     this.setActiveList(this.data.activeListId);
+    // },
+};
+
 // const newState = (state: AppData, newData: AppData) => Object.assign({}, state, newData);
 const newState = (state: AppData, newData: AppData) => ({ ...state, ...newData });
 
 export function appDataReducer(state: AppData = defaultState, action: Action) {
-    let newState_ = JSON.parse(JSON.stringify(state));
+    let newState_ = getCopyOf(state);
 
     const getListById = (id: string): TaskList => newState_.lists.find((list: TaskList) => list.id == id);
     const getTaskById = (
@@ -49,12 +63,10 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             newState_.activeListId = newList.id;
             return newState(state, newState_);
         }
-
         case AppDataActions.SET_ACTIVE_LIST: {
             newState_.activeListId = action.listId;
             return newState(state, newState_);
         }
-
         case AppDataActions.EDIT_LIST: {
             let taskList = getListById(action.listId);
             taskList = Object.assign(taskList, action.updatedList);
@@ -102,6 +114,13 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             const indexOfTaskInParent = (taskParent as Task[]).indexOf(task as Task);
             (taskParent as Task[]).splice(indexOfTaskInParent, 1);
             return newState_;
+        }
+
+        case AppDataActions.SAVE_TO_DB: {
+            localStorage[db.localStorageKey] = JSON.stringify(state);
+            console.log('%cdatabase updated', 'color: red;');
+
+            return state;
         }
 
         default:
