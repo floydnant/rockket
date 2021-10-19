@@ -4,6 +4,10 @@
 
 A lightweight, carefully designed todo app with a focus on simplicity, built with angular.
 
+## deployment
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9fd8a950-2e65-4669-bb3e-7d98889c1b35/deploy-status)](https://app.netlify.com/sites/floyds-todo/deploys)
+The app is deployed here: https://floyds-todo.netlify.app 
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
