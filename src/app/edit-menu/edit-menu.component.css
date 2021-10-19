@@ -1,5 +1,6 @@
 .edit-menu {
-    margin-top: 30px
+    margin-top: 30px;
+    min-width: min(45vw, 30rem);
 }
 .edit-item {
     width: calc(100% - var(--modal-padding));
@@ -16,32 +17,28 @@
     box-shadow: 0 0 1px var(--outline-weight) var(--outline-clr), var(--box-shadow-s);
     background: var(--global-background);
 }
-.edit-menu .btn-close {
+.btn-close {
     position: absolute;
     top: 10px;
     right: 10px;
 }
-.edit-menu .nameInput {
+.nameInput {
     display: block;
 }
 .nameInput:focus {
     --outline-clr: var(--primary-clr);
 }
 
-.edit-menu .primary-slider-label {
+.priority-label {
     display: inline-flex;
     align-items: center;
 }
-.edit-menu .primary-slider-label {
-    padding-top: 0;
-    padding-bottom: 0;
-}
-.edit-menu .primary-slider-label input {
-    background: none;
-    box-shadow: none;
-}
-.edit-menu-container.list-edit .primary-slider-label {
-    display: none;
+select {
+    font-size: 1rem;
+    padding: 5px;
+    border-radius: 6px;
+    --outline-clr: rgba(128, 128, 128, 0);
+    border: none;
 }
 .notesTextarea {
     width: calc(100% - var(--modal-padding));
@@ -73,23 +70,44 @@
 .linkInput:focus {
     --outline-clr: var(--primary-clr);
 }
+.link-list {
+    box-shadow: var(--box-shadow-s);
+    padding: 10px;
+    border-radius: 8px;
+}
 .link-list ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-.edit-menu .btn-group {
+.link-list li {
+    display: flex;
+    align-items: center;
+}
+.link-list li a {
+    transform: translateY(-2px);
+}
+.link-list li a:not(:hover) {
+    text-decoration: none;
+}
+
+.btn-group {
     position: relative;
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
-.edit-menu .btn-group button {
+.btn-group button {
     margin-left: 10px;
 }
-.edit-menu .btn-group button.btn-delete {
+.btn-group button.btn-delete {
     position: absolute;
     left: 0;
     margin-left: 0;
+}
+.btn-cancel {
+    color: var(--global-color);
+    background: var(--global-background);
+    box-shadow: var(--box-shadow-s);
 }

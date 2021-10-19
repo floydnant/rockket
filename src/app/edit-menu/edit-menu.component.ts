@@ -56,7 +56,7 @@ export class EditMenuComponent implements OnInit {
     }
 
     close(btnRes: returnInterface['responseStatus']) {
-        this.addLink();
+        if (this.type == 'Task') this.addLink();
         this.modalService.close('edit-menu');
         this.isOpen = false;
         this.editMenuService.return({ updatedProps: getCopyOf(this.dataEdit), responseStatus: btnRes });

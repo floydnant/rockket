@@ -50,6 +50,9 @@ body {
 
     transition: 500ms;
 }
+* {
+    font-family: var(--primary-font);
+}
 ::selection {
     background: var(--primary-clr);
     color: rgb(27, 27, 27);
