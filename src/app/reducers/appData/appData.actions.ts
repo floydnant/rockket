@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { TaskList } from 'src/app/shared/taskList.model';
+import { AppData } from './appData.model';
 
 export const CREATE_LIST = '[List] Create';
 export const SET_ACTIVE_LIST = '[List] SetActive';
@@ -16,7 +17,7 @@ export const DELETE_TASK = '[Task] Delete';
 export const SAVE_TO_DB = '[DB] Save';
 export const LOAD_FROM_DB = '[DB] Load';
 export const DB_EXPORT = '[DB] Export';
-export const DB_IMPORT = '[DB] Import';
+export const IMPORT_TO_DB = '[DB] Import';
 export const DB_DELETE = '[DB] Delete';
 
 export class CreateList implements Action {
@@ -78,6 +79,11 @@ export class SaveToDB implements Action {
 export class LoadFromDB implements Action {
     readonly type = LOAD_FROM_DB;
 }
+export class ImportToDB implements Action {
+    readonly type = IMPORT_TO_DB;
+
+    constructor(public payload: AppData) {}
+}
 
 export type All =
     | CreateList
@@ -91,4 +97,5 @@ export type All =
     | ToggleSubtaskList
     | DeleteTask
     | SaveToDB
-    | LoadFromDB;
+    | LoadFromDB
+    | ImportToDB;

@@ -2,8 +2,8 @@ import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angula
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { AppData } from './reducers/appData';
-import * as AppDataActions from './reducers/';
+import { AppData, AppState } from './reducers/appData';
+import { AppDataActions } from './reducers/';
 
 import { ModalService } from './modal/modal.service';
 import { downloadObjectAsJson, replaceCharsWithNumbers, generatePassword } from './shared/utility.model';
@@ -11,10 +11,7 @@ import { TaskList } from './shared/taskList.model';
 import { Task } from './task/task.model';
 import { DialogService } from './custom-dialog/custom-dialog.service';
 import { EditMenuService } from './edit-menu/edit-menu.service';
-
-interface AppState {
-    data: AppData;
-}
+import { AppDataService } from './reducers/appData/appData.service';
 
 @Component({
     selector: 'app-root',
@@ -32,7 +29,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         public modalService: ModalService,
         private dialogService: DialogService,
         private editMenuService: EditMenuService,
-        private store: Store<AppState>
+        private store: Store<AppState>,
+        private appDataService: AppDataService
     ) {
         this.store.subscribe((data: unknown) => {
             this.data = (data as { appData: AppData }).appData;

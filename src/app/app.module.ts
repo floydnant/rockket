@@ -33,7 +33,7 @@ import { AppDataEffects } from './reducers/appData/appData.effects';
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         EffectsModule.forRoot([AppDataEffects]),
     ],
-    providers: [],
+    providers: [StoreModule],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -5,7 +5,7 @@ import { AppData } from '../reducers';
 import { Utility } from '../shared/utility.model';
 import { Task } from './task.model';
 
-import * as AppDataActions from '../reducers';
+import { AppDataActions } from '../reducers';
 import { DialogService } from '../custom-dialog';
 import { EditMenuService } from '../edit-menu/edit-menu.service';
 

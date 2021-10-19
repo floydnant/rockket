@@ -9,14 +9,15 @@ import * as AppDataActions from './appData.actions';
 export class AppDataEffects {
     constructor(private actions$: Actions, private store: Store) {}
 
-    saveAppData$ = createEffect(() =>
-        this.actions$.pipe(
-            mergeMap(() =>
-                this.store.pipe(
-                    map(_data => new AppDataActions.SaveToDB()),
-                    catchError(() => EMPTY)
-                )
-            )
-        )
-    );
+    // saveAppData$ = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType('[List] SetActive'),
+    //         mergeMap(() =>
+    //             this.store.pipe(
+    //                 map(_data => new AppDataActions.SaveToDB()),
+    //                 catchError(() => EMPTY)
+    //             )
+    //         )
+    //     )
+    // );
 }

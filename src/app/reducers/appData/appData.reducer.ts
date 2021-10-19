@@ -2,30 +2,9 @@ import { getCopyOf } from 'src/app/shared/utility.model';
 import { Task } from 'src/app/task/task.model';
 import { TaskList } from '../../shared/taskList.model';
 import * as AppDataActions from './appData.actions';
-import { ACTIVE_VERSION, AppData } from './appData.model';
+import { ACTIVE_VERSION, AppData, defaultState } from './appData.model';
 
 export type Action = AppDataActions.All;
-
-const newTasklist0 = new TaskList('test list one', [new Task('test task 123')]);
-const newTasklist1 = new TaskList('test list two', [new Task('test task')]);
-const defaultState: AppData = {
-    activeListId: newTasklist0.id,
-    lists: [newTasklist0, newTasklist1],
-    version: ACTIVE_VERSION,
-};
-
-const db = {
-    localStorageKey: 'todoListData',
-    // save: (data) => (localStorage[db.localStorageKey] = JSON.stringify(data)),
-    // load: () => {
-    //     try {
-    //         this.data = JSON.parse(localStorage[db.localStorageKey]);
-    //     } catch (err) {
-    //         // this.data = this.db.getDefaultData();
-    //     }
-    //     this.setActiveList(this.data.activeListId);
-    // },
-};
 
 // const newState = (state: AppData, newData: AppData) => Object.assign({}, state, newData);
 const newState = (state: AppData, newData: AppData) => ({ ...state, ...newData });
@@ -117,10 +96,11 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
         }
 
         case AppDataActions.SAVE_TO_DB: {
-            localStorage[db.localStorageKey] = JSON.stringify(state);
-            console.log('%cdatabase updated', 'color: red;');
-
+            console.log(action.type + ' ...nothing happening here');
             return state;
+        }
+        case AppDataActions.IMPORT_TO_DB: {
+            return action.payload;
         }
 
         default:
