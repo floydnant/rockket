@@ -70,6 +70,8 @@ body.light {
 }
 [disabled] {
     filter: grayscale(1) !important;
+    background: var(--global-background) !important;
+    color: var(--global-color) !important;
     cursor: not-allowed !important;
     /* display: none !important; */
 }

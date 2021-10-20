@@ -6,7 +6,7 @@ import { AppData, AppState } from './reducers/appData';
 import { AppDataActions } from './reducers/';
 
 import { ModalService } from './modal/modal.service';
-import { downloadObjectAsJson, replaceCharsWithNumbers, generatePassword } from './shared/utility.model';
+import { downloadObjectAsJson, replaceCharsWithNumbers, generatePassword, getCopyOf } from './shared/utility.model';
 import { TaskList } from './shared/taskList.model';
 import { Task } from './task/task.model';
 import { DialogService } from './custom-dialog/custom-dialog.service';
@@ -104,21 +104,27 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     ////////////////////////////////////// database interaction /////////////////////////////////////////
     db = {
-        exportJson: () => {
-            if (confirm('Download ToDo data as file?')) downloadObjectAsJson(this.data, 'ToDo-data', true);
-        },
+        exportJson: () =>
+            this.dialogService
+                .confirm({ title: 'Download ToDo lists as file?', buttons: ['Cancel', 'Download'] })
+                .then(() => this.appDataService.exportAsJSON())
+                .catch(err => {}),
         importJson: async (inputRef: any) => {
             try {
                 const unparsed = await inputRef.files[0].text();
                 const jsonData = JSON.parse(unparsed.replace(/metaData/g, 'meta'));
-                console.log(jsonData);
 
-                if ('activeListId' in jsonData && 'lists' in jsonData) {
-                    // TODO: add a prompt wich lets the user select wich lists to import
-                    this.data.lists = [...this.data.lists, ...jsonData.lists];
-                } else alert('The JSON File does not contain the necessary data.');
+                if ('appData' in jsonData) {
+                    const appData = jsonData.appData;
+                    if ('activeListId' in appData && 'lists' in appData) {
+                        const data: AppData = getCopyOf(this.data);
+                        // TODO: add a prompt wich lets the user select wich lists to import
+                        data.lists = [...this.data.lists, ...jsonData.lists];
+                        this.appDataService.importFromJSON(data);
+                    } else this.dialogService.confirm({ title: 'The JSON File does not contain the necessary data.' });
+                } else this.dialogService.confirm({ title: 'The JSON File might not be what you think it is.' });
             } catch (e) {
-                alert('Failed to import JSON file. Have you modified it?');
+                this.dialogService.confirm({ title: 'Failed to import JSON file. Have you modified it?' });
                 console.error('Failed to parse JSON: ' + e);
             }
         },

@@ -3,7 +3,13 @@
         <button class="btn btn-icon btn-close" (click)="close('Cancelled')">
             <i class="fas fa-times"></i>
         </button>
-        <input class="nameInput edit-item input" type="text" #nameInputRef [(ngModel)]="dataEdit.name" />
+        <input
+            class="nameInput edit-item input"
+            type="text"
+            placeholder="task name"
+            #nameInputRef
+            [(ngModel)]="dataEdit.name"
+        />
         <label *ngIf="this.type == 'Task'" class="priority-label edit-item"
             >Priority: &nbsp;
             <select class="input" [(ngModel)]="dataEdit.priority">
@@ -12,7 +18,6 @@
                 <option value="2">Medium</option>
                 <option value="3">High</option>
             </select>
-            <!-- Normal<input type="range" id="prioritySlider" min="0" max="3" [(ngModel)]="dataEdit.priority" />High -->
         </label>
 
         <textarea

@@ -14,11 +14,7 @@ export const ADD_SUBTASK = '[Task] AddSubtask';
 export const TOGGLE_SUBTASK_LIST = '[Task] ToggleSubtaskList';
 export const DELETE_TASK = '[Task] Delete';
 
-export const SAVE_TO_DB = '[DB] Save';
-export const LOAD_FROM_DB = '[DB] Load';
-export const DB_EXPORT = '[DB] Export';
 export const IMPORT_TO_DB = '[DB] Import';
-export const DB_DELETE = '[DB] Delete';
 
 export class CreateList implements Action {
     readonly type = CREATE_LIST;
@@ -73,12 +69,6 @@ export class DeleteTask implements Action {
 }
 
 
-export class SaveToDB implements Action {
-    readonly type = SAVE_TO_DB;
-}
-export class LoadFromDB implements Action {
-    readonly type = LOAD_FROM_DB;
-}
 export class ImportToDB implements Action {
     readonly type = IMPORT_TO_DB;
 
@@ -96,6 +86,4 @@ export type All =
     | AddSubtask
     | ToggleSubtaskList
     | DeleteTask
-    | SaveToDB
-    | LoadFromDB
     | ImportToDB;

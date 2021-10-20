@@ -1,7 +1,9 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { downloadObjectAsJson } from 'src/app/shared/utility.model';
+
 import { AppDataActions } from '.';
-import { AppState } from './appData.model';
+import { AppData, AppState } from './appData.model';
 
 @Injectable({
     providedIn: 'root',
@@ -11,9 +13,11 @@ export class AppDataService implements OnInit {
         this.load();
         this.store.subscribe(data => {
             this.save(data);
+            this.data = data;
             console.log(data);
         });
     }
+    data: AppState;
 
     db = {
         localStorageKey: 'todoListData',
@@ -33,11 +37,11 @@ export class AppDataService implements OnInit {
             );
         } catch (err) {
             console.log('%ccould not load data from database (localStorage for now)', 'color: red;');
-            // this.data = this.db.getDefaultData();
         }
     };
+    exportAsJSON = () => downloadObjectAsJson(this.data, 'ToDo-data', true);
+    importFromJSON = (data: AppData) => this.store.dispatch(new AppDataActions.ImportToDB(data));
+    deleteAllData = () => localStorage.removeItem(this.db.localStorageKey);
 
-    ngOnInit() {
-        // this.load();
-    }
+    ngOnInit() {}
 }

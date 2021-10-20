@@ -95,10 +95,6 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             return newState_;
         }
 
-        case AppDataActions.SAVE_TO_DB: {
-            console.log(action.type + ' ...nothing happening here');
-            return state;
-        }
         case AppDataActions.IMPORT_TO_DB: {
             return action.payload;
         }
