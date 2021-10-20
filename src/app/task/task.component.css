@@ -89,7 +89,7 @@
 /* .task .btn:not(:hover) {
     transform-origin: right;
 } */
-.task .btn:hover:not(.task.completed .btn-complete, [disabled]) {
+.task .btn:hover:not(.task.completed .btn-complete, [disabled], .disabled) {
     box-shadow: var(--box-shadow-m), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
 }
 .task .btn-complete {
@@ -118,6 +118,8 @@
     background: var(--global-background);
     box-shadow: var(--box-shadow-s);
     opacity: 0;
+
+    pointer-events: none;
 
     transition: 200ms;
 }

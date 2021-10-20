@@ -14,6 +14,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AppDataEffects } from './reducers/appData/appData.effects';
+import { ThemeToggleComponent } from './theme-toggle/theme-toggle.component';
 
 @NgModule({
     declarations: [
@@ -23,6 +24,7 @@ import { AppDataEffects } from './reducers/appData/appData.effects';
         TaskComponent,
         ModalComponent,
         CustomDialogComponent,
+        ThemeToggleComponent,
     ],
     imports: [
         BrowserModule,

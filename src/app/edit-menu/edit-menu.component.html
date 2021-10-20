@@ -30,7 +30,7 @@
                 placeholder="Link"
                 [(ngModel)]="linkInput"
             />
-            <button class="btn btn-primary" (click)="addLink()">add</button>
+            <button class="btn btn-primary" [disabled]="!linkInput" (click)="addLink()">add</button>
         </div>
         <div *ngIf="this.type == 'Task' && this.dataEdit.meta.links.length" class="link-list" style="margin-top: 10px">
             <ul *ngIf="this.dataEdit.meta.links.length > 0">

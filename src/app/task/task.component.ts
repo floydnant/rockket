@@ -38,15 +38,11 @@ export class TaskComponent implements OnInit {
     };
     toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
     editTask = () => {
-        // this.dialogService
-        //     .prompt({ title: 'Update task name:', defaultValue: this.data.name, buttons: ['Cancel', 'Update'] })
         this.editMenuService
             .editTask(this.data)
-            .then((updatedTask: Task) => {
-                // const updatedTask = JSON.parse(JSON.stringify(this.data));
-                // updatedTask.name = updatedTaskName;
-                this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask } as any));
-            })
+            .then((updatedTask: Task) =>
+                this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask } as any))
+            )
             .catch(err => {
                 if (err == 'Deleted') this.deleteTask(this.data.id);
             });

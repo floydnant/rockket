@@ -1,3 +1,4 @@
+<theme-toggle></theme-toggle>
 <div class="container">
     <sidebar
         [data]="this.data"
@@ -10,8 +11,9 @@
         <h1 class="heading">
             {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
             <button
+                *ngIf="this.activeTaskList"
                 class="btn btn-primary btn-icon"
-                style="cursor: pointer; transform: translateY(-5px)"
+                style="transform: translateY(-5px)"
                 (click)="editList()"
             >
                 <i class="fas fa-pencil-alt"></i>
@@ -28,7 +30,7 @@
                 (keydown.Escape)="clearTaskNameInput(nameInputRef)"
                 [(ngModel)]="this.taskNameInput"
             />
-            <button class="btn btn-primary btn-add" (click)="addTask()">add</button>
+            <button class="btn btn-primary btn-add" [disabled]="!this.taskNameInput" (click)="addTask()">add</button>
         </section>
         <section class="task-list">
             <h5 *ngIf="!this.activeTaskList || this.activeTaskList.list.length == 0" style="text-align: center">
@@ -38,7 +40,6 @@
                 <task
                     *ngFor="let task of this.activeTaskList.list; let i = index"
                     [data]="task"
-                    (onDataSensitiveAction)="db.save()"
                 ></task>
             </ul>
         </section>

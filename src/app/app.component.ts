@@ -79,7 +79,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     };
     createList = () =>
         this.dialogService
-            .prompt({ title: 'New list name:' })
+            .prompt({ title: 'New list name:', buttons: ['Cancel', 'Create'] })
             .then((newListName: string) => this.store.dispatch(new AppDataActions.CreateList(newListName)))
             .catch(() => {});
 
@@ -87,37 +87,23 @@ export class AppComponent implements OnInit, AfterViewInit {
         const listId = listId_ || this.data.activeListId;
         const taskList = this.getListById(listId);
 
-        // this.dialogService
-        //     .prompt({
-        //         title: 'Update list name:',
-        //         defaultValue: taskList.name,
-        //         buttons: ['!Delete', 'Cancel', 'Update'],
-        //     })
         this.editMenuService
             .editTaskList(taskList)
             .then((updatedTaskList: TaskList) => {
                 this.store.dispatch(new AppDataActions.EditList(listId, { ...taskList, ...updatedTaskList }));
             })
             .catch(err => {
-                if (err == 'Deleted') this.deleteList(listId);
+                if (err == 'Deleted')
+                    this.dialogService
+                        .confirm({ title: 'Delete this list?', buttons: ['Cancel', '!Delete'] })
+                        .then(() => this.deleteList(listId))
+                        .catch(err => {});
             });
-
-        // this.db.save();
     };
     deleteList = (listId: string) => this.store.dispatch(new AppDataActions.DeleteList(listId));
 
     ////////////////////////////////////// database interaction /////////////////////////////////////////
     db = {
-        localStorageKey: 'todoListData',
-        save: () => (localStorage[this.db.localStorageKey] = JSON.stringify(this.data)),
-        load: () => {
-            try {
-                this.data = JSON.parse(localStorage[this.db.localStorageKey]);
-            } catch (err) {
-                // this.data = this.db.getDefaultData();
-            }
-            this.setActiveList(this.data.activeListId);
-        },
         exportJson: () => {
             if (confirm('Download ToDo data as file?')) downloadObjectAsJson(this.data, 'ToDo-data', true);
         },
@@ -130,30 +116,15 @@ export class AppComponent implements OnInit, AfterViewInit {
                 if ('activeListId' in jsonData && 'lists' in jsonData) {
                     // TODO: add a prompt wich lets the user select wich lists to import
                     this.data.lists = [...this.data.lists, ...jsonData.lists];
-
-                    this.db.save();
                 } else alert('The JSON File does not contain the necessary data.');
             } catch (e) {
                 alert('Failed to import JSON file. Have you modified it?');
                 console.error('Failed to parse JSON: ' + e);
             }
         },
-        delete: () => localStorage.removeItem(this.db.localStorageKey),
     };
-    showConfirm = () =>
-        this.dialogService
-            .confirm({ title: 'test dialog title', text: 'Are you sure?', buttons: ['Cancel', '!Delete', 'OK'] })
-            .then(console.info)
-            .catch(console.warn);
-    showPrompt = () =>
-        this.dialogService
-            .confirm({ title: 'test prompt title', text: 'Are you sure?', buttons: ['Cancel', 'OK'] })
-            .then(console.info)
-            .catch(console.warn);
 
-    ngOnInit(): void {
-        // this.db.load();
-    }
+    ngOnInit(): void {}
     ngAfterViewInit() {
         this.nameInputRef.nativeElement.select();
     }
