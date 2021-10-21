@@ -21,7 +21,7 @@
     
     --dark-theme-global-background: hsl(var(--bg-clr-hue), 5%, 14%);
     --dark-theme-global-color: white;
-    --light-theme-global-background: hsl(var(--bg-clr-hue), 10%, 81%);
+    --light-theme-global-background: hsl(var(--bg-clr-hue), 10%, 91%);
     --light-theme-global-color: hsl(var(--bg-clr-hue), 14%, 14%);
 
     --primary-font: futura, helvetica, arial, sans-serif;
@@ -60,6 +60,11 @@ body {
 body.light {
     --global-background: var(--light-theme-global-background);
     --global-color: var(--light-theme-global-color);
+
+    --primary-clr-hue: 293;
+    --primary-clr: hsl(var(--primary-clr-hue), 100%, 38%);
+
+    --complete-clr: hsl(var(--complete-clr-hue), 100%, 37%);
 }
 * {
     font-family: var(--primary-font);

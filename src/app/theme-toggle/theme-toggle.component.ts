@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 
 @Component({
     selector: 'theme-toggle',
@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ThemeToggleComponent implements OnInit {
     darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
-    isDarkTheme = this.darkThemeMq.matches;
+    @Output() isDarkTheme = this.darkThemeMq.matches;
 
     setTheme = (shouldBeDarkTheme: boolean) => {
         this.isDarkTheme = shouldBeDarkTheme;
@@ -16,7 +16,10 @@ export class ThemeToggleComponent implements OnInit {
     };
     toggleTheme = () => this.setTheme(!this.isDarkTheme);
 
+    init = () => this.setTheme(this.isDarkTheme);
+
     ngOnInit(): void {
-        this.darkThemeMq.addListener(mq => this.setTheme(mq.matches));
+        this.init();
+        this.darkThemeMq.addEventListener('change', mq => this.setTheme(mq.matches));
     }
 }

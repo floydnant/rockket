@@ -16,8 +16,11 @@
     padding: 20px;
     padding-bottom: 60px;
 
-    background: hsla(var(--bg-clr-hue), 14%, 20%, 0.158);
+    /* background: hsla(var(--bg-clr-hue), 14%, 20%, 0.158); */
+    background: var(--global-background);
     box-shadow: var(--box-shadow-s);
+
+    transition: background 200ms;
 }
 .sidebar h2 {
     margin-top: 0;
@@ -29,12 +32,13 @@
 }
 .sidebar li {
     position: relative;
-    background: hsla(var(--bg-clr-hue), 19%, 25%, 0.366);
     padding: 10px;
     padding-right: 2rem;
     border-radius: 6px;
     cursor: pointer;
-
+    
+    /* background: hsla(var(--bg-clr-hue), 19%, 25%, 0.366); */
+    background: var(--global-background);
     box-shadow: var(--box-shadow-s);
     transition: 180ms;
 }
@@ -82,7 +86,7 @@
     filter: opacity(0.6);
 }
 .sidebar li:nth-child(2n) {
-    background: hsla(var(--bg-clr-hue), 20%, 40%, 0.342);
+    background: hsla(var(--bg-clr-hue), 20%, 50%, 0.2);
 }
 .file-interaction {
     position: absolute;

@@ -2,6 +2,11 @@ app-modal:not(.open) .modal-container {
     filter: opacity(0);
     pointer-events: none;
 }
+app-modal:not(.open) {
+    /* transform: scale(0); */
+    visibility: hidden;
+    transition: visibility 0ms 1000ms;
+}
 app-modal.open .modal-container {
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
