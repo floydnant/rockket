@@ -119,12 +119,12 @@ export class AppComponent implements OnInit, AfterViewInit {
                     if ('activeListId' in appData && 'lists' in appData) {
                         const data: AppData = getCopyOf(this.data);
                         // TODO: add a prompt wich lets the user select wich lists to import
-                        data.lists = [...this.data.lists, ...jsonData.lists];
+                        data.lists = [...this.data.lists, ...appData.lists];
                         this.appDataService.importFromJSON(data);
                     } else this.dialogService.confirm({ title: 'The JSON File does not contain the necessary data.' });
                 } else this.dialogService.confirm({ title: 'The JSON File might not be what you think it is.' });
             } catch (e) {
-                this.dialogService.confirm({ title: 'Failed to import JSON file. Have you modified it?' });
+                this.dialogService.confirm({ title: 'Failed to import JSON file.', text: 'Have you modified it?' });
                 console.error('Failed to parse JSON: ' + e);
             }
         },
