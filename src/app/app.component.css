@@ -20,7 +20,7 @@ main {
     margin-bottom: 20px;
 }
 .nameInput {
-    width: calc(100% - 60px);
+    width: calc(100% - 65px);
     margin-right: 5px;
 
     box-sizing: border-box;
