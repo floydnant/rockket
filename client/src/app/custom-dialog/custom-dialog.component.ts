@@ -21,7 +21,7 @@ export class CustomDialogComponent implements OnInit {
         this.props = props;
         if (props.defaultValue) this.promptInput = props.defaultValue;
 
-        if (props.type == 'prompt') this.inputRef.nativeElement.select();
+        if (props.type == 'prompt') setTimeout(() => this.inputRef.nativeElement.select(), 100);
         this.modalService.open('custom-dialog');
         this.isOpen = true;
     }

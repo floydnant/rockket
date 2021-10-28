@@ -1,4 +1,4 @@
-import { Task } from '../task/task.model';
+import { Task } from './task.model';
 import { generateId } from './utility.model';
 
 export class TaskList {

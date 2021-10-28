@@ -1,4 +1,4 @@
-import { Utility } from '../shared/utility.model';
+import { Utility } from './utility.model';
 
 export class Task {
     constructor(name: string) {

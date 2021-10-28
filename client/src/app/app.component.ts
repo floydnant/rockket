@@ -8,7 +8,7 @@ import { AppDataActions } from './reducers/';
 import { ModalService } from './modal/modal.service';
 import { downloadObjectAsJson, replaceCharsWithNumbers, generatePassword, getCopyOf } from './shared/utility.model';
 import { TaskList } from './shared/taskList.model';
-import { Task } from './task/task.model';
+import { Task } from './shared/task.model';
 import { DialogService } from './custom-dialog/custom-dialog.service';
 import { EditMenuService } from './edit-menu/edit-menu.service';
 import { AppDataService } from './reducers/appData/appData.service';

@@ -1,4 +1,4 @@
-import { Task } from 'src/app/task/task.model';
+import { Task } from 'src/app/shared/task.model';
 import { TaskList } from '../../shared/taskList.model';
 
 export const ACTIVE_VERSION = '2.0';

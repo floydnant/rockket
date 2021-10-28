@@ -37,8 +37,3 @@ main {
     padding: 0;
     transition: 200ms;
 }
-
-/* needed for timeCompleted to be shown correctly */
-task {
-    position: relative;
-}

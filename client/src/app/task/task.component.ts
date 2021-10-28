@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { ModalService } from '../modal/modal.service';
 import { AppData } from '../reducers';
 import { Utility } from '../shared/utility.model';
-import { Task } from './task.model';
+import { Task } from '../shared/task.model';
 
 import { AppDataActions } from '../reducers';
 import { DialogService } from '../custom-dialog';

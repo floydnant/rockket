@@ -166,3 +166,8 @@ input,
     --color-hue: 214;
     --color: hsl(214, 100%, 50%);
 }
+
+/* needed for timeCompleted to be shown correctly */
+task {
+    position: relative;
+}

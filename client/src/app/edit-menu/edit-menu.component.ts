@@ -13,11 +13,7 @@ interface meta {
 export class DataEdit_ {
     meta: meta;
     constructor(public name: string, meta: meta, public priority?: number) {
-        // this.meta = {
-        //     notes: meta.notes,
-        // };
-        // if (meta.links) this.meta.links = [...meta.links];
-        this.meta = JSON.parse(JSON.stringify(meta));
+        this.meta = getCopyOf(meta);
     }
 }
 
@@ -51,7 +47,8 @@ export class EditMenuComponent implements OnInit {
                 break;
         }
         this.modalService.open('edit-menu');
-        this.nameInputRef.nativeElement.select();
+        setTimeout(() => this.nameInputRef.nativeElement.select(), 100);
+        console.log('nameInputRef has select method: ', 'select' in this.nameInputRef.nativeElement, this.nameInputRef);
         this.isOpen = true;
     }
 
@@ -62,23 +59,23 @@ export class EditMenuComponent implements OnInit {
         this.editMenuService.return({ updatedProps: getCopyOf(this.dataEdit), responseStatus: btnRes });
 
         this.dataEdit = this.defaultData();
+        this.linkInput = '';
     }
 
     linkInput: '';
     addLink() {
-        if (this.linkInput == '') return;
-        this.dataEdit.meta.links.push(this.linkInput);
+        const link = this.trimLinkInput();
         this.linkInput = '';
+        if (link) this.dataEdit.meta.links.push(link);
     }
-    removeLink(index: number) {
-        this.dataEdit.meta.links.splice(index, 1);
-    }
+    removeLink = (index: number) => this.dataEdit.meta.links.splice(index, 1);
+    trimLinkInput = () => ('' + this.linkInput).replace(/undefined/, '').trim();
 
     isOpen = false;
     @HostListener('document:keydown', ['$event'])
     keyboardHandler(e: KeyboardEvent) {
         if (!this.isOpen) return;
-        if (e.key == 'Enter') this.close('OK');
+        if (e.key == 'Enter' && !e.shiftKey) this.close('OK');
         if (e.key == 'Escape') this.close('Cancelled');
     }
 
