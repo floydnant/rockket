@@ -24,6 +24,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     taskNameInput!: string;
 
     @ViewChild('nameInputRef') nameInputRef: ElementRef;
+    initCount = 0;
 
     constructor(
         public modalService: ModalService,
@@ -35,8 +36,11 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.store.subscribe((data: unknown) => {
             this.data = (data as { appData: AppData }).appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
-            console.log('%cupdated state:', 'color: gray');
-            console.log(this.data);
+
+            this.initCount++;
+            if (this.initCount > 1) this.nameInputRef.nativeElement.select();
+
+            console.log('%cupdated state:', 'color: gray', this.data);
         });
     }
 

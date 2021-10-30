@@ -1,7 +1,8 @@
 import { Component, ElementRef, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { DialogService } from '../custom-dialog';
 import { ModalService } from '../modal/modal.service';
 import { TaskList } from '../shared/taskList.model';
-import { getCopyOf } from '../shared/utility.model';
+import { getCopyOf, validateAndFormatUrl } from '../shared/utility.model';
 import { editmenuProps, editmenuPropsTask, editmenuPropsTasklist } from './edit-menu.model';
 import { EditMenuService } from './edit-menu.service';
 import { returnInterface } from './edit-menu.service';
@@ -29,7 +30,11 @@ export class EditMenuComponent implements OnInit {
 
     @ViewChild('nameInputRef') nameInputRef: ElementRef;
 
-    constructor(private modalService: ModalService, private editMenuService: EditMenuService) {}
+    constructor(
+        private modalService: ModalService,
+        private editMenuService: EditMenuService,
+        private dialogService: DialogService
+    ) {}
 
     open(props: editmenuProps) {
         this.type = props.type;
@@ -48,12 +53,12 @@ export class EditMenuComponent implements OnInit {
         }
         this.modalService.open('edit-menu');
         setTimeout(() => this.nameInputRef.nativeElement.select(), 100);
-        console.log('nameInputRef has select method: ', 'select' in this.nameInputRef.nativeElement, this.nameInputRef);
+        setTimeout(() => this.nameInputRef.nativeElement.select(), 300);
         this.isOpen = true;
     }
 
     close(btnRes: returnInterface['responseStatus']) {
-        if (this.type == 'Task') this.addLink();
+        if (this.type == 'Task' && btnRes == 'OK') this.addLink();
         this.modalService.close('edit-menu');
         this.isOpen = false;
         this.editMenuService.return({ updatedProps: getCopyOf(this.dataEdit), responseStatus: btnRes });
@@ -62,11 +67,20 @@ export class EditMenuComponent implements OnInit {
         this.linkInput = '';
     }
 
-    linkInput: '';
+    linkInput: string;
     addLink() {
-        const link = this.trimLinkInput();
+        const validation = validateAndFormatUrl(this.linkInput);
+        const link = validation.resUrl;
+
+        if (link == '') return;
+
+        if (!validation.isDomainValid && link != '') {
+            this.dialogService.confirm({ title: 'invalid link' });
+            return;
+        }
+
+        this.dataEdit.meta.links.push(link);
         this.linkInput = '';
-        if (link) this.dataEdit.meta.links.push(link);
     }
     removeLink = (index: number) => this.dataEdit.meta.links.splice(index, 1);
     trimLinkInput = () => ('' + this.linkInput).replace(/undefined/, '').trim();

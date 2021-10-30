@@ -59,6 +59,23 @@ export const generatePassword = (blockCount: number = 4) => {
     return password.join('-');
 };
 
+export const validateAndFormatUrl = (url: string = '') => {
+    url = url.trim();
+    const matchProtocol = url.search(/https?:\/\//g);
+    const matchDomain = url.search(/([^\s"/,;:]+\.)+[^\s".,;:]+/g);
+
+    const isProtocolValid = matchProtocol == 0 ? true : matchProtocol == -1 ? false : false;
+    const isDomainValid = matchDomain == 0 ? true : matchDomain == -1 ? false : false;
+
+    if (!isProtocolValid && url != '') url = 'http://' + url;
+
+    return {
+        isProtocolValid,
+        isDomainValid,
+        resUrl: url,
+    };
+};
+
 export const escapeHTML = (unsafe: string) =>
     unsafe == '' || unsafe == null
         ? ''
