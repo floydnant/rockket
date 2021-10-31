@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AppData } from '../reducers';
-import { TaskList } from '../shared/taskList.model';
+import { TaskList, countOpenTasks } from '../shared/taskList.model';
 
 @Component({
     selector: 'sidebar',
@@ -23,7 +23,7 @@ export class SidebarComponent implements OnInit {
     @Output() onImportData = new EventEmitter<HTMLInputElement>();
     importData = (inputRef: HTMLInputElement) => this.onImportData.emit(inputRef);
 
-    ngOnInit(): void {}
+    countOpenTasks = countOpenTasks;
 
-    countOpenTasks = (arr: TaskList) => arr.list.filter(task => !task.isCompleted).length;
+    ngOnInit(): void {}
 }

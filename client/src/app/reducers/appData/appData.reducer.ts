@@ -1,12 +1,23 @@
 import { getCopyOf } from 'src/app/shared/utility.model';
 import { Task } from 'src/app/shared/task.model';
-import { TaskList } from '../../shared/taskList.model';
+import { countOpenTasksAll, sortTasksBy, TaskList } from '../../shared/taskList.model';
 import * as AppDataActions from './appData.actions';
 import { ACTIVE_VERSION, AppData, defaultState } from './appData.model';
 
+const setAllSubtasksCompleted = (tasks: Task[]) => {
+    const recurse = (tasks_: Task[]) => {
+        tasks_ = tasks_.map(task => {
+            task.isCompleted = true;
+            if (task.subTasks.length) recurse(task.subTasks);
+            return task;
+        });
+    };
+    recurse(tasks);
+    return tasks;
+};
+
 export type Action = AppDataActions.All;
 
-// const newState = (state: AppData, newData: AppData) => Object.assign({}, state, newData);
 const newState = (state: AppData, newData: AppData) => ({ ...state, ...newData });
 
 export function appDataReducer(state: AppData = defaultState, action: Action) {
@@ -15,8 +26,8 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
     const getListById = (id: string): TaskList => newState_.lists.find((list: TaskList) => list.id == id);
     const getTaskById = (
         taskId: string,
-        taskList: Task[] = getListById(newState_.activeListId).list,
-        getParentArr = false
+        getParentArr = false,
+        tasks: Task[] = getListById(newState_.activeListId).list
     ) => {
         const recurse = (taskId: string, arr: Task[]): Task | Task[] | void => {
             for (let i in arr) {
@@ -29,11 +40,25 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
                 }
             }
         };
-        return recurse(taskId, taskList);
+        return recurse(taskId, tasks);
     };
 
-    console.log(`%caction type: %c${action.type}%c, state:`, 'color: gray;', 'color: yellowgreen;', 'color: gray;');
-    console.log(state);
+    const activeList = getListById(newState_.activeListId);
+    if (!activeList.sortBy) activeList.sortBy = new TaskList().sortBy; // migration
+    const SORT_BY_PROPERTIES = activeList.sortBy;
+
+    const sortTasks = (tasks: Task[]) => {
+        if (SORT_BY_PROPERTIES.priority) sortTasksBy(tasks, 'priority');
+        if (SORT_BY_PROPERTIES.completion) sortTasksBy(tasks, 'isCompleted');
+    };
+
+    console.log(
+        `%caction type: %c${action.type}%c, state:`,
+        'color: gray;',
+        'color: yellowgreen;',
+        'color: gray;',
+        state
+    );
 
     switch (action.type) {
         case AppDataActions.CREATE_LIST: {
@@ -65,21 +90,47 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
         case AppDataActions.CREATE_TASK: {
             const taskList = getListById(action.listId);
             taskList.list.push(new Task(action.newTaskName));
+
+            sortTasks(taskList.list);
+
             return newState(state, newState_);
         }
         case AppDataActions.EDIT_TASK: {
             let task = getTaskById(action.taskId);
             task = Object.assign(task, action.updatedTask);
+
+            const taskParentArr = getTaskById(action.taskId, true) as Task[];
+            sortTasks(taskParentArr);
+
             return newState(state, newState_);
         }
         case AppDataActions.SET_TASK_COMPLETED: {
-            let task = getTaskById(action.taskId);
-            task = Object.assign(task, { isCompleted: !(task as Task).isCompleted, timeCompleted: new Date() });
+            let task = getTaskById(action.taskId) as Task;
+            const modifiedSubtasks = getCopyOf(task.subTasks);
+
+            if (!task.isCompleted)
+                if (action.allSubtasks) {
+                    setAllSubtasksCompleted(modifiedSubtasks);
+                    task.collapseSubtaskList = true;
+                }
+            task = Object.assign(task, {
+                isCompleted: action.shouldBeCompleted,
+                timeCompleted: new Date(),
+                subTasks: modifiedSubtasks,
+            });
+
+            const taskParentArr = getTaskById(action.taskId, true) as Task[];
+            sortTasks(taskParentArr);
+
             return newState(state, newState_);
         }
         case AppDataActions.ADD_SUBTASK: {
             const task = getTaskById(action.taskId) as Task;
             task.subTasks.push(new Task(action.newTaskName));
+
+            const taskParentArr = getTaskById(action.taskId, true) as Task[];
+            sortTasks(taskParentArr);
+
             return newState(state, newState_);
         }
         case AppDataActions.TOGGLE_SUBTASK_LIST: {
@@ -88,7 +139,7 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             return newState(state, newState_);
         }
         case AppDataActions.DELETE_TASK: {
-            const taskParent = getTaskById(action.taskId, getListById(newState_.activeListId).list, true);
+            const taskParent = getTaskById(action.taskId, true);
             const task = getTaskById(action.taskId);
             const indexOfTaskInParent = (taskParent as Task[]).indexOf(task as Task);
             (taskParent as Task[]).splice(indexOfTaskInParent, 1);

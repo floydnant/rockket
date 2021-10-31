@@ -50,7 +50,7 @@ export class EditTask implements Action {
 export class SetCompleted implements Action {
     readonly type = SET_TASK_COMPLETED;
 
-    constructor(public taskId: string) {}
+    constructor(public taskId: string, public shouldBeCompleted: boolean, public allSubtasks = false) {}
 }
 export class AddSubtask implements Action {
     readonly type = ADD_SUBTASK;

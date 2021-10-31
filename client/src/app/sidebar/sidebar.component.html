@@ -11,11 +11,11 @@
             *ngFor="let list of this.data.lists; let i = index"
             (click)="setActiveList(list.id)"
             [class.active]="this.data.activeListId == list.id"
-            [class.completed]="countOpenTasks(list) == 0 && list.list.length"
+            [class.completed]="countOpenTasks(list.list) == 0 && list.list.length"
         >
             <span class="text">{{ list.name }}</span
             >&nbsp;
-            <span style="color: var(--danger-clr); opacity: 0.8">{{ countOpenTasks(list) || "" }}</span>
+            <span style="color: var(--danger-clr); opacity: 0.8">{{ countOpenTasks(list.list) || "" }}</span>
             <i class="fas fa-chevron-right"></i>
         </li>
     </ul>

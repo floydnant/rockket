@@ -8,6 +8,7 @@ import { Task } from '../shared/task.model';
 import { AppDataActions } from '../reducers';
 import { DialogService } from '../custom-dialog';
 import { EditMenuService } from '../edit-menu/edit-menu.service';
+import { countOpenTasksAll } from '../shared/taskList.model';
 
 @Component({
     selector: 'task',
@@ -26,7 +27,21 @@ export class TaskComponent implements OnInit {
 
     @Input() @Output() data!: Task;
 
-    setCompleted = (status: boolean) => this.store.dispatch(new AppDataActions.SetCompleted(this.data.id));
+    setCompleted = (status: boolean) => {
+        const dispatchAction = (allSubtasks = false) =>
+            this.store.dispatch(new AppDataActions.SetCompleted(this.data.id, status, allSubtasks));
+
+        if (!this.data.isCompleted && countOpenTasksAll(this.data.subTasks) > 0)
+            this.dialogService
+                .confirm({
+                    title: 'Open subtasks left!',
+                    text: 'Do you want to mark all subtasks as completed too?',
+                    buttons: ['keep uncompleted', 'OK'],
+                })
+                .then(() => dispatchAction(true))
+                .catch(err => dispatchAction());
+        else dispatchAction();
+    };
     toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
     addSubTask = () => {
         this.dialogService
