@@ -37,7 +37,7 @@ export const sortTasksBy = (tasks: Task[], property: string) => {
     let sort: (arr: Task[]) => Task[];
     switch (typeOfProperty) {
         case 'number':
-            sort = arr => arr.sort((a, b) => parseInt(a[property]) - parseInt(b[property])).reverse(); break; //prettier-ignore
+            sort = arr => arr.reverse().sort((a, b) => parseInt(a[property]) - parseInt(b[property])).reverse(); break; //prettier-ignore
         case 'boolean':
             sort = arr => arr.sort((a, b) => (a[property] === b[property] ? 0 : b[property] ? -1 : 1)); break; //prettier-ignore
     }
