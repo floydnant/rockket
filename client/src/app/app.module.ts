@@ -15,6 +15,7 @@ import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AppDataEffects } from './reducers/appData/appData.effects';
 import { ThemeToggleComponent } from './theme-toggle/theme-toggle.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
     declarations: [
@@ -34,6 +35,11 @@ import { ThemeToggleComponent } from './theme-toggle/theme-toggle.component';
         }),
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         EffectsModule.forRoot([AppDataEffects]),
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: environment.production,
+            // Register the ServiceWorker as soon as the app is stable or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000',
+        }),
     ],
     providers: [StoreModule],
     bootstrap: [AppComponent],
