@@ -1,0 +1,24 @@
+{
+    "name": "todo-app",
+    "version": "1.0.0",
+    "description": "<img src=\"./src/assets/todo-app-logo/todo-app-logo.png\" height=\"100px\">",
+    "scripts": {
+        "server&&client": "concurrently \"cd client && ng serve\" \"cd server && ts-node-dev server.ts\"",
+        "server": "cd server && ts-node-dev server.ts",
+        "client": "cd client && ng serve",
+        "deploy": "git checkout prod && git pull origin main && git push && git checkout main && echo 'deploying should be in the building phase by now'"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dein-ding/ToDo-App.git"
+    },
+    "author": "Floyd Haremsa",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/dein-ding/ToDo-App/issues"
+    },
+    "homepage": "https://github.com/dein-ding/ToDo-App#readme",
+    "devDependencies": {
+        "concurrently": "^6.3.0"
+    }
+}
