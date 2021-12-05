@@ -16,6 +16,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { AppDataEffects } from './reducers/appData/appData.effects';
 import { ThemeToggleComponent } from './theme-toggle/theme-toggle.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { MenuComponent } from './side-menu/menu.component';
+import { MenuToggleBtnComponent } from './menu-toggle-btn/menu-toggle-btn.component';
 
 @NgModule({
     declarations: [
@@ -26,6 +28,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
         ModalComponent,
         CustomDialogComponent,
         ThemeToggleComponent,
+        MenuComponent,
+        MenuToggleBtnComponent,
     ],
     imports: [
         BrowserModule,

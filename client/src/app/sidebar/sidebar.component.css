@@ -3,16 +3,16 @@
     min-height: 40vh;
     height: max-content;
 
-    min-width: 9rem;
-    min-width: max(max-content, 9rem); /* comment out for resizing to work properly */
-    width: max-content;
-    max-width: 17rem;
+    min-width: 120px;
+    /* min-width: max(max-content, 9rem); comment out for resizing to work properly */
+    /* width: max-content; */
+    max-width: max-content;
     resize: horizontal;
     overflow: auto;
 
     border-radius: 10px;
     --margin-top: 140px;
-    margin: var(--margin-top) 20px 0 0;
+    margin: 15px 0 0 0;
     padding: 20px;
     padding-bottom: 60px;
 

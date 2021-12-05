@@ -6,7 +6,13 @@ import { AppData, AppState } from './reducers/appData';
 import { AppDataActions } from './reducers/';
 
 import { ModalService } from './modal/modal.service';
-import { downloadObjectAsJson, replaceCharsWithNumbers, generatePassword, getCopyOf } from './shared/utility.model';
+import {
+    downloadObjectAsJson,
+    replaceCharsWithNumbers,
+    generatePassword,
+    getCopyOf,
+    isTouchDevice,
+} from './shared/utility.model';
 import { TaskList } from './shared/taskList.model';
 import { Task } from './shared/task.model';
 import { DialogService } from './custom-dialog/custom-dialog.service';
@@ -23,8 +29,17 @@ export class AppComponent implements OnInit, AfterViewInit {
     activeTaskList!: TaskList;
     taskNameInput!: string;
 
+    log(event) {
+        console.log('menu toggled, state:', event);
+        console.log('isMobileMenuOpen:', this.isMobileMenuOpen);
+    }
+
+    isMobileDevice = isTouchDevice()
+    isMobileMenuOpen: boolean;
+    setMobileMenuOpen = e => (this.isMobileMenuOpen = e);
+
     @ViewChild('nameInputRef') nameInputRef: ElementRef;
-    initCount = 0;
+    updateCount = 0;
 
     constructor(
         public modalService: ModalService,
@@ -37,8 +52,8 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.data = (data as { appData: AppData }).appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
 
-            this.initCount++;
-            if (this.initCount > 1) this.nameInputRef.nativeElement.select();
+            this.updateCount++;
+            if (this.updateCount > 1 && !this.isMobileDevice) this.nameInputRef.nativeElement.select();
 
             console.log('%cupdated state:', 'color: gray', this.data);
         });
@@ -80,6 +95,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     setActiveList = (listId: string) => {
         this.store.dispatch(new AppDataActions.SetActiveList(listId));
+        this.isMobileMenuOpen = false;
     };
     createList = () =>
         this.dialogService

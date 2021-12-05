@@ -1,9 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-/* @import url(./customDialog.css); */
 
 :root {
-    --: hsl(268, 100%, 50%);
-    
+    --: #1cde02;
+    --theme_color: #1976d2;
+    --background_color: #fafafa;
+
     --primary-clr-hue: 44;
     --primary-clr: hsl(var(--primary-clr-hue), 100%, 50%);
     --secondary-clr-hue: 270;
@@ -18,7 +19,7 @@
     --btn-icon-size: 2rem;
 
     --bg-clr-hue: 234;
-    
+
     --dark-theme-global-background: hsl(var(--bg-clr-hue), 5%, 14%);
     --dark-theme-global-color: white;
     --light-theme-global-background: hsl(var(--bg-clr-hue), 10%, 91%);
@@ -31,6 +32,8 @@
     --box-shadow-l: 0 0 20px rgba(0, 0, 0, 0.514), 0 0 40px rgba(0, 0, 0, 0.514);
 
     --modal-padding: 20px;
+
+    --breakpoint-m: 650px;
 }
 /* @media (prefers-color-scheme: light) {
     :root {
@@ -49,12 +52,12 @@ body {
 
     --global-background: var(--dark-theme-global-background);
     --global-color: var(--dark-theme-global-color);
-    
+
     font-family: var(--primary-font);
     color: var(--global-color);
-    
+
     background: var(--global-background);
-    
+
     transition: 500ms;
 }
 body.light {
@@ -73,25 +76,37 @@ body.light {
     background: var(--primary-clr);
     color: rgb(27, 27, 27);
 }
+::-webkit-scrollbar {
+    width: 0.5rem;
+}
+::-webkit-scrollbar-track {
+    background: var(--global-background);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--primary-clr);
+    border-radius: 100vh;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-clr);
+}
 [disabled] {
     filter: grayscale(1) !important;
     background: var(--global-background) !important;
     color: var(--global-color) !important;
     cursor: not-allowed !important;
-    /* display: none !important; */
 }
 .disabled {
-    filter: opacity(0);
+    /* filter: opacity(0);
     opacity: 0;
     pointer-events: none;
-    cursor: not-allowed !important;
+    cursor: not-allowed !important; */
     display: none !important;
 }
 a {
     color: var(--primary-clr);
 }
 button {
-    cursor: pointer
+    cursor: pointer;
 }
 input,
 .btn {
@@ -99,6 +114,7 @@ input,
     padding: 10px;
     border: 0;
     border-radius: 10px;
+    color: var(--global-background);
 
     box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6), var(--box-shadow-s);
 }
@@ -107,10 +123,10 @@ input,
     color: var(--global-color);
 
     outline: none;
+    border: var(--outline-weight) solid var(--outline-clr);
     --outline-clr: gray;
     --outline-weight: 1px;
-    box-shadow: 0 0 1px var(--outline-weight) var(--outline-clr), var(--box-shadow-s);
-    /* border: 1px solid var(--outline-clr); */
+    box-shadow: var(--box-shadow-s);
     transition: 180ms;
 }
 .input:focus {

@@ -59,6 +59,9 @@ export const generatePassword = (blockCount: number = 4) => {
     return password.join('-');
 };
 
+export const isTouchDevice = () =>
+    'ontouchstart' in window || navigator.maxTouchPoints > 0 || (navigator as any).msMaxTouchPoints > 0;
+
 export const validateAndFormatUrl = (url: string = '') => {
     url = url.trim();
     const matchProtocol = url.search(/https?:\/\//g);
@@ -120,4 +123,5 @@ export class Utility {
     public formatDate = formatDate;
     public multiplyString = multiplyString;
     public escapeHTML = escapeHTML;
+    public isTouchDevice = isTouchDevice;
 }

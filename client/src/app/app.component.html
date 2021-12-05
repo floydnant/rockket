@@ -1,14 +1,26 @@
-<theme-toggle></theme-toggle>
 <div class="container">
-    <sidebar
-        [data]="this.data"
-        (onSetActiveList)="setActiveList($event)"
-        (onCreateList)="createList()"
-        (onExportData)="db.exportJson()"
-        (onImportData)="db.importJson($event)"
-    ></sidebar>
+    <!-- [class]="isMobileMenuOpen ? 'open' : ''" -->
+    <!-- [ngClass]="{'open': isMobileMenuOpen}" -->
+    <menu-toggle-btn
+        type="hamburger"
+        size="l"
+        color="secondary"
+        [class.open]="isMobileMenuOpen"
+        [isOpen]="isMobileMenuOpen"
+        (onMenuToggle)="setMobileMenuOpen($event)"
+    ></menu-toggle-btn>
+    <div class="side-container">
+        <app-side-menu></app-side-menu>
+        <sidebar
+            [data]="this.data"
+            (onSetActiveList)="setActiveList($event)"
+            (onCreateList)="createList()"
+            (onExportData)="db.exportJson()"
+            (onImportData)="db.importJson($event)"
+        ></sidebar>
+    </div>
     <main>
-        <h1 class="heading">
+        <h1 class="list-name">
             {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
             <button
                 *ngIf="this.activeTaskList"
@@ -37,10 +49,7 @@
                 No tasks yet...
             </h5>
             <ul *ngIf="this.activeTaskList">
-                <task
-                    *ngFor="let task of this.activeTaskList.list; let i = index"
-                    [data]="task"
-                ></task>
+                <task *ngFor="let task of this.activeTaskList.list; let i = index" [data]="task"></task>
             </ul>
         </section>
     </main>

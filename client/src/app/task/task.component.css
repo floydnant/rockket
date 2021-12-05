@@ -147,10 +147,13 @@
     padding: 0;
     width: max-content;
 }
+.task.touchDevice {
+    padding-right: 145px
+}
 .task .btn-group .btn {
     margin: 0 5px;
 }
-.task .btn:not(.task:hover .btn, .btn-complete) {
+.task .btn:not(.task:hover .btn, .btn-complete, .task.touchDevice .btn) {
     transform: scale(0.5);
     filter: opacity(0);
 

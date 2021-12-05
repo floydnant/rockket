@@ -43,27 +43,12 @@
 	height: max-content;
 
     color: var(--global-color);
-	/* background: var(--global-background);
-    box-shadow: var(--box-shadow-l); */
 
 	pointer-events: all;
 	user-select: none; /* Standard syntax */
 	-webkit-user-select: none; /* Safari */
 	-ms-user-select: none; /* IE 10 and IE 11 */
-
-	--defaultScale: 1;
-	--initScale: 0.7;
-	/* transform: scale(0.7);
-	opacity: 0; */
 	transition: 160ms;
-}
-@media (max-width: 600px) {
-	.dialog {
-		transform: scale(0.7);
-	}
-	.dialog.appear {
-		transform: scale(0.85);
-	}
 }
 .dialogText {
 	display: flex;

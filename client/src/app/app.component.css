@@ -1,39 +1,86 @@
 .container {
+    box-sizing: border-box;
     position: relative;
     display: flex;
-    /* min-height: 80vh; */
-    width: 90vw;
-    /* outline: 2px solid red; */
+    max-width: min(1500px, 100vw);
+
+    padding: 20px 0 0;
+}
+.side-container {
+    height: 100%;
+    max-width: min(40%);
+
+    padding: 10px 0 20px 20px;
 }
 main {
-    height: 100%;
-    /* outline: 2px solid red; */
+    width: 100%;
 }
 
-.heading i {
-    transition: 180ms;
+menu-toggle-btn {
+    z-index: 20;
+    position: fixed;
+    top: 20px;
+    right: 20px;
 }
-.heading i:hover {
-    filter: brightness(0.7);
+
+@media screen and (min-width: 650px) {
+    menu-toggle-btn {
+        display: none;
+    }
+}
+@media screen and (max-width: 800px) {
+    .container {
+        width: 100vw;
+    }
+}
+@media screen and (max-width: 650px) {
+    
+    menu-toggle-btn.open ~ .side-container {
+        background: var(--global-background);
+        --bg-trans-delay: 70ms;
+        transform: translateY(-20px);
+    }
+    menu-toggle-btn:not(.open) ~ .side-container {
+        transform: translateX(-100vw);
+    }
+    .side-container {
+        position: absolute;
+        z-index: 10;
+        width: 100vw;
+        max-width: unset;
+        min-height: 100vh;
+        padding: 20px;
+
+        box-sizing: border-box;
+
+        --bg-trans: 180ms;
+        --bg-trans-delay: 0ms;
+        transition: transform 180ms ease-in-out, background var(--bg-trans) var(--bg-trans-delay);
+    }
+    main {
+        width: 100%;
+    }
+}
+main {
+    padding: 20px;
+    padding-top: 0;
+}
+
+.list-name {
+    margin: 0;
 }
 .new-task-form {
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 .nameInput {
     width: calc(100% - 65px);
-    margin-right: 5px;
-
     box-sizing: border-box;
 }
 .btn-add {
     float: right;
 }
 
-.task-list {
-    min-width: 40vw;
-    max-width: 90vw;
-}
 .task-list ul {
     padding: 0;
-    transition: 200ms;
+    margin: 0;
 }

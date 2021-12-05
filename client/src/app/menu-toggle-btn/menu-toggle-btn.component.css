@@ -1,0 +1,88 @@
+label {
+	display: inline-flex;
+	align-items: center;
+    justify-content: center;
+
+    --icon-w: 16px;
+    --icon-h: 2px;
+    --icon-elem-border-radius: 4px;
+    --icon-elem-spacing: 7px;
+    
+    --hamburger-color: var(--color);
+	background: var(--global-background);
+	cursor: pointer;
+}
+label.size-s {
+    padding: 0;
+}
+label.size-l {
+    --icon-w: 1.6rem;
+    --icon-h: 3px;
+    --icon-elem-spacing: 10px;
+}
+
+span {
+	height: var(--icon-h);
+	width: var(--icon-w);
+
+    border-radius: var(--icon-elem-border-radius);
+    background: var(--hamburger-color);
+    transition: 200ms;
+}
+span::before,
+span::after {
+    position: absolute;
+    
+    height: var(--icon-h);
+    width: var(--icon-w);
+    border-radius: var(--icon-elem-border-radius);
+
+    background: var(--hamburger-color);
+    transition: 200ms;
+}
+
+.hamburger::before {
+    content: "";
+	transform: translateY(calc(var(--icon-elem-spacing) * -1));
+}
+.hamburger::after {
+    content: "";
+    transform: translateY(var(--icon-elem-spacing));
+}
+#checkbox:checked ~ label .hamburger::after {
+    transform: rotate(45deg);
+}
+#checkbox:checked ~ label .hamburger::before {
+    transform: rotate(-45deg);
+}
+#checkbox:checked ~ label .hamburger {
+    background: transparent;
+}
+
+.chevron {
+    --icon-w: 12px;
+    --icon-h: 3px;
+    --icon-elem-spacing: 3.5px;
+    transform: translateX(-1px);
+    background: transparent;
+}
+.chevron:before, .chevron::after {
+    content: "";
+    transform: translateY(var(--spacing)) rotate(var(--rotate));
+}
+.chevron:before {
+    --spacing: var(--icon-elem-spacing);
+    --rotate: 45deg;
+}
+.chevron:after {
+    --spacing: calc(var(--icon-elem-spacing) * -1);
+    --rotate: -45deg;
+}
+#checkbox:checked ~ label .chevron::before, 
+#checkbox:checked ~ label .chevron::after { 
+    --icon-w: 16px;
+    --spacing: 0;
+}
+#checkbox:checked ~ label .chevron {
+    transform: translate(-2px, -1px);
+} 
