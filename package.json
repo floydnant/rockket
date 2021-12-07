@@ -6,7 +6,7 @@
         "server&&client": "concurrently \"cd client && ng serve\" \"cd server && ts-node-dev server.ts\"",
         "server": "cd server && ts-node-dev server.ts",
         "client": "cd client && ng serve",
-        "deploy": "git checkout prod && git pull origin main && git push && git checkout main && echo 'deploying should be in the building phase by now'"
+        "deploy": "git checkout prod && git pull origin main && git push && git checkout main && echo '' && echo 'deploying should be in the building phase by now'"
     },
     "repository": {
         "type": "git",

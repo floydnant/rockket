@@ -1,3 +1,7 @@
+.menu-container {
+    z-index: 10;
+    position: relative;
+}
 label {
 	display: inline-flex;
 	align-items: center;
@@ -86,3 +90,40 @@ span::after {
 #checkbox:checked ~ label .chevron {
     transform: translate(-2px, -1px);
 } 
+
+
+.drop-down {
+    position: absolute;
+    right: calc(100% + 20px);
+    top: 50%;
+
+    display: flex;
+    padding: 6px;
+    border-radius: 14px;
+
+    background: var(--global-background);
+    box-shadow: var(--box-shadow-s);
+    transform: translateY(-50%);
+}
+.drop-down.column {
+    flex-direction: column;
+}
+.drop-down::before {
+    content: "";
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translate(0, -50%);
+    /* z-index: -1; */
+    
+    margin-right: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent var(--global-background);
+}
+.drop-down.row > *:not(:last-child) {
+    margin: 0 10px 0 0;
+}
+.drop-down.column > *:not(:last-child) {
+    margin: 0 0 10px;
+}

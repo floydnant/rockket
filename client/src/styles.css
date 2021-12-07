@@ -45,7 +45,7 @@
 body {
     min-height: 100vh;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; /* TODO: make this user decidable */
 
     margin: 0;
     padding: 0;
@@ -181,9 +181,4 @@ input,
 .btn-add-subTask {
     --color-hue: 214;
     --color: hsl(214, 100%, 50%);
-}
-
-/* needed for timeCompleted to be shown correctly */
-task {
-    position: relative;
 }

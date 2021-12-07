@@ -1,6 +1,6 @@
 import { getCopyOf } from 'src/app/shared/utility.model';
 import { Task } from 'src/app/shared/task.model';
-import { countOpenTasksAll, sortTasksBy, TaskList } from '../../shared/taskList.model';
+import { countOpenTasksMultiLevel, sortTasksBy, TaskList } from '../../shared/taskList.model';
 import * as AppDataActions from './appData.actions';
 import { ACTIVE_VERSION, AppData, defaultState } from './appData.model';
 

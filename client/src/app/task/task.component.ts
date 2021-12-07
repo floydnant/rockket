@@ -8,7 +8,7 @@ import { Task } from '../shared/task.model';
 import { AppDataActions } from '../reducers';
 import { DialogService } from '../custom-dialog';
 import { EditMenuService } from '../edit-menu/edit-menu.service';
-import { countOpenTasksAll } from '../shared/taskList.model';
+import { countOpenTasksMultiLevel, countOpenTasks } from '../shared/taskList.model';
 
 @Component({
     selector: 'task',
@@ -17,6 +17,10 @@ import { countOpenTasksAll } from '../shared/taskList.model';
 })
 export class TaskComponent implements OnInit {
     util = new Utility();
+    countOpenTasks = countOpenTasks;
+
+    touchDevice_showBtns = false;
+    toggleBtns = v => (this.touchDevice_showBtns = v);
 
     constructor(
         public modalService: ModalService,
@@ -31,7 +35,7 @@ export class TaskComponent implements OnInit {
         const dispatchAction = (allSubtasks = false) =>
             this.store.dispatch(new AppDataActions.SetCompleted(this.data.id, status, allSubtasks));
 
-        if (!this.data.isCompleted && countOpenTasksAll(this.data.subTasks) > 0)
+        if (!this.data.isCompleted && countOpenTasksMultiLevel(this.data.subTasks) > 0)
             this.dialogService
                 .confirm({
                     title: 'Open subtasks left!',

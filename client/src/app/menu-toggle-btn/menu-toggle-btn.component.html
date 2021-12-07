@@ -1,4 +1,10 @@
-<input type="checkbox" id="checkbox" style="display: none" [checked]="isOpen" />
-<label role="button" class="btn btn-icon btn-{{ color }} size-{{ size }}" (click)="toggleMenu()">
-    <span [class]="type"></span>
-</label>
+<div class="menu-container">
+    <input type="checkbox" id="checkbox" style="display: none" [checked]="isOpen" />
+    <label role="button" class="btn btn-icon btn-{{ color }} size-{{ size }}" (click)="toggleMenu()">
+        <span [class]="type"></span>
+    </label>
+
+    <div *ngIf="isOpen" class="drop-down {{ orientation }}">
+        <ng-content></ng-content>
+    </div>
+</div>

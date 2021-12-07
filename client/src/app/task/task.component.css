@@ -1,114 +1,52 @@
 .task {
-    position: relative;
-    height: max(1.9rem, max-content);
+    /* position: relative; */
+    /* height: max(1.9rem, max-content);
+    height: 1.9rem; */
 
-    padding: 10px;
-    padding-right: 20px;
+    /* padding: 10px;
+    padding-right: 20px; */
     border-radius: 10px;
-    overflow: hidden;
-
-    display: flex;
+    
+    /* display: flex;
     justify-content: flex-start;
-    align-items: center;
-
-    --opacity: 1;
-
-    --alt-bg: hsla(var(--bg-clr-hue), 15%, 50%, 0.212);
+    align-items: center; */
+    
+    list-style: none;
+    
     background: hsla(var(--bg-clr-hue), 15%, 19%, 0.24);
+    --alt-bg: hsla(var(--bg-clr-hue), 15%, 50%, 0.212);
+    /* background: hsla(var(--bg-clr-hue), 15%, 19%);
+    --alt-bg: hsla(var(--bg-clr-hue), 15%, 50%); */
+
     box-shadow: var(--box-shadow-s);
-    transition: filter 180ms, opacity 180ms;
+    transition: filter 150ms;
 }
 .task:not(.task-list > .task:first-child) {
     margin-top: 10px;
 }
-/* when task is completed */
 .task.completed {
     --opacity: 0.25;
     --brightness: 0.8;
     filter: opacity(var(--opacity)) brightness(var(--brightness));
 }
-.task:hover {
-    filter: opacity(calc(var(--opacity) + 0.4)) brightness(1.2);
-}
-.task p .taskName {
-    position: relative;
-}
-.task p .taskName::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    height: 2px;
-    width: 0;
-
-    /* background: var(--global-color); */
-    background: var(--complete-clr);
-    box-shadow: var(--box-shadow-s);
-    transition: 220ms;
-}
-.task.completed p .taskName::before {
-    width: 100%;
-    box-shadow: var(--box-shadow-s);
-}
-.subtask-list {
-    border-left: 1px solid rgba(128, 128, 128, 0.466);
-    transition: padding 100ms 80ms ease;
-}
-.subtask-list.hide {
-    padding: 0;
-    height: 0;
-    overflow: hidden;
-}
-.text-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-}
-.task p {
-    margin-block: 0;
-    /* overflow: hidden; */
-}
-.task .external-link {
-    color: hsl(var(--primary-clr-hue), 100%, 55%);
-    margin: 0 2.5px;
-}
-.task .dropdown-toggle {
-    font-size: 0.9rem;
-    opacity: 0.55;
-    cursor: pointer;
-}
-.task .dropdown-toggle i {
-    transition: transform 180ms;
-}
-.task .dropdown-toggle:not(.open) i {
-    transform: rotate(-90deg);
-}
-.task .btn {
-    transition: box-shadow 400ms, transform 200ms, filter 150ms, color 200ms;
-}
-/* .task .btn:not(:hover) {
-    transform-origin: right;
-} */
-.task .btn:hover:not(.task.completed .btn-complete, [disabled], .disabled) {
-    box-shadow: var(--box-shadow-m), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
-}
-.task .btn-complete {
-    position: relative;
-    margin-right: 10px;
-}
-.task .btn-complete:hover ~ :is(.btn-delete, .btn-edit):not(.task.completed .btn) {
-    filter: /* opacity(0.5) */ grayscale(1);
-}
-.task:not(.completed) .btn-complete:not(:hover) {
-    color: gray;
+.task.completed:hover {
+    /* filter: opacity(calc(var(--opacity, .6) + 0.4)) brightness(1.2); */
+    /* filter: opacity(calc(var(--opacity, .6) + 0.4)) brightness(1); TODO: handle the brightness with background instead */
+    filter: opacity(1);
 }
 
+
+.position-time-completed {
+    position: relative;
+    height: 100%;
+    /* border: 1px solid red; */
+}
 .time-completed {
     position: absolute;
     bottom: calc(100% + 10px);
     left: 0%;
     --translateY: 5px;
-    transform: translate(calc(-50% + 25px), var(--translateY));
+    transform: translate(calc(-50% + 26.5px), var(--translateY));
     width: max-content;
 
     color: var(--complete-clr);
@@ -135,31 +73,146 @@
     border-style: solid;
     border-color: var(--global-background) transparent transparent transparent;
 }
-.task.completed:hover ~ .time-completed {
+.task.completed:hover .time-completed {
     --translateY: 0;
     opacity: 1;
 }
 
-.task .btn-group {
+
+.outer-wrapper {
+    /* outline: 1px solid red; */
+    /* position: relative; */
+    display: flex;
+    align-items: center;
+}
+.inner-wrapper {
+    /* outline: 1px solid greenyellow; */
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    padding: 10px;
+    /* padding-right: 20px; */
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+p {
+    /* margin-block: 0; */
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+p .taskName {
+    position: relative;
+}
+p .taskName::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    height: 2px;
+    width: 0;
+
+    background: var(--complete-clr);
+    box-shadow: var(--box-shadow-s);
+    transition: width 220ms, box-shadow 220ms;
+}
+.task.completed p .taskName::before {
+    width: 100%;
+    box-shadow: var(--box-shadow-s);
+}
+
+p .external-link {
+    color: hsl(var(--primary-clr-hue), 100%, 55%);
+    margin: 0 2.5px;
+}
+
+p.subtask-list-toggle {
+    font-size: 0.9rem;
+    opacity: 0.5;
+    cursor: pointer;
+}
+p.subtask-list-toggle i {
+    transition: transform 180ms;
+}
+p.subtask-list-toggle:not(.open) i {
+    transform: rotate(-90deg);
+}
+
+
+.btn {
+    transition: box-shadow 400ms, transform 200ms, filter 150ms, color 200ms;
+}
+.btn:hover:not(.task.completed .btn-complete, [disabled], .disabled) {
+    box-shadow: var(--box-shadow-m), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
+}
+.btn-complete {
+    position: relative;
+    margin-right: 10px;
+}
+.btn-complete:hover ~ :is(.btn-delete, .btn-edit):not(.task.completed .btn) {
+    filter: /* opacity(0.5) */ grayscale(1);
+}
+.task:not(.completed) .btn-complete:not(:hover) {
+    color: gray;
+}
+
+menu-toggle-btn {
+    /* position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%); */
+    float: right;
+    margin: 10px;
+}
+
+.btn-group {
+    /* outline: 1px solid red; */
     position: absolute;
     right: 12px;
     margin: 0;
     padding: 0;
     width: max-content;
+
+    display: flex;
 }
 .task.touchDevice {
-    padding-right: 145px
+    /* padding-right: 145px; */
 }
-.task .btn-group .btn {
-    margin: 0 5px;
+.btn-group > *:not(:last-child) {
+    margin: 0 10px 0 0;
 }
-.task .btn:not(.task:hover .btn, .btn-complete, .task.touchDevice .btn) {
+.btn-group .btn:not(
+    .task:hover .btn,
+    .btn-complete,
+    .task.touchDevice .btn,
+    /* .btn-group.touchDevice_showBtns .btn */
+) {
     transform: scale(0.5);
     filter: opacity(0);
 
     --delay: calc(50ms * var(--btn-index-reverse));
 }
-.task .btn:not(.btn-complete) {
+.btn:not(.btn-complete) {
     --delay: calc(80ms * var(--btn-index));
     transition: box-shadow 400ms, transform 200ms var(--delay), filter 150ms var(--delay);
+}
+
+
+.subtask-list {
+    border-left: 1px solid rgba(128, 128, 128, 0.466);
+    transition: padding 100ms 80ms ease;
+}
+.subtask-list.hide {
+    padding: 0;
+    height: 0;
+    overflow: hidden;
 }

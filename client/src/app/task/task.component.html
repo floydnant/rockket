@@ -1,67 +1,107 @@
-<li id="task-{{ this.data.id }}" class="task" [class.touchDevice]="util.isTouchDevice()" [class.completed]="this.data.isCompleted">
-    <button class="btn btn-icon btn-complete" title="mark/unmark task as completed" (click)="toggleCompleted()">
-        <i *ngIf="this.data.isCompleted" class="fas fa-check-circle"></i>
-        <i *ngIf="!this.data.isCompleted" class="far fa-circle"></i>
-    </button>
-    <div class="text-container">
-        <p class="cell_">
-            <span class="taskName">
-                <span style="color: var(--danger-clr)">
-                    {{ this.util.multiplyString("! ", this.data.priority || 0) }}
-                </span>
-                {{ this.data.name }}
-            </span>
-            <a
-                *ngFor="let link of this.data.meta.links"
-                class="external-link"
-                [href]="link"
-                [title]="link"
-                target="_blank"
-                ><i class="fas fa-external-link"></i
-            ></a>
-        </p>
-        <p
-            *ngIf="this.data.subTasks.length != 0"
-            class="dropdown-toggle"
-            [class.open]="!this.data.collapseSubtaskList"
-            (click)="toggleSubtaskList()"
-        >
-            <i class="fas fa-chevron-down"></i> {{ this.data.subTasks.length }}
-            {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
-        </p>
+<li
+    id="task-{{ this.data.id }}"
+    class="task"
+    [class.touchDevice]="util.isTouchDevice()"
+    [class.completed]="this.data.isCompleted"
+>
+    <div class="position-time-completed">
+        <span *ngIf="this.data.isCompleted" class="time-completed">
+            {{ this.util.formatDate(this.data.timeCompleted) }}
+        </span>
     </div>
-    <div class="btn-group">
-        <button
-            title="add sub task"
-            class="btn btn-icon btn-add-subTask"
-            [class.disabled]="this.data.isCompleted"
-            (click)="addSubTask()"
-            style="--btn-index: 2; --btn-index-reverse: 0"
-        >
-            <i class="fas fa-plus"></i></button
-        ><button
-            title="edit task"
-            class="btn btn-icon btn-edit"
-            [class.disabled]="this.data.isCompleted"
-            (click)="editTask()"
-            style="--btn-index: 1; --btn-index-reverse: 1"
-        >
-            <i class="fas fa-pencil-alt"></i></button
-        ><button
-            title="delete task"
-            class="btn btn-icon btn-delete"
-            (click)="deleteTask(this.data.id)"
-            style="--btn-index: 0; --btn-index-reverse: 2"
-        >
-            <i class="far fa-trash-alt"></i>
-        </button>
-        <menu-toggle-btn></menu-toggle-btn>
+    <div class="wrapper outer-wrapper">
+        <div class="wrapper inner-wrapper">
+            <button class="btn btn-icon btn-complete" title="mark/unmark task as completed" (click)="toggleCompleted()">
+                <i *ngIf="this.data.isCompleted" class="fas fa-check-circle"></i>
+                <i *ngIf="!this.data.isCompleted" class="far fa-circle"></i>
+            </button>
+            <div class="text-container">
+                <p>
+                    <span class="taskName">
+                        <span style="color: var(--danger-clr)">
+                            {{ this.util.multiplyString("! ", this.data.priority || 0) }}
+                        </span>
+                        {{ this.data.name }}
+                    </span>
+                    <a
+                        *ngFor="let link of this.data.meta.links"
+                        class="external-link"
+                        [href]="link"
+                        [title]="link"
+                        target="_blank"
+                        ><i class="fas fa-external-link"></i
+                    ></a>
+                </p>
+                <p
+                    *ngIf="this.data.subTasks.length != 0"
+                    class="subtask-list-toggle"
+                    [class.open]="!this.data.collapseSubtaskList"
+                    (click)="toggleSubtaskList()"
+                >
+                    <i class="fas fa-chevron-down"></i>
+                    <span *ngIf="countOpenTasks(this.data.subTasks) != 0">
+                        <span style="color: var(--danger-clr)">
+                            {{ countOpenTasks(this.data.subTasks) }} open
+                        </span> /
+                    </span>
+                    {{ this.data.subTasks.length }} {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
+                </p>
+            </div>
+            <!-- <div class="btn-group" [class.touchDevice_showBtns]="touchDevice_showBtns">
+                <button
+                    title="add sub task"
+                    class="btn btn-icon btn-add-subTask"
+                    [class.disabled]="this.data.isCompleted"
+                    (click)="addSubTask()"
+                    style="--btn-index: 2; --btn-index-reverse: 0"
+                >
+                    <i class="fas fa-plus"></i></button
+                ><button
+                    title="edit task"
+                    class="btn btn-icon btn-edit"
+                    [class.disabled]="this.data.isCompleted"
+                    (click)="editTask()"
+                    style="--btn-index: 1; --btn-index-reverse: 1"
+                >
+                    <i class="fas fa-pencil-alt"></i></button
+                ><button
+                    title="delete task"
+                    class="btn btn-icon btn-delete"
+                    (click)="deleteTask(this.data.id)"
+                    style="--btn-index: 0; --btn-index-reverse: 2"
+                >
+                    <i class="far fa-trash-alt"></i>
+                </button>
+            </div> -->
+        </div>
+        <menu-toggle-btn [isOpen]="touchDevice_showBtns" (onMenuToggle)="toggleBtns($event)">
+            <button
+                title="add sub task"
+                class="btn btn-icon btn-add-subTask"
+                [class.disabled]="this.data.isCompleted"
+                (click)="addSubTask()"
+                style="--btn-index: 2; --btn-index-reverse: 0"
+            >
+                <i class="fas fa-plus"></i></button
+            ><button
+                title="edit task"
+                class="btn btn-icon btn-edit"
+                [class.disabled]="this.data.isCompleted"
+                (click)="editTask()"
+                style="--btn-index: 1; --btn-index-reverse: 1"
+            >
+                <i class="fas fa-pencil-alt"></i></button
+            ><button
+                title="delete task"
+                class="btn btn-icon btn-delete"
+                (click)="deleteTask(this.data.id)"
+                style="--btn-index: 0; --btn-index-reverse: 2"
+            >
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </menu-toggle-btn>
     </div>
 </li>
-
-<span *ngIf="this.data.isCompleted" class="time-completed">
-    {{ this.util.formatDate(this.data.timeCompleted) }}
-</span>
 
 <ul
     *ngIf="this.data.subTasks.length != 0"
