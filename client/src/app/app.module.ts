@@ -2,7 +2,11 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers, appDataReducer } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { ServiceWorkerModule } from '@angular/service-worker';
+
+import { reducers, metaReducers } from './reducers';
 
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -10,14 +14,12 @@ import { EditMenuComponent } from './edit-menu/edit-menu.component';
 import { TaskComponent } from './task/task.component';
 import { ModalComponent } from './modal/modal.component';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { EffectsModule } from '@ngrx/effects';
 import { AppDataEffects } from './reducers/appData/appData.effects';
 import { ThemeToggleComponent } from './theme-toggle/theme-toggle.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { MenuComponent } from './side-menu/menu.component';
 import { MenuToggleBtnComponent } from './menu-toggle-btn/menu-toggle-btn.component';
+import { RemoveHostDirective } from './directives/remove-host.directive';
 
 @NgModule({
     declarations: [
@@ -30,6 +32,7 @@ import { MenuToggleBtnComponent } from './menu-toggle-btn/menu-toggle-btn.compon
         ThemeToggleComponent,
         MenuComponent,
         MenuToggleBtnComponent,
+        RemoveHostDirective,
     ],
     imports: [
         BrowserModule,

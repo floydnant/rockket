@@ -8,12 +8,14 @@
 }
 .side-container {
     height: 100%;
-    max-width: min(40%);
+    max-width: min(40%, 20rem);
 
     padding: 10px 0 20px 20px;
 }
+
 main {
     width: 100%;
+    isolation: isolate;
 }
 
 menu-toggle-btn {

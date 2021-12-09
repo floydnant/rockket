@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@
 import { Store } from '@ngrx/store';
 import { ModalService } from '../modal/modal.service';
 import { AppData } from '../reducers';
-import { Utility } from '../shared/utility.model';
+import { Utility, isTouchDevice } from '../shared/utility.model';
 import { Task } from '../shared/task.model';
 
 import { AppDataActions } from '../reducers';
@@ -19,8 +19,10 @@ export class TaskComponent implements OnInit {
     util = new Utility();
     countOpenTasks = countOpenTasks;
 
+    isTouchDevice = isTouchDevice();
     touchDevice_showBtns = false;
-    toggleBtns = v => (this.touchDevice_showBtns = v);
+    /** toggle the task action buttons when on touch a device */
+    toggleTaskActionBtns = (v: boolean) => (this.touchDevice_showBtns = v);
 
     constructor(
         public modalService: ModalService,

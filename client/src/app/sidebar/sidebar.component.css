@@ -1,3 +1,5 @@
+/* :host { display: block; } */
+
 .sidebar {
     position: relative;
     min-height: 40vh;
@@ -6,7 +8,10 @@
     min-width: 120px;
     /* min-width: max(max-content, 9rem); comment out for resizing to work properly */
     /* width: max-content; */
-    max-width: max-content;
+    width: clamp(120px, max-content, 17rem);
+    /* max-width: min(100%, 20rem); */
+    max-width: 100%;
+
     resize: horizontal;
     overflow: auto;
 

@@ -4,7 +4,8 @@
         <span [class]="type"></span>
     </label>
 
-    <div *ngIf="isOpen" class="drop-down {{ orientation }}">
+    <!-- <div style="display: none;" #checkForNgContent><ng-content></ng-content></div> -->
+    <div *ngIf="isOpen && !(noDropDown === true || noDropDown === '')" class="drop-down {{ orientation }}">
         <ng-content></ng-content>
     </div>
 </div>

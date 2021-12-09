@@ -34,9 +34,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         console.log('isMobileMenuOpen:', this.isMobileMenuOpen);
     }
 
-    isMobileDevice = isTouchDevice()
+    isMobileDevice = isTouchDevice();
     isMobileMenuOpen: boolean;
-    setMobileMenuOpen = e => (this.isMobileMenuOpen = e);
+    setMobileMenuOpen = (e: boolean) => (this.isMobileMenuOpen = e);
 
     @ViewChild('nameInputRef') nameInputRef: ElementRef;
     updateCount = 0;
@@ -100,7 +100,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     createList = () =>
         this.dialogService
             .prompt({ title: 'New list name:', buttons: ['Cancel', 'Create'] })
-            .then((newListName: string) => this.store.dispatch(new AppDataActions.CreateList(newListName)))
+            .then((newListName: string) => {
+                this.store.dispatch(new AppDataActions.CreateList(newListName));
+                this.setMobileMenuOpen(false);
+            })
             .catch(() => {});
 
     editList = (listId_?: string) => {

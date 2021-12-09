@@ -40,19 +40,18 @@
                 >
                     <i class="fas fa-chevron-down"></i>
                     <span *ngIf="countOpenTasks(this.data.subTasks) != 0">
-                        <span style="color: var(--danger-clr)">
-                            {{ countOpenTasks(this.data.subTasks) }} open
-                        </span> /
+                        <span style="color: var(--danger-clr)"> {{ countOpenTasks(this.data.subTasks) }} open </span> /
                     </span>
                     {{ this.data.subTasks.length }} {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
                 </p>
             </div>
-            <!-- <div class="btn-group" [class.touchDevice_showBtns]="touchDevice_showBtns">
-                <button
+        </div>
+        <ng-template #taskActionBtns>
+            <button
                     title="add sub task"
                     class="btn btn-icon btn-add-subTask"
                     [class.disabled]="this.data.isCompleted"
-                    (click)="addSubTask()"
+                    (click)="addSubTask(); toggleTaskActionBtns(false)"
                     style="--btn-index: 2; --btn-index-reverse: 0"
                 >
                     <i class="fas fa-plus"></i></button
@@ -60,45 +59,30 @@
                     title="edit task"
                     class="btn btn-icon btn-edit"
                     [class.disabled]="this.data.isCompleted"
-                    (click)="editTask()"
+                    (click)="editTask();  toggleTaskActionBtns(false)"
                     style="--btn-index: 1; --btn-index-reverse: 1"
                 >
                     <i class="fas fa-pencil-alt"></i></button
                 ><button
                     title="delete task"
                     class="btn btn-icon btn-delete"
-                    (click)="deleteTask(this.data.id)"
+                    (click)="deleteTask(this.data.id); toggleTaskActionBtns(false)"
                     style="--btn-index: 0; --btn-index-reverse: 2"
                 >
                     <i class="far fa-trash-alt"></i>
                 </button>
-            </div> -->
+        </ng-template>
+        <div *ngIf="!isTouchDevice" class="position-task-action-btns">
+            <div class="btn-group">
+                <template [ngTemplateOutlet]="taskActionBtns"></template>
+            </div>
         </div>
-        <menu-toggle-btn [isOpen]="touchDevice_showBtns" (onMenuToggle)="toggleBtns($event)">
-            <button
-                title="add sub task"
-                class="btn btn-icon btn-add-subTask"
-                [class.disabled]="this.data.isCompleted"
-                (click)="addSubTask()"
-                style="--btn-index: 2; --btn-index-reverse: 0"
-            >
-                <i class="fas fa-plus"></i></button
-            ><button
-                title="edit task"
-                class="btn btn-icon btn-edit"
-                [class.disabled]="this.data.isCompleted"
-                (click)="editTask()"
-                style="--btn-index: 1; --btn-index-reverse: 1"
-            >
-                <i class="fas fa-pencil-alt"></i></button
-            ><button
-                title="delete task"
-                class="btn btn-icon btn-delete"
-                (click)="deleteTask(this.data.id)"
-                style="--btn-index: 0; --btn-index-reverse: 2"
-            >
-                <i class="far fa-trash-alt"></i>
-            </button>
+        <menu-toggle-btn
+            *ngIf="isTouchDevice"
+            [isOpen]="touchDevice_showBtns"
+            (onMenuToggle)="toggleTaskActionBtns($event)"
+        >
+            <template [ngTemplateOutlet]="taskActionBtns"></template>
         </menu-toggle-btn>
     </div>
 </li>
