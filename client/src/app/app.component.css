@@ -8,9 +8,11 @@
 }
 .side-container {
     height: 100%;
+    /* width: 17rem; */
     max-width: min(40%, 20rem);
+    --padding-inline: 20px;
 
-    padding: 10px 0 20px 20px;
+    padding: 10px 0 var(--padding-inline) var(--padding-inline);
 }
 
 main {

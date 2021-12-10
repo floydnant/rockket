@@ -11,7 +11,7 @@
     </div>
     <div class="wrapper outer-wrapper">
         <div class="wrapper inner-wrapper">
-            <button class="btn btn-icon btn-complete" title="mark/unmark task as completed" (click)="toggleCompleted()">
+            <button class="btn btn-icon btn-complete" title="{{ this.data.isCompleted ? 'un' : '' }}mark task as completed" (click)="toggleCompleted()">
                 <i *ngIf="this.data.isCompleted" class="fas fa-check-circle"></i>
                 <i *ngIf="!this.data.isCompleted" class="far fa-circle"></i>
             </button>

@@ -133,15 +133,18 @@ input,
     --outline-clr: var(--primary-clr);
 }
 .btn {
+    --color: var(--clr);
     font-weight: 800;
     cursor: pointer;
     background: var(--color);
 
-    transition: 150ms;
+    transition: transform 150ms, background 200ms, color 180ms, filter 150ms;
 }
 .btn:hover:not([disabled]) {
     transform: scale(1.09);
     filter: opacity(1) brightness(1) !important;
+    background: var(--clr);
+    --color: var(--global-background);
 }
 
 .btn-icon {
@@ -160,25 +163,53 @@ input,
 }
 .btn-primary {
     --color-hue: var(--primary-clr-hue);
-    --color: var(--primary-clr);
+    --clr: var(--primary-clr);
 }
 .btn-secondary {
     --color-hue: var(--secondary-clr-hue);
-    --color: var(--secondary-clr);
+    --clr: var(--secondary-clr);
 }
 .btn-edit {
     --color-hue: var(--primary-clr-hue);
-    --color: var(--primary-clr);
+    --clr: var(--primary-clr);
 }
-.btn-delete {
+.btn-delete, .danger-clr {
     --color-hue: var(--danger-clr-hue) !important;
-    --color: var(--danger-clr) !important;
+    --clr: var(--danger-clr) !important;
+    --color: var(--danger-clr);
 }
 .btn-complete {
     --color-hue: var(--complete-clr-hue);
-    --color: var(--complete-clr);
+    --clr: var(--complete-clr);
 }
 .btn-add-subTask {
     --color-hue: 214;
-    --color: hsl(214, 100%, 50%);
+    --clr: hsl(214, 100%, 50%);
+}
+
+
+.badge {
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    height: 23px;
+    width: 23px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 10px;
+    color: var(--global-background);
+    
+    background: var(--color);
+}
+.badge-outline {
+    border: 1px solid var(--color);
+    color: var(--color);
+    background: var(--global-background);
 }

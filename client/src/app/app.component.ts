@@ -1,18 +1,12 @@
 import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+// import { Observable } from 'rxjs';
 
 import { AppData, AppState } from './reducers/appData';
 import { AppDataActions } from './reducers/';
 
 import { ModalService } from './modal/modal.service';
-import {
-    downloadObjectAsJson,
-    replaceCharsWithNumbers,
-    generatePassword,
-    getCopyOf,
-    isTouchDevice,
-} from './shared/utility.model';
+import { getCopyOf, isTouchDevice } from './shared/utility.model';
 import { TaskList } from './shared/taskList.model';
 import { Task } from './shared/task.model';
 import { DialogService } from './custom-dialog/custom-dialog.service';
@@ -34,7 +28,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         console.log('isMobileMenuOpen:', this.isMobileMenuOpen);
     }
 
-    isMobileDevice = isTouchDevice();
+    isTouchDevice = isTouchDevice();
     isMobileMenuOpen: boolean;
     setMobileMenuOpen = (e: boolean) => (this.isMobileMenuOpen = e);
 
@@ -53,10 +47,12 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.activeTaskList = this.getListById(this.data.activeListId);
 
             this.updateCount++;
-            if (this.updateCount > 1 && !this.isMobileDevice) this.nameInputRef.nativeElement.select();
+            if (this.updateCount > 1 && !this.isTouchDevice) this.nameInputRef.nativeElement.select();
 
             console.log('%cupdated state:', 'color: gray', this.data);
         });
+
+        console.log('isTouchDevice:', this.isTouchDevice);
     }
 
     clearTaskNameInput = (inputRef?: HTMLElement) => {
@@ -68,11 +64,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     addTask = () => {
         if (!this.taskNameInput) return;
-        if (this.data.lists.length == 0) this.dialogService.confirm({ title: "You don't have any lists." });
-        // this.activeTaskList.list.push(new Task(this.taskNameInput));
+        if (this.data.lists.length == 0) {
+            this.dialogService.confirm({ title: "You don't have any lists." });
+            return;
+        }
         this.store.dispatch(new AppDataActions.CreateTask(this.activeTaskList.id, this.taskNameInput));
         this.clearTaskNameInput();
-        // this.db.save();
     };
     getTaskById(taskId: string, taskList: Task[], getParentArr = false) {
         const recurse = (taskId: string, arr: Task[]): Task | Task[] | void => {

@@ -1,4 +1,7 @@
-/* :host { display: block; } */
+:host { 
+    display: block;
+    width: 100%;
+}
 
 .sidebar {
     position: relative;
@@ -8,18 +11,18 @@
     min-width: 120px;
     /* min-width: max(max-content, 9rem); comment out for resizing to work properly */
     /* width: max-content; */
-    width: clamp(120px, max-content, 17rem);
-    /* max-width: min(100%, 20rem); */
-    max-width: 100%;
+    /* width: clamp(120px, max-content, 17rem); */
+    width: 13rem;
+    /* max-width: min(100%, 17rem); */
+    max-width: calc(100% - (var(--padding-inline) * 2));
 
     resize: horizontal;
     overflow: auto;
 
     border-radius: 10px;
-    --margin-top: 140px;
     margin: 15px 0 0 0;
     padding: 20px;
-    padding-bottom: 60px;
+    padding-bottom: 70px;
 
     /* background: hsla(var(--bg-clr-hue), 14%, 20%, 0.158); */
     background: var(--global-background);
@@ -59,6 +62,10 @@
 .sidebar li.completed {
     filter: opacity(0.8);
 }
+
+
+li .open-tasks-badge {}
+
 .sidebar li .text {
     position: relative;
     transition: 220ms;

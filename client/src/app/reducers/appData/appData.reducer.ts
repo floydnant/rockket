@@ -44,8 +44,8 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
     };
 
     const activeList = getListById(newState_.activeListId);
-    if (!activeList.sortBy) activeList.sortBy = new TaskList().sortBy; // migration
-    const SORT_BY_PROPERTIES = activeList.sortBy;
+    if (activeList && !activeList.sortBy) activeList.sortBy = new TaskList().sortBy; // migration
+    const SORT_BY_PROPERTIES = activeList?.sortBy || new TaskList().sortBy;
 
     const sortTasks = (tasks: Task[]) => {
         if (SORT_BY_PROPERTIES.priority) sortTasksBy(tasks, 'priority');

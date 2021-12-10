@@ -14,8 +14,8 @@
             [class.completed]="countOpenTasks(list.list) == 0 && list.list.length"
         >
             <span class="text">{{ list.name }}</span
-            >&nbsp;
-            <span style="color: var(--danger-clr); opacity: 0.8">{{ countOpenTasks(list.list) || "" }}</span>
+            ><!-- &nbsp; -->
+            <span *ngIf="countOpenTasks(list.list)" class="badge danger-clr">{{ countOpenTasks(list.list) }}</span>
             <i class="fas fa-chevron-right"></i>
         </li>
     </ul>
