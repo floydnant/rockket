@@ -42,11 +42,12 @@
                     [class.open]="!this.data.collapseSubtaskList"
                     (click)="toggleSubtaskList()"
                 >
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down dimm"></i>
                     <span *ngIf="countOpenTasks(this.data.subTasks) != 0">
-                        <span style="color: var(--danger-clr)"> {{ countOpenTasks(this.data.subTasks) }} open </span> /
+                        <span style="color: var(--danger-clr)"> {{ countOpenTasks(this.data.subTasks) }} open </span>
+                        <span class="dimm"> / </span>
                     </span>
-                    {{ this.data.subTasks.length }} {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
+                    <span class="dimm">{{ this.data.subTasks.length }} {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}</span>
                 </p>
             </div>
         </div>

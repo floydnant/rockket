@@ -2,6 +2,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostListener,
     Input,
     OnInit,
     Output,
@@ -23,13 +24,22 @@ export class MenuToggleBtnComponent implements OnInit {
 
     // @ViewChild('checkForNgContent') checkForNgContent: ElementRef;
     @Input('drop-down-orientation') orientation: 'row' | 'column' = 'column';
-    @Input() noDropDown: true | false | "" = false;
+    @Input() noDropDown: true | false | '' = false;
 
     @Output() onMenuToggle = new EventEmitter<boolean>();
+    setIsOpen = (v: boolean) => (this.isOpen = v);
     toggleMenu = () => {
-        this.isOpen = !this.isOpen;
+        this.setIsOpen(!this.isOpen);
         this.onMenuToggle.emit(this.isOpen);
     };
+
+    constructor(private eRef: ElementRef) {}
+
+    @HostListener('document:click', ['$event'])
+    clickout(event) {
+        if (!this.eRef.nativeElement.contains(event.target) && !(this.noDropDown || this.noDropDown === ''))
+            this.setIsOpen(false);
+    }
 
     ngOnInit(): void {}
     // ngAfterViewInit(): void {
