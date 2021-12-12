@@ -20,6 +20,7 @@ import { ThemeToggleComponent } from './theme-toggle/theme-toggle.component';
 import { MenuComponent } from './side-menu/menu.component';
 import { MenuToggleBtnComponent } from './menu-toggle-btn/menu-toggle-btn.component';
 import { RemoveHostDirective } from './directives/remove-host.directive';
+import { QuickAddTaskComponent } from './task/quick-add-task/quick-add-task.component';
 
 @NgModule({
     declarations: [
@@ -33,6 +34,7 @@ import { RemoveHostDirective } from './directives/remove-host.directive';
         MenuComponent,
         MenuToggleBtnComponent,
         RemoveHostDirective,
+        QuickAddTaskComponent,
     ],
     imports: [
         BrowserModule,

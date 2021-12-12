@@ -1,0 +1,14 @@
+<div class="container">
+    <input
+        type="text"
+        class="input"
+        placeholder="add new task..."
+        [(ngModel)]="newTaskName"
+        (keydown.enter)="addTask()"
+        #inputField
+        (keydown.escape)="newTaskName = ''; inputField.blur()"
+    />
+    <button class="btn btn-icon btn-add-subTask" [disabled]="this.newTaskName.trim() == ''" (click)="addTask()">
+        add
+    </button>
+</div>

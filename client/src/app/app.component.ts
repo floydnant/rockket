@@ -23,6 +23,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     activeTaskList!: TaskList;
     taskNameInput!: string;
 
+    uncompletedTasks: Task[];
+    showCompleted = true;
+    completedTasks: Task[];
+
     log(event) {
         console.log('menu toggled, state:', event);
         console.log('isMobileMenuOpen:', this.isMobileMenuOpen);
@@ -46,13 +50,14 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.data = (data as { appData: AppData }).appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
 
+            this.uncompletedTasks = this.activeTaskList.list.filter(task => !task.isCompleted);
+            this.completedTasks = this.activeTaskList.list.filter(task => task.isCompleted);
+
             this.updateCount++;
             if (this.updateCount > 1 && !this.isTouchDevice) this.nameInputRef.nativeElement.select();
 
             console.log('%cupdated state:', 'color: gray', this.data);
         });
-
-        console.log('isTouchDevice:', this.isTouchDevice);
     }
 
     clearTaskNameInput = (inputRef?: HTMLElement) => {
@@ -62,13 +67,15 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     ///////////////////////////////////////////// Tasks ////////////////////////////////////////////////
 
+    dispatchCreateTask = (newTaskName: string) =>
+        this.store.dispatch(new AppDataActions.CreateTask(this.activeTaskList.id, newTaskName));
     addTask = () => {
         if (!this.taskNameInput) return;
         if (this.data.lists.length == 0) {
             this.dialogService.confirm({ title: "You don't have any lists." });
             return;
         }
-        this.store.dispatch(new AppDataActions.CreateTask(this.activeTaskList.id, this.taskNameInput));
+        this.dispatchCreateTask(this.taskNameInput);
         this.clearTaskNameInput();
     };
     getTaskById(taskId: string, taskList: Task[], getParentArr = false) {

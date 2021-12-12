@@ -50,7 +50,19 @@
                 No tasks yet...
             </h5>
             <ul *ngIf="this.activeTaskList">
-                <task *ngFor="let task of this.activeTaskList.list; let i = index" [data]="task"></task>
+                <task
+                    *ngFor="let task of this.uncompletedTasks; let i = index"
+                    [data]="task"
+                    [showCompleted]="showCompleted"
+                ></task>
+                <quick-add-task *ngIf="activeTaskList.list.length" (onAddTask)="dispatchCreateTask($event)"></quick-add-task>
+                <div *ngIf="showCompleted">
+                    <task
+                        *ngFor="let task of this.completedTasks; let i = index"
+                        [data]="task"
+                        [showCompleted]="showCompleted"
+                    ></task>
+                </div>
             </ul>
         </section>
     </main>

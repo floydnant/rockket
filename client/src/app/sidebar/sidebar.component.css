@@ -30,6 +30,13 @@
 
     transition: background 200ms;
 }
+@media screen and (max-width: 650px) {
+    .sidebar {
+        width: unset;
+    }
+}
+
+
 .sidebar h2 {
     margin-top: 0;
 }
@@ -63,8 +70,6 @@
     filter: opacity(0.8);
 }
 
-
-li .open-tasks-badge {}
 
 .sidebar li .text {
     position: relative;

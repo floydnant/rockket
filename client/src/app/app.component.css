@@ -32,9 +32,14 @@ menu-toggle-btn {
         display: none;
     }
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
     .container {
         width: 100vw;
+    }
+}
+@media screen and (min-width: 1000px) {
+    .container {
+        width: 80vw;
     }
 }
 @media screen and (max-width: 650px) {

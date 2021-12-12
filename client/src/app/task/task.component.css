@@ -1,3 +1,7 @@
+:host {
+    --bg: hsla(var(--bg-clr-hue), 15%, 19%, 0.24);
+    --alt-bg: hsla(var(--bg-clr-hue), 15%, 50%, 0.212);
+}
 .task {
     /* position: relative; */
     /* height: max(1.9rem, max-content);
@@ -13,8 +17,7 @@
 
     list-style: none;
 
-    background: hsla(var(--bg-clr-hue), 15%, 19%, 0.24);
-    --alt-bg: hsla(var(--bg-clr-hue), 15%, 50%, 0.212);
+    background: var(--bg);
     /* background: hsla(var(--bg-clr-hue), 15%, 19%);
     --alt-bg: hsla(var(--bg-clr-hue), 15%, 50%); */
 

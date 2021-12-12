@@ -31,7 +31,11 @@ export class TaskComponent implements OnInit {
         private editMenuService: EditMenuService
     ) {}
 
-    @Input() @Output() data!: Task;
+    @Input() @Output() data: Task;
+
+    uncompletedTasks: Task[];
+    @Input() showCompleted = true;
+    completedTasks: Task[];
 
     setCompleted = (status: boolean) => {
         const dispatchAction = (allSubtasks = false) =>
@@ -49,21 +53,22 @@ export class TaskComponent implements OnInit {
         else dispatchAction();
     };
     toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
+
+    dispatchNewSubtaskAction = (newTaskName: string) =>
+        this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
     addSubTask = () => {
         this.dialogService
             .prompt({ title: 'Create new subtask:', buttons: ['Cancel', 'Create'] })
-            .then((newTaskName: string) => {
-                this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
-            })
+            .then((newTaskName: string) => this.dispatchNewSubtaskAction(newTaskName))
             .catch(() => {});
     };
     toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
     editTask = () => {
         this.editMenuService
             .editTask(this.data)
-            .then((updatedTask: Task) =>
-                this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask } as any))
-            )
+            .then((updatedTask: Task) => {
+                this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask } as any));
+            })
             .catch(err => {
                 if (err == 'Deleted') this.deleteTask(this.data.id);
             });
@@ -80,7 +85,10 @@ export class TaskComponent implements OnInit {
         else del();
     };
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.uncompletedTasks = this.data.subTasks.filter(task => !task.isCompleted);
+        this.completedTasks = this.data.subTasks.filter(task => task.isCompleted);
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         // alternate the background of every 2nd task

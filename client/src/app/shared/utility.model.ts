@@ -20,34 +20,40 @@ export const multiplyString = (text = '!', multiplier = 3) => {
 
 const replacementChars = [
     {
-        keyChar: 'E',
+        searchChar: 'E',
         replaceChar: '3',
     },
     {
-        keyChar: 'A',
+        searchChar: 'A',
         replaceChar: '4',
     },
     {
-        keyChar: 'O',
+        searchChar: 'O',
         replaceChar: '0',
     },
     {
-        keyChar: 'S',
+        searchChar: 'S',
         replaceChar: '5',
     },
     {
-        keyChar: 'I',
+        searchChar: 'I',
         replaceChar: '1',
     },
 ];
 export const replaceCharsWithNumbers = (
     text: string,
     replacementArr: {
-        keyChar: string;
+        searchChar: string;
         replaceChar: string;
     }[] = replacementChars
-) => text.split('')
-        .map(char => replacementArr.some(c => c.keyChar == char) ? replacementArr.find(c => c.keyChar == char).replaceChar : char)
+) =>
+    text
+        .split('')
+        .map(char =>
+            replacementArr.some(c => c.searchChar == char)
+                ? replacementArr.find(c => c.searchChar == char).replaceChar
+                : char
+        )
         .join(''); // prettier-ignore
 
 export const generatePassword = (blockCount: number = 4) => {
