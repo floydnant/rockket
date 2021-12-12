@@ -42,6 +42,11 @@ menu-toggle-btn {
         width: 80vw;
     }
 }
+@media screen and (min-width: 1700px) {
+    .container {
+        width: 70vw;
+    }
+}
 @media screen and (max-width: 650px) {
     
     menu-toggle-btn.open ~ .side-container {
