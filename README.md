@@ -1,4 +1,4 @@
-<img src="./src/assets/todo-app-logo/todo-app-logo.png" height="100px">
+<img src="./client/src/assets/todo-app-logo/todo-app-logo.png" height="100px">
 
 # TodoApp
 
