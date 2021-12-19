@@ -21,6 +21,7 @@ import { MenuComponent } from './side-menu/menu.component';
 import { MenuToggleBtnComponent } from './menu-toggle-btn/menu-toggle-btn.component';
 import { RemoveHostDirective } from './directives/remove-host.directive';
 import { QuickAddTaskComponent } from './task/quick-add-task/quick-add-task.component';
+import { ShowCompletedComponent } from './task/show-completed/show-completed.component';
 
 @NgModule({
     declarations: [
@@ -35,6 +36,7 @@ import { QuickAddTaskComponent } from './task/quick-add-task/quick-add-task.comp
         MenuToggleBtnComponent,
         RemoveHostDirective,
         QuickAddTaskComponent,
+        ShowCompletedComponent,
     ],
     imports: [
         BrowserModule,

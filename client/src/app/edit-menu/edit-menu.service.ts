@@ -14,8 +14,8 @@ export class EditMenuService {
     editMenu: EditMenuComponent;
     return: ({}: returnInterface) => void;
 
-    editTask(props: editmenuPropsTask) {
-        this.editMenu.open({ data: props, type: 'Task' });
+    editTask(props: editmenuPropsTask, noEdit = false) {
+        this.editMenu.open({ data: props, type: 'Task', noEdit });
 
         return new Promise((resolve, reject) => {
             this.return = ({ updatedProps, responseStatus }: returnInterface) => {
@@ -27,8 +27,8 @@ export class EditMenuService {
             };
         });
     }
-    editTaskList(props: editmenuPropsTasklist) {
-        this.editMenu.open({ data: props, type: 'TaskList' });
+    editTaskList(props: editmenuPropsTasklist, noEdit = false) {
+        this.editMenu.open({ data: props, type: 'TaskList', noEdit });
 
         return new Promise((resolve, reject) => {
             this.return = ({ updatedProps, responseStatus }: returnInterface) => {

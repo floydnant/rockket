@@ -34,7 +34,7 @@ export class TaskComponent implements OnInit {
     @Input() @Output() data: Task;
 
     uncompletedTasks: Task[];
-    @Input() showCompleted = true;
+    @Input() showCompleted: boolean;
     completedTasks: Task[];
 
     setCompleted = (status: boolean) => {
@@ -63,12 +63,20 @@ export class TaskComponent implements OnInit {
             .catch(() => {});
     };
     toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
-    editTask = () => {
+    editTaskDetails = () => {
         this.editMenuService
             .editTask(this.data)
             .then((updatedTask: Task) => {
                 this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask } as any));
             })
+            .catch(err => {
+                if (err == 'Deleted') this.deleteTask(this.data.id);
+            });
+    };
+    showDetails = () => {
+        this.editMenuService
+            .editTask(this.data, true)
+            .then(() => {})
             .catch(err => {
                 if (err == 'Deleted') this.deleteTask(this.data.id);
             });

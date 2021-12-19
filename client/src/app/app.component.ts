@@ -7,7 +7,7 @@ import { AppDataActions } from './reducers/';
 
 import { ModalService } from './modal/modal.service';
 import { getCopyOf, isTouchDevice } from './shared/utility.model';
-import { TaskList } from './shared/taskList.model';
+import { countOpenTasks, TaskList } from './shared/taskList.model';
 import { Task } from './shared/task.model';
 import { DialogService } from './custom-dialog/custom-dialog.service';
 import { EditMenuService } from './edit-menu/edit-menu.service';
@@ -24,8 +24,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     taskNameInput!: string;
 
     uncompletedTasks: Task[];
-    showCompleted = true;
+    showCompletedMaster = false;
+    showCompleted = this.showCompletedMaster;
     completedTasks: Task[];
+
+    countOpenTasks = countOpenTasks;
 
     log(event) {
         console.log('menu toggled, state:', event);

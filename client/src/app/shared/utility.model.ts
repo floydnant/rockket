@@ -69,12 +69,9 @@ export const isTouchDevice = () =>
     'ontouchstart' in window || navigator.maxTouchPoints > 0 || (navigator as any).msMaxTouchPoints > 0;
 
 export const validateAndFormatUrl = (url: string = '') => {
-    url = url.trim();
-    const matchProtocol = url.search(/https?:\/\//g);
-    const matchDomain = url.search(/([^\s"/,;:]+\.)+[^\s".,;:]+/g);
-
-    const isProtocolValid = matchProtocol == 0 ? true : matchProtocol == -1 ? false : false;
-    const isDomainValid = matchDomain == 0 ? true : matchDomain == -1 ? false : false;
+    url = url.trim().toLocaleLowerCase();
+    const isProtocolValid = /^https?:\/\//.test(url);
+    const isDomainValid = /([^\s"/,;:]+\.)+[^\s".,;:]+$/g.test(url);
 
     if (!isProtocolValid && url != '') url = 'http://' + url;
 
@@ -83,7 +80,7 @@ export const validateAndFormatUrl = (url: string = '') => {
         isDomainValid,
         resUrl: url,
     };
-};
+};;
 
 export const escapeHTML = (unsafe: string) =>
     unsafe == '' || unsafe == null

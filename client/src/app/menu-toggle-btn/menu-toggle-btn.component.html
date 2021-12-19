@@ -5,7 +5,7 @@
     </label>
 
     <!-- <div style="display: none;" #checkForNgContent><ng-content></ng-content></div> -->
-    <div *ngIf="isOpen && !(noDropDown === true || noDropDown === '')" class="drop-down {{ orientation }}">
+    <div class="drop-down {{ orientation }}" [class.open]="isOpen && !(noDropDown === true || noDropDown === '')">
         <ng-content></ng-content>
     </div>
 </div>

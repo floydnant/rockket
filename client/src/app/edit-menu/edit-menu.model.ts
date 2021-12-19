@@ -13,5 +13,6 @@ export interface editmenuPropsTask extends editmenuPropsTasklist {
 }
 export interface editmenuProps {
     type: 'Task' | 'TaskList';
-    data: editmenuPropsTask | editmenuPropsTasklist
+    noEdit: boolean;
+    data: editmenuPropsTask | editmenuPropsTasklist;
 }

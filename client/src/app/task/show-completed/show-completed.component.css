@@ -1,0 +1,26 @@
+.container {
+    margin-top: 10px;
+    /* background: hsla(241, 30%, 39%, 0.788); */
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: var(--box-shadow-s);
+
+    display: flex;
+
+    --opacity: 0.6;
+    --brightness: 0.8;
+    filter: opacity(var(--opacity)) brightness(var(--brightness));
+}
+span {
+    color: var(--complete-clr);
+}
+/* span:hover {
+    text-decoration: underline;
+} */
+
+i {
+    transition: transform 180ms;
+}
+div:not(.open) i {
+    transform: rotate(-90deg);
+}

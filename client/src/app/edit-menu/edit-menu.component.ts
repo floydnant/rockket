@@ -27,6 +27,7 @@ export class EditMenuComponent implements OnInit {
     defaultData = () => new DataEdit_('', { notes: '', links: [] }, 0);
     dataEdit: DataEdit_ = this.defaultData();
     type: editmenuProps['type'];
+    noEdit = false;
 
     @ViewChild('nameInputRef') nameInputRef: ElementRef;
 
@@ -38,6 +39,7 @@ export class EditMenuComponent implements OnInit {
 
     open(props: editmenuProps) {
         this.type = props.type;
+        this.noEdit = props.noEdit;
 
         switch (this.type) {
             case 'Task':

@@ -1,15 +1,24 @@
 :host { 
     display: block;
     width: 100%;
+    /* height: calc(100% - 100px); */
+    /* box-sizing: border-box; */
+
+    display: flex;
+    flex-direction: column;
+
+    /* outline: 3px solid rgb(255, 81, 0); */
 }
 
 .sidebar {
     position: relative;
-    min-height: 40vh;
-    height: max-content;
+    min-height: min(100%, 40vh);
+    /* height: max-content; */
+    /* max-height: 100%; */
+    /* outline: 1px solid rgb(9, 255, 0); */
 
     min-width: 120px;
-    /* min-width: max(max-content, 9rem); comment out for resizing to work properly */
+    /* min-width: max(max-content, 9rem); */
     /* width: max-content; */
     /* width: clamp(120px, max-content, 17rem); */
     width: 13rem;
@@ -17,7 +26,10 @@
     max-width: calc(100% - (var(--padding-inline) * 2));
 
     resize: horizontal;
-    overflow: auto;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
 
     border-radius: 10px;
     margin: 15px 0 0 0;
@@ -41,10 +53,24 @@
     margin-top: 0;
 }
 .sidebar ul {
+    box-sizing: border-box;
+    /* position: relative;
+    left: -17px;
+    width: calc(100% + 37px); */
+    /* max-height: 52vh; */
+    /* height: 100%; */
+    /* outline: 1px solid rgb(0, 89, 255); */
+
+    /* isolation: isolate; */
+
     list-style: none;
     padding: 0;
+    /* padding-right: 10px; */
     margin: 0;
+
+    /* box-shadow: 0 -20px 20px -20px rgba(0, 0, 0, 0.445) inset; */
 }
+
 .sidebar li {
     position: relative;
     padding: 10px;
@@ -53,7 +79,7 @@
     cursor: pointer;
     
     /* background: hsla(var(--bg-clr-hue), 19%, 25%, 0.366); */
-    background: var(--global-background);
+    /* background: var(--global-background); */
     box-shadow: var(--box-shadow-s);
     transition: 180ms;
 }
@@ -63,11 +89,14 @@
 .sidebar li:hover {
     filter: brightness(1.2);
 }
+.sidebar li.completed {
+    filter: opacity(0.8);
+}
 .sidebar li:not(.active) i {
     display: none;
 }
-.sidebar li.completed {
-    filter: opacity(0.8);
+.sidebar li:nth-child(2n) {
+    background: hsla(var(--bg-clr-hue), 20%, 50%, 0.2);
 }
 
 
@@ -101,9 +130,6 @@
     margin-left: 20px;
     float: right;
     filter: opacity(0.6);
-}
-.sidebar li:nth-child(2n) {
-    background: hsla(var(--bg-clr-hue), 20%, 50%, 0.2);
 }
 .file-interaction {
     position: absolute;

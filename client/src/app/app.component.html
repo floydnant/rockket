@@ -53,14 +53,23 @@
                 <task
                     *ngFor="let task of this.uncompletedTasks; let i = index"
                     [data]="task"
-                    [showCompleted]="showCompleted"
+                    [showCompleted]="showCompletedMaster"
                 ></task>
-                <quick-add-task *ngIf="activeTaskList.list.length" (onAddTask)="dispatchCreateTask($event)"></quick-add-task>
+                <quick-add-task
+                    *ngIf="countOpenTasks(activeTaskList.list)"
+                    (onAddTask)="dispatchCreateTask($event)"
+                ></quick-add-task>
+                <show-completed
+                    *ngIf="completedTasks.length"
+                    [isOpen]="showCompleted"
+                    (onToggle)="showCompleted = $event"
+                    [tasks]="completedTasks.length"
+                ></show-completed>
                 <div *ngIf="showCompleted">
                     <task
                         *ngFor="let task of this.completedTasks; let i = index"
                         [data]="task"
-                        [showCompleted]="showCompleted"
+                        [showCompleted]="showCompletedMaster"
                     ></task>
                 </div>
             </ul>

@@ -96,6 +96,7 @@ span::after {
     position: absolute;
     right: calc(100% + 20px);
     top: 50%;
+    transform: translate(var(--translateX, 0), -50%) scale(var(--scale, 1));
 
     display: flex;
     padding: 6px;
@@ -103,11 +104,18 @@ span::after {
 
     background: var(--global-background);
     box-shadow: var(--box-shadow-s);
-    transform: translateY(-50%);
+
+    transform-origin: right;
+    transition: transform 150ms;
 }
 .drop-down.column {
     flex-direction: column;
 }
+.drop-down:not(.open) {
+    --scale: 0, 0;
+    --translateX: 25px;
+}
+
 .drop-down::before {
     content: "";
     position: absolute;
@@ -127,3 +135,4 @@ span::after {
 .drop-down.column > *:not(:last-child) {
     margin: 0 0 10px;
 }
+

@@ -1,0 +1,5 @@
+<div class="container" [class.open]="isOpen">
+    <span class="btn-complete" (click)="this.isOpen = !this.isOpen; onToggle.emit(this.isOpen)"
+        ><i class="fas fa-chevron-down dimm"></i> {{ isOpen ? "hide" : "show" }} {{ tasks }} completed tasks</span
+    >
+</div>

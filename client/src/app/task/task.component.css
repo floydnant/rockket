@@ -107,7 +107,7 @@
     margin-right: 10px;
     transition: box-shadow 400ms, transform 200ms, /* filter 150ms, */ color 200ms;
 }
-.btn-complete:hover:not(.task.completed .btn-complete, [disabled], .disabled) {
+.task:not(.completed, .touchDevice) .btn-complete:hover:not([disabled], .disabled) {
     box-shadow: var(--box-shadow-m), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
 }
 .task:not(.completed) .btn-complete:not(:hover) {

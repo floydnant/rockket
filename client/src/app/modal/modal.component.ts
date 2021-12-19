@@ -1,4 +1,14 @@
-import { Component, ElementRef, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
 import { ModalService } from './modal.service';
 
 @Component({
@@ -13,12 +23,17 @@ export class ModalComponent implements OnInit {
 
     public testValue = 'testValue';
 
-    constructor(private modalService: ModalService, el: ElementRef) {
-        this.element = el.nativeElement;
+    constructor(private modalService: ModalService, private elemRef: ElementRef) {
+        this.element = elemRef.nativeElement;
+    }
+    isOpen = false;
+    setIsOpenTrue() {
+        this.isOpen = true;
     }
 
     // open modal
     open(): void {
+        setTimeout(() => this.setIsOpenTrue(), 200);
         // this.element.style.display = 'block';
         this.element.classList.add('open');
         document.body.classList.add('modal-open');
@@ -26,9 +41,21 @@ export class ModalComponent implements OnInit {
 
     // close modal
     close(): void {
+        this.isOpen = false;
         // this.element.style.display = 'none';
         this.element.classList.remove('open');
         document.body.classList.remove('modal-open');
+    }
+
+    @ViewChild('closeOnClick') closeOnClick: ElementRef<HTMLElement>;
+    //let the parent Component handle the close event, so it can cleanup and do some other stuff
+    @Output() onClose = new EventEmitter();
+    closeAndCleanUp = () => this.onClose.emit();
+
+    @HostListener('document:click', ['$event'])
+    clickout(event: PointerEvent): void {
+        // if (!this.closeOnClick.nativeElement.contains(event.target as Node) && this.isOpen) this.close();
+        if (this.closeOnClick.nativeElement == event.target && this.isOpen) this.closeAndCleanUp();
     }
 
     ngOnInit(): void {
