@@ -13,6 +13,7 @@
 }
 span {
     color: var(--complete-clr);
+    cursor: pointer;
 }
 /* span:hover {
     text-decoration: underline;

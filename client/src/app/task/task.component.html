@@ -113,12 +113,12 @@
         (onAddTask)="this.dispatchNewSubtaskAction($event)"
     ></quick-add-task>
     <show-completed
-        *ngIf="completedTasks.length"
+        *ngIf="completedTasks.length && uncompletedTasks.length"
         [isOpen]="showCompleted"
         (onToggle)="showCompleted = $event"
         [tasks]="completedTasks.length"
     ></show-completed>
-    <div *ngIf="showCompleted">
+    <div *ngIf="showCompleted || !uncompletedTasks.length">
         <task *ngFor="let task of this.completedTasks" [data]="task" [showCompleted]="showCompleted"></task>
     </div>
 </ul>
