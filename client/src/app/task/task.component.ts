@@ -19,6 +19,8 @@ export class TaskComponent implements OnInit {
     util = new Utility();
     countOpenTasks = countOpenTasks;
 
+    @Input() taskPosition: number;
+
     isTouchDevice = isTouchDevice();
     touchDevice_showBtns = false;
     /** toggle the task action buttons when on touch a device */
@@ -32,6 +34,7 @@ export class TaskComponent implements OnInit {
     ) {}
 
     @Input() @Output() data: Task;
+    priorityArr: 1[];
 
     uncompletedTasks: Task[];
     @Input() showCompleted: boolean;
@@ -96,12 +99,10 @@ export class TaskComponent implements OnInit {
     ngOnInit(): void {
         this.uncompletedTasks = this.data.subTasks.filter(task => !task.isCompleted);
         this.completedTasks = this.data.subTasks.filter(task => task.isCompleted);
+
+        this.priorityArr = [];
+        for (let i = 0; i < parseInt(this.data.priority as unknown as string); i++) this.priorityArr.push(1);
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        // alternate the background of every 2nd task
-        document.querySelectorAll<HTMLElement>('.task').forEach((taskElement, i) => {
-            if (i % 2 === 1) taskElement.style.background = 'var(--alt-bg)';
-        });
-    }
+    // ngOnChanges(changes: SimpleChanges): void {}
 }

@@ -1,12 +1,33 @@
 .edit-menu {
-    margin-top: 30px;
+    /* margin-top: 30px; */
     min-width: min(45vw, 30rem);
+    max-width: 90vw;
 }
 @media screen and (max-width: 650px) {
     .edit-menu {
         width: 82vw;
     }
 }
+@media screen and (min-width: 900px) {
+    .edit-menu {
+        max-width: 70vw;
+    }
+}
+@media screen and (min-width: 1200px) {
+    .edit-menu {
+        max-width: 60vw;
+    }
+}
+@media screen and (min-width: 1600px) {
+    .edit-menu {
+        max-width: 50vw;
+    }
+}
+
+h2 {
+    margin-top: 0;
+}
+
 .edit-item {
     width: calc(100% - var(--modal-padding));
     margin-bottom: 10px;
@@ -29,6 +50,7 @@
 .priority-label {
     display: inline-flex;
     align-items: center;
+    justify-content: flex-start;
 }
 select {
     font-size: 1rem;
@@ -67,21 +89,30 @@ select {
 .link-list {
     box-shadow: var(--box-shadow-s);
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 .link-list ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-.link-list li {
+.link-container hr {
+    position: relative;
+    left: -10px;
+    width: calc(100% + 18px);
+    border-color: hsla(0, 0%, 50%, 0.5);
+    /* opacity: .1; */
+}
+.link-container li {
     display: flex;
+    justify-content: space-between;
     align-items: center;
 }
-.link-list li a {
+.link-container li a {
     transform: translateY(-2px);
+    word-break: break-all;
 }
-.link-list li a:not(:hover) {
+.link-container li a:not(:hover) {
     text-decoration: none;
 }
 
@@ -95,13 +126,13 @@ select {
 .btn-group button {
     margin-left: 10px;
 }
-.btn-group button.btn-delete {
+.btn-group button.btn-danger {
     position: absolute;
     left: 0;
     margin-left: 0;
 }
-.btn-cancel {
-    color: var(--global-color);
-    background: var(--global-background);
+/* .btn-neutral {
+    --bg-clr-sat: 0%;
+    --bg-opacity: .5;
     box-shadow: var(--box-shadow-s);
-}
+} */

@@ -8,7 +8,5 @@
         #inputField
         (keydown.escape)="newTaskName = ''; inputField.blur()"
     />
-    <button class="btn btn-icon btn-add-subTask" [disabled]="this.newTaskName.trim() == ''" (click)="addTask()">
-        add
-    </button>
+    <button class="btn btn-submit" [disabled]="this.newTaskName.trim() == ''" (click)="addTask()">add</button>
 </div>

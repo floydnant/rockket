@@ -1,6 +1,8 @@
 :host {
-    --bg: hsla(var(--bg-clr-hue), 15%, 19%, 0.24);
-    --alt-bg: hsla(var(--bg-clr-hue), 15%, 50%, 0.212);
+    /* --bg: hsla(var(--bg-clr-hue), 15%, 19%, 0.24);
+    --alt-bg: hsla(var(--bg-clr-hue), 15%, 50%, 0.212); */
+    --bg: var(--global-item-bg);
+    --alt-bg: var(--global-item-bg-alt);
 }
 .task {
     /* position: relative; */
@@ -20,9 +22,12 @@
     background: var(--bg);
     /* background: hsla(var(--bg-clr-hue), 15%, 19%);
     --alt-bg: hsla(var(--bg-clr-hue), 15%, 50%); */
-
+    
     box-shadow: var(--box-shadow-s);
-    transition: filter 150ms;
+    transition: filter 150ms, background 180ms;
+}
+.alt-bg {
+    background: var(--alt-bg);
 }
 .task:not(.task-list > .task:first-child) {
     margin-top: 10px;
@@ -31,6 +36,9 @@
     --opacity: 0.25;
     --brightness: 0.8;
     filter: opacity(var(--opacity)) brightness(var(--brightness));
+}
+.task:not(.touchDevice):hover {
+    background: var(--global-item-bg-highlight) !important;
 }
 .task.completed:hover {
     /* filter: opacity(calc(var(--opacity, .6) + 0.4)) brightness(1.2); */
@@ -52,7 +60,7 @@
     transform: translate(/* calc(-50% + 26.5px) */0, var(--translateY));
     width: max-content;
 
-    color: var(--complete-clr);
+    color: var(--submit-clr);
     padding: 8px;
     border-radius: 10px;
 
@@ -105,10 +113,14 @@
 .btn-complete {
     position: relative;
     margin-right: 10px;
-    transition: box-shadow 400ms, transform 200ms, /* filter 150ms, */ color 200ms;
+
+    --shadow: var(--box-shadow-s), 0 0 0px 0px hsla(var(--color-hue), 97%, 58%, 0.3);
+    --shadow-transition: box-shadow 300ms ease-in;
+    transition: var(--shadow-transition), transform 200ms, color 200ms, background 200ms;
 }
 .task:not(.completed, .touchDevice) .btn-complete:hover:not([disabled], .disabled) {
-    box-shadow: var(--box-shadow-m), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
+    box-shadow: var(--box-shadow-s), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
+    --shadow-transition: box-shadow 400ms ease;
 }
 .task:not(.completed) .btn-complete:not(:hover) {
     color: gray;
@@ -137,7 +149,7 @@ p .taskName::before {
     height: 2px;
     width: 0;
 
-    background: var(--complete-clr);
+    background: var(--submit-clr);
     box-shadow: var(--box-shadow-s);
     transition: width 220ms, box-shadow 220ms;
 }
@@ -204,7 +216,7 @@ menu-toggle-btn {
 }
 .btn-group .btn:not(:hover) {
     --delay: calc(80ms * var(--btn-index));
-    transition: /* box-shadow 400ms, */ transform 200ms var(--delay), filter 150ms var(--delay);
+    transition: background 200ms, transform 200ms var(--delay), filter 150ms var(--delay);
 }
 
 

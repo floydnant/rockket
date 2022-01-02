@@ -135,4 +135,7 @@ span::after {
 .drop-down.column > *:not(:last-child) {
     margin: 0 0 10px;
 }
+.drop-down > * {
+    --shadow: 0 0 0 transparent;
+}
 

@@ -107,13 +107,18 @@ main {
 }
 .new-task-form {
     margin: 20px 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .nameInput {
-    width: calc(100% - 65px);
-    box-sizing: border-box;
+    width: 100%;
+    margin-right: 10px;
 }
-.btn-add {
-    float: right;
+.btn-submit {
+    padding: 7.5px 15px;
+    border-radius: 10px;
 }
 
 .task-list ul {

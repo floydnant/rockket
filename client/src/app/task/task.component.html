@@ -3,6 +3,7 @@
     class="task"
     [class.touchDevice]="isTouchDevice"
     [class.completed]="this.data.isCompleted"
+    [class.alt-bg]="this.taskPosition % 2 == 1"
 >
     <div class="position-time-completed">
         <span *ngIf="this.data.isCompleted" class="time-completed">
@@ -22,9 +23,19 @@
             <div class="text-container">
                 <p>
                     <span class="taskName">
-                        <span style="color: var(--danger-clr)">
+                        <i
+                            *ngIf="this.data.priority == -1"
+                            class="fas fa-question"
+                            style="color: var(--submit-clr)"
+                        ></i>
+                        <i
+                            *ngFor="let _ of this.priorityArr; let i = index"
+                            class="fas fa-exclamation"
+                            [style]="(i ? 'margin-left:5px;' : '') + 'color: var(--danger-clr);'"
+                        ></i>
+                        <!-- <span >
                             {{ this.util.multiplyString("! ", this.data.priority || 0) }}
-                        </span>
+                        </span> -->
                         {{ this.data.name }}
                     </span>
                     <a
@@ -53,8 +64,8 @@
                         <span style="color: var(--danger-clr)"> {{ countOpenTasks(this.data.subTasks) }} open </span>
                         <span class="dimm"> /</span>
                     </span>
-                    <span class="dimm"
-                        > {{ this.data.subTasks.length }}
+                    <span class="dimm">
+                        {{ this.data.subTasks.length }}
                         {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}</span
                     >
                 </p>
@@ -63,7 +74,7 @@
         <ng-template #taskActionBtns>
             <button
                 title="add sub task"
-                class="btn btn-icon btn-add-subTask"
+                class="btn btn-icon btn-secondary"
                 [class.disabled]="this.data.isCompleted"
                 (click)="addSubTask(); toggleTaskActionBtns(false)"
                 style="--btn-index: 2; --btn-index-reverse: 0"
@@ -76,8 +87,8 @@
                 style="--btn-index: 1; --btn-index-reverse: 1"
             >
                 <!-- [class.disabled]="this.data.isCompleted" -->
-                <i class="fas fa-info"></i>
-                <!-- <i class="fas fa-ellipsis-v"></i> --></button
+                <!-- <i class="fas fa-info"></i> -->
+                <i class="fas fa-ellipsis-v"></i></button
             ><button
                 title="delete task"
                 class="btn btn-icon btn-delete"
@@ -107,7 +118,12 @@
     class="subtask-list subtask-list-{{ this.data.id }}"
     [class.hide]="this.data.collapseSubtaskList"
 >
-    <task *ngFor="let task of this.uncompletedTasks" [data]="task" [showCompleted]="showCompleted"></task>
+    <task
+        *ngFor="let task of this.uncompletedTasks; let i = index"
+        [data]="task"
+        [showCompleted]="showCompleted"
+        [taskPosition]="this.taskPosition + i - 1"
+    ></task>
     <quick-add-task
         *ngIf="this.data.subTasks.length != 0 && !this.data.collapseSubtaskList && !data.isCompleted"
         (onAddTask)="this.dispatchNewSubtaskAction($event)"
@@ -119,6 +135,11 @@
         [tasks]="completedTasks.length"
     ></show-completed>
     <div *ngIf="showCompleted || !uncompletedTasks.length">
-        <task *ngFor="let task of this.completedTasks" [data]="task" [showCompleted]="showCompleted"></task>
+        <task
+            *ngFor="let task of this.completedTasks; let i = index"
+            [data]="task"
+            [showCompleted]="showCompleted"
+            [taskPosition]="this.taskPosition + i + 1 + this.uncompletedTasks.length"
+        ></task>
     </div>
 </ul>

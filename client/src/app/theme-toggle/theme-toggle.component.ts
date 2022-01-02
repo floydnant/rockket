@@ -11,8 +11,14 @@ export class ThemeToggleComponent implements OnInit {
 
     setTheme = (shouldBeDarkTheme: boolean) => {
         this.isDarkTheme = shouldBeDarkTheme;
-        if (this.isDarkTheme) document.body.classList.remove('light');
-        else document.body.classList.add('light');
+        const root = document.querySelector(':root');
+        if (this.isDarkTheme) {
+            root.classList.remove('light');
+            root.classList.add('dark');
+        } else {
+            root.classList.remove('dark');
+            root.classList.add('light');
+        }
     };
     toggleTheme = () => this.setTheme(!this.isDarkTheme);
 

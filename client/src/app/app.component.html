@@ -29,7 +29,8 @@
                 style="transform: translateY(-5px)"
                 (click)="editList()"
             >
-                <i class="fas fa-pencil-alt"></i>
+                <!-- <i class="fas fa-pencil-alt"></i> -->
+                <i class="fas fa-ellipsis-v"></i>
             </button>
         </h1>
         <section class="new-task-form">
@@ -43,7 +44,7 @@
                 (keydown.Escape)="clearTaskNameInput(nameInputRef)"
                 [(ngModel)]="this.taskNameInput"
             />
-            <button class="btn btn-primary btn-add" [disabled]="!this.taskNameInput" (click)="addTask()">add</button>
+            <button class="btn modal-btn btn-submit" [disabled]="!this.taskNameInput" (click)="addTask()">add</button>
         </section>
         <section class="task-list">
             <h5 *ngIf="!this.activeTaskList || this.activeTaskList.list.length == 0" style="text-align: center">
@@ -53,6 +54,7 @@
                 <task
                     *ngFor="let task of this.uncompletedTasks; let i = index"
                     [data]="task"
+                    [taskPosition]="i"
                     [showCompleted]="showCompletedMaster"
                 ></task>
                 <quick-add-task
@@ -69,6 +71,7 @@
                     <task
                         *ngFor="let task of this.completedTasks; let i = index"
                         [data]="task"
+                        [taskPosition]="i + this.uncompletedTasks.length"
                         [showCompleted]="showCompletedMaster"
                     ></task>
                 </div>

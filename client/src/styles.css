@@ -1,46 +1,62 @@
-/* You can add global styles to this file, and also import other style files */
-
 :root {
     --: #1cde02;
     --theme_color: #1976d2;
     --background_color: #fafafa;
 
-    --primary-clr-hue: 44;
+    /* --primary-clr-hue: 44; */
+    --primary-clr-hue: 53;
     --primary-clr: hsl(var(--primary-clr-hue), 100%, 50%);
     --secondary-clr-hue: 270;
     --secondary-clr: hsl(var(--secondary-clr-hue), 100%, 60%);
 
-    --danger-clr-hue: 0;
+    --danger-clr-hue: 345;
     --danger-clr: hsl(var(--danger-clr-hue), 100%, 50%);
 
-    --complete-clr-hue: 113;
-    --complete-clr: hsl(var(--complete-clr-hue), 100%, 47%);
+    /* --submit-clr-hue: 113; */
+    --submit-clr-hue: 150;
+    --submit-clr: hsl(var(--submit-clr-hue), 100%, 47%);
 
     --btn-icon-size: 2rem;
 
-    --bg-clr-hue: 234;
-
-    --dark-theme-global-background: hsl(var(--bg-clr-hue), 5%, 14%);
-    --dark-theme-global-color: white;
-    --light-theme-global-background: hsl(var(--bg-clr-hue), 10%, 91%);
-    --light-theme-global-color: hsl(var(--bg-clr-hue), 14%, 14%);
+    /* --bg-clr-hue: 234; */
+    --bg-clr-hue: 270;
 
     --primary-font: futura, helvetica, arial, sans-serif;
-
-    --box-shadow-s: 0 0 20px rgba(0, 0, 0, 0.61);
-    --box-shadow-m: 0 0 10px rgba(0, 0, 0, 0.603), 0 0 20px rgba(0, 0, 0, 0.61);
-    --box-shadow-l: 0 0 20px rgba(0, 0, 0, 0.514), 0 0 40px rgba(0, 0, 0, 0.514);
-
     --modal-padding: 20px;
-
     --breakpoint-m: 650px;
 }
-/* @media (prefers-color-scheme: light) {
-    :root {
-        --global-background: var(--light-theme-global-background);
-        --global-color: var(--light-theme-global-color);
-    }
-} */
+
+:root.light {
+    --global-background: hsl(var(--bg-clr-hue), 5%, 91%);
+    /* --global-item-bg: hsl(var(--bg-clr-hue), 10%, 88%); */
+    --global-item-bg: var(--global-background);
+    --global-item-bg-alt: hsl(var(--bg-clr-hue), 5%, 85%);
+    --global-item-bg-highlight: hsl(var(--bg-clr-hue), 5%, 98%);
+
+    --global-color: hsl(var(--bg-clr-hue), 14%, 14%);
+
+    /* --primary-clr-hue: 180; */
+    --primary-clr-hue: 43;
+    --primary-clr: hsl(var(--primary-clr-hue), 100%, 48%);
+
+    --submit-clr: hsl(var(--submit-clr-hue), 100%, 42%);
+
+    --box-shadow-s: 0 0 10px rgba(0, 0, 0, 0.466);
+    --box-shadow-m: 0 0 10px rgba(0, 0, 0, 0.418), 0 0 20px rgba(0, 0, 0, 0.425);
+    --box-shadow-l: 0 0 150px rgba(0, 0, 0, 0.473), 0 0 30px rgba(0, 0, 0, 0.418);
+}
+:root.dark {
+    --global-background: hsl(var(--bg-clr-hue), 13%, 14%);
+    --global-item-bg: hsl(var(--bg-clr-hue), 15%, 16%);
+    --global-item-bg-alt: hsl(var(--bg-clr-hue), 15%, 20%);
+    --global-item-bg-highlight: hsl(var(--bg-clr-hue), 20%, 30%);
+
+    --global-color: white;
+
+    --box-shadow-s: 0 0 10px rgba(0, 0, 0, 0.61);
+    --box-shadow-m: 0 0 10px rgba(0, 0, 0, 0.603), 0 0 20px rgba(0, 0, 0, 0.61);
+    --box-shadow-l: 0 0 20px rgba(0, 0, 0, 0.514), 0 0 40px rgba(0, 0, 0, 0.514);
+}
 
 body {
     min-height: 100vh;
@@ -50,9 +66,6 @@ body {
     margin: 0;
     padding: 0;
 
-    --global-background: var(--dark-theme-global-background);
-    --global-color: var(--dark-theme-global-color);
-
     font-family: var(--primary-font);
     color: var(--global-color);
 
@@ -60,15 +73,7 @@ body {
 
     transition: 500ms;
 }
-body.light {
-    --global-background: var(--light-theme-global-background);
-    --global-color: var(--light-theme-global-color);
 
-    --primary-clr-hue: 293;
-    --primary-clr: hsl(var(--primary-clr-hue), 100%, 38%);
-
-    --complete-clr: hsl(var(--complete-clr-hue), 100%, 37%);
-}
 * {
     font-family: var(--primary-font);
 }
@@ -91,7 +96,6 @@ body.light {
     background: var(--secondary-clr);
 }
 [disabled] {
-    filter: grayscale(1) !important;
     background: var(--global-background) !important;
     color: var(--global-color) !important;
     cursor: not-allowed !important;
@@ -112,12 +116,13 @@ button {
 input,
 .btn {
     font-size: 16px;
-    padding: 10px;
+    padding: 7.5px;
     border: 0;
     border-radius: 10px;
     color: var(--global-background);
 
-    box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6), var(--box-shadow-s);
+    --shadow: var(--box-shadow-s);
+    box-shadow: var(--shadow);
 }
 .input {
     background: var(--global-background);
@@ -135,17 +140,45 @@ input,
 }
 .btn {
     --color: var(--clr);
+    padding: 7.5px 15px;
     font-weight: 800;
     cursor: pointer;
     background: var(--color);
 
     transition: transform 150ms, background 200ms, color 180ms, filter 150ms;
 }
-.btn:hover:not([disabled]) {
+body:not(.touchDevice) .btn:hover:not([disabled], .modal-btn),
+body.touchDevice .btn.hover:not([disabled], .modal-btn) {
     transform: scale(1.09);
     filter: opacity(1) brightness(1) !important;
     background: var(--clr);
     --color: var(--global-background);
+}
+
+.modal-btn {
+    padding: 3px 15px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 6px;
+    font-weight: 650;
+    --color: var(--global-color);
+    color: var(--color);
+
+    /* prettier-ignore */
+    background: hsl(
+        var(--color-hue, var(--secondary-clr-hue)) 
+        var(--bg-clr-sat, 100%) 
+        var(--bg-clr-lightness, 50%) 
+        / var(--bg-opacity, .5));
+    --bg-opacity: 1;
+
+    transition: color 110ms, background 115ms;
+}
+.modal-btn:is(:hover, :focus) {
+    --bg-clr-lightness: 35%;
 }
 
 .btn-icon {
@@ -161,6 +194,7 @@ input,
     border: none;
     color: var(--color);
     background: var(--global-background);
+    box-shadow: var(--shadow), 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6);
 }
 .btn-primary {
     --color-hue: var(--primary-clr-hue);
@@ -174,20 +208,32 @@ input,
     --color-hue: var(--primary-clr-hue);
     --clr: var(--primary-clr);
 }
-.btn-delete, .danger-clr {
+
+.btn-delete,
+.btn-danger,
+.danger-clr {
     --color-hue: var(--danger-clr-hue) !important;
     --clr: var(--danger-clr) !important;
     --color: var(--danger-clr);
 }
-.btn-complete {
-    --color-hue: var(--complete-clr-hue);
-    --clr: var(--complete-clr);
-}
-.btn-add-subTask {
-    --color-hue: 214;
-    --clr: hsl(214, 100%, 50%);
+.modal-btn.btn-delete,
+.modal-btn.btn-danger {
+    color: white;
 }
 
+.btn-complete,
+.btn-submit {
+    --color-hue: var(--submit-clr-hue);
+    --clr: var(--submit-clr);
+}
+.modal-btn.btn-submit {
+    color: black;
+}
+.btn-neutral {
+    background: hsl(0 0% var(--bg-clr-lightness, 50%) / 0.5);
+    color: var(--global-color);
+    box-shadow: var(--box-shadow-s);
+}
 
 .badge {
     box-sizing: border-box;
@@ -206,7 +252,7 @@ input,
     /* font-weight: 700; */
     border-radius: 10px;
     color: var(--global-background);
-    
+
     background: var(--color);
 }
 .badge-outline {

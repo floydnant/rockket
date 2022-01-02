@@ -14,7 +14,13 @@
                 [(ngModel)]="this.promptInput"
             />
             <div class="btn-group">
-                <button *ngFor="let btnText of this.props.buttons; let i = index" [class.btn-delete]="btnText[0] == '!'" (click)="closeDialog(i)">
+                <button
+                    *ngFor="let btnText of this.props.buttons; let i = index"
+                    class="modal-btn"
+                    [class.btn-danger]="btnText[0] == '!'"
+                    [class.btn-submit]="i == (this.props.buttons.length - 1) && btnText[0] != '!'"
+                    (click)="closeDialog(i)"
+                >
                     {{ btnText.replace("!", "") }}
                 </button>
             </div>

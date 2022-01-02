@@ -12,8 +12,8 @@ input {
     width: 100%;
     margin-right: 10px;
 
-    padding: 6px;
-    border-radius: 8px;
+    /* padding: 6px; */
+    border-radius: 10px;
     color: var(--global-color);
     
     background: none;
@@ -27,9 +27,9 @@ button {
     height: unset;
     width: unset;
     
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 15px;
-    padding: 6px;
+    /* padding: 6px 15px; */
     
     box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6);
     transform: unset !important;

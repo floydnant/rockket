@@ -80,45 +80,46 @@
 	margin: 15px 0 0;
 }
 button {
-	background: transparent;
-	border: none;
+    margin-inline: 7.5px;
+	font-size: 1rem;
+	border: 0;
+}
+button:not(.btn-danger, .btn-submit) {
+	/* border: none;
 	border-radius: 6px;
-	padding-block: 5px !important;
+	padding-block: 3px !important;
 	padding-inline: 15px;
 
 	margin-inline: 7.5px;
-	max-height: 25px;
 
 	display: flex;
 	justify-content: center;
 	align-items: center;
 
 	font-size: 1rem;
-	font-weight: 650;
-	/* --color: hsl(0, 0%, 59%); */
-	--color: var(--global-color);
-	color: var(--color);
-	background: hsl(var(--color-hue, 213) var(--bg-clr-sat, 40%) var(--bg-clr-lightness, 45%) / var(--bg-opacity, .5));
+	font-weight: 650; */
+	color: var(--global-color);
+	background: hsl(0 0% var(--bg-clr-lightness, 50%) / .5);
 	
-	transition: color 110ms, background 115ms;
+	/* transition: color 110ms, background 115ms; */
 }
-button:not(.btn-delete) {
+/* button:not(.btn-delete) {
 	--bg-clr-sat: 0%;
-}
+} */
 /* btn-primary */
-button:last-child {
+/* button:last-child {
 	color: white;
+	--color-hue: var(--submit-clr-hue);
 	--bg-clr-sat: 100%;
-	--bg-clr-lightness: 50%;
 	--bg-opacity: 1;
-}
-button:active {
+} */
+/* button:active {
 	color: var(--dialogBackground);
-}
-button:is(:hover, :focus) {
+} */
+/* button:is(:hover, :focus) {
 	--bg-clr-lightness: 35%;
-	/* background: hsla(0, 0%, 28%, 0.282); */
-}
+} */
+/* background: hsla(0, 0%, 28%, 0.282); */
 
 .dialog.prompt .dialogInput {
 	flex-direction: column;

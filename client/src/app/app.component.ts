@@ -163,5 +163,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {}
     ngAfterViewInit() {
         this.nameInputRef.nativeElement.select();
+
+        if (this.isTouchDevice) document.body.classList.add("touchDevice")
     }
 }

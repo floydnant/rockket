@@ -9,6 +9,7 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
+import { isTouchDevice } from '../shared/utility.model';
 
 @Component({
     selector: 'menu-toggle-btn',
@@ -21,6 +22,8 @@ export class MenuToggleBtnComponent implements OnInit {
     @Input() size: 's' | 'l' = 's';
     @Input() type: 'hamburger' | 'chevron' = 'chevron';
     @Input() color: string = 'primary';
+
+    isTouchDevice = isTouchDevice();
 
     // @ViewChild('checkForNgContent') checkForNgContent: ElementRef;
     @Input('drop-down-orientation') orientation: 'row' | 'column' = 'column';

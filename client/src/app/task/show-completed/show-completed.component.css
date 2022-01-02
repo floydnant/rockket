@@ -12,7 +12,7 @@
     filter: opacity(var(--opacity)) brightness(var(--brightness));
 }
 span {
-    color: var(--complete-clr);
+    color: var(--submit-clr);
     cursor: pointer;
 }
 /* span:hover {
