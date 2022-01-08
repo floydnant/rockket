@@ -1,27 +1,30 @@
 <app-modal id="custom-dialog">
-    <div class="dialog {{ this.props.type }}">
+    <div class="dialog {{ this.props.type }}" *ngIf="isOpen">
         <div class="dialogText">
             <h3>{{ this.props.title }}</h3>
             <p *ngIf="this.props.text">{{ this.props.text }}</p>
         </div>
 
         <div class="dialogInput">
+            <div *ngIf="this.props.type == 'filterArray'" class="select-lists">not implemented yet</div>
             <input
                 *ngIf="this.props.type == 'prompt'"
+                [(ngModel)]="this.promptInput"
+                [placeholder]="props.placeholder"
                 class="input promptInput"
                 type="text"
                 #localInputRef
-                [(ngModel)]="this.promptInput"
             />
             <div class="btn-group">
                 <button
-                    *ngFor="let btnText of this.props.buttons; let i = index"
+                    *ngFor="let btnText of this.props.buttons as buttons; index as i"
                     class="modal-btn"
+                    [title]="i == buttons.length - 2 ? '[esc]' : i == buttons.length - 1 ? '[↵]' : ''"
                     [class.btn-danger]="btnText[0] == '!'"
-                    [class.btn-submit]="i == (this.props.buttons.length - 1) && btnText[0] != '!'"
+                    [class.btn-submit]="i == buttons.length - 1 && btnText[0] != '!'"
                     (click)="closeDialog(i)"
                 >
-                    {{ btnText.replace("!", "") }}
+                    {{ btnText[0] == '!' ? btnText.replace("!", "") : btnText}}
                 </button>
             </div>
         </div>

@@ -98,7 +98,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     ///////////////////////////////////////////// Lists ////////////////////////////////////////////////
     getListById = (id: string): TaskList => this.data.lists.find(list => list.id == id);
-    getListIndexById = (id: string): number => this.data.lists.indexOf(this.data.lists.find(list => list.id == id)); //prettier-ignore
+    getListIndexById = (id: string): number => this.data.lists.indexOf(this.data.lists.find(list => list.id == id));
 
     setActiveList = (listId: string) => {
         this.store.dispatch(new AppDataActions.SetActiveList(listId));
@@ -106,19 +106,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     };
     createList = () =>
         this.dialogService
-            .prompt({ title: 'New list name:', buttons: ['Cancel', 'Create'] })
+            .prompt({ title: 'Create new list:', buttons: ['Cancel', 'Create'], placeholder: 'list name' })
             .then((newListName: string) => {
                 this.store.dispatch(new AppDataActions.CreateList(newListName));
                 this.setMobileMenuOpen(false);
             })
             .catch(() => {});
 
-    editList = (listId_?: string) => {
-        const listId = listId_ || this.data.activeListId;
+    editList = (listId: string = this.data.activeListId) => {
         const taskList = this.getListById(listId);
 
         this.editMenuService
-            .editTaskList(taskList)
+            .editTaskListDetails(taskList)
             .then((updatedTaskList: TaskList) => {
                 this.store.dispatch(new AppDataActions.EditList(listId, { ...taskList, ...updatedTaskList }));
             })
@@ -164,6 +163,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.nameInputRef.nativeElement.select();
 
-        if (this.isTouchDevice) document.body.classList.add("touchDevice")
+        if (this.isTouchDevice) document.body.classList.add('touchDevice');
     }
 }

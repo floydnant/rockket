@@ -1,43 +1,39 @@
 import { Injectable } from '@angular/core';
-import { DataEdit_, EditMenuComponent } from './edit-menu.component';
-import { editmenuProps, editmenuPropsTask, editmenuPropsTasklist } from './edit-menu.model';
-
-export interface returnInterface {
-    updatedProps: DataEdit_;
-    responseStatus: 'OK' | 'Cancelled' | 'Deleted';
-}
+import { EditMenuComponent } from './edit-menu.component';
+import { EditmenuTaskData, EditmenuTasklistData, responseHandlerInterface } from './edit-menu.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class EditMenuService {
     editMenu: EditMenuComponent;
-    return: ({}: returnInterface) => void;
+    responseHandler: (response: responseHandlerInterface) => void;
+    setResponseHandler<T extends EditmenuTaskData | EditmenuTasklistData>(
+        resolve: (value: T) => void,
+        reject: (reason?: string) => void
+    ) {
+        this.responseHandler = ({ updatedData, responseStatus }) => {
+            switch (responseStatus) {
+                case 'OK': resolve(updatedData as T); break;
+                case 'Cancelled': reject('Cancelled'); break; 
+                case 'Deleted': reject('Deleted'); break; 
+            } //prettier-ignore
+        };
+    }
 
-    editTask(props: editmenuPropsTask, noEdit = false) {
-        this.editMenu.open({ data: props, type: 'Task', noEdit });
-
+    editTaskDetails(data: EditmenuTaskData, noEdit = false, viewLinks = false): Promise<string | EditmenuTaskData> {
+        this.editMenu.open({ data, type: 'Task', noEdit, viewLinks });
         return new Promise((resolve, reject) => {
-            this.return = ({ updatedProps, responseStatus }: returnInterface) => {
-                switch (responseStatus) {
-                    case 'OK': resolve(updatedProps); break; 
-                    case 'Cancelled': reject('Cancelled'); break; 
-                    case 'Deleted': reject('Deleted'); break; 
-                } //prettier-ignore
-            };
+            this.setResponseHandler<EditmenuTaskData>(resolve, reject);
         });
     }
-    editTaskList(props: editmenuPropsTasklist, noEdit = false) {
-        this.editMenu.open({ data: props, type: 'TaskList', noEdit });
+    /** not implemented yet*/
+    createTaskWithDetails() {}
 
+    editTaskListDetails(data: EditmenuTasklistData, noEdit = false): Promise<string | EditmenuTasklistData> {
+        this.editMenu.open({ data, type: 'TaskList', noEdit });
         return new Promise((resolve, reject) => {
-            this.return = ({ updatedProps, responseStatus }: returnInterface) => {
-                switch (responseStatus) {
-                    case 'OK': resolve(updatedProps); break;
-                    case 'Cancelled': reject('Cancelled'); break; 
-                    case 'Deleted': reject('Deleted'); break; 
-                } //prettier-ignore
-            };
+            this.setResponseHandler<EditmenuTasklistData>(resolve, reject);
         });
     }
 }

@@ -1,80 +1,78 @@
 import { Injectable } from '@angular/core';
+import { Task } from '../shared/task.model';
 import { CustomDialogComponent } from './custom-dialog.component';
-import { customDialogCallProps, customDialogProps } from './custom-dialog.model';
+import {
+    CustomDialogConfirmOptions,
+    CustomDialogFilterArray_filterItem,
+    CustomDialogFilterArrayOptions,
+    CustomDialogPromptOptions,
+    responseHandlerInterface,
+} from './custom-dialog.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DialogService {
     dialog: CustomDialogComponent;
-    return: (res: any) => void;
+    responseHandler: (response: responseHandlerInterface) => void;
 
-    confirm({ title, text, buttons }: customDialogCallProps): Promise<string> {
+    confirm(options: CustomDialogConfirmOptions): Promise<string> {
+        const defaultOptions = new CustomDialogConfirmOptions();
         return new Promise((resolve, reject) => {
-            const props: customDialogProps = {
-                title,
-                text,
-                buttons: buttons || ['OK'],
+            this.dialog.open({
+                ...defaultOptions,
+                ...options,
                 type: 'confirm',
-            };
-            this.dialog.open(props);
+            });
 
-            this.return = ({ buttons, resBtnIndex }) => {
+            this.responseHandler = ({ buttons, resBtnIndex }) => {
                 if (resBtnIndex == buttons.length - 1) resolve(buttons[resBtnIndex]);
                 else reject(buttons[resBtnIndex]);
             };
         });
     }
-    prompt({ title, text, buttons, defaultValue }: customDialogCallProps): Promise<string> {
+    prompt(options: CustomDialogPromptOptions): Promise<string> {
+        const defaultOptions = new CustomDialogPromptOptions();
         return new Promise((resolve, reject) => {
-            const props: customDialogProps = {
-                title,
-                text,
-                buttons: buttons || ['OK'],
-                defaultValue,
+            this.dialog.open({
+                ...defaultOptions,
+                ...options,
                 type: 'prompt',
-            };
-            this.dialog.open(props);
+            });
 
-            this.return = ({ promptInput, buttons, resBtnIndex }) => {
-                if (promptInput && resBtnIndex == buttons.length - 1) resolve(promptInput);
+            this.responseHandler = ({ promptInput, buttons, resBtnIndex }) => {
+                if (promptInput.trim() && resBtnIndex == buttons.length - 1) resolve(promptInput);
+                else reject(buttons[resBtnIndex]);
+            };
+        });
+    }
+    filterArray<T extends object>({ array, itemKey, ...options }: CustomDialogFilterArrayOptions<T>): Promise<T[]> {
+        const defaultOptions = new CustomDialogFilterArrayOptions();
+        return new Promise((resolve, reject) => {
+            this.dialog.open({
+                ...defaultOptions,
+                ...options,
+                filterArray: array.map<CustomDialogFilterArray_filterItem>((item, i) => ({
+                    name: item[itemKey],
+                    index: i,
+                    selected: false,
+                })),
+                type: 'filterArray',
+            });
+
+            this.responseHandler = ({ buttons, resBtnIndex, filterdArray }) => {
+                if (resBtnIndex == buttons.length - 1)
+                    resolve(
+                        filterdArray
+                            .filter(filterItem => filterItem.selected)
+                            .map(filterItem => array[filterItem.index])
+                    );
                 else reject(buttons[resBtnIndex]);
             };
         });
     }
 }
 
-// export const custom = {
-//     confirm({ title, text, buttons }: customDialogCallProps): Promise<string> {
-//         return new Promise((resolve, reject) => {
-//             const props: customDialogProps = {
-//                 title,
-//                 text,
-//                 buttons: buttons || ['OK'],
-//                 type: 'confirm',
-//             };
-//             DialogService.dialog.open(props);
-
-//             DialogService.return = ({ buttons, resBtnIndex }) => {
-//                 if (resBtnIndex == buttons.length - 1) resolve(buttons[resBtnIndex]);
-//                 else reject(buttons[resBtnIndex]);
-//             };
-//         });
-//     },
-//     prompt({ title, text, buttons }: customDialogCallProps) {
-//         return new Promise((resolve, reject) => {
-//             const props: customDialogProps = {
-//                 title,
-//                 text,
-//                 buttons: buttons || ['OK'],
-//                 type: 'prompt',
-//             };
-//             DialogService.dialog.open(props);
-
-//             DialogService.return = ({ promptInput, buttons, resBtnIndex }) => {
-//                 if (promptInput && resBtnIndex == buttons.length - 1) resolve(promptInput);
-//                 else reject('cancelled');
-//             };
-//         });
-//     }
-// };
+async () => {
+    const arr = await new DialogService().filterArray({ title: 'test', array: [new Task()], itemKey: 'name' });
+};

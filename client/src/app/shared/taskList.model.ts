@@ -1,18 +1,18 @@
 import { Task } from './task.model';
 import { generateId } from './utility.model';
 
+export class TaskListMeta {
+    notes: string = '';
+}
+
 export class TaskList {
-    constructor(name = 'ToDo', list: Task[] = []) {
-        this.name = name;
-        this.id = generateId();
-        this.list = list;
-    }
-    public name: string;
     public id: string;
-    public list: Task[];
-    public meta = {
-        notes: '',
-    };
+    constructor(
+        public name: string = 'ToDo',
+        public list: Task[] = []
+    ) { this.id = generateId(); } //prettier-ignore
+
+    public meta: TaskListMeta = new TaskListMeta();
     public sortBy = {
         completion: true,
         priority: true,
@@ -50,5 +50,3 @@ export const sortTasksBy = (tasks: Task[], property: string) => {
     };
     recurse(tasks);
 };
-
-

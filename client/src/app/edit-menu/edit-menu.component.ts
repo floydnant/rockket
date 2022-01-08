@@ -1,22 +1,10 @@
-import { Component, ElementRef, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { DialogService } from '../custom-dialog';
 import { ModalService } from '../modal/modal.service';
-import { TaskList } from '../shared/taskList.model';
+import { TaskMeta } from '../shared/task.model';
 import { getCopyOf, validateAndFormatUrl } from '../shared/utility.model';
-import { editmenuProps, editmenuPropsTask, editmenuPropsTasklist } from './edit-menu.model';
+import { editmenuOptions, EditmenuTaskData, responseHandlerInterface, EditmenuTasklistData } from './edit-menu.model';
 import { EditMenuService } from './edit-menu.service';
-import { returnInterface } from './edit-menu.service';
-
-interface meta {
-    notes: string;
-    links?: string[];
-}
-export class DataEdit_ {
-    meta: meta;
-    constructor(public name: string, meta: meta, public priority?: number) {
-        this.meta = getCopyOf(meta);
-    }
-}
 
 @Component({
     selector: 'edit-menu',
@@ -24,12 +12,16 @@ export class DataEdit_ {
     styleUrls: ['./edit-menu.component.css'],
 })
 export class EditMenuComponent implements OnInit {
-    defaultData = () => new DataEdit_('', { notes: '', links: [] }, 0);
-    dataEdit: DataEdit_ = this.defaultData();
-    type: editmenuProps['type'];
-    noEdit = false;
+    public data: any; //needs to be 'any' because typecasting in the html template is a bit funky
 
-    @ViewChild('nameInputRef') nameInputRef: ElementRef;
+    type: editmenuOptions['type'];
+    noEdit = false;
+    viewLinks = false;
+
+    isOpen = false;
+
+    @ViewChild('nameInputRef') nameInputRef: ElementRef<HTMLInputElement>;
+    @ViewChild('linkList') linkList: ElementRef<HTMLDivElement>;
 
     constructor(
         private modalService: ModalService,
@@ -37,35 +29,34 @@ export class EditMenuComponent implements OnInit {
         private dialogService: DialogService
     ) {}
 
-    open(props: editmenuProps) {
-        this.type = props.type;
-        this.noEdit = props.noEdit;
-
-        switch (this.type) {
-            case 'Task':
-                this.dataEdit = new DataEdit_(
-                    props.data.name,
-                    props.data.meta,
-                    (props.data as editmenuPropsTask).priority
-                );
-                break;
-            case 'TaskList':
-                this.dataEdit = new DataEdit_(props.data.name, props.data.meta);
-                break;
-        }
-        this.modalService.open('edit-menu');
-        setTimeout(() => this.nameInputRef.nativeElement.select(), 100);
-        setTimeout(() => this.nameInputRef.nativeElement.select(), 300);
+    open({ type, noEdit, data, viewLinks }: editmenuOptions) {
         this.isOpen = true;
+        this.modalService.open('edit-menu');
+
+        this.type = type;
+        this.noEdit = noEdit;
+        this.viewLinks = viewLinks;
+
+        const { meta, ...rest } = data;
+        this.data = {
+            ...(this.type == 'Task' ? new EditmenuTaskData() : new EditmenuTasklistData()),
+            ...rest,
+            meta: getCopyOf(meta),
+        };
+
+        if (!viewLinks)
+            [100, 300, 500].forEach(delay => setTimeout(() => this.nameInputRef.nativeElement.focus(), delay));
+        this.linkList?.nativeElement.scrollIntoView({ behavior: 'smooth' });
     }
 
-    close(btnRes: returnInterface['responseStatus']) {
-        if (this.type == 'Task' && btnRes == 'OK') this.addLink();
-        this.modalService.close('edit-menu');
+    close(responseStatus: responseHandlerInterface['responseStatus']) {
         this.isOpen = false;
-        this.editMenuService.return({ updatedProps: getCopyOf(this.dataEdit), responseStatus: btnRes });
+        this.modalService.close('edit-menu');
 
-        this.dataEdit = this.defaultData();
+        if (this.type == 'Task' && responseStatus == 'OK') this.addLink();
+        this.editMenuService.responseHandler({ updatedData: getCopyOf(this.data), responseStatus });
+
+        this.nameInputRef.nativeElement.blur();
         this.linkInput = '';
     }
 
@@ -81,13 +72,12 @@ export class EditMenuComponent implements OnInit {
             return;
         }
 
-        this.dataEdit.meta.links.push(link);
+        (this.data.meta as TaskMeta).links.push(link);
         this.linkInput = '';
     }
-    removeLink = (index: number) => this.dataEdit.meta.links.splice(index, 1);
+    removeLink = (index: number) => (this.data.meta as TaskMeta).links.splice(index, 1);
     trimLinkInput = () => ('' + this.linkInput).replace(/undefined/, '').trim();
 
-    isOpen = false;
     @HostListener('document:keydown', ['$event'])
     keyboardHandler(e: KeyboardEvent) {
         if (!this.isOpen) return;

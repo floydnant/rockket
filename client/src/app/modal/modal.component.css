@@ -17,9 +17,9 @@ app-modal:not(.open) {
     display: grid;
     place-items: center;
     
-    background: rgba(27, 27, 27, 0.5);
+    background: hsla(var(--bg-clr-hue), 13%, 11%, 0.5);
     
-    transition: backdrop-filter 100ms, filter 200ms;
+    transition: backdrop-filter 100ms, -webkit-backdrop-filter 100ms, filter 150ms;
 }
 app-modal.open .modal-container {
     backdrop-filter: blur(3px);

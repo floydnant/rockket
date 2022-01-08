@@ -1,7 +1,7 @@
 <app-modal id="edit-menu" (onClose)="close('Cancelled')">
-    <div class="edit-menu">
+    <div class="edit-menu" *ngIf="isOpen">
         <h2>{{ this.type }} details</h2>
-        <button class="btn btn-icon btn-close" (click)="close('Cancelled')">
+        <button class="btn btn-icon btn-close" title="[esc]" (click)="close('Cancelled')">
             <i class="fas fa-times"></i>
         </button>
         <input
@@ -10,11 +10,11 @@
             placeholder="{{ this.type == 'Task' ? 'task' : 'list' }} name"
             #nameInputRef
             [disabled]="noEdit"
-            [(ngModel)]="dataEdit.name"
+            [(ngModel)]="data.name"
         />
         <label *ngIf="this.type == 'Task'" class="priority-label edit-item"
             >Priority: &nbsp;
-            <select class="input" [(ngModel)]="dataEdit.priority" [disabled]="noEdit">
+            <select class="input" [(ngModel)]="data.priority" [disabled]="noEdit">
                 <option value="-1">Optional</option>
                 <option value="0">None</option>
                 <option value="1">Low</option>
@@ -28,7 +28,7 @@
             class="notesTextarea edit-item input"
             placeholder="notes"
             [disabled]="noEdit"
-            [(ngModel)]="dataEdit.meta.notes"
+            [(ngModel)]="data.meta.notes"
         ></textarea>
 
         <div *ngIf="this.type == 'Task' && !noEdit" class="add-link-container">
@@ -37,16 +37,22 @@
                 class="linkInput edit-item input"
                 id="linkInput"
                 placeholder="Link"
-                [disabled]="noEdit"
-                [(ngModel)]="linkInput"
+                [disabled]="this.noEdit"
+                [(ngModel)]="this.linkInput"
             />
-            <button class="btn btn-primary" [disabled]="!this.trimLinkInput() || !linkInput" (click)="addLink()">
+            <button class="btn btn-primary" [disabled]="!this.trimLinkInput() || !this.linkInput" (click)="addLink()">
                 add
             </button>
         </div>
-        <div *ngIf="this.type == 'Task' && this.dataEdit.meta.links.length" class="link-list" style="margin-top: 10px">
-            <ul *ngIf="this.dataEdit.meta.links.length > 0">
-                <div class="link-container" *ngFor="let link of this.dataEdit.meta.links; let i = index">
+        <div
+            *ngIf="this.type == 'Task' && this.data.meta.links.length"
+            class="link-list"
+            [class.animate-highlight]="this.viewLinks"
+            #linkList
+            style="margin-top: 10px"
+        >
+            <ul *ngIf="this.data.meta.links.length">
+                <div class="link-container" *ngFor="let link of this.data.meta.links; let i = index">
                     <hr *ngIf="i" />
                     <li>
                         <a [href]="link" target="_blank">{{ link }}</a>
@@ -65,10 +71,10 @@
 
         <div class="btn-group">
             <button class="btn modal-btn btn-danger" style="float: left" (click)="close('Deleted')">delete</button>
-            <button class="btn modal-btn btn-neutral" title="Escape" (click)="close('Cancelled')">
+            <button class="btn modal-btn btn-neutral" title="[esc]" (click)="close('Cancelled')">
                 {{ noEdit ? "close" : "cancel" }}
             </button>
-            <button *ngIf="!noEdit" class="btn modal-btn btn-submit" title="Enter" (click)="close('OK')">Done</button>
+            <button *ngIf="!noEdit" class="btn modal-btn btn-submit" title="[↵]" (click)="close('OK')">Done</button>
         </div>
     </div>
 </app-modal>

@@ -20,32 +20,27 @@
     list-style: none;
 
     background: var(--bg);
-    /* background: hsla(var(--bg-clr-hue), 15%, 19%);
-    --alt-bg: hsla(var(--bg-clr-hue), 15%, 50%); */
-    
+
     box-shadow: var(--box-shadow-s);
     transition: filter 150ms, background 180ms;
-}
-.alt-bg {
-    background: var(--alt-bg);
 }
 .task:not(.task-list > .task:first-child) {
     margin-top: 10px;
 }
-.task.completed {
-    --opacity: 0.25;
-    --brightness: 0.8;
-    filter: opacity(var(--opacity)) brightness(var(--brightness));
+.alt-bg {
+    background: var(--alt-bg);
 }
 .task:not(.touchDevice):hover {
     background: var(--global-item-bg-highlight) !important;
 }
-.task.completed:hover {
-    /* filter: opacity(calc(var(--opacity, .6) + 0.4)) brightness(1.2); */
-    /* filter: opacity(calc(var(--opacity, .6) + 0.4)) brightness(1); TODO: handle the brightness with background instead */
-    filter: opacity(1);
+.task.completed {
+    filter: opacity(0.25) brightness(0.8);
+    /* opacity: .2; */
 }
-
+.task.completed:hover {
+    filter: opacity(1);
+    /* opacity: 1; */
+}
 
 .position-time-completed {
     position: relative;
@@ -57,7 +52,7 @@
     bottom: calc(100% + 10px);
     left: 0%;
     --translateY: 5px;
-    transform: translate(/* calc(-50% + 26.5px) */0, var(--translateY));
+    transform: translate(/* calc(-50% + 26.5px) */ 0, var(--translateY));
     width: max-content;
 
     color: var(--submit-clr);
@@ -89,7 +84,6 @@
     opacity: 1;
 }
 
-
 .outer-wrapper {
     /* outline: 1px solid red; */
     /* position: relative; */
@@ -98,6 +92,7 @@
 }
 .inner-wrapper {
     /* outline: 1px solid greenyellow; */
+    position: relative;
     width: 100%;
     display: flex;
     align-items: center;
@@ -109,7 +104,6 @@
     overflow: hidden;
 }
 
-
 .btn-complete {
     position: relative;
     margin-right: 10px;
@@ -118,14 +112,23 @@
     --shadow-transition: box-shadow 300ms ease-in;
     transition: var(--shadow-transition), transform 200ms, color 200ms, background 200ms;
 }
-.task:not(.completed, .touchDevice) .btn-complete:hover:not([disabled], .disabled) {
+/* .task:not(.completed, .touchDevice) .btn-complete:hover:not([disabled], .disabled) {
     box-shadow: var(--box-shadow-s), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
     --shadow-transition: box-shadow 400ms ease;
+} */
+
+/* .task.completed-transition .btn-complete {
+    --shadow-transition: box-shadow 500ms ease-in !important;
+} */
+.task.completed-transition .btn-complete,
+.task.completed .btn-complete:hover {
+    --shadow: var(--box-shadow-s), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
+    --shadow-transition: box-shadow 400ms ease;
 }
-.task:not(.completed) .btn-complete:not(:hover) {
+.task:not(.completed, .completed-transition) .btn-complete:not(:hover),
+.task.touchDevice:not(.completed, .completed-transition) .btn-complete {
     color: gray;
 }
-
 
 .text-container {
     display: flex;
@@ -150,10 +153,10 @@ p .taskName::before {
     width: 0;
 
     background: var(--submit-clr);
-    box-shadow: var(--box-shadow-s);
-    transition: width 220ms, box-shadow 220ms;
+    box-shadow: var(--box-shadow-m);
+    transition: width 320ms, box-shadow 220ms;
 }
-.task.completed p .taskName::before {
+.task:is(.completed, .completed-transition) p .taskName::before {
     width: 100%;
     box-shadow: var(--box-shadow-s);
 }
@@ -176,7 +179,6 @@ p.subtask-list-toggle i {
 p.subtask-list-toggle:not(.open) i {
     transform: rotate(-90deg);
 }
-
 
 menu-toggle-btn {
     /* position: absolute;
@@ -218,7 +220,6 @@ menu-toggle-btn {
     --delay: calc(80ms * var(--btn-index));
     transition: background 200ms, transform 200ms var(--delay), filter 150ms var(--delay);
 }
-
 
 .subtask-list {
     border-left: 1px solid rgba(128, 128, 128, 0.466);

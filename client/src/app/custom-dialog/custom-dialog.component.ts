@@ -1,6 +1,6 @@
-import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ModalService } from '../modal/modal.service';
-import { customDialogProps, defaultCustomDialogProps } from './custom-dialog.model';
+import { CustomDialogComponentProps } from './custom-dialog.model';
 import { DialogService } from './custom-dialog.service';
 
 @Component({
@@ -12,34 +12,35 @@ export class CustomDialogComponent implements OnInit {
     constructor(private modalService: ModalService, private dialogService: DialogService) {}
 
     promptInput: string;
-    props: customDialogProps = new defaultCustomDialogProps();
+    props: CustomDialogComponentProps;
     @ViewChild('localInputRef') inputRef: ElementRef;
 
     isOpen = false;
 
-    open(props: customDialogProps) {
-        this.props = props;
-        if (props.defaultValue) this.promptInput = props.defaultValue;
-
-        if (props.type == 'prompt') {
-            setTimeout(() => this.inputRef.nativeElement.select(), 100);
-            setTimeout(() => this.inputRef.nativeElement.select(), 300);
-        }
-        this.modalService.open('custom-dialog');
+    open(props: CustomDialogComponentProps) {
         this.isOpen = true;
+        this.modalService.open('custom-dialog');
+
+        this.props = props;
+
+        this.promptInput = props.defaultValue;
+        if (props.type == 'prompt')
+            [100, 300, 500].forEach(delay => setTimeout(() => this.inputRef.nativeElement.focus(), delay));
     }
 
     closeDialog(resBtnIndex: number) {
         this.isOpen = false;
         this.modalService.close('custom-dialog');
 
-        this.dialogService.return({
+        this.dialogService.responseHandler({
             buttons: this.props.buttons,
             resBtnIndex,
             promptInput: this.promptInput,
+            filterdArray: this.props.filterArray,
         });
 
         this.promptInput = '';
+        this.inputRef?.nativeElement.blur();
     }
 
     @HostListener('document:keydown', ['$event'])

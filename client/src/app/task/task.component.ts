@@ -21,6 +21,10 @@ export class TaskComponent implements OnInit {
 
     @Input() taskPosition: number;
 
+    log = (...v: any) => console.log(...v);
+
+    completeBtnIsHovered = false;
+
     isTouchDevice = isTouchDevice();
     touchDevice_showBtns = false;
     /** toggle the task action buttons when on touch a device */
@@ -34,15 +38,22 @@ export class TaskComponent implements OnInit {
     ) {}
 
     @Input() @Output() data: Task;
-    priorityArr: 1[];
+    isCompleted: boolean;
+    priorityArr: any[];
 
     uncompletedTasks: Task[];
     @Input() showCompleted: boolean;
     completedTasks: Task[];
 
     setCompleted = (status: boolean) => {
-        const dispatchAction = (allSubtasks = false) =>
-            this.store.dispatch(new AppDataActions.SetCompleted(this.data.id, status, allSubtasks));
+        const dispatchAction = (allSubtasks = false) => {
+            this.isCompleted = status;
+
+            setTimeout(
+                () => this.store.dispatch(new AppDataActions.SetCompleted(this.data.id, status, allSubtasks)),
+                600
+            );
+        };
 
         if (!this.data.isCompleted && countOpenTasksMultiLevel(this.data.subTasks) > 0)
             this.dialogService
@@ -61,14 +72,14 @@ export class TaskComponent implements OnInit {
         this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
     addSubTask = () => {
         this.dialogService
-            .prompt({ title: 'Create new subtask:', buttons: ['Cancel', 'Create'] })
+            .prompt({ title: 'Create new subtask:', buttons: ['Cancel', 'Create'], placeholder: 'subtask name' })
             .then((newTaskName: string) => this.dispatchNewSubtaskAction(newTaskName))
             .catch(() => {});
     };
     toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
-    editTaskDetails = () => {
+    editTaskDetails = (viewLinks = false) => {
         this.editMenuService
-            .editTask(this.data)
+            .editTaskDetails(this.data, false, viewLinks)
             .then((updatedTask: Task) => {
                 this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask } as any));
             })
@@ -76,9 +87,9 @@ export class TaskComponent implements OnInit {
                 if (err == 'Deleted') this.deleteTask(this.data.id);
             });
     };
-    showDetails = () => {
+    showDetails = (viewLinks = false) => {
         this.editMenuService
-            .editTask(this.data, true)
+            .editTaskDetails(this.data, true, viewLinks)
             .then(() => {})
             .catch(err => {
                 if (err == 'Deleted') this.deleteTask(this.data.id);
@@ -97,6 +108,8 @@ export class TaskComponent implements OnInit {
     };
 
     ngOnInit(): void {
+        this.isCompleted = this.data.isCompleted;
+
         this.uncompletedTasks = this.data.subTasks.filter(task => !task.isCompleted);
         this.completedTasks = this.data.subTasks.filter(task => task.isCompleted);
 
