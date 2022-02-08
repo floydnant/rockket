@@ -3,10 +3,12 @@
     "version": "1.0.0",
     "description": "<img src=\"./src/assets/todo-app-logo/todo-app-logo.png\" height=\"100px\">",
     "scripts": {
-        "server&&client": "concurrently \"cd client && ng serve\" \"cd server && ts-node-dev server.ts\"",
+        "server+client": "concurrently \"cd client && ng serve\" \"cd server && ts-node-dev server.ts\"",
         "server": "cd server && ts-node-dev server.ts",
-        "client": "cd client && ng serve",
-        "client:lan": "cd client && ng serve --host 0.0.0.0",
+        "client": "cd client && npm run serve",
+        "client:lan": "cd client && npm run serve:lan",
+        "client:build": "cd client && npm run build",
+        "client:watch": "cd client && concurrently \"npm run build:watch\" \"angular-http-server --path ./dist/todo-app\"",
         "deploy": "git checkout prod && git pull origin main && git push && git checkout main && echo '' && echo 'deploying should be in the building phase by now'"
     },
     "repository": {
@@ -20,6 +22,7 @@
     },
     "homepage": "https://github.com/dein-ding/ToDo-App#readme",
     "devDependencies": {
+        "angular-http-server": "^1.10.0",
         "concurrently": "^6.3.0"
     }
 }

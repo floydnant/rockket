@@ -15,11 +15,11 @@
         <label *ngIf="this.type == 'Task'" class="priority-label edit-item"
             >Priority: &nbsp;
             <select class="input" [(ngModel)]="data.priority" [disabled]="noEdit">
-                <option value="-1">Optional</option>
-                <option value="0">None</option>
-                <option value="1">Low</option>
-                <option value="2">Medium</option>
                 <option value="3">High</option>
+                <option value="2">Medium</option>
+                <option value="1">Low</option>
+                <option value="0">None</option>
+                <option value="-1">Optional</option>
             </select>
         </label>
 

@@ -100,7 +100,7 @@ export const escapeHTML = (unsafe: string) =>
               }
           });
 
-export const getCopyOf = (obj: object | any[]) => JSON.parse(JSON.stringify(obj));
+export const getCopyOf = <T extends object | any[]>(obj: T): T => JSON.parse(JSON.stringify(obj));
 
 /**
  * ## download JSON object or array as file

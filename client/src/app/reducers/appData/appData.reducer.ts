@@ -18,23 +18,24 @@ const setAllSubtasksCompleted = (tasks: Task[]) => {
 
 export type Action = AppDataActions.All;
 
-const newState = (state: AppData, newData: AppData) => ({ ...state, ...newData });
-
 export function appDataReducer(state: AppData = defaultState, action: Action) {
-    let newState_ = getCopyOf(state);
+    const getNewState = (newData: AppData) => ({ ...state, ...newData });
 
-    const getListById = (id: string): TaskList => newState_.lists.find((list: TaskList) => list.id == id);
+    let newState = getCopyOf(state);
+
+    const getListById = (id: string): TaskList => newState.lists.find((list: TaskList) => list.id == id);
     const getTaskById = (
         taskId: string,
         getParentArr = false,
-        tasks: Task[] = getListById(newState_.activeListId).list
+        tasks: Task[] = getListById(newState.activeListId).list
     ) => {
-        const recurse = (taskId: string, arr: Task[]): Task | Task[] | void => {
-            for (let i in arr) {
-                const task: Task = arr[i];
+        const recurse = (taskId: string, list: Task[]): Task | Task[] | void => {
+            for (let taskIndex in list) {
+                const task: Task = list[taskIndex];
 
-                if (task.id == taskId) return getParentArr ? arr : task;
-                else if (task.subTasks.length != 0) {
+                if (task.id == taskId) return getParentArr ? list : task;
+
+                if (task.subTasks.length) {
                     const taskRef = recurse(taskId, task.subTasks);
                     if (taskRef) return taskRef;
                 }
@@ -43,7 +44,7 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
         return recurse(taskId, tasks);
     };
 
-    const activeList = getListById(newState_.activeListId);
+    const activeList = getListById(newState.activeListId);
     if (activeList && !activeList.sortBy) activeList.sortBy = new TaskList().sortBy; // migration
     const SORT_BY_PROPERTIES = activeList?.sortBy || new TaskList().sortBy;
 
@@ -63,28 +64,28 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
     switch (action.type) {
         case AppDataActions.CREATE_LIST: {
             const newList = new TaskList(action.newListName);
-            newState_.lists.push(newList);
-            newState_.activeListId = newList.id;
-            return newState(state, newState_);
+            newState.lists.push(newList);
+            newState.activeListId = newList.id;
+            return getNewState(newState);
         }
         case AppDataActions.SET_ACTIVE_LIST: {
-            newState_.activeListId = action.listId;
-            return newState(state, newState_);
+            newState.activeListId = action.listId;
+            return getNewState(newState);
         }
         case AppDataActions.EDIT_LIST: {
             let taskList = getListById(action.listId);
             taskList = Object.assign(taskList, action.updatedList);
-            return newState(state, newState_);
+            return getNewState(newState);
         }
         case AppDataActions.DELETE_LIST: {
             const taskList = getListById(action.listId);
-            const listIndex = newState_.lists.indexOf(taskList);
+            const listIndex = newState.lists.indexOf(taskList);
 
-            newState_.lists.splice(listIndex, 1);
-            const listCount = newState_.lists.length;
+            newState.lists.splice(listIndex, 1);
+            const listCount = newState.lists.length;
             const nextListIndex = listIndex > 0 ? listIndex - 1 : 0;
-            newState_.activeListId = listCount == 0 ? null : newState_.lists[nextListIndex].id;
-            return newState_;
+            newState.activeListId = listCount == 0 ? null : newState.lists[nextListIndex].id;
+            return newState;
         }
 
         case AppDataActions.CREATE_TASK: {
@@ -93,7 +94,7 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
 
             sortTasks(taskList.list);
 
-            return newState(state, newState_);
+            return getNewState(newState);
         }
         case AppDataActions.EDIT_TASK: {
             let task = getTaskById(action.taskId);
@@ -102,7 +103,7 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             const taskParentArr = getTaskById(action.taskId, true) as Task[];
             sortTasks(taskParentArr);
 
-            return newState(state, newState_);
+            return getNewState(newState);
         }
         case AppDataActions.SET_TASK_COMPLETED: {
             let task = getTaskById(action.taskId) as Task;
@@ -122,7 +123,7 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             const taskParentArr = getTaskById(action.taskId, true) as Task[];
             sortTasks(taskParentArr);
 
-            return newState(state, newState_);
+            return getNewState(newState);
         }
         case AppDataActions.ADD_SUBTASK: {
             const task = getTaskById(action.taskId) as Task;
@@ -131,19 +132,19 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             const taskParentArr = getTaskById(action.taskId, true) as Task[];
             sortTasks(taskParentArr);
 
-            return newState(state, newState_);
+            return getNewState(newState);
         }
         case AppDataActions.TOGGLE_SUBTASK_LIST: {
             const task = getTaskById(action.taskId) as Task;
             task.collapseSubtaskList = !task.collapseSubtaskList;
-            return newState(state, newState_);
+            return getNewState(newState);
         }
         case AppDataActions.DELETE_TASK: {
             const taskParent = getTaskById(action.taskId, true);
             const task = getTaskById(action.taskId);
             const indexOfTaskInParent = (taskParent as Task[]).indexOf(task as Task);
             (taskParent as Task[]).splice(indexOfTaskInParent, 1);
-            return newState_;
+            return newState;
         }
 
         case AppDataActions.IMPORT_TO_DB: {

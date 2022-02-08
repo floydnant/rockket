@@ -34,12 +34,14 @@ export const countOpenTasksMultiLevel = (tasks: Task[]) => {
 export const sortTasksBy = (tasks: Task[], property: string) => {
     const typeOfProperty = property == 'priority' ? 'number' : typeof tasks[0][property];
 
-    let sort: (arr: Task[]) => Task[];
+    let sort: (tasks_: Task[]) => Task[];
     switch (typeOfProperty) {
         case 'number':
-            sort = arr => arr.reverse().sort((a, b) => parseInt(a[property]) - parseInt(b[property])).reverse(); break; //prettier-ignore
+            sort = arr => arr.reverse().sort((a, b) => parseInt(a[property]) - parseInt(b[property])).reverse(); //prettier-ignore
+            break;
         case 'boolean':
-            sort = arr => arr.sort((a, b) => (a[property] === b[property] ? 0 : b[property] ? -1 : 1)); break; //prettier-ignore
+            sort = arr => arr.sort((a, b) => (a[property] === b[property] ? 0 : b[property] ? -1 : 1));
+            break;
     }
 
     const recurse = (tasks_: Task[]) => {
