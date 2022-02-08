@@ -1,17 +1,16 @@
-import { TaskMeta, Task } from '../shared/task.model';
-import { TaskList, TaskListMeta } from '../shared/taskList.model';
-import { getCopyOf } from '../shared/utility.model';
+import { TaskMeta, Task } from '../../../shared/task.model';
+import { TaskList, TaskListMeta } from '../../../shared/taskList.model';
+import { getCopyOf } from '../../../shared/utility.model';
 
 export class EditmenuTasklistData {
-    name: TaskList["name"] = '';
+    name: TaskList['name'] = '';
     meta: TaskListMeta = new TaskListMeta();
 }
 export class EditmenuTaskData {
-    name: Task["name"] = '';
+    name: Task['name'] = '';
     priority: Task['priority'] = 0;
     meta: TaskMeta = new TaskMeta();
 }
-
 
 export interface editmenuOptions {
     type: 'Task' | 'TaskList';

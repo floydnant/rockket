@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { AppData } from '../reducers';
-import { countOpenTasks } from '../shared/taskList.model';
+import { AppData } from '../../../reducers';
+import { countOpenTasks } from '../../../shared/taskList.model';
 
 @Component({
     selector: 'sidebar',

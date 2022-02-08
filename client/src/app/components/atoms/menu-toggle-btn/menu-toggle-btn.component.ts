@@ -9,7 +9,7 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { isTouchDevice } from '../shared/utility.model';
+import { isTouchDevice } from '../../../shared/utility.model';
 
 @Component({
     selector: 'menu-toggle-btn',

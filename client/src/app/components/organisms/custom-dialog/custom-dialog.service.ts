@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Task } from '../shared/task.model';
+import { Task } from '../../../shared/task.model';
 import { CustomDialogComponent } from './custom-dialog.component';
 import {
     CustomDialogConfirmOptions,

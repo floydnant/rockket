@@ -9,19 +9,19 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { reducers, metaReducers } from './reducers';
 
 import { AppComponent } from './app.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { EditMenuComponent } from './edit-menu/edit-menu.component';
-import { TaskComponent } from './task/task.component';
-import { ModalComponent } from './modal/modal.component';
-import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
+import { SidebarComponent } from './components/organisms/sidebar/sidebar.component';
+import { EditMenuComponent } from './components/organisms/edit-menu/edit-menu.component';
+import { TaskComponent } from './components/molecules/task/task.component';
+import { ModalComponent } from './components/molecules/modal/modal.component';
+import { CustomDialogComponent } from './components/organisms/custom-dialog/custom-dialog.component';
 import { environment } from '../environments/environment';
 import { AppDataEffects } from './reducers/appData/appData.effects';
-import { ThemeToggleComponent } from './theme-toggle/theme-toggle.component';
-import { MenuComponent } from './side-menu/menu.component';
-import { MenuToggleBtnComponent } from './menu-toggle-btn/menu-toggle-btn.component';
+import { ThemeToggleComponent } from './components/atoms/theme-toggle/theme-toggle.component';
+import { MenuComponent } from './components/organisms/side-menu/menu.component';
+import { MenuToggleBtnComponent } from './components/atoms/menu-toggle-btn/menu-toggle-btn.component';
 import { RemoveHostDirective } from './directives/remove-host.directive';
-import { QuickAddTaskComponent } from './task/quick-add-task/quick-add-task.component';
-import { ShowCompletedComponent } from './task/show-completed/show-completed.component';
+import { QuickAddTaskComponent } from './components/molecules/task/quick-add-task/quick-add-task.component';
+import { ShowCompletedComponent } from './components/molecules/task/show-completed/show-completed.component';
 
 @NgModule({
     declarations: [

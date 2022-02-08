@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { ModalService } from '../modal/modal.service';
+import { ModalService } from '../../molecules/modal/modal.service';
 import { CustomDialogComponentProps } from './custom-dialog.model';
 import { DialogService } from './custom-dialog.service';
 

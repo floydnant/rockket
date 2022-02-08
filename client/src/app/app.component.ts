@@ -5,12 +5,12 @@ import { Store } from '@ngrx/store';
 import { AppData, AppState } from './reducers/appData';
 import { AppDataActions } from './reducers/';
 
-import { ModalService } from './modal/modal.service';
+import { ModalService } from './components/molecules/modal/modal.service';
 import { getCopyOf, isTouchDevice } from './shared/utility.model';
 import { countOpenTasks, TaskList } from './shared/taskList.model';
 import { Task } from './shared/task.model';
-import { DialogService } from './custom-dialog/custom-dialog.service';
-import { EditMenuService } from './edit-menu/edit-menu.service';
+import { DialogService } from './components/organisms/custom-dialog/custom-dialog.service';
+import { EditMenuService } from './components/organisms/edit-menu/edit-menu.service';
 import { AppDataService } from './reducers/appData/appData.service';
 
 @Component({

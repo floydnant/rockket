@@ -1,8 +1,8 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { DialogService } from '../custom-dialog';
-import { ModalService } from '../modal/modal.service';
-import { TaskMeta } from '../shared/task.model';
-import { getCopyOf, validateAndFormatUrl } from '../shared/utility.model';
+import { ModalService } from '../../molecules/modal/modal.service';
+import { TaskMeta } from '../../../shared/task.model';
+import { getCopyOf, validateAndFormatUrl } from '../../../shared/utility.model';
 import { editmenuOptions, EditmenuTaskData, responseHandlerInterface, EditmenuTasklistData } from './edit-menu.model';
 import { EditMenuService } from './edit-menu.service';
 
