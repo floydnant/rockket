@@ -32,16 +32,7 @@
             <div class="text-container">
                 <p>
                     <span class="taskName">
-                        <i
-                            *ngIf="this.data.priority == -1"
-                            class="fas fa-question"
-                            style="color: var(--submit-clr)"
-                        ></i>
-                        <i
-                            *ngFor="let _ of this.priorityArr; let i = index"
-                            class="fas fa-exclamation"
-                            [style]="(i ? 'margin-left:5px;' : '') + 'color: var(--danger-clr);'"
-                        ></i>
+                        <priority-icon [priority]="data.priority"></priority-icon>
                         {{ this.data.name }}
                     </span>
                     <a

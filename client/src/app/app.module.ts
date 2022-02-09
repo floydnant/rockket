@@ -22,6 +22,8 @@ import { MenuToggleBtnComponent } from './components/atoms/menu-toggle-btn/menu-
 import { RemoveHostDirective } from './directives/remove-host.directive';
 import { QuickAddTaskComponent } from './components/molecules/task/quick-add-task/quick-add-task.component';
 import { ShowCompletedComponent } from './components/molecules/task/show-completed/show-completed.component';
+import { LoadingSpinnerComponent } from './components/atoms/loading-spinner/loading-spinner.component';
+import { PriorityIconComponent } from './components/atoms/priority-icon/priority-icon.component';
 
 @NgModule({
     declarations: [
@@ -37,6 +39,8 @@ import { ShowCompletedComponent } from './components/molecules/task/show-complet
         RemoveHostDirective,
         QuickAddTaskComponent,
         ShowCompletedComponent,
+        LoadingSpinnerComponent,
+        PriorityIconComponent,
     ],
     imports: [
         BrowserModule,

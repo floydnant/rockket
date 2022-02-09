@@ -1,0 +1,6 @@
+<i *ngIf="this.priority == -1" class="fas fa-question" style="color: var(--submit-clr)"></i>
+<i
+    *ngFor="let _ of this.priorityArr; let i = index"
+    class="fas fa-exclamation"
+    [style]="(i ? 'margin-left:5px;' : '') + 'color: var(--danger-clr);'"
+></i>
