@@ -1,0 +1,18 @@
+<div class="container">
+    <input
+        #inputField
+        class="input"
+        [class.no-focus-no-border]="noFocusNoBorder"
+        [class.is-focused]="isFocused"
+        [type]="type"
+        [placeholder]="placeholder"
+        [(ngModel)]="value"
+        (keydown.enter)="submit()"
+        (keydown.escape)="value = ''; inputField.blur()"
+        (focus)="onFocusChange(true)"
+        (blur)="onFocusChange(false)"
+    />
+    <button class="btn {{ btnColorClass }}" [disabled]="this.value.trim() == ''" (click)="submit()">
+        {{ btnText }}
+    </button>
+</div>

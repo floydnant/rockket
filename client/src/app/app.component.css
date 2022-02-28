@@ -106,19 +106,8 @@ main {
     margin: 0;
 }
 .new-task-form {
-    margin: 20px 0;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.nameInput {
+    margin: 25px 0;
     width: 100%;
-    margin-right: 10px;
-}
-.btn-submit {
-    padding: 7.5px 15px;
-    border-radius: 10px;
 }
 
 .task-list ul {

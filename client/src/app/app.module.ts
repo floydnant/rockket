@@ -20,7 +20,7 @@ import { ThemeToggleComponent } from './components/atoms/theme-toggle/theme-togg
 import { MenuComponent } from './components/organisms/side-menu/menu.component';
 import { MenuToggleBtnComponent } from './components/atoms/menu-toggle-btn/menu-toggle-btn.component';
 import { RemoveHostDirective } from './directives/remove-host.directive';
-import { QuickAddTaskComponent } from './components/molecules/task/quick-add-task/quick-add-task.component';
+import { SingleInputFormComponent } from './components/molecules/single-input-form/single-input-form.component';
 import { ShowCompletedComponent } from './components/molecules/task/show-completed/show-completed.component';
 import { LoadingSpinnerComponent } from './components/atoms/loading-spinner/loading-spinner.component';
 import { PriorityIconComponent } from './components/atoms/priority-icon/priority-icon.component';
@@ -37,7 +37,7 @@ import { PriorityIconComponent } from './components/atoms/priority-icon/priority
         MenuComponent,
         MenuToggleBtnComponent,
         RemoveHostDirective,
-        QuickAddTaskComponent,
+        SingleInputFormComponent,
         ShowCompletedComponent,
         LoadingSpinnerComponent,
         PriorityIconComponent,

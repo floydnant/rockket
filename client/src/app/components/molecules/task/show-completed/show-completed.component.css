@@ -3,7 +3,7 @@
     /* background: hsla(241, 30%, 39%, 0.788); */
     border-radius: 8px;
     padding: 5px;
-    box-shadow: var(--box-shadow-s);
+    /* box-shadow: var(--box-shadow-s); */
 
     display: flex;
 

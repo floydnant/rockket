@@ -62,13 +62,16 @@ export class EditMenuComponent implements OnInit {
 
     linkInput: string;
     addLink() {
-        const validation = validateAndFormatUrl(this.linkInput);
-        const link = validation.resUrl;
+        const { resUrl, isDomainValid } = validateAndFormatUrl(this.linkInput);
+        const link = resUrl;
 
         if (link == '') return;
 
-        if (!validation.isDomainValid && link != '') {
-            this.dialogService.confirm({ title: 'invalid link' });
+        if (!isDomainValid) {
+            this.dialogService.confirm({
+                title: 'invalid domain',
+                text: "Your Link should at least look like this: 'example.com'",
+            });
             return;
         }
 

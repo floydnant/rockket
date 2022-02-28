@@ -68,8 +68,8 @@ export const generatePassword = (blockCount: number = 4) => {
 export const isTouchDevice = () =>
     'ontouchstart' in window || navigator.maxTouchPoints > 0 || (navigator as any).msMaxTouchPoints > 0;
 
-export const validateAndFormatUrl = (url: string = '') => {
-    url = url.trim().toLocaleLowerCase();
+export const validateAndFormatUrl = (url: string) => {
+    url = (url || '').trim().toLocaleLowerCase();
     const isProtocolValid = /^https?:\/\//.test(url);
     const isDomainValid = /([^\s"/,;:]+\.)+[^\s".,;:]+$/g.test(url);
 

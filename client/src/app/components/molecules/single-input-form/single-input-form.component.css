@@ -1,3 +1,7 @@
+:host {
+    display: block
+}
+
 .container {
     margin-top: 10px;
     /* background: hsla(241, 30%, 39%, 0.788); */
@@ -5,36 +9,47 @@
     box-shadow: var(--box-shadow-s);
 
     display: flex;
+    transition: 180ms;
 }
 
 input {
     box-sizing: border-box;
     width: 100%;
-    margin-right: 10px;
-
+    
     /* padding: 6px; */
     border-radius: 10px;
     color: var(--global-color);
     
     background: none;
     box-shadow: none;
+    transition: all 180ms, width 200ms;
 }
-input:not(:focus) {
+.no-focus-no-border:not(:focus) {
     border: 1px solid var(--global-background);
 }
 
 button {
+    box-sizing: border-box;
     height: unset;
     width: unset;
+    margin-left: 10px;
     
     border-radius: 10px;
     font-size: 15px;
     /* padding: 6px 15px; */
     
-    box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6);
     transform: unset !important;
+    box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6);
+    transition: all 180ms, color 200ms;
+    transform-origin: right;
+    opacity: 1;
 }
-input:not(:focus) ~ button {
-    filter: opacity(0) !important;
-    /* pointer-events: none; */
+input:not(.is-focused) ~ button {
+    transition: color 0 0, opacity 0 0ms, all 80ms 180ms;
+    opacity: 0;
+    color: rgba(0, 0, 0, 0);
+    /* transform: scale(0, 1) !important; */
+    width: 0;
+    padding: 0;
+    margin: 0;
 }

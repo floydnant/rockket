@@ -32,17 +32,20 @@
         ></textarea>
 
         <div *ngIf="this.type == 'Task' && !noEdit" class="add-link-container">
-            <input
-                type="url"
+            <!-- <input
                 class="linkInput edit-item input"
-                id="linkInput"
-                placeholder="Link"
-                [disabled]="this.noEdit"
                 [(ngModel)]="this.linkInput"
-            />
-            <button class="btn btn-primary" [disabled]="!this.trimLinkInput() || !this.linkInput" (click)="addLink()">
-                add
-            </button>
+                />
+                <button class="btn btn-primary" [disabled]="!this.trimLinkInput() || !this.linkInput" (click)="addLink()">
+                    add
+                </button> -->
+                <single-input-form
+                noFocusNoBorder
+                type="url"
+                placeholder="Link"
+                class="linkInput"
+                (onSubmit)="linkInput = $event; addLink()"
+            ></single-input-form>
         </div>
         <div
             *ngIf="this.type == 'Task' && this.data.meta.links.length"

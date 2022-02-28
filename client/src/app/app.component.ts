@@ -12,6 +12,7 @@ import { Task } from './shared/task.model';
 import { DialogService } from './components/organisms/custom-dialog/custom-dialog.service';
 import { EditMenuService } from './components/organisms/edit-menu/edit-menu.service';
 import { AppDataService } from './reducers/appData/appData.service';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -30,17 +31,16 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     countOpenTasks = countOpenTasks;
 
-    log(event) {
-        console.log('menu toggled, state:', event);
-        console.log('isMobileMenuOpen:', this.isMobileMenuOpen);
-    }
-
     isTouchDevice = isTouchDevice();
     isMobileMenuOpen: boolean;
     setMobileMenuOpen = (e: boolean) => (this.isMobileMenuOpen = e);
 
-    @ViewChild('nameInputRef') nameInputRef: ElementRef;
+    // @ViewChild('nameInputRef') nameInputRef: ElementRef;
     updateCount = 0;
+    focusChangeEventsSubject = new Subject<boolean>();
+    changeFocus(shouldBeFocused: boolean) {
+        this.focusChangeEventsSubject.next(shouldBeFocused);
+    }
 
     constructor(
         public modalService: ModalService,
@@ -57,29 +57,24 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.completedTasks = this.activeTaskList.list.filter(task => task.isCompleted);
 
             this.updateCount++;
-            if (this.updateCount > 1 && !this.isTouchDevice) this.nameInputRef.nativeElement.select();
+            if (this.updateCount > 1 && !this.isTouchDevice) this.changeFocus(true); //this.nameInputRef.nativeElement.select();
 
             console.log('%cupdated state:', 'color: gray', this.data);
         });
     }
 
-    clearTaskNameInput = (inputRef?: HTMLElement) => {
-        this.taskNameInput = '';
-        if (inputRef) inputRef.blur();
-    };
-
     ///////////////////////////////////////////// Tasks ////////////////////////////////////////////////
 
     dispatchCreateTask = (newTaskName: string) =>
         this.store.dispatch(new AppDataActions.CreateTask(this.activeTaskList.id, newTaskName));
-    addTask = () => {
-        if (!this.taskNameInput) return;
+    addTask = (input: string) => {
+        if (!(/* this.taskNameInput */ input)) return;
         if (this.data.lists.length == 0) {
             this.dialogService.confirm({ title: "You don't have any lists." });
             return;
         }
-        this.dispatchCreateTask(this.taskNameInput);
-        this.clearTaskNameInput();
+        this.dispatchCreateTask(/* this.taskNameInput */ input);
+        // this.clearTaskNameInput();
     };
     getTaskById(taskId: string, taskList: Task[], getParentArr = false) {
         const recurse = (taskId: string, arr: Task[]): Task | Task[] | void => {
@@ -161,7 +156,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {}
     ngAfterViewInit() {
-        this.nameInputRef.nativeElement.select();
+        // this.nameInputRef.nativeElement.select();
+        this.changeFocus(true);
 
         if (this.isTouchDevice) document.body.classList.add('touchDevice');
     }
