@@ -8,6 +8,7 @@ const setAllSubtasksCompleted = (tasks: Task[]) => {
     const recurse = (tasks_: Task[]) => {
         tasks_ = tasks_.map(task => {
             task.isCompleted = true;
+            task.timeCompleted = new Date();
             if (task.subTasks.length) recurse(task.subTasks);
             return task;
         });
@@ -107,17 +108,17 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
         }
         case AppDataActions.SET_TASK_COMPLETED: {
             let task = getTaskById(action.taskId) as Task;
-            const modifiedSubtasks = getCopyOf(task.subTasks);
+            const subtasksCopy = getCopyOf(task.subTasks);
 
             if (!task.isCompleted)
                 if (action.allSubtasks) {
-                    setAllSubtasksCompleted(modifiedSubtasks);
+                    setAllSubtasksCompleted(subtasksCopy);
                     task.collapseSubtaskList = true;
                 }
             task = Object.assign(task, {
                 isCompleted: action.shouldBeCompleted,
                 timeCompleted: new Date(),
-                subTasks: modifiedSubtasks,
+                subTasks: subtasksCopy,
             });
 
             const taskParentArr = getTaskById(action.taskId, true) as Task[];

@@ -60,10 +60,10 @@ export class TaskComponent implements OnInit {
                 .confirm({
                     title: 'Open subtasks left!',
                     text: 'Do you want to mark all subtasks as completed too?',
-                    buttons: ['keep uncompleted', 'OK'],
+                    buttons: ['Cancel', 'Keep uncompleted', 'OK'],
                 })
                 .then(() => dispatchAction(true))
-                .catch(err => dispatchAction());
+                .catch(clickedButton => clickedButton == 'Keep uncompleted' && dispatchAction());
         else dispatchAction();
     };
     toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
@@ -97,12 +97,20 @@ export class TaskComponent implements OnInit {
     };
     deleteTask = (id: string, prompt = true) => {
         const del = () => this.store.dispatch(new AppDataActions.DeleteTask(this.data.id));
+        const openSubtasksCount = this.data.subTasks.filter(task => !task.isCompleted).length;
         if (prompt)
+            // TODO: make this an inline prompt
             this.dialogService
-                .confirm({ title: 'Delete this task?', buttons: ['Cancel', '!Delete'] })
-                .then(() => {
-                    del();
-                }) // TODO: make this an inline animation
+                .confirm({
+                    title: `Delete this task?`,
+                    text: openSubtasksCount
+                        ? `and ${openSubtasksCount > 1 ? `all ` : ''}it's ${openSubtasksCount} open ${
+                              openSubtasksCount > 1 ? `subtasks` : 'subtask'
+                          }?`
+                        : null,
+                    buttons: ['Cancel', '!Delete' + (openSubtasksCount ? ' all' : '')],
+                })
+                .then(() => del())
                 .catch(() => {});
         else del();
     };
