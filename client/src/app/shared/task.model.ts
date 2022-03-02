@@ -15,7 +15,7 @@ export class Task {
     public priority: number = 0; // TODO: make this an enum
     // TODO: add field: public createdAt: Date | '' = '';
     public isCompleted: boolean = false;
-    public timeCompleted: Date | '' = ''; // TODO: rename field: timeCompleted -> completedAt
+    public completedAt: Date | '' = '';
     public meta: TaskMeta = new TaskMeta();
     public collapseSubtaskList = false;
     public subTasks: Task[] = [];

@@ -8,7 +8,7 @@ const setAllSubtasksCompleted = (tasks: Task[]) => {
     const recurse = (tasks_: Task[]) => {
         tasks_ = tasks_.map(task => {
             task.isCompleted = true;
-            task.timeCompleted = new Date();
+            task.completedAt = new Date();
             if (task.subTasks.length) recurse(task.subTasks);
             return task;
         });
@@ -117,7 +117,7 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
                 }
             task = Object.assign(task, {
                 isCompleted: action.shouldBeCompleted,
-                timeCompleted: new Date(),
+                completedAt: new Date(),
                 subTasks: subtasksCopy,
             });
 
