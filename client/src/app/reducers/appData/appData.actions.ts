@@ -72,7 +72,7 @@ export class DeleteTask implements Action {
 export class ImportToDB implements Action {
     readonly type = IMPORT_TO_DB;
 
-    constructor(public payload: AppData) {}
+    constructor(public payload: AppData, public overwrite = false) {}
 }
 
 export type All =

@@ -8,7 +8,7 @@
 >
     <div class="position-time-completed">
         <span *ngIf="this.data.isCompleted" class="time-completed">
-            {{ this.util.formatDate(this.data.completedAt) }}
+            {{ formatDateRelative(this.data.completedAt) }}
         </span>
     </div>
     <div class="wrapper outer-wrapper">
@@ -20,7 +20,6 @@
                 (mouseenter)="completeBtnIsHovered = true"
                 (mouseleave)="completeBtnIsHovered = false"
             >
-
                 <i
                     *ngIf="this.data.isCompleted; else uncompleted"
                     class="{{ completeBtnIsHovered ? 'far fa-circle' : 'fas fa-check-circle' }}"
@@ -36,7 +35,7 @@
                         {{ this.data.name }}
                     </span>
                     <a
-                        *ngFor="let link of (isTouchDevice ? [] : this.data.meta.links)"
+                        *ngFor="let link of isTouchDevice ? [] : this.data.meta.links"
                         class="external-link"
                         [href]="link"
                         [title]="link"

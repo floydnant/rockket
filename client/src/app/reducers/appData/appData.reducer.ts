@@ -149,12 +149,27 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
         }
 
         case AppDataActions.IMPORT_TO_DB: {
-            return action.payload;
+            const importedState = getCopyOf(action.payload);
+
+            console.log('importedState.version:', importedState.version);
+
+            // migrate 'timeCompleted' to 'completedAt'
+            if (importedState.version != ACTIVE_VERSION)
+                importedState.lists.forEach(tasklist => {
+                    tasklist.list = tasklist.list.map(({ timeCompleted, ...task }: any) => ({
+                        ...task,
+                        completedAt: timeCompleted,
+                    }));
+                });
+
+            return {
+                ...newState,
+                lists: [...(action.overwrite ? [] : newState.lists), ...importedState.lists],
+                version: ACTIVE_VERSION,
+            };
         }
 
         default:
             return state;
     }
-
-    // localStorage -> ngRX Effects?
 }

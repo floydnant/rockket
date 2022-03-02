@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@
 import { Store } from '@ngrx/store';
 import { ModalService } from '../modal/modal.service';
 import { AppData } from '../../../reducers';
-import { Utility, isTouchDevice } from '../../../shared/utility.model';
+import { isTouchDevice, formatDateRelative } from '../../../shared/utility.model';
 import { Task } from '../../../shared/task.model';
 
 import { AppDataActions } from '../../../reducers';
@@ -16,7 +16,7 @@ import { countOpenTasksMultiLevel, countOpenTasks } from '../../../shared/taskLi
     styleUrls: ['./task.component.css'],
 })
 export class TaskComponent implements OnInit {
-    util = new Utility();
+    formatDateRelative = formatDateRelative;
     countOpenTasks = countOpenTasks;
 
     @Input() taskPosition: number;

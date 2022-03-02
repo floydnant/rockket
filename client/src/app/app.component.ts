@@ -141,10 +141,10 @@ export class AppComponent implements OnInit, AfterViewInit {
                 if ('appData' in jsonData) {
                     const appData = jsonData.appData;
                     if ('activeListId' in appData && 'lists' in appData) {
-                        const data: AppData = getCopyOf(this.data);
-                        // TODO: add a prompt wich lets the user select wich lists to import
-                        data.lists = [...this.data.lists, ...appData.lists];
-                        this.appDataService.importFromJSON(data);
+                        // const data: AppData = getCopyOf(this.data);
+                        // // TODO: add a prompt wich lets the user select wich lists to import
+                        // data.lists = [...this.data.lists, ...appData.lists];
+                        this.appDataService.importFromJSON(appData);
                     } else this.dialogService.confirm({ title: 'The JSON File does not contain the necessary data.' });
                 } else this.dialogService.confirm({ title: 'The JSON File might not be what you think it is.' });
             } catch (e) {

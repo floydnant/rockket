@@ -30,7 +30,7 @@ export class AppDataService implements OnInit {
     load = () => {
         try {
             let data = JSON.parse(localStorage[this.db.localStorageKey]);
-            this.store.dispatch(new AppDataActions.ImportToDB(data.appData));
+            this.store.dispatch(new AppDataActions.ImportToDB(data.appData, true));
             console.log(
                 '%cAppData successfully loaded from database (localStorage for now)',
                 'color: hsl(113, 100%, 50%);'

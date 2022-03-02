@@ -1,7 +1,7 @@
 import { Task } from 'src/app/shared/task.model';
 import { TaskList } from '../../shared/taskList.model';
 
-export const ACTIVE_VERSION = '2.0';
+export const ACTIVE_VERSION = '3.0';
 
 export interface AppData {
     activeListId: string;
