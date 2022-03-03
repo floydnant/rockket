@@ -166,6 +166,7 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
                 ...newState,
                 lists: [...(action.overwrite ? [] : newState.lists), ...importedState.lists],
                 version: ACTIVE_VERSION,
+                activeListId: importedState.lists[0].id,
             };
         }
 
