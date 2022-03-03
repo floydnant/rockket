@@ -125,10 +125,13 @@
         [showCompleted]="showCompleted"
         [taskPosition]="this.taskPosition + i - 1"
     ></task>
+
     <single-input-form
         *ngIf="this.data.subTasks.length != 0 && !this.data.collapseSubtaskList && !data.isCompleted"
-        (onSubmit)="this.dispatchNewSubtaskAction($event)"
+        (onSubmit)="addSubTask($event)"
+        [inputFieldId]="'_' + data.id"
     ></single-input-form>
+
     <show-completed
         *ngIf="completedTasks.length && uncompletedTasks.length"
         [isOpen]="showCompleted"

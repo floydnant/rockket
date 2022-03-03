@@ -30,6 +30,12 @@ export class TaskComponent implements OnInit {
     /** toggle the task action buttons when on touch a device */
     toggleTaskActionBtns = (v: boolean) => (this.touchDevice_showBtns = v);
 
+    focusQuickAddInputField = () => {
+        setTimeout(() => {
+            document.querySelector<HTMLInputElement>('#_' + this.data.id).focus();
+        }, 200);
+    };
+
     constructor(
         public modalService: ModalService,
         private store: Store<AppData>,
@@ -60,7 +66,7 @@ export class TaskComponent implements OnInit {
                 .confirm({
                     title: 'Open subtasks left!',
                     text: 'Do you want to mark all subtasks as completed too?',
-                    buttons: ['Cancel', 'Keep uncompleted', 'OK'],
+                    buttons: ['Keep uncompleted', 'Cancel', 'OK'],
                 })
                 .then(() => dispatchAction(true))
                 .catch(clickedButton => clickedButton == 'Keep uncompleted' && dispatchAction());
@@ -70,11 +76,19 @@ export class TaskComponent implements OnInit {
 
     dispatchNewSubtaskAction = (newTaskName: string) =>
         this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
-    addSubTask = () => {
-        this.dialogService
-            .prompt({ title: 'Create new subtask:', buttons: ['Cancel', 'Create'], placeholder: 'subtask name' })
-            .then((newTaskName: string) => this.dispatchNewSubtaskAction(newTaskName))
-            .catch(() => {});
+    addSubTask = (newTaskName?: string) => {
+        if (!newTaskName)
+            this.dialogService
+                .prompt({ title: 'Create new subtask:', buttons: ['Cancel', 'Create'], placeholder: 'subtask name' })
+                .then((newTaskName: string) => {
+                    this.dispatchNewSubtaskAction(newTaskName);
+                    this.focusQuickAddInputField();
+                })
+                .catch(() => {});
+        else {
+            this.dispatchNewSubtaskAction(newTaskName);
+            this.focusQuickAddInputField();
+        }
     };
     toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
     editTaskDetails = (viewLinks = false) => {

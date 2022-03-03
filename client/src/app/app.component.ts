@@ -25,9 +25,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     taskNameInput!: string;
 
     uncompletedTasks: Task[];
+    completedTasks: Task[];
     showCompletedMaster = false;
     showCompleted = this.showCompletedMaster;
-    completedTasks: Task[];
 
     countOpenTasks = countOpenTasks;
 
@@ -35,12 +35,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     isMobileMenuOpen: boolean;
     setMobileMenuOpen = (e: boolean) => (this.isMobileMenuOpen = e);
 
-    // @ViewChild('nameInputRef') nameInputRef: ElementRef;
-    updateCount = 0;
-    focusChangeEventsSubject = new Subject<boolean>();
-    changeFocus(shouldBeFocused: boolean) {
-        this.focusChangeEventsSubject.next(shouldBeFocused);
-    }
+    quickAddInputField = {
+        focusEventsSubject: [new Subject<boolean>(), new Subject<boolean>()],
+        focus: (inputField: number) => {
+            this.quickAddInputField.focusEventsSubject[inputField].next(true);
+            console.log('changing focus of:', inputField);
+        },
+    };
 
     constructor(
         public modalService: ModalService,
@@ -56,26 +57,30 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.uncompletedTasks = this.activeTaskList.list.filter(task => !task.isCompleted);
             this.completedTasks = this.activeTaskList.list.filter(task => task.isCompleted);
 
-            this.updateCount++;
-            if (this.updateCount > 1 && !this.isTouchDevice) this.changeFocus(true); //this.nameInputRef.nativeElement.select();
-
             console.log('%cupdated state:', 'color: gray', this.data);
         });
     }
 
     ///////////////////////////////////////////// Tasks ////////////////////////////////////////////////
 
+    addTask = [
+        (newTaskName: string) => {
+            if (!newTaskName) return;
+            if (this.data.lists.length == 0) {
+                this.dialogService.confirm({ title: "You don't have any lists." });
+                return;
+            }
+            this.dispatchCreateTask(newTaskName);
+            this.quickAddInputField.focus(0);
+        },
+        (newTaskName: string) => {
+            this.dispatchCreateTask(newTaskName);
+            this.quickAddInputField.focus(1);
+        },
+    ];
     dispatchCreateTask = (newTaskName: string) =>
         this.store.dispatch(new AppDataActions.CreateTask(this.activeTaskList.id, newTaskName));
-    addTask = (input: string) => {
-        if (!(/* this.taskNameInput */ input)) return;
-        if (this.data.lists.length == 0) {
-            this.dialogService.confirm({ title: "You don't have any lists." });
-            return;
-        }
-        this.dispatchCreateTask(/* this.taskNameInput */ input);
-        // this.clearTaskNameInput();
-    };
+
     getTaskById(taskId: string, taskList: Task[], getParentArr = false) {
         const recurse = (taskId: string, arr: Task[]): Task | Task[] | void => {
             for (let i in arr) {
@@ -157,7 +162,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {}
     ngAfterViewInit() {
         // this.nameInputRef.nativeElement.select();
-        this.changeFocus(true);
+        this.quickAddInputField.focus(0);
 
         if (this.isTouchDevice) document.body.classList.add('touchDevice');
     }

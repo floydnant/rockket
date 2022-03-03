@@ -18,6 +18,7 @@ import { Subscription, Observable } from 'rxjs';
 })
 export class SingleInputFormComponent implements OnInit, OnDestroy {
     @ViewChild('inputField') inputFieldRef: ElementRef<HTMLInputElement>;
+    @Input() inputFieldId?: string;
     @Input() type: string = 'text';
     @Input() placeholder: string = 'add new task...';
     @Input() value: string = '';
@@ -38,13 +39,13 @@ export class SingleInputFormComponent implements OnInit, OnDestroy {
         setTimeout(() => (this.isFocused = isFocused), isFocused ? 0 : 200);
         this.focusChange.emit(isFocused);
     };
-    changeFocus(isNowFocused: boolean) {
+    changeFocus(isNowFocused: boolean, delay = 0) {
         if (this.inputFieldRef?.nativeElement)
             setTimeout(() => {
                 this.isFocused = isNowFocused;
                 if (isNowFocused) this.inputFieldRef.nativeElement.select();
                 else this.inputFieldRef.nativeElement.blur();
-            }, 0);
+            }, delay);
     }
 
     @Input() focusChangeEvents?: Observable<boolean>;

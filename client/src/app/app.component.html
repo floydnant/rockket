@@ -49,8 +49,8 @@
             noFocusNoBorder
             placeholder="What shall it be?"
             class="new-task-form"
-            (onSubmit)="addTask($event)"
-            [focusChangeEvents]="this.focusChangeEventsSubject.asObservable()"
+            (onSubmit)="addTask[0]($event)"
+            [focusChangeEvents]="this.quickAddInputField.focusEventsSubject[0].asObservable()"
         ></single-input-form>
         <!-- </section> -->
         <section class="task-list">
@@ -66,7 +66,8 @@
                 ></task>
                 <single-input-form
                     *ngIf="countOpenTasks(activeTaskList.list)"
-                    (onSubmit)="dispatchCreateTask($event)"
+                    (onSubmit)="addTask[1]($event)"
+                    [focusChangeEvents]="quickAddInputField.focusEventsSubject[1].asObservable()"
                 ></single-input-form>
                 <show-completed
                     *ngIf="completedTasks.length"
