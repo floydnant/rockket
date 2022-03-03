@@ -37,10 +37,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     quickAddInputField = {
         focusEventsSubject: [new Subject<boolean>(), new Subject<boolean>()],
-        focus: (inputField: number) => {
-            this.quickAddInputField.focusEventsSubject[inputField].next(true);
-            console.log('changing focus of:', inputField);
-        },
+        focus: (inputField: number) => this.quickAddInputField.focusEventsSubject[inputField].next(true),
     };
 
     constructor(
