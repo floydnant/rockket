@@ -153,14 +153,19 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
 
             console.log('importedState.version:', importedState.version);
 
-            // migrate 'timeCompleted' to 'completedAt'
-            if (importedState.version != ACTIVE_VERSION)
-                importedState.lists.forEach(tasklist => {
-                    tasklist.list = tasklist.list.map(({ timeCompleted, ...task }: any) => ({
+            if (importedState.version != ACTIVE_VERSION) {
+                // migrate 'timeCompleted' to 'completedAt'
+                const migrateTasksRecursive = (arr: Task[]) => {
+                    return arr.map(({ timeCompleted, subTasks, ...task }: Task & { timeCompleted: string }) => ({
                         ...task,
                         completedAt: timeCompleted,
+                        subTasks: !subTasks.length ? [] : migrateTasksRecursive(subTasks),
                     }));
+                };
+                importedState.lists.forEach(tasklist => {
+                    tasklist.list = migrateTasksRecursive(tasklist.list);
                 });
+            }
 
             return {
                 ...newState,
