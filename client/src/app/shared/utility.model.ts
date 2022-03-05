@@ -115,7 +115,7 @@ export const validateAndFormatUrl = (url: string) => {
     const isProtocolValid = /^https?:\/\//.test(url);
     const isDomainValid = /([^\s"/,;:]+\.)+[^\s".,;:]+$/g.test(url);
 
-    if (!isProtocolValid && url != '') url = 'http://' + url;
+    if (!isProtocolValid && url != '') url = 'https://' + url;
 
     return {
         isProtocolValid,
@@ -169,7 +169,7 @@ export class Compare {
     static array(a: any[], b: any[]) {
         if (a === b) return true;
         if (a.length !== b.length) return false;
-        
+
         if (!a.every((v, i) => this.any(v, b[i]))) return false;
         // for (let i = 0; i < a.length; i++) {
         //     if (!this.any(a[i], b[i])) return false;
@@ -230,6 +230,9 @@ export class Compare {
         return type;
     }
 }
+
+export const repeatAfterDelay = (callback: () => void, delays: number[]) =>
+    delays.forEach(delay => setTimeout(callback, delay));
 
 export class Utility {
     public generateId = generateId;

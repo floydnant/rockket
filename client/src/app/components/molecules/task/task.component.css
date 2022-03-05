@@ -161,14 +161,25 @@ p .taskName::before {
     box-shadow: var(--box-shadow-s);
 }
 
-p .external-link {
+p .detail-icon {
+    display: inline-block;
+    margin-left: 3.5px;
     color: hsl(var(--primary-clr-hue), 100%, 55%);
-    margin: 0 2.5px;
+    cursor: pointer;
+    transition: opacity 150ms;
+}
+p .detail-icon:hover {
+    opacity: .6;
+}
+p .notes-icon {
+    position: relative;
+    top: 2px;
 }
 
 p.subtask-list-toggle {
     font-size: 0.9rem;
     cursor: pointer;
+    user-select: none;
 }
 p.subtask-list-toggle .dimm {
     opacity: 0.5;

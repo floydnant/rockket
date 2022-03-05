@@ -15,7 +15,7 @@ export class EditmenuTaskData {
 export interface editmenuOptions {
     type: 'Task' | 'TaskList';
     noEdit: boolean;
-    viewLinks?: boolean;
+    hightlight?: 'notes' | 'links';
     data: EditmenuTaskData | EditmenuTasklistData;
 }
 export interface responseHandlerInterface {

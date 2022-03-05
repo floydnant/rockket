@@ -24,8 +24,9 @@
         </label>
 
         <textarea
-            id="notesTextarea"
+            #notesTextarea
             class="notesTextarea edit-item input"
+            [class.animate-highlight]="this.hightlight == 'notes'"
             placeholder="notes"
             [disabled]="noEdit"
             [(ngModel)]="data.meta.notes"
@@ -39,7 +40,7 @@
                 <button class="btn btn-primary" [disabled]="!this.trimLinkInput() || !this.linkInput" (click)="addLink()">
                     add
                 </button> -->
-                <single-input-form
+            <single-input-form
                 noFocusNoBorder
                 type="url"
                 placeholder="Link"
@@ -48,10 +49,10 @@
             ></single-input-form>
         </div>
         <div
+            #linkList
             *ngIf="this.type == 'Task' && this.data.meta.links.length"
             class="link-list"
-            [class.animate-highlight]="this.viewLinks"
-            #linkList
+            [class.animate-highlight]="this.hightlight == 'links'"
             style="margin-top: 10px"
         >
             <ul *ngIf="this.data.meta.links.length">

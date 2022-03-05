@@ -9,6 +9,7 @@ import { AppDataActions } from '../../../reducers';
 import { DialogService } from '../../organisms/custom-dialog';
 import { EditMenuService } from '../../organisms/edit-menu/edit-menu.service';
 import { countOpenTasksMultiLevel, countOpenTasks } from '../../../shared/taskList.model';
+import { editmenuOptions } from '../../organisms/edit-menu/edit-menu.model';
 
 @Component({
     selector: 'task',
@@ -91,9 +92,9 @@ export class TaskComponent implements OnInit {
         }
     };
     toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
-    editTaskDetails = (viewLinks = false) => {
+    editTaskDetails = (hightlight?: editmenuOptions["hightlight"]) => {
         this.editMenuService
-            .editTaskDetails(this.data, false, viewLinks)
+            .editTaskDetails(this.data, false, hightlight)
             .then((updatedTask: Task) => {
                 this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask } as any));
             })
@@ -101,9 +102,9 @@ export class TaskComponent implements OnInit {
                 if (err == 'Deleted') this.deleteTask(this.data.id);
             });
     };
-    showDetails = (viewLinks = false) => {
+    showDetails = (hightlight?: editmenuOptions["hightlight"]) => {
         this.editMenuService
-            .editTaskDetails(this.data, true, viewLinks)
+            .editTaskDetails(this.data, true, hightlight)
             .then(() => {})
             .catch(err => {
                 if (err == 'Deleted') this.deleteTask(this.data.id);

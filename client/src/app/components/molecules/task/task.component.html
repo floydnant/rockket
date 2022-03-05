@@ -28,15 +28,24 @@
                     ><i class="{{ completeBtnIsHovered ? 'fas fa-check-circle' : 'far fa-circle' }}"></i>
                 </ng-template>
             </button>
+
             <div class="text-container">
                 <p>
                     <span class="taskName">
                         <priority-icon [priority]="data.priority"></priority-icon>
                         {{ this.data.name }}
                     </span>
+                    <span
+                        *ngIf="this.data.meta.notes"
+                        class="notes-icon detail-icon"
+                        [title]="this.data.meta.notes"
+                        (click)="data.isCompleted ? showDetails('notes') : editTaskDetails('notes')"
+                    >
+                        <i class="far fa-comment-alt-lines"></i>
+                    </span>
                     <a
                         *ngFor="let link of isTouchDevice ? [] : this.data.meta.links"
-                        class="external-link"
+                        class="detail-icon"
                         [href]="link"
                         [title]="link"
                         target="_blank"
@@ -44,15 +53,15 @@
                         <i class="fas fa-external-link"></i>
                         <!-- <i class="fas fa-link"></i> -->
                     </a>
-                    <a
+                    <span
                         *ngIf="isTouchDevice && this.data.meta.links.length"
-                        class="external-link"
-                        (click)="data.isCompleted ? showDetails(true) : editTaskDetails(true)"
+                        class="detail-icon"
+                        (click)="data.isCompleted ? showDetails('links') : editTaskDetails('links')"
                     >
                         <i class="fas fa-external-link"></i>
                         <!-- <i class="fas fa-link"></i> -->
-                        <i class="fas fa-caret-down" style="margin-left: 5px"></i>
-                    </a>
+                        <i class="fas fa-caret-down" style="margin-left: .175em"></i>
+                    </span>
                 </p>
                 <p
                     *ngIf="this.data.subTasks.length != 0"

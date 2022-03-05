@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular
 import { DialogService } from '../custom-dialog';
 import { ModalService } from '../../molecules/modal/modal.service';
 import { TaskMeta } from '../../../shared/task.model';
-import { Compare, getCopyOf, validateAndFormatUrl } from '../../../shared/utility.model';
+import { Compare, getCopyOf, repeatAfterDelay, validateAndFormatUrl } from '../../../shared/utility.model';
 import { editmenuOptions, EditmenuTaskData, responseHandlerInterface, EditmenuTasklistData } from './edit-menu.model';
 import { EditMenuService } from './edit-menu.service';
 
@@ -17,12 +17,13 @@ export class EditMenuComponent implements OnInit {
 
     type: editmenuOptions['type'];
     noEdit = false;
-    viewLinks = false;
+    hightlight: editmenuOptions['hightlight'] = null;
 
     isOpen = false;
 
     @ViewChild('nameInputRef') nameInputRef: ElementRef<HTMLInputElement>;
     @ViewChild('linkList') linkList: ElementRef<HTMLDivElement>;
+    @ViewChild('notesTextarea') notesTextarea: ElementRef<HTMLTextAreaElement>;
 
     constructor(
         private modalService: ModalService,
@@ -30,13 +31,13 @@ export class EditMenuComponent implements OnInit {
         private dialogService: DialogService
     ) {}
 
-    open({ type, noEdit, data, viewLinks }: editmenuOptions) {
+    open({ type, noEdit, data, hightlight }: editmenuOptions) {
         this.isOpen = true;
         this.modalService.open('edit-menu');
 
         this.type = type;
         this.noEdit = noEdit;
-        this.viewLinks = viewLinks;
+        this.hightlight = hightlight;
 
         this.originalData = getCopyOf(data);
 
@@ -47,9 +48,12 @@ export class EditMenuComponent implements OnInit {
             meta: getCopyOf(meta),
         };
 
-        if (!viewLinks)
-            [100, 300, 500].forEach(delay => setTimeout(() => this.nameInputRef.nativeElement.focus(), delay));
-        this.linkList?.nativeElement.scrollIntoView({ behavior: 'smooth' });
+        if (!hightlight) repeatAfterDelay(() => this.nameInputRef.nativeElement.focus(), [100, 300, 500]);
+        else {
+            if (this.hightlight == 'links') this.linkList?.nativeElement.scrollIntoView({ behavior: 'smooth' });
+            if (this.hightlight == 'notes')
+                repeatAfterDelay(() => this.notesTextarea?.nativeElement.focus(), [100, 300, 500]);
+        }
     }
 
     async close(responseStatus: responseHandlerInterface['responseStatus']) {
@@ -63,7 +67,7 @@ export class EditMenuComponent implements OnInit {
                     buttons: ['Abandone', 'Cancel'],
                 })
                 .catch(err => err);
-            if (confirmationResponse == 'Cancel') return
+            if (confirmationResponse == 'Cancel') return;
         }
 
         this.isOpen = false;
