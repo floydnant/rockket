@@ -107,6 +107,14 @@ body {
     cursor: not-allowed !important; */
     display: none !important;
 }
+
+.dimm-1 {
+    filter: opacity(0.6) brightness(0.9);
+}
+.dimm-2 {
+    filter: opacity(0.5) brightness(0.75);
+}
+
 .toggle-icons:not(:hover) > i:last-of-type {
     display: none;
 }

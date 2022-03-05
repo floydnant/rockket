@@ -170,18 +170,7 @@ p .taskName::before {
 
 p.subtask-list-toggle {
     font-size: 0.9rem;
-    cursor: pointer;
-    user-select: none;
     margin-right: 1rem;
-}
-p.subtask-list-toggle .dimm {
-    opacity: 0.5;
-}
-p.subtask-list-toggle i {
-    transition: transform 180ms;
-}
-p.subtask-list-toggle:not(.open) i {
-    transform: rotate(-90deg);
 }
 
 

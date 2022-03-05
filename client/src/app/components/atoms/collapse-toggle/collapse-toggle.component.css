@@ -1,0 +1,28 @@
+.container {
+    border-radius: 8px;
+    user-select: none;
+    cursor: pointer;
+    
+    display: flex;
+}
+.container.margin {
+    margin-top: 10px;
+    padding: 5px;
+}
+.container.dimm {
+    filter: opacity(0.6) brightness(0.9);
+}
+span {
+    color: var(--clr);
+    cursor: pointer;
+}
+/* span:hover {
+    text-decoration: underline;
+} */
+
+i {
+    transition: transform 180ms;
+}
+div:not(.open) i {
+    transform: rotate(-90deg);
+}

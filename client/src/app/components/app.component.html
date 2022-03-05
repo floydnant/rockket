@@ -64,17 +64,21 @@
                     [taskPosition]="i"
                     [showCompleted]="showCompletedMaster"
                 ></task>
+
                 <single-input-form
                     *ngIf="countOpenTasks(activeTaskList.list)"
                     (onSubmit)="addTask[1]($event)"
                     [focusChangeEvents]="quickAddInputField.focusEventsSubject[1].asObservable()"
                 ></single-input-form>
-                <show-completed
+
+                <collapse-toggle
                     *ngIf="completedTasks.length"
                     [isOpen]="showCompleted"
                     (onToggle)="showCompleted = $event"
-                    [tasks]="completedTasks.length"
-                ></show-completed>
+                    colorClass="btn-submit"
+                >
+                    {{ completedTasks.length }} completed task{{ completedTasks.length > 1 ? "s" : "" }}
+                </collapse-toggle>
                 <div *ngIf="showCompleted">
                     <task
                         *ngFor="let task of this.completedTasks; let i = index"

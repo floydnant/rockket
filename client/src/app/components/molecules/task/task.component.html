@@ -37,23 +37,25 @@
                     </span>
                 </p>
                 <div class="second-row">
-                    <p
-                        *ngIf="this.data.subTasks.length != 0"
-                        class="subtask-list-toggle"
-                        [class.open]="!this.data.collapseSubtaskList"
-                        (click)="toggleSubtaskList()"
-                    >
-                        <i class="fas fa-chevron-down dimm"></i>
-                        <span *ngIf="countOpenTasks(this.data.subTasks) != 0">
-                            <span style="color: var(--secondary-clr)">
-                                {{ countOpenTasks(this.data.subTasks) }} open</span
-                            >
-                            <span class="dimm"> /</span>
-                        </span>
-                        <span class="dimm">
-                            {{ this.data.subTasks.length }}
-                            {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
-                        </span>
+                    <p *ngIf="this.data.subTasks.length != 0" class="subtask-list-toggle">
+                        <collapse-toggle
+                            [isOpen]="!this.data.collapseSubtaskList"
+                            noSpacing
+                            hideToggleText
+                            dimm="none"
+                            (onToggle)="toggleSubtaskList()"
+                        >
+                            <span *ngIf="countOpenTasks(this.data.subTasks) != 0">
+                                <span style="color: var(--secondary-clr)">
+                                    {{ countOpenTasks(this.data.subTasks) }} open</span
+                                >
+                                <span class="dimm-1"> /</span>
+                            </span>
+                            <span class="dimm-1">
+                                {{ this.data.subTasks.length }}
+                                {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
+                            </span>
+                        </collapse-toggle>
                     </p>
                     <span *ngIf="this.data.meta.notes || this.data.meta.links.length" class="detail-icons-wrapper">
                         <span
@@ -64,7 +66,6 @@
                             (click)="data.isCompleted ? showDetails('notes') : editTaskDetails('notes')"
                         >
                             <i class="far fa-comment-alt-lines"></i>
-                            <!-- <i class="fas fa-comment-alt-lines"></i> -->
                         </span>
                         <span
                             *ngIf="this.data.meta.links.length"
@@ -72,14 +73,8 @@
                             class="detail-icon"
                             (click)="data.isCompleted ? showDetails('links') : editTaskDetails('links')"
                         >
-                            <!-- <i> -->
-                                <i class="far fa-external-link-alt"></i>
-                                <i class="fas fa-caret-down" style="margin-left: 0.175em"></i>
-                            <!-- </i>
-                            <i>
-                                <i class="fas fa-external-link"></i>
-                                <i class="far fa-caret-down" style="margin-left: 0.175em"></i>
-                            </i> -->
+                            <i class="far fa-external-link-alt"></i>
+                            <i class="fas fa-caret-down" style="margin-left: 0.175em"></i>
                         </span>
                     </span>
                 </div>
@@ -145,12 +140,14 @@
         [inputFieldId]="'_' + data.id"
     ></single-input-form>
 
-    <show-completed
+    <collapse-toggle
         *ngIf="completedTasks.length && uncompletedTasks.length"
         [isOpen]="showCompleted"
         (onToggle)="showCompleted = $event"
-        [tasks]="completedTasks.length"
-    ></show-completed>
+        colorClass="btn-submit"
+        dimm="dimm-1"
+        >{{ completedTasks.length }} completed task{{ completedTasks.length > 1 ? "s" : "" }}</collapse-toggle
+    >
     <div *ngIf="showCompleted || !uncompletedTasks.length">
         <task
             *ngFor="let task of this.completedTasks; let i = index"
