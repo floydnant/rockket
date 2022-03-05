@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular
 import { DialogService } from '../custom-dialog';
 import { ModalService } from '../../molecules/modal/modal.service';
 import { TaskMeta } from '../../../shared/task.model';
-import { getCopyOf, validateAndFormatUrl } from '../../../shared/utility.model';
+import { Compare, getCopyOf, validateAndFormatUrl } from '../../../shared/utility.model';
 import { editmenuOptions, EditmenuTaskData, responseHandlerInterface, EditmenuTasklistData } from './edit-menu.model';
 import { EditMenuService } from './edit-menu.service';
 
@@ -13,6 +13,7 @@ import { EditMenuService } from './edit-menu.service';
 })
 export class EditMenuComponent implements OnInit {
     public data: any; //needs to be 'any' because typecasting in the html template is a bit funky
+    originalData: EditmenuTaskData | EditmenuTasklistData;
 
     type: editmenuOptions['type'];
     noEdit = false;
@@ -37,6 +38,8 @@ export class EditMenuComponent implements OnInit {
         this.noEdit = noEdit;
         this.viewLinks = viewLinks;
 
+        this.originalData = getCopyOf(data);
+
         const { meta, ...rest } = data;
         this.data = {
             ...(this.type == 'Task' ? new EditmenuTaskData() : new EditmenuTasklistData()),
@@ -49,7 +52,20 @@ export class EditMenuComponent implements OnInit {
         this.linkList?.nativeElement.scrollIntoView({ behavior: 'smooth' });
     }
 
-    close(responseStatus: responseHandlerInterface['responseStatus']) {
+    async close(responseStatus: responseHandlerInterface['responseStatus']) {
+        const dataHasChanged = !Compare.object(this.data, this.originalData);
+
+        if (responseStatus == 'Cancelled' && dataHasChanged) {
+            const confirmationResponse = await this.dialogService
+                .confirm({
+                    title: 'Abandone changes?',
+                    text: 'You already made some changes, want to abandone them?',
+                    buttons: ['Abandone', 'Cancel'],
+                })
+                .catch(err => err);
+            if (confirmationResponse == 'Cancel') return
+        }
+
         this.isOpen = false;
         this.modalService.close('edit-menu');
 

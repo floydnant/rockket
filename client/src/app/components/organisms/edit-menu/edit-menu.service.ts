@@ -8,7 +8,7 @@ import { EditmenuTaskData, EditmenuTasklistData, responseHandlerInterface } from
 export class EditMenuService {
     editMenu: EditMenuComponent;
     responseHandler: (response: responseHandlerInterface) => void;
-    setResponseHandler<T extends EditmenuTaskData | EditmenuTasklistData>(
+    private setResponseHandler<T extends EditmenuTaskData | EditmenuTasklistData>(
         resolve: (value: T) => void,
         reject: (reason?: string) => void
     ) {
