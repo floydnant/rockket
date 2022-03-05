@@ -1,17 +1,15 @@
 import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-// import { Observable } from 'rxjs';
+import { AppData, AppState, AppDataActions } from '../reducers';
+import { AppDataService } from '../reducers/appData/appData.service';
 
-import { AppData, AppState } from './reducers/appData';
-import { AppDataActions } from './reducers/';
+import { Task } from '../shared/task.model';
+import { TaskList, countOpenTasks } from '../shared/taskList.model';
+import { isTouchDevice } from '../shared/utility.model';
+import { ModalService } from './molecules/modal/modal.service';
+import { DialogService } from './organisms/custom-dialog';
+import { EditMenuService } from './organisms/edit-menu';
 
-import { ModalService } from './components/molecules/modal/modal.service';
-import { getCopyOf, isTouchDevice } from './shared/utility.model';
-import { countOpenTasks, TaskList } from './shared/taskList.model';
-import { Task } from './shared/task.model';
-import { DialogService } from './components/organisms/custom-dialog/custom-dialog.service';
-import { EditMenuService } from './components/organisms/edit-menu/edit-menu.service';
-import { AppDataService } from './reducers/appData/appData.service';
 import { Subject } from 'rxjs';
 
 @Component({

@@ -8,7 +8,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { reducers, metaReducers } from './reducers';
 
-import { AppComponent } from './app.component';
+import { AppComponent } from './components/app.component';
 import { SidebarComponent } from './components/organisms/sidebar/sidebar.component';
 import { EditMenuComponent } from './components/organisms/edit-menu/edit-menu.component';
 import { TaskComponent } from './components/molecules/task/task.component';
