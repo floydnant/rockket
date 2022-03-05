@@ -1,15 +1,17 @@
 :host {
-    display: block
+    display: block;
 }
 
 .container {
-    margin-top: 10px;
     /* background: hsla(241, 30%, 39%, 0.788); */
     border-radius: 10px;
     box-shadow: var(--box-shadow-s);
-
+    
     display: flex;
     transition: 180ms;
+}
+.container.top-margin {
+    margin-top: 10px;
 }
 
 input {
@@ -45,7 +47,7 @@ button {
     opacity: 1;
 }
 input:not(.is-focused) ~ button {
-    transition: color 0 0, opacity 0 0ms, all 80ms 180ms;
+    transition: all 180ms, color 0ms, opacity 20ms;
     opacity: 0;
     color: rgba(0, 0, 0, 0);
     /* transform: scale(0, 1) !important; */

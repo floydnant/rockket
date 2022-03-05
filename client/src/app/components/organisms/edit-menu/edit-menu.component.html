@@ -12,8 +12,9 @@
             [disabled]="noEdit"
             [(ngModel)]="data.name"
         />
-        <label *ngIf="this.type == 'Task'" class="priority-label edit-item"
-            >Priority: &nbsp;
+        <label *ngIf="this.type == 'Task'" class="priority-label edit-item">
+            <p>Priority:</p>
+            <priority-icon [priority]="data.priority"></priority-icon>
             <select class="input" [(ngModel)]="data.priority" [disabled]="noEdit">
                 <option value="3">High</option>
                 <option value="2">Medium</option>
@@ -42,6 +43,7 @@
                 </button> -->
             <single-input-form
                 noFocusNoBorder
+                noTopMargin
                 type="url"
                 placeholder="Link"
                 class="linkInput"

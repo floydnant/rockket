@@ -107,6 +107,13 @@ body {
     cursor: not-allowed !important; */
     display: none !important;
 }
+.toggle-icons:not(:hover) > i:last-of-type {
+    display: none;
+}
+.toggle-icons:hover > i:first-of-type {
+    display: none;
+}
+
 a {
     color: var(--primary-clr);
 }

@@ -17,12 +17,14 @@ import { Subscription, Observable } from 'rxjs';
     styleUrls: ['./single-input-form.component.css'],
 })
 export class SingleInputFormComponent implements OnInit, OnDestroy {
+    @Input('noTopMargin') topMargin: true | '' = true;
+
     @ViewChild('inputField') inputFieldRef: ElementRef<HTMLInputElement>;
     @Input() inputFieldId?: string;
     @Input() type: string = 'text';
     @Input() placeholder: string = 'add new task...';
     @Input() value: string = '';
-    @Input() noFocusNoBorder: boolean | '' = true;
+    @Input() noFocusNoBorder: true | '' = true;
 
     @Input() btnText: string = 'add';
     @Input() btnColorClass: 'btn-primary' | 'btn-secondary' | 'btn-danger' | 'btn-submit' = 'btn-secondary';
