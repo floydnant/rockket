@@ -58,28 +58,28 @@
                     <span *ngIf="this.data.meta.notes || this.data.meta.links.length" class="detail-icons-wrapper">
                         <span
                             *ngIf="this.data.meta.notes"
-                            class="detail-icon toggle-icons"
+                            class="detail-icon"
                             style="position: relative; top: 2px"
                             [title]="this.data.meta.notes"
                             (click)="data.isCompleted ? showDetails('notes') : editTaskDetails('notes')"
                         >
                             <i class="far fa-comment-alt-lines"></i>
-                            <i class="fas fa-comment-alt-lines"></i>
+                            <!-- <i class="fas fa-comment-alt-lines"></i> -->
                         </span>
                         <span
                             *ngIf="this.data.meta.links.length"
                             [title]="this.data.meta.links.join('\n')"
-                            class="detail-icon toggle-icons"
+                            class="detail-icon"
                             (click)="data.isCompleted ? showDetails('links') : editTaskDetails('links')"
                         >
-                            <i>
+                            <!-- <i> -->
                                 <i class="far fa-external-link-alt"></i>
                                 <i class="fas fa-caret-down" style="margin-left: 0.175em"></i>
-                            </i>
+                            <!-- </i>
                             <i>
                                 <i class="fas fa-external-link"></i>
                                 <i class="far fa-caret-down" style="margin-left: 0.175em"></i>
-                            </i>
+                            </i> -->
                         </span>
                     </span>
                 </div>

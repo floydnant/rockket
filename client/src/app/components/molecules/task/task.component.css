@@ -203,10 +203,14 @@ p.subtask-list-toggle:not(.open) i {
     width: max-content;
     color: hsl(var(--primary-clr-hue), 100%, 55%);
     cursor: pointer;
-    transition: opacity 150ms;
+    transition: color 180ms;
 }
 .detail-icon:not(:first-child) {
     margin: 0 0 0 5px;
+}
+.detail-icon:hover {
+    color: var(--secondary-clr);
+    text-shadow: 0 0 10px black;
 }
 
 menu-toggle-btn {
