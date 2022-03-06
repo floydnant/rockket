@@ -14,7 +14,9 @@
             [class.completed]="countOpenTasks(list.list) == 0 && list.list.length"
         >
             <span class="text">{{ list.name }}</span>
-            <span *ngIf="countOpenTasks(list.list)" class="badge danger-clr">{{ countOpenTasks(list.list) }}</span>
+            <span *ngIf="countOpenTasks(list.list)" class="badge secondary-clr text-shadow" style="--text-clr: white">{{
+                countOpenTasks(list.list)
+            }}</span>
 
             <i *ngIf="this.data.activeListId == list.id" class="fas fa-chevron-right"></i>
             <loading-spinner *ngIf="isLoading == list.id && data.activeListId != list.id"></loading-spinner>

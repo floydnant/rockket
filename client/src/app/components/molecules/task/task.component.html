@@ -45,13 +45,18 @@
                             dimm="none"
                             (onToggle)="toggleSubtaskList()"
                         >
-                            <span *ngIf="countOpenTasks(this.data.subTasks) != 0">
-                                <span style="color: var(--secondary-clr)">
-                                    {{ countOpenTasks(this.data.subTasks) }} open</span
-                                >
-                                <span class="dimm-1"> /</span>
+                            <span
+                                *ngIf="countOpenTasks(this.data.subTasks) != 0; else completed"
+                                class="text-shadow"
+                                style="color: var(--secondary-clr)"
+                            >
+                                {{ countOpenTasks(this.data.subTasks) }} open
                             </span>
+                            <ng-template #completed>
+                                <span style="color: var(--submit-clr)"> {{ completedTasks.length }} completed </span>
+                            </ng-template>
                             <span class="dimm-1">
+                                /
                                 {{ this.data.subTasks.length }}
                                 {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
                             </span>
@@ -119,6 +124,20 @@
         >
             <template [ngTemplateOutlet]="taskActionBtns"></template>
         </menu-toggle-btn>
+    </div>
+    <div class="position-task-progress">
+        <div class="task-progress-container">
+            <div *ngIf="data.subTasks.length" class="task-progress">
+                <span
+                    class="submit-clr"
+                    [style]="'width:' + (completedTasks.length / data.subTasks.length) * 100 + '%;'"
+                ></span>
+                <span
+                    class="secondary-clr"
+                    [style]="'width:' + (uncompletedTasks.length / data.subTasks.length) * 100 + '%;'"
+                ></span>
+            </div>
+        </div>
     </div>
 </li>
 
