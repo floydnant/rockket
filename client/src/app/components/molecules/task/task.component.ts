@@ -33,7 +33,7 @@ export class TaskComponent implements OnInit {
 
     focusQuickAddInputField = () => {
         setTimeout(() => {
-            document.querySelector<HTMLInputElement>('#_' + this.data.id).focus();
+            document.querySelector<HTMLInputElement>('#_' + this.data.id)?.focus();
         }, 200);
     };
 

@@ -13,10 +13,11 @@
             [class.active]="this.data.activeListId == list.id"
             [class.completed]="countOpenTasks(list.list) == 0 && list.list.length"
         >
-            <span class="text">{{ list.name }}</span
-            ><!-- &nbsp; -->
+            <span class="text">{{ list.name }}</span>
             <span *ngIf="countOpenTasks(list.list)" class="badge danger-clr">{{ countOpenTasks(list.list) }}</span>
-            <i class="fas fa-chevron-right"></i>
+
+            <i *ngIf="this.data.activeListId == list.id" class="fas fa-chevron-right"></i>
+            <loading-spinner *ngIf="isLoading == list.id && data.activeListId != list.id"></loading-spinner>
         </li>
     </ul>
     <div class="file-interaction">

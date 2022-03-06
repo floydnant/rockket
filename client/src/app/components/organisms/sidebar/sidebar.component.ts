@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { AppData } from '../../../reducers';
 import { countOpenTasks } from '../../../shared/taskList.model';
 
@@ -7,12 +7,19 @@ import { countOpenTasks } from '../../../shared/taskList.model';
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css'],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnChanges {
     constructor() {}
     @Input() @Output() data!: AppData;
 
+    isLoading: string | null;
+
     @Output() onSetActiveList = new EventEmitter<string>();
-    setActiveList = (listId: string) => this.onSetActiveList.emit(listId);
+    setActiveList = (listId: string) => {
+        if (this.data.activeListId == listId) return;
+
+        this.isLoading = listId;
+        setTimeout(() => this.onSetActiveList.emit(listId), 0);
+    };
 
     @Output() onCreateList = new EventEmitter();
     createList = () => this.onCreateList.emit();
@@ -26,4 +33,7 @@ export class SidebarComponent implements OnInit {
     countOpenTasks = countOpenTasks;
 
     ngOnInit(): void {}
+    ngOnChanges(changes: SimpleChanges): void {
+        if ('data' in changes) setTimeout(() => (this.isLoading = null), 0);
+    }
 }

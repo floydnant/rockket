@@ -99,9 +99,9 @@
     background: var(--global-item-bg-highlight)
 }
 
-.sidebar li:not(.active) i {
+/* .sidebar li:not(.active) i {
     display: none;
-}
+} */
 
 .sidebar li .text {
     position: relative;
@@ -125,7 +125,7 @@
     width: 100%;
 }
 
-.sidebar .taskListsList li.active i {
+.sidebar .taskListsList li :is(i, loading-spinner) {
     position: absolute;
     top: 50%;
     right: 10px;

@@ -80,7 +80,9 @@
             <button class="btn modal-btn btn-neutral" title="[esc]" (click)="close('Cancelled')">
                 {{ noEdit ? "close" : "cancel" }}
             </button>
-            <button *ngIf="!noEdit" class="btn modal-btn btn-submit" title="[↵]" (click)="close('OK')">Done</button>
+            <button *ngIf="!noEdit" class="btn modal-btn btn-submit" title="[↵]" (click)="close('OK')">
+                Done <loading-spinner *ngIf="isLoading"></loading-spinner>
+            </button>
         </div>
     </div>
 </app-modal>

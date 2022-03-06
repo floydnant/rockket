@@ -20,6 +20,7 @@ export class EditMenuComponent implements OnInit {
     hightlight: editmenuOptions['hightlight'] = null;
 
     isOpen = false;
+    isLoading = false;
 
     @ViewChild('nameInputRef') nameInputRef: ElementRef<HTMLInputElement>;
     @ViewChild('linkList') linkList: ElementRef<HTMLDivElement>;
@@ -32,6 +33,7 @@ export class EditMenuComponent implements OnInit {
     ) {}
 
     open({ type, noEdit, data, hightlight }: editmenuOptions) {
+        this.isLoading = false;
         this.isOpen = true;
         this.modalService.open('edit-menu');
 
@@ -56,29 +58,32 @@ export class EditMenuComponent implements OnInit {
         }
     }
 
-    async close(responseStatus: responseHandlerInterface['responseStatus']) {
-        const dataHasChanged = !Compare.object(this.data, this.originalData);
+    close(responseStatus: responseHandlerInterface['responseStatus']) {
+        if (responseStatus == 'OK') this.isLoading = true;
+        setTimeout(async () => {
+            const dataHasChanged = !Compare.object(this.data, this.originalData);
 
-        if (responseStatus == 'Cancelled' && dataHasChanged) {
-            const confirmationResponse = await this.dialogService
-                .confirm({
-                    title: 'Abandone changes?',
-                    text: "You already made some changes, don't you want to save them?",
-                    buttons: ['Abandone', 'Keep editing', 'Save'],
-                })
-                .catch(err => err);
-            if (confirmationResponse == 'Keep editing') return;
-            if (confirmationResponse == 'Save') responseStatus = 'OK';
-        }
+            if (responseStatus == 'Cancelled' && dataHasChanged) {
+                const confirmationResponse = await this.dialogService
+                    .confirm({
+                        title: 'Abandone changes?',
+                        text: "You already made some changes, don't you want to save them?",
+                        buttons: ['Abandone', 'Keep editing', 'Save'],
+                    })
+                    .catch(err => err);
+                if (confirmationResponse == 'Keep editing') return;
+                if (confirmationResponse == 'Save') responseStatus = 'OK';
+            }
 
-        this.isOpen = false;
-        this.modalService.close('edit-menu');
+            this.isOpen = false;
+            this.modalService.close('edit-menu');
 
-        if (this.type == 'Task' && responseStatus == 'OK') this.addLink();
-        this.editMenuService.responseHandler({ updatedData: getCopyOf(this.data), responseStatus });
+            if (this.type == 'Task' && responseStatus == 'OK') this.addLink();
+            this.editMenuService.responseHandler({ updatedData: getCopyOf(this.data), responseStatus });
 
-        this.nameInputRef.nativeElement.blur();
-        this.linkInput = '';
+            this.nameInputRef.nativeElement.blur();
+            this.linkInput = '';
+        }, 0);
     }
 
     linkInput: string;
