@@ -8,6 +8,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 export class PriorityIconComponent implements OnInit, OnChanges {
     @Input() priority: string | number;
     priorityArr: any[] = [];
+    @Input('showNoneAsIcon') hideNoneAsIcon: true | '' = true;
 
     updatePriority() {
         const priority = this.priority > 0 ? parseInt(this.priority as string) : 0;
