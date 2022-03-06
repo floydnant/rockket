@@ -42,13 +42,7 @@ export class EditMenuComponent implements OnInit {
         this.hightlight = hightlight;
 
         this.originalData = getCopyOf(data);
-
-        const { meta, ...rest } = data;
-        this.data = {
-            ...(this.type == 'Task' ? new EditmenuTaskData() : new EditmenuTasklistData()),
-            ...rest,
-            meta: getCopyOf(meta),
-        };
+        this.data = getCopyOf(data);
 
         if (!hightlight) repeatAfterDelay(() => this.nameInputRef.nativeElement.focus(), [100, 300, 500]);
         else {
@@ -58,23 +52,22 @@ export class EditMenuComponent implements OnInit {
         }
     }
 
-    close(responseStatus: responseHandlerInterface['responseStatus']) {
+    async close(responseStatus: responseHandlerInterface['responseStatus']) {
+        if (responseStatus == 'Cancelled' && /* dataHasChanged */ !Compare.object(this.data, this.originalData)) {
+            const confirmationResponse = await this.dialogService
+                .confirm({
+                    title: 'Abandone changes?',
+                    text: "You already made some changes, don't you want to save them?",
+                    buttons: ['Abandone', 'Keep editing', 'Save'],
+                })
+                .catch(err => err);
+            if (confirmationResponse == 'Keep editing') return;
+            if (confirmationResponse == 'Save') responseStatus = 'OK';
+        }
+
         if (responseStatus == 'OK') this.isLoading = true;
-        setTimeout(async () => {
-            const dataHasChanged = !Compare.object(this.data, this.originalData);
 
-            if (responseStatus == 'Cancelled' && dataHasChanged) {
-                const confirmationResponse = await this.dialogService
-                    .confirm({
-                        title: 'Abandone changes?',
-                        text: "You already made some changes, don't you want to save them?",
-                        buttons: ['Abandone', 'Keep editing', 'Save'],
-                    })
-                    .catch(err => err);
-                if (confirmationResponse == 'Keep editing') return;
-                if (confirmationResponse == 'Save') responseStatus = 'OK';
-            }
-
+        setTimeout(() => {
             this.isOpen = false;
             this.modalService.close('edit-menu');
 
