@@ -101,6 +101,7 @@
     /* padding-right: 20px; */
     border-radius: 10px;
 
+    isolation: isolate;
     overflow: hidden;
 }
 
