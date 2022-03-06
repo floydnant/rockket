@@ -24,6 +24,7 @@ import { SingleInputFormComponent } from './components/molecules/single-input-fo
 import { CollapseToggleComponent } from './components/atoms/collapse-toggle/collapse-toggle.component';
 import { LoadingSpinnerComponent } from './components/atoms/loading-spinner/loading-spinner.component';
 import { PriorityIconComponent } from './components/atoms/priority-icon/priority-icon.component';
+import { ToggleSwitchComponent } from './components/atoms/toggle-switch/toggle-switch.component';
 
 @NgModule({
     declarations: [
@@ -41,6 +42,7 @@ import { PriorityIconComponent } from './components/atoms/priority-icon/priority
         CollapseToggleComponent,
         LoadingSpinnerComponent,
         PriorityIconComponent,
+        ToggleSwitchComponent,
     ],
     imports: [
         BrowserModule,

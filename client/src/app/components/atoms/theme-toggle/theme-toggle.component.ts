@@ -11,6 +11,7 @@ export class ThemeToggleComponent implements OnInit {
 
     setTheme = (shouldBeDarkTheme: boolean) => {
         this.isDarkTheme = shouldBeDarkTheme;
+        localStorage.setItem('todo-theme-dark', shouldBeDarkTheme.toString());
         const root = document.querySelector(':root');
         if (this.isDarkTheme) {
             root.classList.remove('light');
@@ -22,10 +23,24 @@ export class ThemeToggleComponent implements OnInit {
     };
     toggleTheme = () => this.setTheme(!this.isDarkTheme);
 
-    init = () => this.setTheme(this.isDarkTheme);
+    get updateThemeOnEvent() {
+        const raw = localStorage.getItem("todo-theme-update")
+        return raw == "false" ? false : true;
+    }
+    set updateThemeOnEvent(value: boolean) {
+        localStorage.setItem("todo-theme-update", value.toString());
+    }
+    toggleUpdateThemeOnEvent() {
+        this.updateThemeOnEvent = !this.updateThemeOnEvent
+    }
+
+    init = () => {
+        const loadedTheme = localStorage.getItem('todo-theme-dark') == "false" ? false : true;
+        this.setTheme(this.updateThemeOnEvent ? this.isDarkTheme : loadedTheme);
+    };
 
     ngOnInit(): void {
         this.init();
-        this.darkThemeMq.addEventListener('change', mq => this.setTheme(mq.matches));
+        this.darkThemeMq.addEventListener('change', mq => this.updateThemeOnEvent && this.setTheme(mq.matches));
     }
 }

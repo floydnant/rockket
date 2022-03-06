@@ -21,6 +21,7 @@ export class MenuToggleBtnComponent implements OnInit {
     @Input() @Output() isOpen = false;
     @Input() size: 's' | 'l' = 's';
     @Input() type: 'hamburger' | 'chevron' = 'chevron';
+    @Input("fa-icon") icon: string;
     @Input() color: string = 'primary';
 
     isTouchDevice = isTouchDevice();
@@ -28,6 +29,7 @@ export class MenuToggleBtnComponent implements OnInit {
     // @ViewChild('checkForNgContent') checkForNgContent: ElementRef;
     @Input('drop-down-orientation') orientation: 'row' | 'column' = 'column';
     @Input() noDropDown: true | false | '' = false;
+    @Input() position: 'left' | 'right' = 'left';
 
     @Output() onMenuToggle = new EventEmitter<boolean>();
     setIsOpen = (v: boolean) => (this.isOpen = v);

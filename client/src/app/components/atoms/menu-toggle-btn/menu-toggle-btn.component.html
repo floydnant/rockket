@@ -6,11 +6,12 @@
         [class.hover]="isTouchDevice && isOpen"
         (click)="toggleMenu()"
     >
-        <span [class]="type"></span>
+    <span *ngIf="!icon; else elseBlock" [class]="type"></span>
+    <ng-template #elseBlock><i [class]="icon"></i></ng-template>
     </label>
 
     <!-- <div style="display: none;" #checkForNgContent><ng-content></ng-content></div> -->
-    <div class="drop-down {{ orientation }}" [class.open]="isOpen && !(noDropDown === true || noDropDown === '')">
+    <div class="drop-down {{ orientation }} {{ position }}" [class.open]="isOpen && !(noDropDown === true || noDropDown === '')">
         <ng-content></ng-content>
     </div>
 </div>

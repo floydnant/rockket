@@ -1,6 +1,7 @@
 .menu-container {
     z-index: 10;
     position: relative;
+    width: max-content;
 }
 label {
 	display: inline-flex;
@@ -94,40 +95,59 @@ span::after {
 
 .drop-down {
     position: absolute;
-    right: calc(100% + 20px);
     top: 50%;
     transform: translate(var(--translateX, 0), -50%) scale(var(--scale, 1));
-
+    
     display: flex;
     padding: 6px;
     border-radius: 14px;
-
+    
     background: var(--global-background);
     box-shadow: var(--box-shadow-s);
-
-    transform-origin: right;
+    
     transition: transform 150ms;
 }
 .drop-down.column {
     flex-direction: column;
 }
+
 .drop-down:not(.open) {
     --scale: 0, 0;
+}
+.drop-down.left {
+    right: calc(100% + 20px);
+    transform-origin: right;
+}
+.drop-down.left:not(.open) {
     --translateX: 25px;
+}
+.drop-down.right {
+    left: calc(100% + 20px);
+    transform-origin: left;
+}
+.drop-down.right:not(.open) {
+    --translateX: -25px;
 }
 
 .drop-down::before {
     content: "";
     position: absolute;
-    left: 100%;
     top: 50%;
     transform: translate(0, -50%);
     /* z-index: -1; */
     
-    margin-right: -10px;
     border-width: 10px;
     border-style: solid;
+}
+.drop-down.left::before {
     border-color: transparent transparent transparent var(--global-background);
+    margin-right: -10px;
+    left: 100%;
+}
+.drop-down.right::before {
+    border-color: transparent var(--global-background) transparent transparent;
+    margin-left: -10px;
+    right: 100%;
 }
 .drop-down.row > *:not(:last-child) {
     margin: 0 10px 0 0;

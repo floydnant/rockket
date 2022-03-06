@@ -1,5 +1,31 @@
-button {
-    /* position: absolute; */
+:host {
+    display: inline-block;
+}
+/* button {
+    position: absolute;
     top: 20px;
     right: 20px;
+} */
+button {
+    min-width: max-content;
+    width: 100%;
+    margin: 0 !important;
+    font-size: .9rem;
+    color: white;
+}
+button + :is(span, button) {
+    margin-top: 5px !important;
+}
+.light {
+    /* background-color: white; */
+    --bg-clr-lightness: 100%;
+    color: var(--secondary-clr)
+}
+.light:hover {
+    opacity: .5;
+}
+span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }

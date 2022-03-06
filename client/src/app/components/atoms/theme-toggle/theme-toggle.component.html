@@ -1,4 +1,12 @@
-<button class="btn btn-icon btn-submit" title="toggle color theme" (click)="toggleTheme()">
+<!-- <button class="btn btn-icon btn-submit" title="toggle color theme" (click)="toggleTheme()">
     <i *ngIf="!this.isDarkTheme" class="fas fa-moon"></i>
     <i *ngIf="this.isDarkTheme" class="fas fa-sun"></i>
-</button>
+</button> -->
+<menu-toggle-btn position="right" [fa-icon]="isDarkTheme ? 'fas fa-moon' : 'fas fa-sun'" color="submit">
+    <button class="btn modal-btn" (click)="setTheme(true)"><i class="fas fa-moon"></i>&nbsp;Always dark</button>
+    <button class="light btn modal-btn" (click)="setTheme(false)"><i class="fas fa-sun"></i>&nbsp;Always light</button>
+    <span
+        ><i class="fas fa-adjust"></i>&nbsp;System
+        <toggle-switch [isOn]="updateThemeOnEvent" (onToggle)="toggleUpdateThemeOnEvent()"></toggle-switch
+    ></span>
+</menu-toggle-btn>
