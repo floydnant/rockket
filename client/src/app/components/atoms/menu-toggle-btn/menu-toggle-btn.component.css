@@ -97,6 +97,7 @@ span::after {
     position: absolute;
     top: 50%;
     transform: translate(var(--translateX, 0), -50%) scale(var(--scale, 1));
+    width:max-content;
     
     display: flex;
     padding: 6px;
