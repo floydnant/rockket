@@ -1,11 +1,10 @@
 export const generateId = () => (Date.now() + Math.random()).toString().replace('.', '_');
 
 export const formatDateRelative = (time: Date) => {
-    // console.log(time);
-    if (!time) return 'never (invalid Date)';
+    const timestamp = new Date(time).valueOf();
+    if (!time || timestamp.toString() == 'NaN') return 'no Data';
 
-    // return timeDifference(new Date().valueOf(), new Date(time).valueOf());
-    return getRelativeTime(new Date(time).valueOf(), new Date().valueOf());
+    return getRelativeTime(timestamp);
 };
 
 export const formatDateAbsolute = (time: Date) =>
@@ -48,8 +47,9 @@ const timeUnits = {
 
 export const getRelativeTime = (d1: number, d2: number = Date.now()) => {
     const elapsed = d1 - d2;
-    for (var u in timeUnits)
-        if (Math.abs(elapsed) > timeUnits[u] || u == 'second') return rtf.format(Math.round(elapsed / timeUnits[u]), u);
+    for (let u in timeUnits)
+        if (Math.abs(elapsed) > timeUnits[u] || u == 'second')
+            return rtf.format(Math.round(elapsed / timeUnits[u]), u); // prettier-ignore
 };
 
 export const reverseString = (str: string) => str.split('').reverse().join('');
