@@ -1,5 +1,5 @@
 <i *ngIf="this.priority == -1" class="fas fa-question" style="color: var(--submit-clr)"></i>
-<i *ngIf="this.priority == 0 && !hideNoneAsIcon" class="far fa-rectangle-portrait dimm-2"></i>
+<i *ngIf="this.priority == 0 && !hideNoneAsIcon" class="far fa-exclamation dimm-2"></i>
 <i
     *ngFor="let _ of this.priorityArr; let i = index"
     class="fas fa-exclamation"
