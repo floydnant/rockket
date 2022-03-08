@@ -30,6 +30,28 @@
             </button>
 
             <div class="text-container">
+                <ng-template #detailIcons>
+                    <span *ngIf="this.data.meta.notes || this.data.meta.links.length" class="detail-icons-wrapper">
+                        <span
+                            *ngIf="this.data.meta.notes"
+                            class="detail-icon"
+                            style="position: relative; top: 2px"
+                            [title]="this.data.meta.notes"
+                            (click)="data.isCompleted ? showDetails('notes') : editTaskDetails('notes')"
+                        >
+                            <i class="far fa-comment-alt-lines"></i>
+                        </span>
+                        <span
+                            *ngIf="this.data.meta.links.length"
+                            [title]="this.data.meta.links.join('\n')"
+                            class="detail-icon"
+                            (click)="data.isCompleted ? showDetails('links') : editTaskDetails('links')"
+                        >
+                            <i class="far fa-external-link-alt"></i>
+                            <i class="fas fa-caret-down" style="margin-left: 0.175em"></i>
+                        </span>
+                    </span>
+                </ng-template>
                 <p>
                     <span class="position-priority-icon" [class.reveal-on-hover]="data.priority == 0">
                         <priority-icon
@@ -40,6 +62,9 @@
                     </span>
                     <span class="taskName">
                         {{ this.data.name }}
+                    </span>
+                    <span *ngIf="!data.subTasks.length" class="first-row-detailIcons">
+                        <template [ngTemplateOutlet]="detailIcons"></template>
                     </span>
                 </p>
                 <div class="second-row">
@@ -68,26 +93,7 @@
                             </span>
                         </collapse-toggle>
                     </p>
-                    <span *ngIf="this.data.meta.notes || this.data.meta.links.length" class="detail-icons-wrapper">
-                        <span
-                            *ngIf="this.data.meta.notes"
-                            class="detail-icon"
-                            style="position: relative; top: 2px"
-                            [title]="this.data.meta.notes"
-                            (click)="data.isCompleted ? showDetails('notes') : editTaskDetails('notes')"
-                        >
-                            <i class="far fa-comment-alt-lines"></i>
-                        </span>
-                        <span
-                            *ngIf="this.data.meta.links.length"
-                            [title]="this.data.meta.links.join('\n')"
-                            class="detail-icon"
-                            (click)="data.isCompleted ? showDetails('links') : editTaskDetails('links')"
-                        >
-                            <i class="far fa-external-link-alt"></i>
-                            <i class="fas fa-caret-down" style="margin-left: 0.175em"></i>
-                        </span>
-                    </span>
+                    <template *ngIf="data.subTasks.length" [ngTemplateOutlet]="detailIcons"></template>
                 </div>
             </div>
         </div>

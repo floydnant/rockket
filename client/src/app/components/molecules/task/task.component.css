@@ -204,7 +204,10 @@ p.subtask-list-toggle {
     margin-right: 1rem;
 }
 
+.first-row-detailIcons {
+    margin-right: 130px;
 
+}
 .detail-icons-wrapper {
     font-size: 1.1rem;
     margin: 0 .5em 0 0;
