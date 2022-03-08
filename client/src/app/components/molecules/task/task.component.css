@@ -177,15 +177,18 @@ p .taskName::before {
 .task:hover .reveal-on-hover priority-icon {
     transition: opacity 600ms .8s;
 }
-.task:not(:hover) .reveal-on-hover priority-icon {
+.reveal-on-hover priority-icon {
     opacity: 0;
+}
+.task:not(.touchDevice):hover .reveal-on-hover priority-icon {
+    opacity: 1;
 }
 .reveal-on-hover ~ * {
     transition: left 100ms ease-out;
     position: relative;
     left: 0px;
 }
-.task:hover .reveal-on-hover ~ * {
+.task:not(.touchDevice):hover .reveal-on-hover ~ * {
     transition: left 200ms .7s ease-in;
     left: 12px;
 }
@@ -204,9 +207,8 @@ p.subtask-list-toggle {
     margin-right: 1rem;
 }
 
-.first-row-detailIcons {
+.task:not(.touchDevice) .first-row-detailIcons {
     margin-right: 130px;
-
 }
 .detail-icons-wrapper {
     font-size: 1.1rem;
@@ -231,7 +233,7 @@ p.subtask-list-toggle {
 .detail-icon:not(:first-child) {
     margin: 0 0 0 5px;
 }
-.detail-icon:hover {
+.task:not(.touchDevice) .detail-icon:hover {
     color: var(--secondary-clr);
     text-shadow: 0 0 10px black;
 }

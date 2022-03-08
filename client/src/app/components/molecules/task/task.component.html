@@ -60,7 +60,7 @@
                     >
                         <priority-icon
                             [priority]="data.priority"
-                            [showDropDown]="true"
+                            [showDropDown]="!isTouchDevice"
                             (change)="setPriority($event)"
                         ></priority-icon>
                     </span>
