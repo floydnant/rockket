@@ -31,7 +31,13 @@
 
             <div class="text-container">
                 <p>
-                    <priority-icon [priority]="data.priority"></priority-icon>
+                    <span class="position-priority-icon" [class.reveal-on-hover]="data.priority == 0">
+                        <priority-icon
+                            [priority]="data.priority"
+                            [showDropDown]="true"
+                            (change)="setPriority($event)"
+                        ></priority-icon>
+                    </span>
                     <span class="taskName">
                         {{ this.data.name }}
                     </span>

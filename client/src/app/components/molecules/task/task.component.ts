@@ -75,6 +75,10 @@ export class TaskComponent implements OnInit {
     };
     toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
 
+    setPriority(priority: number) {
+        this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, priority }));
+    }
+
     dispatchNewSubtaskAction = (newTaskName: string) =>
         this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
     addSubTask = (newTaskName?: string) => {
@@ -92,17 +96,17 @@ export class TaskComponent implements OnInit {
         }
     };
     toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
-    editTaskDetails = (hightlight?: editmenuOptions["hightlight"]) => {
+    editTaskDetails = (hightlight?: editmenuOptions['hightlight']) => {
         this.editMenuService
             .editTaskDetails(this.data, false, hightlight)
             .then((updatedTask: Task) => {
-                this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask } as any));
+                this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask }));
             })
             .catch(err => {
                 if (err == 'Deleted') this.deleteTask(this.data.id);
             });
     };
-    showDetails = (hightlight?: editmenuOptions["hightlight"]) => {
+    showDetails = (hightlight?: editmenuOptions['hightlight']) => {
         this.editMenuService
             .editTaskDetails(this.data, true, hightlight)
             .then(() => {})

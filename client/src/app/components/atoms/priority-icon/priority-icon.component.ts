@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
     selector: 'priority-icon',
@@ -8,7 +8,17 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 export class PriorityIconComponent implements OnInit, OnChanges {
     @Input() priority: string | number;
     priorityArr: any[] = [];
-    @Input('showNoneAsIcon') hideNoneAsIcon: true | '' = true;
+    @Input('showNoneAsIcon') hideNoneAsIcon: true | '' = '';
+    @Input() noEdit = false;
+    @Input() showDropDown = false;
+
+    @Output() change = new EventEmitter<number>();
+    updatePriorityFromWithin = (priority: string) => {
+        this.priority = priority;
+        this.updatePriority();
+
+        this.change.emit(parseInt(priority));
+    };
 
     updatePriority() {
         const priority = this.priority > 0 ? parseInt(this.priority as string) : 0;

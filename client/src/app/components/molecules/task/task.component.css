@@ -22,7 +22,7 @@
     background: var(--bg);
 
     box-shadow: var(--box-shadow-s);
-    transition: filter 150ms, background 180ms;
+    transition: filter 150ms, background 80ms;
 }
 .task:not(.task-list > .task:first-child) {
     margin-top: 10px;
@@ -161,6 +161,36 @@ p .taskName::before {
     width: 100%;
     box-shadow: var(--box-shadow-s);
 }
+
+.position-priority-icon {
+    position: relative;
+}
+.reveal-on-hover priority-icon {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+
+    display: inline-block;
+    transition: opacity 180ms;
+}
+.task:hover .reveal-on-hover priority-icon {
+    transition: opacity 600ms .8s;
+}
+.task:not(:hover) .reveal-on-hover priority-icon {
+    opacity: 0;
+}
+.reveal-on-hover ~ * {
+    transition: left 100ms ease-out;
+    position: relative;
+    left: 0px;
+}
+.task:hover .reveal-on-hover ~ * {
+    transition: left 200ms .7s ease-in;
+    left: 12px;
+}
+
+
 .second-row {
     display: flex;
     justify-content: flex-start;

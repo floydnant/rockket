@@ -1,0 +1,20 @@
+:host {
+    position: relative;
+    transition: transform 180ms;
+    cursor: pointer;
+}
+:host:hover {
+    transform: scale(1.2);
+}
+
+.drop-down {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    opacity: 0;
+    cursor: pointer;
+}
+:host:not(:hover) .drop-down {
+    pointer-events: none;
+}

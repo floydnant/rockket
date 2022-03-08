@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { TaskList } from 'src/app/shared/taskList.model';
 import { AppData } from './appData.model';
+import { Task } from 'src/app/shared/task.model';
 
 export const CREATE_LIST = '[List] Create';
 export const SET_ACTIVE_LIST = '[List] SetActive';

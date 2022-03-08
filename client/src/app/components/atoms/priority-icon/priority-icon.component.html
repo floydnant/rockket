@@ -5,3 +5,18 @@
     class="fas fa-exclamation"
     [style]="(i ? 'margin-left:5px;' : '') + 'color: var(--danger-clr);'"
 ></i>
+<select
+    #select
+    *ngIf="showDropDown"
+    [value]="priority"
+    class="drop-down"
+    onchange="this.blur()"
+    (change)="updatePriorityFromWithin(select.value)"
+    [disabled]="noEdit"
+>
+    <option value="3">High</option>
+    <option value="2">Medium</option>
+    <option value="1">Low</option>
+    <option value="0">None</option>
+    <option value="-1">Optional</option>
+</select>
