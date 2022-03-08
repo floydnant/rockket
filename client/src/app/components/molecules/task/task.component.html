@@ -53,7 +53,11 @@
                     </span>
                 </ng-template>
                 <p>
-                    <span class="position-priority-icon" [class.reveal-on-hover]="data.priority == 0">
+                    <span
+                        *ngIf="!isCompleted"
+                        class="position-priority-icon"
+                        [class.reveal-on-hover]="data.priority == 0"
+                    >
                         <priority-icon
                             [priority]="data.priority"
                             [showDropDown]="true"
@@ -63,7 +67,10 @@
                     <span class="taskName">
                         {{ this.data.name }}
                     </span>
-                    <span *ngIf="!data.subTasks.length && (data.meta.notes || data.meta.links.length)" class="first-row-detailIcons">
+                    <span
+                        *ngIf="!data.subTasks.length && (data.meta.notes || data.meta.links.length)"
+                        class="first-row-detailIcons"
+                    >
                         <template [ngTemplateOutlet]="detailIcons"></template>
                     </span>
                 </p>
@@ -93,7 +100,10 @@
                             </span>
                         </collapse-toggle>
                     </p>
-                    <template *ngIf="data.subTasks.length && (data.meta.notes || data.meta.links.length)" [ngTemplateOutlet]="detailIcons"></template>
+                    <template
+                        *ngIf="data.subTasks.length && (data.meta.notes || data.meta.links.length)"
+                        [ngTemplateOutlet]="detailIcons"
+                    ></template>
                 </div>
             </div>
         </div>

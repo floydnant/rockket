@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { ModalService } from '../modal/modal.service';
 import { AppData } from '../../../reducers';
 import { isTouchDevice, formatDateRelative } from '../../../shared/utility.model';
-import { Task } from '../../../shared/task.model';
+import { sortCompletedTasks, Task } from '../../../shared/task.model';
 
 import { AppDataActions } from '../../../reducers';
 import { DialogService } from '../../organisms/custom-dialog';
@@ -138,7 +138,7 @@ export class TaskComponent implements OnInit {
         this.isCompleted = this.data.isCompleted;
 
         this.uncompletedTasks = this.data.subTasks.filter(task => !task.isCompleted);
-        this.completedTasks = this.data.subTasks.filter(task => task.isCompleted);
+        this.completedTasks = this.data.subTasks.filter(task => task.isCompleted).sort(sortCompletedTasks);
 
         this.priorityArr = [];
         for (let i = 0; i < parseInt(this.data.priority as unknown as string); i++) this.priorityArr.push(1);

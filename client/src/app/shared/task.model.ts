@@ -20,3 +20,12 @@ export class Task {
     public collapseSubtaskList = false;
     public subTasks: Task[] = [];
 }
+
+export const sortCompletedTasks = (a: Task, b: Task): 0 | 1 | -1 => {
+    try {
+        const order = new Date(a.completedAt).valueOf() - new Date(b.completedAt).valueOf();
+        return order > 0 ? -1 : order < 0 ? 1 : 0;
+    } catch (e) {
+        return -1;
+    }
+};

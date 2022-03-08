@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppData, AppState, AppDataActions } from '../reducers';
 import { AppDataService } from '../reducers/appData/appData.service';
 
-import { Task } from '../shared/task.model';
+import { sortCompletedTasks, Task } from '../shared/task.model';
 import { TaskList, countOpenTasks } from '../shared/taskList.model';
 import { isTouchDevice } from '../shared/utility.model';
 import { ModalService } from './molecules/modal/modal.service';
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.activeTaskList = this.getListById(this.data.activeListId);
 
             this.uncompletedTasks = this.activeTaskList.list.filter(task => !task.isCompleted);
-            this.completedTasks = this.activeTaskList.list.filter(task => task.isCompleted);
+            this.completedTasks = this.activeTaskList.list.filter(task => task.isCompleted).sort(sortCompletedTasks);
 
             console.log('%cupdated state:', 'color: gray', this.data);
         });
