@@ -31,7 +31,7 @@
 
             <div class="text-container">
                 <ng-template #detailIcons>
-                    <span *ngIf="this.data.meta.notes || this.data.meta.links.length" class="detail-icons-wrapper">
+                    <span class="detail-icons-wrapper">
                         <span
                             *ngIf="this.data.meta.notes"
                             class="detail-icon"
@@ -63,7 +63,7 @@
                     <span class="taskName">
                         {{ this.data.name }}
                     </span>
-                    <span *ngIf="!data.subTasks.length" class="first-row-detailIcons">
+                    <span *ngIf="!data.subTasks.length && (data.meta.notes || data.meta.links.length)" class="first-row-detailIcons">
                         <template [ngTemplateOutlet]="detailIcons"></template>
                     </span>
                 </p>
@@ -93,7 +93,7 @@
                             </span>
                         </collapse-toggle>
                     </p>
-                    <template *ngIf="data.subTasks.length" [ngTemplateOutlet]="detailIcons"></template>
+                    <template *ngIf="data.subTasks.length && (data.meta.notes || data.meta.links.length)" [ngTemplateOutlet]="detailIcons"></template>
                 </div>
             </div>
         </div>
