@@ -8,7 +8,6 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 export class PriorityIconComponent implements OnInit, OnChanges {
     @Input() priority: string | number;
     priorityArr: any[] = [];
-    @Input('showNoneAsIcon') hideNoneAsIcon: true | '' = '';
     @Input() noEdit = false;
     @Input() showDropDown = false;
 

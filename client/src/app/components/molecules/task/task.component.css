@@ -190,7 +190,7 @@ p .taskName::before {
 }
 .task:not(.touchDevice):hover .reveal-on-hover ~ * {
     transition: left 200ms .7s ease-in;
-    left: 12px;
+    left: 20px;
 }
 
 

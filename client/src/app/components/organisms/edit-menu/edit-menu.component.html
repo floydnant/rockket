@@ -14,7 +14,7 @@
         />
         <label *ngIf="this.type == 'Task'" class="priority-label edit-item">
             <p>Priority:</p>
-            <priority-icon [priority]="data.priority" showNoneAsIcon></priority-icon>
+            <priority-icon [priority]="data.priority"></priority-icon>
             <select class="input" [(ngModel)]="data.priority" [disabled]="noEdit">
                 <option value="3">High</option>
                 <option value="2">Medium</option>

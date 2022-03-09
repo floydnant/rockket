@@ -18,3 +18,23 @@
 :host:not(:hover) .drop-down {
     pointer-events: none;
 }
+span {
+    display: inline-block;
+    width: max-content;
+}
+span .caret {
+    margin-left: 2px;
+    font-size: 0.6em;
+}
+.submit-clr {
+    color: var(--submit-clr);
+}
+.submit-clr ~ .caret {
+    color: var(--submit-clr);
+}
+.danger-clr {
+    color: var(--danger-clr);
+}
+.danger-clr ~ .caret {
+    color: var(--danger-clr);
+}

@@ -1,10 +1,15 @@
-<i *ngIf="this.priority == -1" class="fas fa-question" style="color: var(--submit-clr)"></i>
-<i *ngIf="this.priority == 0 && !hideNoneAsIcon" class="far fa-exclamation dimm-2"></i>
-<i
-    *ngFor="let _ of this.priorityArr; let i = index"
-    class="fas fa-exclamation"
-    [style]="(i ? 'margin-left:5px;' : '') + 'color: var(--danger-clr);'"
-></i>
+<span>
+    <i *ngIf="this.priority == -1" class="fas fa-question submit-clr"></i>
+    <i *ngIf="this.priority == 0" class="far fa-exclamation dimm-2"></i>
+    <i
+        *ngFor="let _ of this.priorityArr; let i = index"
+        class="fas fa-exclamation danger-clr"
+        [style]="i ? 'margin-left:5px;' : ''"
+    ></i>
+
+    <i *ngIf="showDropDown" class="fas fa-caret-down caret" [class.dimm-2]="this.priority == 0"></i>
+</span>
+
 <select
     #select
     *ngIf="showDropDown"
