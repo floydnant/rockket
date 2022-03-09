@@ -29,12 +29,12 @@ span .caret {
 .submit-clr {
     color: var(--submit-clr);
 }
-.submit-clr ~ .caret {
+/* .submit-clr ~ .caret {
     color: var(--submit-clr);
-}
+} */
 .danger-clr {
     color: var(--danger-clr);
 }
-.danger-clr ~ .caret {
+/* .danger-clr ~ .caret {
     color: var(--danger-clr);
-}
+} */
