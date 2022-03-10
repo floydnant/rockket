@@ -1,22 +1,21 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ModalService } from '../modal/modal.service';
-import { AppData } from '../../../reducers';
-import { isTouchDevice, formatDateRelative } from '../../../shared/utility.model';
+import { TaskUiState, UiStateService } from 'src/app/services/ui-state.service';
+import { AppData, AppDataActions } from '../../../reducers';
 import { sortCompletedTasks, Task } from '../../../shared/task.model';
-
-import { AppDataActions } from '../../../reducers';
+import { countOpenTasks, countOpenTasksMultiLevel } from '../../../shared/taskList.model';
+import { formatDateRelative, isTouchDevice } from '../../../shared/utility.model';
 import { DialogService } from '../../organisms/custom-dialog';
-import { EditMenuService } from '../../organisms/edit-menu/edit-menu.service';
-import { countOpenTasksMultiLevel, countOpenTasks } from '../../../shared/taskList.model';
 import { editmenuOptions } from '../../organisms/edit-menu/edit-menu.model';
+import { EditMenuService } from '../../organisms/edit-menu/edit-menu.service';
+import { ModalService } from '../modal/modal.service';
 
 @Component({
     selector: 'task',
     templateUrl: './task.component.html',
     styleUrls: ['./task.component.css'],
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent implements OnInit, AfterViewInit {
     formatDateRelative = formatDateRelative;
     countOpenTasks = countOpenTasks;
 
@@ -37,16 +36,38 @@ export class TaskComponent implements OnInit {
         }, 200);
     };
 
+    uiState: TaskUiState;
+    setNotesPopOutState(open: boolean) {
+        this.uiState.notesPopOutOpen = open;
+        this.uiStateService.setTaskState(this.data.id, { ...this.uiState, notesPopOutOpen: open });
+    }
+
+    @ViewChild('notesArea') notesArea: ElementRef<HTMLTextAreaElement>;
+    setHeightOfArea(area: HTMLTextAreaElement = this.notesArea?.nativeElement) {
+        if (area) area.style.height = area.scrollHeight + 2 + 'px';
+    }
+    toggleNotesPopOutOpen(save = true) {
+        this.setNotesPopOutState(!this.uiState.notesPopOutOpen);
+
+        if (this.uiState.notesPopOutOpen) {
+            this.notesAreaValue = this.data.meta.notes;
+            setTimeout(() => {
+                this.setHeightOfArea();
+                this.notesArea.nativeElement.focus();
+            }, 0);
+        } else if (this.notesAreaValue != this.data.meta.notes && save) this.updateNotes();
+    }
+
     constructor(
         public modalService: ModalService,
         private store: Store<AppData>,
         private dialogService: DialogService,
-        private editMenuService: EditMenuService
+        private editMenuService: EditMenuService,
+        private uiStateService: UiStateService
     ) {}
 
     @Input() @Output() data: Task;
     isCompleted: boolean;
-    priorityArr: any[];
 
     uncompletedTasks: Task[];
     @Input() showCompleted: boolean;
@@ -79,6 +100,17 @@ export class TaskComponent implements OnInit {
         this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, priority }));
     }
 
+    notesAreaValue: string;
+    updateNotes() {
+        if (this.notesAreaValue != this.data.meta.notes)
+            this.store.dispatch(
+                new AppDataActions.EditTask(this.data.id, {
+                    ...this.data,
+                    meta: { ...this.data.meta, notes: this.notesAreaValue },
+                })
+            );
+    }
+
     dispatchNewSubtaskAction = (newTaskName: string) =>
         this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
     addSubTask = (newTaskName?: string) => {
@@ -98,7 +130,11 @@ export class TaskComponent implements OnInit {
     toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
     editTaskDetails = (hightlight?: editmenuOptions['hightlight']) => {
         this.editMenuService
-            .editTaskDetails(this.data, false, hightlight)
+            .editTaskDetails(
+                { ...this.data, meta: { ...this.data.meta, notes: this.notesAreaValue } },
+                false,
+                hightlight
+            )
             .then((updatedTask: Task) => {
                 this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask }));
             })
@@ -140,9 +176,11 @@ export class TaskComponent implements OnInit {
         this.uncompletedTasks = this.data.subTasks.filter(task => !task.isCompleted);
         this.completedTasks = this.data.subTasks.filter(task => task.isCompleted).sort(sortCompletedTasks);
 
-        this.priorityArr = [];
-        for (let i = 0; i < parseInt(this.data.priority as unknown as string); i++) this.priorityArr.push(1);
+        this.uiState = this.uiStateService.getTaskState(this.data.id);
+        this.notesAreaValue = this.data.meta.notes;
     }
-
+    ngAfterViewInit() {
+        this.setHeightOfArea();
+    }
     // ngOnChanges(changes: SimpleChanges): void {}
 }

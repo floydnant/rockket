@@ -148,7 +148,7 @@ input,
     --outline-clr: gray;
     --outline-weight: 1px;
     box-shadow: var(--box-shadow-s);
-    transition: 180ms;
+    transition: 180ms, height 0ms;
 }
 .input:focus {
     --outline-clr: var(--primary-clr);

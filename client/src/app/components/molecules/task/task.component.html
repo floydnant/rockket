@@ -1,167 +1,217 @@
-<li
-    id="task-{{ this.data.id }}"
-    class="task"
-    [class.touchDevice]="isTouchDevice"
-    [class.completed]="this.isCompleted && this.data.isCompleted"
-    [class.completed-transition]="this.isCompleted"
-    [class.alt-bg]="this.taskPosition % 2 == 1"
->
-    <div class="position-time-completed">
-        <span *ngIf="this.data.isCompleted" class="time-completed">
-            {{ formatDateRelative(this.data.completedAt) }}
-        </span>
+<div class="task-wrapper">
+    <div
+        *ngIf="data.meta.notes && !uiState.notesPopOutOpen"
+        class="pop-out-collapsed"
+        (click)="toggleNotesPopOutOpen()"
+    ></div>
+    <div class="pop-out-container">
+        <textarea
+            #notesArea
+            *ngIf="data.meta.notes && uiState.notesPopOutOpen"
+            class="input pop-out"
+            placeholder="notes"
+            [(ngModel)]="notesAreaValue"
+            [disabled]="isCompleted"
+            (input)="setHeightOfArea()"
+            (focus)="setHeightOfArea()"
+        ></textarea>
+        <div class="position-pop-out-actions">
+            <div class="pop-out-actions-container">
+                <button
+                    class="pop-out-action no-filter"
+                    title="open details menu"
+                    (click)="data.isCompleted ? showDetails('notes') : editTaskDetails('notes')"
+                >
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+                <button
+                    class="pop-out-action"
+                    title="save changes & close"
+                    [class.submit-clr]="notesAreaValue != data.meta.notes"
+                    [class.no-filter]="notesAreaValue == data.meta.notes"
+                    (click)="toggleNotesPopOutOpen()"
+                >
+                    <i class="fas fa-times"></i>
+                </button>
+                <button
+                    *ngIf="notesAreaValue != data.meta.notes"
+                    class="btn modal-btn btn-submit"
+                    title="save changes"
+                    style="margin-left: 15px"
+                    (click)="updateNotes()"
+                >
+                    <!-- <i class="fas fa-save"></i>  -->Save
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="wrapper outer-wrapper">
-        <div class="wrapper inner-wrapper">
-            <button
-                class="btn btn-icon btn-complete"
-                title="mark task as {{ this.data.isCompleted ? 'un' : '' }}completed"
-                (click)="toggleCompleted()"
-                (mouseenter)="completeBtnIsHovered = true"
-                (mouseleave)="completeBtnIsHovered = false"
-            >
-                <i
-                    *ngIf="this.data.isCompleted; else uncompleted"
-                    class="{{ completeBtnIsHovered ? 'far fa-circle' : 'fas fa-check-circle' }}"
-                ></i>
-                <ng-template #uncompleted
-                    ><i class="{{ completeBtnIsHovered ? 'fas fa-check-circle' : 'far fa-circle' }}"></i>
-                </ng-template>
-            </button>
+    <li
+        id="task-{{ this.data.id }}"
+        class="task"
+        [class.touchDevice]="isTouchDevice"
+        [class.completed]="this.isCompleted && this.data.isCompleted"
+        [class.completed-transition]="this.isCompleted"
+        [class.alt-bg]="this.taskPosition % 2 == 1"
+    >
+        <div class="position-time-completed">
+            <span *ngIf="this.data.isCompleted" class="time-completed">
+                {{ formatDateRelative(this.data.completedAt) }}
+            </span>
+        </div>
+        <div class="wrapper outer-wrapper">
+            <div class="wrapper inner-wrapper">
+                <button
+                    class="btn btn-icon btn-complete"
+                    title="mark task as {{ this.data.isCompleted ? 'un' : '' }}completed"
+                    (click)="toggleCompleted()"
+                    (mouseenter)="completeBtnIsHovered = true"
+                    (mouseleave)="completeBtnIsHovered = false"
+                >
+                    <i
+                        *ngIf="this.data.isCompleted; else uncompleted"
+                        class="{{ completeBtnIsHovered ? 'far fa-circle' : 'fas fa-check-circle' }}"
+                    ></i>
+                    <ng-template #uncompleted
+                        ><i class="{{ completeBtnIsHovered ? 'fas fa-check-circle' : 'far fa-circle' }}"></i>
+                    </ng-template>
+                </button>
 
-            <div class="text-container">
-                <ng-template #detailIcons>
-                    <span class="detail-icons-wrapper">
-                        <span
-                            *ngIf="this.data.meta.notes"
-                            class="detail-icon"
-                            style="position: relative; top: 2px"
-                            [title]="this.data.meta.notes"
-                            (click)="data.isCompleted ? showDetails('notes') : editTaskDetails('notes')"
-                        >
-                            <i class="far fa-comment-alt-lines"></i>
-                        </span>
-                        <span
-                            *ngIf="this.data.meta.links.length"
-                            [title]="this.data.meta.links.join('\n')"
-                            class="detail-icon"
-                            (click)="data.isCompleted ? showDetails('links') : editTaskDetails('links')"
-                        >
-                            <i class="far fa-external-link-alt"></i>
-                            <i class="fas fa-caret-down" style="margin-left: 0.175em"></i>
-                        </span>
-                    </span>
-                </ng-template>
-                <p>
-                    <span
-                        *ngIf="!isCompleted"
-                        class="position-priority-icon"
-                        [class.reveal-on-hover]="data.priority == 0"
-                    >
-                        <priority-icon
-                            [priority]="data.priority"
-                            [showDropDown]="!isTouchDevice"
-                            (change)="setPriority($event)"
-                        ></priority-icon>
-                    </span>
-                    <span class="taskName">
-                        {{ this.data.name }}
-                    </span>
-                    <span
-                        *ngIf="!data.subTasks.length && (data.meta.notes || data.meta.links.length)"
-                        class="first-row-detailIcons"
-                    >
-                        <template [ngTemplateOutlet]="detailIcons"></template>
-                    </span>
-                </p>
-                <div class="second-row">
-                    <p *ngIf="this.data.subTasks.length != 0" class="subtask-list-toggle">
-                        <collapse-toggle
-                            [isOpen]="!this.data.collapseSubtaskList"
-                            noSpacing
-                            hideToggleText
-                            dimm="none"
-                            (onToggle)="toggleSubtaskList()"
-                        >
+                <div class="text-container">
+                    <ng-template #detailIcons>
+                        <span class="detail-icons-wrapper">
                             <span
-                                *ngIf="countOpenTasks(this.data.subTasks) != 0; else completed"
-                                class="text-shadow"
-                                style="color: var(--secondary-clr)"
+                                *ngIf="this.data.meta.notes"
+                                class="detail-icon"
+                                style="position: relative; top: 2px"
+                                title="toggle notes pop-out"
+                                (click)="toggleNotesPopOutOpen()"
                             >
-                                {{ countOpenTasks(this.data.subTasks) }} open
+                                <i class="far fa-comment-alt-lines"></i>
                             </span>
-                            <ng-template #completed>
-                                <span style="color: var(--submit-clr)"> {{ completedTasks.length }} completed </span>
-                            </ng-template>
-                            <span class="dimm-1">
-                                /
-                                {{ this.data.subTasks.length }}
-                                {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
+                            <span
+                                *ngIf="this.data.meta.links.length"
+                                [title]="this.data.meta.links.join('\n')"
+                                class="detail-icon"
+                                (click)="data.isCompleted ? showDetails('links') : editTaskDetails('links')"
+                            >
+                                <i class="far fa-external-link-alt"></i>
+                                <i class="fas fa-caret-down" style="margin-left: 0.175em"></i>
                             </span>
-                        </collapse-toggle>
+                        </span>
+                    </ng-template>
+                    <p>
+                        <span
+                            *ngIf="!isCompleted"
+                            class="position-priority-icon"
+                            [class.reveal-on-hover]="data.priority == 0"
+                        >
+                            <priority-icon
+                                [priority]="data.priority"
+                                [showDropDown]="!isTouchDevice"
+                                (change)="setPriority($event)"
+                            ></priority-icon>
+                        </span>
+                        <span class="taskName">
+                            {{ this.data.name }}
+                        </span>
+                        <span
+                            *ngIf="!data.subTasks.length && (data.meta.notes || data.meta.links.length)"
+                            class="first-row-detailIcons"
+                        >
+                            <template [ngTemplateOutlet]="detailIcons"></template>
+                        </span>
                     </p>
-                    <template
-                        *ngIf="data.subTasks.length && (data.meta.notes || data.meta.links.length)"
-                        [ngTemplateOutlet]="detailIcons"
-                    ></template>
+                    <div class="second-row">
+                        <p *ngIf="this.data.subTasks.length != 0" class="subtask-list-toggle">
+                            <collapse-toggle
+                                [isOpen]="!this.data.collapseSubtaskList"
+                                noSpacing
+                                hideToggleText
+                                dimm="none"
+                                (onToggle)="toggleSubtaskList()"
+                            >
+                                <span
+                                    *ngIf="countOpenTasks(this.data.subTasks) != 0; else completed"
+                                    class="text-shadow"
+                                    style="color: var(--secondary-clr)"
+                                >
+                                    {{ countOpenTasks(this.data.subTasks) }} open
+                                </span>
+                                <ng-template #completed>
+                                    <span style="color: var(--submit-clr)">
+                                        {{ completedTasks.length }} completed
+                                    </span>
+                                </ng-template>
+                                <span class="dimm-1">
+                                    /
+                                    {{ this.data.subTasks.length }}
+                                    {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
+                                </span>
+                            </collapse-toggle>
+                        </p>
+                        <template
+                            *ngIf="data.subTasks.length && (data.meta.notes || data.meta.links.length)"
+                            [ngTemplateOutlet]="detailIcons"
+                        ></template>
+                    </div>
+                </div>
+            </div>
+            <ng-template #taskActionBtns>
+                <button
+                    title="add sub task"
+                    class="btn btn-icon btn-secondary"
+                    [class.disabled]="this.data.isCompleted"
+                    (click)="addSubTask(); toggleTaskActionBtns(false)"
+                    style="--btn-index: 2; --btn-index-reverse: 0"
+                >
+                    <i class="fas fa-plus"></i></button
+                ><button
+                    title="show{{ this.data.isCompleted ? '' : '/edit' }} task details"
+                    class="btn btn-icon btn-edit"
+                    (click)="data.isCompleted ? showDetails() : editTaskDetails(); toggleTaskActionBtns(false)"
+                    style="--btn-index: 1; --btn-index-reverse: 1"
+                >
+                    <!-- [class.disabled]="this.data.isCompleted" -->
+                    <!-- <i class="fas fa-info"></i> -->
+                    <i class="fas fa-ellipsis-v"></i></button
+                ><button
+                    title="delete task"
+                    class="btn btn-icon btn-delete"
+                    (click)="deleteTask(this.data.id); toggleTaskActionBtns(false)"
+                    style="--btn-index: 0; --btn-index-reverse: 2"
+                >
+                    <i class="far fa-trash-alt"></i>
+                </button>
+            </ng-template>
+            <div *ngIf="!isTouchDevice" class="position-task-action-btns">
+                <div class="btn-group">
+                    <template [ngTemplateOutlet]="taskActionBtns"></template>
+                </div>
+            </div>
+            <menu-toggle-btn
+                *ngIf="isTouchDevice"
+                [isOpen]="touchDevice_showBtns"
+                (onMenuToggle)="toggleTaskActionBtns($event)"
+            >
+                <template [ngTemplateOutlet]="taskActionBtns"></template>
+            </menu-toggle-btn>
+        </div>
+        <div class="position-task-progress">
+            <div class="task-progress-container">
+                <div *ngIf="data.subTasks.length" class="task-progress">
+                    <span
+                        class="submit-clr"
+                        [style]="'width:' + (completedTasks.length / data.subTasks.length) * 100 + '%;'"
+                    ></span>
+                    <span
+                        class="secondary-clr"
+                        [style]="'width:' + (uncompletedTasks.length / data.subTasks.length) * 100 + '%;'"
+                    ></span>
                 </div>
             </div>
         </div>
-        <ng-template #taskActionBtns>
-            <button
-                title="add sub task"
-                class="btn btn-icon btn-secondary"
-                [class.disabled]="this.data.isCompleted"
-                (click)="addSubTask(); toggleTaskActionBtns(false)"
-                style="--btn-index: 2; --btn-index-reverse: 0"
-            >
-                <i class="fas fa-plus"></i></button
-            ><button
-                title="show{{ this.data.isCompleted ? '' : '/edit' }} task details"
-                class="btn btn-icon btn-edit"
-                (click)="data.isCompleted ? showDetails() : editTaskDetails(); toggleTaskActionBtns(false)"
-                style="--btn-index: 1; --btn-index-reverse: 1"
-            >
-                <!-- [class.disabled]="this.data.isCompleted" -->
-                <!-- <i class="fas fa-info"></i> -->
-                <i class="fas fa-ellipsis-v"></i></button
-            ><button
-                title="delete task"
-                class="btn btn-icon btn-delete"
-                (click)="deleteTask(this.data.id); toggleTaskActionBtns(false)"
-                style="--btn-index: 0; --btn-index-reverse: 2"
-            >
-                <i class="far fa-trash-alt"></i>
-            </button>
-        </ng-template>
-        <div *ngIf="!isTouchDevice" class="position-task-action-btns">
-            <div class="btn-group">
-                <template [ngTemplateOutlet]="taskActionBtns"></template>
-            </div>
-        </div>
-        <menu-toggle-btn
-            *ngIf="isTouchDevice"
-            [isOpen]="touchDevice_showBtns"
-            (onMenuToggle)="toggleTaskActionBtns($event)"
-        >
-            <template [ngTemplateOutlet]="taskActionBtns"></template>
-        </menu-toggle-btn>
-    </div>
-    <div class="position-task-progress">
-        <div class="task-progress-container">
-            <div *ngIf="data.subTasks.length" class="task-progress">
-                <span
-                    class="submit-clr"
-                    [style]="'width:' + (completedTasks.length / data.subTasks.length) * 100 + '%;'"
-                ></span>
-                <span
-                    class="secondary-clr"
-                    [style]="'width:' + (uncompletedTasks.length / data.subTasks.length) * 100 + '%;'"
-                ></span>
-            </div>
-        </div>
-    </div>
-</li>
+    </li>
+</div>
 
 <ul
     *ngIf="this.data.subTasks.length != 0"
