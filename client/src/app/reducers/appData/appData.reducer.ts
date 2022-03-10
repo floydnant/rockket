@@ -151,8 +151,6 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
         case AppDataActions.IMPORT_TO_DB: {
             const importedState = getCopyOf(action.payload);
 
-            console.log('importedState.version:', importedState.version);
-
             if (importedState.version != ACTIVE_VERSION) {
                 // migrate 'timeCompleted' to 'completedAt'
                 const migrateTasksRecursive = (arr: Task[]) => {

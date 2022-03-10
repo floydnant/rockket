@@ -177,6 +177,7 @@
 
     <single-input-form
         *ngIf="this.data.subTasks.length != 0 && !this.data.collapseSubtaskList && !data.isCompleted"
+        placeholder="add new subtask..."
         (onSubmit)="addSubTask($event)"
         [inputFieldId]="'_' + data.id"
     ></single-input-form>
@@ -187,7 +188,7 @@
         (onToggle)="showCompleted = $event"
         colorClass="btn-submit"
         dimm="dimm-1"
-        >{{ completedTasks.length }} completed task{{ completedTasks.length > 1 ? "s" : "" }}</collapse-toggle
+        >{{ completedTasks.length }} completed subtask{{ completedTasks.length > 1 ? "s" : "" }}</collapse-toggle
     >
     <div *ngIf="showCompleted || !uncompletedTasks.length">
         <task
