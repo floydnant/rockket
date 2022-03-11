@@ -1,19 +1,18 @@
 <div class="task-wrapper">
     <div
-        *ngIf="data.meta.notes && !uiState.notesPopOutOpen"
+        *ngIf="data.meta.notes && !isDetailsPopOutOpen"
         class="pop-out-collapsed"
-        (click)="toggleNotesPopOutOpen()"
+        (click)="toggleDetailsPopOutOpen(); $event.stopPropagation()"
     ></div>
-    <div class="pop-out-container">
+    <div #popOutContainer *ngIf="data.meta.notes && isDetailsPopOutOpen" class="pop-out-container">
         <textarea
             #notesArea
-            *ngIf="data.meta.notes && uiState.notesPopOutOpen"
-            class="input pop-out"
+            class="input pop-out dimm-0"
             placeholder="notes"
             [(ngModel)]="notesAreaValue"
             [disabled]="isCompleted"
-            (input)="setHeightOfArea()"
-            (focus)="setHeightOfArea()"
+            (input)="setTextAreaHeight()"
+            (focus)="setTextAreaHeight()"
         ></textarea>
         <div class="position-pop-out-actions">
             <div class="pop-out-actions-container">
@@ -26,21 +25,31 @@
                 </button>
                 <button
                     class="pop-out-action"
-                    title="save changes & close"
-                    [class.submit-clr]="notesAreaValue != data.meta.notes"
-                    [class.no-filter]="notesAreaValue == data.meta.notes"
-                    (click)="toggleNotesPopOutOpen()"
+                    [class.primary-clr]="uiState.keepDetailsPopOutOpen"
+                    [class.no-filter]="!uiState.keepDetailsPopOutOpen"
+                    title="{{ uiState.keepDetailsPopOutOpen ? 'DON\'T keep details open' : 'keep details open' }}"
+                    (click)="setKeepDetailsPopOutOpen(!uiState.keepDetailsPopOutOpen)"
                 >
-                    <i class="fas fa-times"></i>
+                    <i *ngIf="uiState.keepDetailsPopOutOpen" class="far fa-lock-alt"></i>
+                    <i *ngIf="!uiState.keepDetailsPopOutOpen" class="far fa-lock-open-alt"></i>
                 </button>
                 <button
                     *ngIf="notesAreaValue != data.meta.notes"
-                    class="btn modal-btn btn-submit"
-                    title="save changes"
-                    style="margin-left: 15px"
-                    (click)="updateNotes()"
+                    class="pop-out-action danger-clr"
+                    title="discard changes"
+                    style="transform: scaleX(-1) rotate(40deg)"
+                    (click)="resetNotesArea()"
                 >
-                    <!-- <i class="fas fa-save"></i>  -->Save
+                    <i class="fas fa-share"></i>
+                </button>
+                <button
+                    class="pop-out-action"
+                    title="{{ notesAreaValue != data.meta.notes ? 'save changes & ' : '' }}close"
+                    [class.submit-clr]="notesAreaValue != data.meta.notes"
+                    [class.no-filter]="notesAreaValue == data.meta.notes"
+                    (click)="toggleDetailsPopOutOpen()"
+                >
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
         </div>
@@ -78,15 +87,16 @@
 
                 <div class="text-container">
                     <ng-template #detailIcons>
-                        <span class="detail-icons-wrapper">
+                        <span #detailIconsWrapper class="detail-icons-wrapper">
                             <span
                                 *ngIf="this.data.meta.notes"
                                 class="detail-icon"
                                 style="position: relative; top: 2px"
                                 title="toggle notes pop-out"
-                                (click)="toggleNotesPopOutOpen()"
+                                (click)="toggleDetailsPopOutOpen()"
                             >
-                                <i class="far fa-comment-alt-lines"></i>
+                                <i *ngIf="isDetailsPopOutOpen" class="fas fa-comment-alt-lines"></i>
+                                <i *ngIf="!isDetailsPopOutOpen" class="far fa-comment-alt-lines"></i>
                             </span>
                             <span
                                 *ngIf="this.data.meta.links.length"

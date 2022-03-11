@@ -14,7 +14,6 @@
     /* position: relative; */
     /* height: max(1.9rem, max-content);
     height: 1.9rem; */
-    z-index: 1;
 
     /* padding: 10px;
     padding-right: 20px; */
@@ -372,7 +371,8 @@ menu-toggle-btn {
     padding-bottom: 10px;
 
     background: none;
-    box-shadow: var(--box-shadow-s);
+    /* box-shadow: var(--box-shadow-s); */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.61);
 }
 .pop-out:not(:focus) {
     border: 1px solid var(--global-background);

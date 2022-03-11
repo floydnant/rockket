@@ -108,6 +108,9 @@ body {
     display: none !important;
 }
 
+.dimm-0 {
+    filter: opacity(0.7);
+}
 .dimm-1 {
     filter: opacity(0.6) brightness(0.9);
 }
@@ -211,11 +214,14 @@ body.touchDevice .btn.hover:not([disabled], .modal-btn) {
     background: var(--global-background);
     box-shadow: var(--shadow), 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6);
 }
-.btn-primary {
+.btn-primary,
+.primary-clr {
     --color-hue: var(--primary-clr-hue);
     --clr: var(--primary-clr);
+    --color: var(--primary-clr);
 }
-.btn-secondary, .secondary-clr {
+.btn-secondary,
+.secondary-clr {
     --color-hue: var(--secondary-clr-hue);
     --clr: var(--secondary-clr);
     --color: var(--secondary-clr);
@@ -272,7 +278,7 @@ body.touchDevice .btn.hover:not([disabled], .modal-btn) {
     /* font-weight: 700; */
     border-radius: 10px;
     color: var(--text-clr, var(--global-background));
-    
+
     background: var(--color);
 }
 .badge-outline {
@@ -291,7 +297,7 @@ body.touchDevice .btn.hover:not([disabled], .modal-btn) {
 }
 @keyframes spin {
     100% {
-        transform: rotate(360deg)
+        transform: rotate(360deg);
     }
 }
 

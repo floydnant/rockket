@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 export class TaskUiState {
     collapseSubtaskList: boolean = false;
     collapseCompletedSubtasks: boolean = true;
-    notesPopOutOpen: boolean = false;
+    keepDetailsPopOutOpen: boolean = false;
 }
 class UiState {
     tasks: {
@@ -17,7 +17,6 @@ class UiState {
 export class UiStateService {
     constructor() {
         this.state = this.getUiState();
-        console.log('ui state initialised');
     }
     private localStorageKey = 'todo-ui-state';
 
