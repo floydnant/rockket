@@ -11,6 +11,7 @@
             placeholder="notes"
             [(ngModel)]="notesAreaValue"
             [disabled]="isCompleted"
+            [ngStyle]="isDetailsPopOutOpen && uiState.detailsPopOut.notesAreaHeight ? { height: uiState.detailsPopOut.notesAreaHeight } : {}"
             (input)="setTextAreaHeight()"
             (focus)="setTextAreaHeight()"
         ></textarea>
@@ -25,13 +26,13 @@
                 </button>
                 <button
                     class="pop-out-action"
-                    [class.primary-clr]="uiState.keepDetailsPopOutOpen"
-                    [class.no-filter]="!uiState.keepDetailsPopOutOpen"
-                    title="{{ uiState.keepDetailsPopOutOpen ? 'DON\'T keep details open' : 'keep details open' }}"
-                    (click)="setKeepDetailsPopOutOpen(!uiState.keepDetailsPopOutOpen)"
+                    [class.primary-clr]="uiState.detailsPopOut.keepOpen"
+                    [class.no-filter]="!uiState.detailsPopOut.keepOpen"
+                    title="{{ uiState.detailsPopOut.keepOpen ? 'DON\'T keep details open' : 'keep details open' }}"
+                    (click)="setKeepDetailsPopOutOpen(!uiState.detailsPopOut.keepOpen)"
                 >
-                    <i *ngIf="uiState.keepDetailsPopOutOpen" class="far fa-lock-alt"></i>
-                    <i *ngIf="!uiState.keepDetailsPopOutOpen" class="far fa-lock-open-alt"></i>
+                    <i *ngIf="uiState.detailsPopOut.keepOpen" class="far fa-lock-alt"></i>
+                    <i *ngIf="!uiState.detailsPopOut.keepOpen" class="far fa-lock-open-alt"></i>
                 </button>
                 <button
                     *ngIf="notesAreaValue != data.meta.notes"

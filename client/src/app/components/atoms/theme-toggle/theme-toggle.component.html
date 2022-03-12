@@ -3,8 +3,8 @@
     <i *ngIf="this.isDarkTheme" class="fas fa-sun"></i>
 </button> -->
 <menu-toggle-btn position="right" [fa-icon]="isDarkTheme ? 'fas fa-moon' : 'fas fa-sun'" color="submit">
-    <button class="btn modal-btn" (click)="setTheme(true)"><i class="fas fa-moon"></i>&nbsp;Always dark</button>
-    <button class="light btn modal-btn" (click)="setTheme(false)"><i class="fas fa-sun"></i>&nbsp;Always light</button>
+    <button class="btn modal-btn" (click)="setTheme(true)"><i class="fas fa-moon"></i>&nbsp;dark</button>
+    <button class="light btn modal-btn" (click)="setTheme(false)"><i class="fas fa-sun"></i>&nbsp;light</button>
     <span
         ><i class="fas fa-adjust"></i>&nbsp;System
         <toggle-switch [isOn]="updateThemeOnEvent" (onToggle)="toggleUpdateThemeOnEvent()"></toggle-switch

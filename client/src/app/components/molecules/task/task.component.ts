@@ -26,7 +26,7 @@ import { ModalService } from '../modal/modal.service';
     templateUrl: './task.component.html',
     styleUrls: ['./task.component.css'],
 })
-export class TaskComponent implements OnInit, AfterViewInit {
+export class TaskComponent implements OnInit {
     formatDateRelative = formatDateRelative;
     countOpenTasks = countOpenTasks;
 
@@ -50,15 +50,37 @@ export class TaskComponent implements OnInit, AfterViewInit {
     uiState: TaskUiState;
     isDetailsPopOutOpen: boolean;
     setKeepDetailsPopOutOpen(keepOpen: boolean) {
-        this.uiState.keepDetailsPopOutOpen = keepOpen;
-        this.uiStateService.setTaskState(this.data.id, { ...this.uiState, keepDetailsPopOutOpen: keepOpen });
+        this.uiState.detailsPopOut.keepOpen = keepOpen;
+
+        this.uiStateService.setTaskState(this.data.id, {
+            ...this.uiState,
+            detailsPopOut: {
+                ...this.uiState.detailsPopOut,
+                keepOpen,
+            },
+        });
     }
 
     @ViewChild('notesArea') notesArea: ElementRef<HTMLTextAreaElement>;
-    setTextAreaHeight(area: HTMLTextAreaElement = this.notesArea?.nativeElement) {
+    setTextAreaHeight() {
+        const area = this.notesArea?.nativeElement;
         if (area) {
-            area.style.height = '20px';
+            area.style.height = '10px';
             area.style.height = area.scrollHeight + 2 + 'px';
+
+            if (
+                this.uiState.detailsPopOut.keepOpen &&
+                this.uiState.detailsPopOut.notesAreaHeight != area.style.height
+            ) {
+                this.uiState.detailsPopOut.notesAreaHeight = area.style.height;
+                this.uiStateService.setTaskState(this.data.id, {
+                    ...this.uiState,
+                    detailsPopOut: {
+                        ...this.uiState.detailsPopOut,
+                        notesAreaHeight: this.uiState.detailsPopOut.notesAreaHeight,
+                    },
+                });
+            }
         }
     }
     resetNotesArea() {
@@ -81,7 +103,7 @@ export class TaskComponent implements OnInit, AfterViewInit {
         // const clickedInsidePopOut = event.composedPath().some(elem => elem == this.popOutContainer.nativeElement);
 
         if (!clickedOneOfThem)
-            if (this.uiState.keepDetailsPopOutOpen) this.updateNotes();
+            if (this.uiState.detailsPopOut.keepOpen) this.updateNotes();
             else this.toggleDetailsPopOutOpen();
     }
     toggleDetailsPopOutOpen(saveChanges = true) {
@@ -218,10 +240,7 @@ export class TaskComponent implements OnInit, AfterViewInit {
         this.completedTasks = this.data.subTasks.filter(task => task.isCompleted).sort(sortCompletedTasks);
 
         this.uiState = this.uiStateService.getTaskState(this.data.id);
-        this.isDetailsPopOutOpen = this.uiState.keepDetailsPopOutOpen;
+        this.isDetailsPopOutOpen = this.uiState.detailsPopOut.keepOpen;
         this.notesAreaValue = this.data.meta.notes;
-    }
-    ngAfterViewInit() {
-        if (this.isDetailsPopOutOpen) this.setTextAreaHeight();
     }
 }

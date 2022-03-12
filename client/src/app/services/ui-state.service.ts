@@ -3,7 +3,16 @@ import { Injectable } from '@angular/core';
 export class TaskUiState {
     collapseSubtaskList: boolean = false;
     collapseCompletedSubtasks: boolean = true;
-    keepDetailsPopOutOpen: boolean = false;
+
+    detailsPopOut: {
+        keepOpen: boolean;
+        notesAreaHeight?: string;
+        showLinks: boolean;
+    } = {
+        keepOpen: false,
+        notesAreaHeight: null,
+        showLinks: false,
+    };
 }
 class UiState {
     tasks: {
