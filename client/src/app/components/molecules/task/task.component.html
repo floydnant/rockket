@@ -4,7 +4,7 @@
         class="pop-out-collapsed"
         (click)="toggleDetailsPopOutOpen(); $event.stopPropagation()"
     ></div>
-    <div #popOutContainer *ngIf="data.meta.notes && isDetailsPopOutOpen" class="pop-out-container">
+    <div #popOutContainer *ngIf="isDetailsPopOutOpen" class="pop-out-container">
         <textarea
             #notesArea
             class="input pop-out dimm-0"
@@ -89,11 +89,11 @@
                 <div class="text-container">
                     <ng-template #detailIcons>
                         <span #detailIconsWrapper class="detail-icons-wrapper">
+                            <!-- *ngIf="this.data.meta.notes" -->
                             <span
-                                *ngIf="this.data.meta.notes"
-                                class="detail-icon"
-                                style="position: relative; top: 2px"
-                                title="toggle notes pop-out"
+                                class="detail-icon notes-icon"
+                                [class.reveal]="!this.data.meta.notes"
+                                title="toggle pop-out notes"
                                 (click)="toggleDetailsPopOutOpen()"
                             >
                                 <i *ngIf="isDetailsPopOutOpen" class="fas fa-comment-alt-lines"></i>
@@ -125,8 +125,9 @@
                         <span class="taskName">
                             {{ this.data.name }}
                         </span>
+                        <!-- && (data.meta.notes || data.meta.links.length) -->
                         <span
-                            *ngIf="!data.subTasks.length && (data.meta.notes || data.meta.links.length)"
+                            *ngIf="!data.subTasks.length"
                             class="first-row-detailIcons"
                         >
                             <template [ngTemplateOutlet]="detailIcons"></template>
@@ -163,8 +164,9 @@
                                 </span>
                             </collapse-toggle>
                         </p>
+                        <!-- && (data.meta.notes || data.meta.links.length) -->
                         <template
-                            *ngIf="data.subTasks.length && (data.meta.notes || data.meta.links.length)"
+                            *ngIf="data.subTasks.length"
                             [ngTemplateOutlet]="detailIcons"
                         ></template>
                     </div>
