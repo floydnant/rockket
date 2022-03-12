@@ -36,7 +36,7 @@
                 <button
                     *ngIf="notesAreaValue != data.meta.notes"
                     class="pop-out-action danger-clr"
-                    title="discard changes"
+                    title="revert changes"
                     style="transform: scaleX(-1) rotate(40deg)"
                     (click)="resetNotesArea()"
                 >
@@ -153,8 +153,11 @@
                                     </span>
                                 </ng-template>
                                 <span class="dimm-1">
-                                    /
-                                    {{ this.data.subTasks.length }}
+                                    {{
+                                        completedTasks.length && uncompletedTasks.length
+                                            ? "/ " + this.data.subTasks.length
+                                            : ""
+                                    }}
                                     {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
                                 </span>
                             </collapse-toggle>
