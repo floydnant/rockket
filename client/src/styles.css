@@ -8,6 +8,9 @@
     --primary-clr: hsl(var(--primary-clr-hue), 100%, 50%);
     --secondary-clr-hue: 270;
     --secondary-clr: hsl(var(--secondary-clr-hue), 100%, 60%);
+    --: #9933ff;
+    --: #1cde02;
+    --: #FFE100;
 
     --danger-clr-hue: 345;
     --danger-clr: hsl(var(--danger-clr-hue), 100%, 50%);
@@ -82,18 +85,18 @@ body {
     color: rgb(27, 27, 27);
 }
 ::-webkit-scrollbar {
-    width: 0.5rem;
+    width: 0.3rem;
     height: 0.5rem;
 }
 ::-webkit-scrollbar-track {
     background: var(--global-background);
 }
 ::-webkit-scrollbar-thumb {
-    background: var(--primary-clr);
+    background: var(--secondary-clr);
     border-radius: 100vh;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary-clr);
+    background: var(--primary-clr);
 }
 [disabled] {
     background: var(--global-background) !important;
@@ -116,6 +119,14 @@ body {
 }
 .dimm-2 {
     filter: opacity(0.5) brightness(0.75);
+}
+
+.cut-text {
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .toggle-icons:not(:hover) > i:last-of-type {
@@ -214,16 +225,18 @@ body.touchDevice .btn.hover:not([disabled], .modal-btn) {
     background: var(--global-background);
     box-shadow: var(--shadow), 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6);
 }
-.btn-primary,
-.primary-clr {
+.btn-primary {
     --color-hue: var(--primary-clr-hue);
     --clr: var(--primary-clr);
+}
+.primary-clr {
     --color: var(--primary-clr);
 }
-.btn-secondary,
-.secondary-clr {
+.btn-secondary {
     --color-hue: var(--secondary-clr-hue);
     --clr: var(--secondary-clr);
+}
+.secondary-clr {
     --color: var(--secondary-clr);
 }
 .btn-edit {
@@ -232,10 +245,11 @@ body.touchDevice .btn.hover:not([disabled], .modal-btn) {
 }
 
 .btn-delete,
-.btn-danger,
-.danger-clr {
+.btn-danger {
     --color-hue: var(--danger-clr-hue) !important;
     --clr: var(--danger-clr) !important;
+}
+.danger-clr {
     --color: var(--danger-clr);
 }
 .modal-btn.btn-delete,
@@ -259,12 +273,8 @@ body.touchDevice .btn.hover:not([disabled], .modal-btn) {
     box-shadow: var(--box-shadow-s);
 }
 
-.badge {
+.chip {
     box-sizing: border-box;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translate(-50%, -50%);
     height: 23px;
     min-width: 23px;
     width: max-content;
@@ -281,7 +291,17 @@ body.touchDevice .btn.hover:not([disabled], .modal-btn) {
 
     background: var(--color);
 }
-.badge-outline {
+.chip.badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+.chip-no-bg {
+    color: var(--color);
+    background: var(--global-background);
+}
+.chip:not(.no-outline) {
     border: 1px solid var(--color);
     color: var(--color);
     background: var(--global-background);

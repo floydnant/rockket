@@ -1,37 +1,35 @@
 <div class="sidebar">
+    <div class="tool-bar">
+        <theme-toggle></theme-toggle>
+    </div>
     <h2>
         Lists <i class="fad fa-clipboard-list-check"></i
         ><button class="btn btn-secondary btn-icon" style="float: right" (click)="createList()">
             <i class="fas fa-plus"></i>
         </button>
     </h2>
+
     <ul id="taskListsList" class="taskListsList">
-        <h5 *ngIf="!this.data.lists.length" style="text-align: center">No lists...</h5>
+        <h5 *ngIf="!this.data.lists.length" style="text-align: center">No lists yet...</h5>
         <li
             *ngFor="let list of this.data.lists; let i = index"
+            class="list"
             (click)="setActiveList(list.id)"
             [class.active]="this.data.activeListId == list.id"
             [class.completed]="countOpenTasks(list.list) == 0 && list.list.length"
         >
-            <span class="text">{{ list.name }}</span>
-            <span *ngIf="countOpenTasks(list.list)" class="badge secondary-clr text-shadow" style="--text-clr: white">{{
-                countOpenTasks(list.list)
-            }}</span>
-
+            <span
+                *ngIf="countOpenTasks(list.list)"
+                class="chip chip-no-bg no-outline secondary-clr text-shadow"
+                style="--text-clr: white; margin-right: 10px"
+                >{{ countOpenTasks(list.list) }}</span
+            >
+            <span class="text cut-text">{{ list.name }}</span>
             <i *ngIf="this.data.activeListId == list.id" class="fas fa-chevron-right"></i>
             <loading-spinner *ngIf="isLoading == list.id && data.activeListId != list.id"></loading-spinner>
         </li>
-    </ul>
-    <div class="file-interaction">
-        <button
-            class="btn btn-secondary btn-icon download-btn"
-            title="Download lists as JSON file"
-            (click)="exportData()"
-        >
-            <i class="far fa-download"></i>
-        </button>
-        <label class="btn btn-secondary btn-icon upload-btn" title="Import lists from JSON file" style="padding: unset">
-            <i class="fas fa-file-import"></i>
+        <label class="modal-btn btn-neutral upload-btn" title="Import lists from JSON file" style="padding: unset">
+            <i class="far fa-file-import"></i>&nbsp; import
             <input
                 id="importDataInput"
                 style="display: none"
@@ -41,5 +39,8 @@
                 (change)="importData(fileInputRef)"
             />
         </label>
-    </div>
+    </ul>
+    <!-- <button class="btn btn-neutral modal-btn download-btn" title="Download lists as JSON file" (click)="exportData()">
+        <i class="far fa-download"></i> export
+    </button> -->
 </div>

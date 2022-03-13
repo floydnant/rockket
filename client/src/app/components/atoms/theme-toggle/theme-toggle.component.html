@@ -2,7 +2,7 @@
     <i *ngIf="!this.isDarkTheme" class="fas fa-moon"></i>
     <i *ngIf="this.isDarkTheme" class="fas fa-sun"></i>
 </button> -->
-<menu-toggle-btn position="right" [fa-icon]="isDarkTheme ? 'fas fa-moon' : 'fas fa-sun'" color="submit">
+<menu-toggle-btn position="right" [fa-icon]="isDarkTheme ? 'fas fa-moon' : 'fas fa-sun'" color="submit" dropdownOffset="25px">
     <button class="btn modal-btn" (click)="setTheme(true)"><i class="fas fa-moon"></i>&nbsp;dark</button>
     <button class="light btn modal-btn" (click)="setTheme(false)"><i class="fas fa-sun"></i>&nbsp;light</button>
     <span

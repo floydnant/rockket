@@ -11,6 +11,7 @@ import { DialogService } from './organisms/custom-dialog';
 import { EditMenuService } from './organisms/edit-menu';
 
 import { Subject } from 'rxjs';
+import { WINDOW_TITLE_SUFFIX } from '../shared/constants';
 
 @Component({
     selector: 'app-root',
@@ -51,6 +52,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
             this.uncompletedTasks = this.activeTaskList.list.filter(task => !task.isCompleted);
             this.completedTasks = this.activeTaskList.list.filter(task => task.isCompleted).sort(sortCompletedTasks);
+
+            document.title = `${this.activeTaskList.name.split('').slice(0, 20).join('')}${
+                this.activeTaskList.name.length > 20 ? '...' : ''
+            } - ${WINDOW_TITLE_SUFFIX}`;
 
             console.log('%cupdated state:', 'color: gray', this.data);
         });

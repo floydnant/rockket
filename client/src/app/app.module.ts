@@ -17,7 +17,6 @@ import { CustomDialogComponent } from './components/organisms/custom-dialog/cust
 import { environment } from '../environments/environment';
 import { AppDataEffects } from './reducers/appData/appData.effects';
 import { ThemeToggleComponent } from './components/atoms/theme-toggle/theme-toggle.component';
-import { MenuComponent } from './components/organisms/side-menu/menu.component';
 import { MenuToggleBtnComponent } from './components/atoms/menu-toggle-btn/menu-toggle-btn.component';
 import { RemoveHostDirective } from './directives/remove-host.directive';
 import { SingleInputFormComponent } from './components/molecules/single-input-form/single-input-form.component';
@@ -35,7 +34,6 @@ import { ToggleSwitchComponent } from './components/atoms/toggle-switch/toggle-s
         ModalComponent,
         CustomDialogComponent,
         ThemeToggleComponent,
-        MenuComponent,
         MenuToggleBtnComponent,
         RemoveHostDirective,
         SingleInputFormComponent,

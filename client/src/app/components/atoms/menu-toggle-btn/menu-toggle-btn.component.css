@@ -95,7 +95,7 @@ span::after {
 
 .drop-down {
     position: absolute;
-    top: 50%;
+    top: calc(50% + var(--offset));
     transform: translate(var(--translateX, 0), -50%) scale(var(--scale, 1));
     width:max-content;
     
@@ -103,7 +103,7 @@ span::after {
     padding: 6px;
     border-radius: 14px;
     
-    background: var(--global-background);
+    background: var(--global-item-bg);
     box-shadow: var(--box-shadow-s);
     
     transition: transform 150ms;
@@ -133,7 +133,7 @@ span::after {
 .drop-down::before {
     content: "";
     position: absolute;
-    top: 50%;
+    top: calc(50% - var(--offset));
     transform: translate(0, -50%);
     /* z-index: -1; */
     
@@ -141,12 +141,12 @@ span::after {
     border-style: solid;
 }
 .drop-down.left::before {
-    border-color: transparent transparent transparent var(--global-background);
+    border-color: transparent transparent transparent var(--global-item-bg);
     margin-right: -10px;
     left: 100%;
 }
 .drop-down.right::before {
-    border-color: transparent var(--global-background) transparent transparent;
+    border-color: transparent var(--global-item-bg) transparent transparent;
     margin-left: -10px;
     right: 100%;
 }

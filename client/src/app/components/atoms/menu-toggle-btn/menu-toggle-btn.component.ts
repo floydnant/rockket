@@ -23,6 +23,7 @@ export class MenuToggleBtnComponent implements OnInit {
     @Input() type: 'hamburger' | 'chevron' = 'chevron';
     @Input("fa-icon") icon: string;
     @Input() color: string = 'primary';
+    @Input() dropdownOffset: string = "0px";
 
     isTouchDevice = isTouchDevice();
 

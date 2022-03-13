@@ -1,17 +1,24 @@
-<div class="container">
-    <!-- [class]="isMobileMenuOpen ? 'open' : ''" -->
-    <!-- [ngClass]="{'open': isMobileMenuOpen}" -->
+<div class="top-bar" [class.sidebar-is-open]="isMobileMenuOpen">
+    <span class="list-name-preview">
+        <span class="name cut-text">
+            {{ this.activeTaskList ? this.activeTaskList.name : "no list selected"
+            }}<!-- <span *ngIf="this.activeTaskList.name.length > 30" class="dimm-1">...</span> -->
+        </span>
+        <!-- <button class="btn btn-primary btn-icon"></button> -->
+        <i *ngIf="this.activeTaskList" class="fas fa-ellipsis-v" (click)="editList()"></i>
+    </span>
     <menu-toggle-btn
         noDropDown
         type="hamburger"
-        size="l"
-        color="secondary"
-        [class.open]="isMobileMenuOpen"
+        size="s"
+        color="submit"
         [isOpen]="isMobileMenuOpen"
         (onMenuToggle)="setMobileMenuOpen($event)"
     ></menu-toggle-btn>
-    <div class="side-container">
-        <app-side-menu></app-side-menu>
+</div>
+<div class="container">
+    <div class="side-container" [class.open]="isMobileMenuOpen">
+        <!-- <app-side-menu></app-side-menu> -->
         <sidebar
             [data]="this.data"
             (onSetActiveList)="setActiveList($event)"
@@ -23,28 +30,11 @@
     <main>
         <h1 class="list-name">
             {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
-            <button
-                *ngIf="this.activeTaskList"
-                class="btn btn-primary btn-icon"
-                style="transform: translateY(-5px)"
-                (click)="editList()"
-            >
-                <!-- <i class="fas fa-pencil-alt"></i> -->
+            <button *ngIf="this.activeTaskList" class="btn btn-primary btn-icon" (click)="editList()">
                 <i class="fas fa-ellipsis-v"></i>
             </button>
         </h1>
-        <!-- <section class="new-task-form"> -->
-        <!-- <input
-                type="text"
-                placeholder="What shall it be?"
-                id="nameInput"
-                class="nameInput input"
-                #nameInputRef
-                (keydown.Enter)="addTask()"
-                (keydown.Escape)="clearTaskNameInput(nameInputRef)"
-                [(ngModel)]="this.taskNameInput"
-            />
-            <button class="btn modal-btn btn-submit" [disabled]="!this.taskNameInput" (click)="addTask()">add</button> -->
+
         <single-input-form
             noFocusNoBorder
             placeholder="What shall it be?"
@@ -52,7 +42,7 @@
             (onSubmit)="addTask[0]($event)"
             [focusChangeEvents]="this.quickAddInputField.focusEventsSubject[0].asObservable()"
         ></single-input-form>
-        <!-- </section> -->
+
         <section class="task-list">
             <h5 *ngIf="!this.activeTaskList || this.activeTaskList.list.length == 0" style="text-align: center">
                 No tasks yet...
