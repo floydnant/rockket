@@ -41,7 +41,7 @@
     --background: var(--global-item-bg-highlight) !important;
 }
 .task.completed {
-    filter: opacity(0.25) brightness(0.8);
+    filter: opacity(0.45) brightness(0.8);
     /* opacity: .2; */
 }
 .task.completed:hover {
@@ -152,7 +152,7 @@ p {
 
 p .taskName {
     position: relative;
-    margin-right: 0.5rem;
+    margin-right: 0.2rem;
 }
 /* p .reveal-on-hover ~ .taskName {
     margin-right: 20px;
@@ -232,10 +232,12 @@ p.subtask-list-toggle {
     align-items: center;
 
     transform-origin: left;
-    box-shadow: 0 0 5px var(--background), 0 0 10px var(--background), 0 0 7px var(--background), 0 0 15px var(--background);
-    background: var(--background);
     transition: background 80ms, box-shadow 80ms;
     isolation: isolate;
+}
+.task:not(.completed) .first-row-detailIcons .detail-icons-wrapper {
+    background: var(--background);
+    box-shadow: 0 0 5px var(--background), 0 0 10px var(--background), 0 0 7px var(--background), 0 0 15px var(--background);
 }
 .detail-icon {
     display: block;
@@ -251,7 +253,8 @@ p.subtask-list-toggle {
     color: var(--secondary-clr);
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
-.task:not(:hover, .touchDevice) .notes-icon.reveal {
+.task:not(:hover, .touchDevice) .notes-icon.reveal,
+.task.completed .notes-icon.reveal  {
     opacity: 0;
 }
 .task.touchDevice .notes-icon.reveal {
