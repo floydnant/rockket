@@ -5,17 +5,32 @@ export class TaskMeta {
     links: string[] = [];
 }
 
+export enum TaskPrioritry {
+    HIGH = 3,
+    MEDIUM = 2,
+    LOW = 1,
+    NONE = 0,
+    OPTINAL = -1,
+}
+
+// enum TaskStatus {
+//     IN_PROGRESS = 1,
+//     OPEN = 0,
+//     COMPLETED = -1,
+// }
+
 export class Task {
     constructor(name: string = '', links: string[] = []) {
         this.name = name.replace(/->/g, '→').replace(/<-/g, '←'); // TODO: move 'replace' into component where the data comes from
         this.id = generateId();
+        this.createdAt = Date.now();
         if (links.length) this.meta.links = links;
     }
     public name: string;
     public id: string;
-    public priority: number = 0; // TODO: make this an enum
-    // TODO: add field: public createdAt: Date | '' = '';
-    public isCompleted: boolean = false;
+    public priority: TaskPrioritry = TaskPrioritry.NONE;
+    public createdAt: number | null = null;
+    public isCompleted: boolean = false; // TODO: this should be 'status' with enum type
     public completedAt: Date | null = null;
     public meta: TaskMeta = new TaskMeta();
     public collapseSubtaskList = false;
