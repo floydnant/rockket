@@ -235,7 +235,7 @@ p.subtask-list-toggle {
     transition: background 80ms, box-shadow 80ms;
     isolation: isolate;
 }
-.task:not(.completed) .first-row-detailIcons .detail-icons-wrapper {
+.task:not(.completed, .completed-transition) .first-row-detailIcons .detail-icons-wrapper {
     background: var(--background);
     box-shadow: 0 0 5px var(--background), 0 0 10px var(--background), 0 0 7px var(--background), 0 0 15px var(--background);
 }

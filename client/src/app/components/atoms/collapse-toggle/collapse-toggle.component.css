@@ -1,7 +1,6 @@
 .container {
     border-radius: 8px;
     user-select: none;
-    cursor: pointer;
     
     display: flex;
 }
@@ -11,6 +10,9 @@
 }
 .container.dimm {
     filter: opacity(0.6) brightness(0.9);
+}
+.container span:hover {
+    filter: unset;
 }
 span {
     color: var(--clr);

@@ -11,7 +11,11 @@
             placeholder="notes"
             [(ngModel)]="notesAreaValue"
             [disabled]="isCompleted"
-            [ngStyle]="isDetailsPopOutOpen && uiState.detailsPopOut.notesAreaHeight ? { height: uiState.detailsPopOut.notesAreaHeight } : {}"
+            [ngStyle]="
+                isDetailsPopOutOpen && uiState.detailsPopOut.notesAreaHeight
+                    ? { height: uiState.detailsPopOut.notesAreaHeight }
+                    : {}
+            "
             (input)="setTextAreaHeight()"
             (focus)="setTextAreaHeight()"
         ></textarea>
@@ -89,8 +93,8 @@
                 <div class="text-container">
                     <ng-template #detailIcons>
                         <span #detailIconsWrapper class="detail-icons-wrapper">
-                            <!-- *ngIf="this.data.meta.notes" -->
                             <span
+                                *ngIf="!data.isCompleted || this.data.meta.notes"
                                 class="detail-icon notes-icon"
                                 [class.reveal]="!this.data.meta.notes"
                                 title="toggle pop-out notes"
@@ -126,10 +130,7 @@
                             {{ this.data.name }}
                         </span>
                         <!-- && (data.meta.notes || data.meta.links.length) -->
-                        <span
-                            *ngIf="!data.subTasks.length"
-                            class="first-row-detailIcons"
-                        >
+                        <span *ngIf="!data.subTasks.length" class="first-row-detailIcons">
                             <template [ngTemplateOutlet]="detailIcons"></template>
                         </span>
                     </p>
@@ -165,10 +166,7 @@
                             </collapse-toggle>
                         </p>
                         <!-- && (data.meta.notes || data.meta.links.length) -->
-                        <template
-                            *ngIf="data.subTasks.length"
-                            [ngTemplateOutlet]="detailIcons"
-                        ></template>
+                        <template *ngIf="data.subTasks.length" [ngTemplateOutlet]="detailIcons"></template>
                     </div>
                 </div>
             </div>

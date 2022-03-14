@@ -1,5 +1,8 @@
-<div class="container {{ dimm != 'none' ? dimm : '' }}" [class.open]="isOpen" [class.margin]="spacing">
-    <span [class]="colorClass" (click)="this.isOpen = !this.isOpen; onToggle.emit(this.isOpen)">
+<div class="container" [class.open]="isOpen" [class.margin]="spacing">
+    <span
+        class="{{ colorClass }} {{ dimm != 'none' ? dimm : '' }}"
+        (click)="this.isOpen = !this.isOpen; onToggle.emit(this.isOpen)"
+    >
         <i class="fas fa-chevron-down" [class.dimm-1]="dimm == 'none'"></i>
         <span *ngIf="toggleText" [class.dimm-1]="toggleText == 'dimm'"> {{ isOpen ? "hide" : "show" }} </span>
         <ng-content></ng-content>
