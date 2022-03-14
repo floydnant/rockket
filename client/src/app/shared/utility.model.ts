@@ -123,6 +123,18 @@ export const validateAndFormatUrl = (url: string) => {
         resUrl: url,
     };
 };
+export const parseUrls = (text: string) => {
+    let urls = [];
+    const sanitizedText = text.replace(/https?:\/\/([^\s"/,;:]+\.)+[^\s".,;:]+/g, match => {
+        urls.push(match);
+        return '';
+    });
+
+    return {
+        sanitizedText,
+        urls,
+    };
+};
 
 export const escapeHTML = (unsafe: string) =>
     unsafe == '' || unsafe == null

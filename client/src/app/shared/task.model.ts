@@ -6,9 +6,10 @@ export class TaskMeta {
 }
 
 export class Task {
-    constructor(name: string = '') {
+    constructor(name: string = '', links: string[] = []) {
         this.name = name.replace(/->/g, '→').replace(/<-/g, '←'); // TODO: move 'replace' into component where the data comes from
         this.id = generateId();
+        if (links.length) this.meta.links = links;
     }
     public name: string;
     public id: string;

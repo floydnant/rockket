@@ -1,4 +1,4 @@
-import { getCopyOf } from 'src/app/shared/utility.model';
+import { getCopyOf, parseUrls } from 'src/app/shared/utility.model';
 import { Task } from 'src/app/shared/task.model';
 import { countOpenTasksMultiLevel, sortTasksBy, TaskList } from '../../shared/taskList.model';
 import * as AppDataActions from './appData.actions';
@@ -91,7 +91,8 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
 
         case AppDataActions.CREATE_TASK: {
             const taskList = getListById(action.listId);
-            taskList.list.push(new Task(action.newTaskName));
+            const { sanitizedText, urls } = parseUrls(action.newTaskName);
+            taskList.list.push(new Task(sanitizedText, urls));
 
             sortTasks(taskList.list);
 
@@ -128,7 +129,8 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
         }
         case AppDataActions.ADD_SUBTASK: {
             const task = getTaskById(action.taskId) as Task;
-            task.subTasks.push(new Task(action.newTaskName));
+            const { sanitizedText, urls } = parseUrls(action.newTaskName);
+            task.subTasks.push(new Task(sanitizedText, urls));
 
             const taskParentArr = getTaskById(action.taskId, true) as Task[];
             sortTasks(taskParentArr);
