@@ -235,7 +235,6 @@
     <task
         *ngFor="let task of this.uncompletedTasks; let i = index"
         [data]="task"
-        [showCompleted]="showCompleted"
         [taskPosition]="this.taskPosition + i - 1"
     ></task>
 
@@ -248,17 +247,16 @@
 
     <collapse-toggle
         *ngIf="completedTasks.length && uncompletedTasks.length"
-        [isOpen]="showCompleted"
-        (onToggle)="showCompleted = $event"
+        [isOpen]="!uiState.collapseCompletedSubtasks"
+        (onToggle)="setCollapseCompletedSubtasks(!$event)"
         colorClass="btn-submit"
         dimm="dimm-1"
         >{{ completedTasks.length }} completed subtask{{ completedTasks.length > 1 ? "s" : "" }}</collapse-toggle
     >
-    <div *ngIf="showCompleted || !uncompletedTasks.length">
+    <div *ngIf="!uiState.collapseCompletedSubtasks || !uncompletedTasks.length">
         <task
             *ngFor="let task of this.completedTasks; let i = index"
             [data]="task"
-            [showCompleted]="showCompleted"
             [taskPosition]="this.taskPosition + i + 1 + this.uncompletedTasks.length"
         ></task>
     </div>

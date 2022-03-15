@@ -44,11 +44,11 @@ export class UiStateService {
     private state: UiState = new UiState();
     private setUiState(state?: UiState) {
         if (state) this.state = state;
-        sessionStorage.setItem(this.localStorageKey, JSON.stringify(this.state));
+        localStorage.setItem(this.localStorageKey, JSON.stringify(this.state));
     }
     private getUiState(): UiState {
         try {
-            return JSON.parse(sessionStorage.getItem(this.localStorageKey)) || new UiState();
+            return JSON.parse(localStorage.getItem(this.localStorageKey)) || new UiState();
         } catch (err) {
             return new UiState();
         }

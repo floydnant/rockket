@@ -52,7 +52,6 @@
                     *ngFor="let task of this.uncompletedTasks; let i = index"
                     [data]="task"
                     [taskPosition]="i"
-                    [showCompleted]="showCompletedMaster"
                 ></task>
 
                 <single-input-form
@@ -74,7 +73,6 @@
                         *ngFor="let task of this.completedTasks; let i = index"
                         [data]="task"
                         [taskPosition]="i + this.uncompletedTasks.length"
-                        [showCompleted]="showCompletedMaster"
                     ></task>
                 </div>
             </ul>

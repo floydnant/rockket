@@ -51,7 +51,6 @@ export class TaskComponent implements OnInit {
     isDetailsPopOutOpen: boolean;
     setKeepDetailsPopOutOpen(keepOpen: boolean) {
         this.uiState.detailsPopOut.keepOpen = keepOpen;
-
         this.uiStateService.setTaskState(this.data.id, {
             ...this.uiState,
             detailsPopOut: {
@@ -60,6 +59,20 @@ export class TaskComponent implements OnInit {
             },
         });
     }
+    setCollapseCompletedSubtasks(collapse: boolean) {
+        this.uiState.collapseCompletedSubtasks = collapse;
+        this.uiStateService.setTaskState(this.data.id, {
+            ...this.uiState,
+            collapseCompletedSubtasks: collapse,
+        });
+    }
+    // setCollapseSubtasks(collapse: boolean) {
+    //     this.uiState.collapseSubtaskList = collapse
+    //     this.uiStateService.setTaskState(this.data.id, {
+    //         ...this.uiState,
+    //         collapseSubtaskList: collapse,
+    //     });
+    // }
 
     @ViewChild('notesArea') notesArea: ElementRef<HTMLTextAreaElement>;
     setTextAreaHeight() {
@@ -132,7 +145,6 @@ export class TaskComponent implements OnInit {
     isCompleted: boolean;
 
     uncompletedTasks: Task[];
-    @Input() showCompleted: boolean;
     completedTasks: Task[];
 
     setCompleted = (status: boolean) => {
