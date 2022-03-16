@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Compare, getCopyOf } from '../shared/utility.model';
 import { theme } from './theme.service';
 
 export class TaskUiState {
@@ -51,7 +50,7 @@ export class UiStateService {
 
     getTaskState(taskId: string) {
         try {
-            return this.state.tasks[taskId] || new TaskUiState();
+            return { ...new TaskUiState(), ...(this.state.tasks[taskId] || {}) };
         } catch (err) {
             return new TaskUiState();
         }
