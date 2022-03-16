@@ -12,7 +12,6 @@ export const CREATE_TASK = '[Task] Create';
 export const EDIT_TASK = '[Task] Edit';
 export const SET_TASK_COMPLETED = '[Task] SetCompleted';
 export const ADD_SUBTASK = '[Task] AddSubtask';
-export const TOGGLE_SUBTASK_LIST = '[Task] ToggleSubtaskList';
 export const DELETE_TASK = '[Task] Delete';
 
 export const IMPORT_TO_DB = '[DB] Import';
@@ -58,17 +57,16 @@ export class AddSubtask implements Action {
 
     constructor(public taskId: string, public newTaskName: string) {}
 }
-export class ToggleSubtaskList implements Action {
-    readonly type = TOGGLE_SUBTASK_LIST;
+// export class ToggleSubtaskList implements Action {
+//     readonly type = TOGGLE_SUBTASK_LIST;
 
-    constructor(public taskId: string) {}
-}
+//     constructor(public taskId: string) {}
+// }
 export class DeleteTask implements Action {
     readonly type = DELETE_TASK;
 
     constructor(public taskId: string) {}
 }
-
 
 export class ImportToDB implements Action {
     readonly type = IMPORT_TO_DB;
@@ -85,6 +83,6 @@ export type All =
     | EditTask
     | SetCompleted
     | AddSubtask
-    | ToggleSubtaskList
+    // | ToggleSubtaskList
     | DeleteTask
     | ImportToDB;

@@ -20,7 +20,7 @@ export class TaskList {
 }
 
 export const countOpenTasks = (arr: Task[]) => arr.filter(task => !task.isCompleted).length;
-export const countOpenTasksMultiLevel = (tasks: Task[]) => {
+export const countOpenTasksRecursive = (tasks: Task[]) => {
     let uncompleted = 0;
     const recurse = (tasks_: Task[]) =>
         tasks_.forEach(task => {

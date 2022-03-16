@@ -313,11 +313,6 @@ menu-toggle-btn {
     border-left: 1px solid rgba(128, 128, 128, 0.466);
     transition: padding 100ms 80ms ease;
 }
-.subtask-list.hide {
-    padding: 0;
-    height: 0;
-    overflow: hidden;
-}
 
 .position-task-progress {
     position: relative;

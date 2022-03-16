@@ -1,6 +1,6 @@
 import { getCopyOf, parseUrls } from 'src/app/shared/utility.model';
 import { Task } from 'src/app/shared/task.model';
-import { countOpenTasksMultiLevel, sortTasksBy, TaskList } from '../../shared/taskList.model';
+import { sortTasksBy, TaskList } from '../../shared/taskList.model';
 import * as AppDataActions from './appData.actions';
 import { ACTIVE_VERSION, AppData, defaultState } from './appData.model';
 
@@ -111,11 +111,9 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             let task = getTaskById(action.taskId) as Task;
             const subtasksCopy = getCopyOf(task.subTasks);
 
-            if (!task.isCompleted)
-                if (action.allSubtasks) {
-                    setAllSubtasksCompleted(subtasksCopy);
-                    task.collapseSubtaskList = true;
-                }
+            if (!task.isCompleted && action.allSubtasks)
+                setAllSubtasksCompleted(subtasksCopy);
+            
             task = Object.assign(task, {
                 isCompleted: action.shouldBeCompleted,
                 completedAt: new Date(),
@@ -135,11 +133,6 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             const taskParentArr = getTaskById(action.taskId, true) as Task[];
             sortTasks(taskParentArr);
 
-            return getNewState(newState);
-        }
-        case AppDataActions.TOGGLE_SUBTASK_LIST: {
-            const task = getTaskById(action.taskId) as Task;
-            task.collapseSubtaskList = !task.collapseSubtaskList;
             return getNewState(newState);
         }
         case AppDataActions.DELETE_TASK: {

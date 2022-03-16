@@ -33,7 +33,6 @@ export class Task {
     public isCompleted: boolean = false; // TODO: this should be 'status' with enum type
     public completedAt: Date | null = null;
     public meta: TaskMeta = new TaskMeta();
-    public collapseSubtaskList = false;
     public subTasks: Task[] = [];
 }
 

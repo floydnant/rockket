@@ -14,7 +14,7 @@ import { Store } from '@ngrx/store';
 import { TaskUiState, UiStateService } from 'src/app/services/ui-state.service';
 import { AppData, AppDataActions } from '../../../reducers';
 import { sortCompletedTasks, Task } from '../../../shared/task.model';
-import { countOpenTasks, countOpenTasksMultiLevel } from '../../../shared/taskList.model';
+import { countOpenTasks, countOpenTasksRecursive } from '../../../shared/taskList.model';
 import { formatDateRelative, isTouchDevice } from '../../../shared/utility.model';
 import { DialogService } from '../../organisms/custom-dialog';
 import { editmenuOptions } from '../../organisms/edit-menu/edit-menu.model';
@@ -51,28 +51,16 @@ export class TaskComponent implements OnInit {
     isDetailsPopOutOpen: boolean;
     setKeepDetailsPopOutOpen(keepOpen: boolean) {
         this.uiState.detailsPopOut.keepOpen = keepOpen;
-        this.uiStateService.setTaskState(this.data.id, {
-            ...this.uiState,
-            detailsPopOut: {
-                ...this.uiState.detailsPopOut,
-                keepOpen,
-            },
-        });
+        this.uiStateService.setTaskState(this.data.id, this.uiState);
     }
-    setCollapseCompletedSubtasks(collapse: boolean) {
-        this.uiState.collapseCompletedSubtasks = collapse;
-        this.uiStateService.setTaskState(this.data.id, {
-            ...this.uiState,
-            collapseCompletedSubtasks: collapse,
-        });
+    toggleCollapseCompletedSubtasks() {
+        this.uiState.collapseCompletedSubtasks = !this.uiState.collapseCompletedSubtasks;
+        this.uiStateService.setTaskState(this.data.id, this.uiState);
     }
-    // setCollapseSubtasks(collapse: boolean) {
-    //     this.uiState.collapseSubtaskList = collapse
-    //     this.uiStateService.setTaskState(this.data.id, {
-    //         ...this.uiState,
-    //         collapseSubtaskList: collapse,
-    //     });
-    // }
+    toggleCollapseSubtaskList(collapse?: boolean) {
+        this.uiState.collapseSubtaskList = collapse !== undefined ? collapse : !this.uiState.collapseSubtaskList;
+        this.uiStateService.setTaskState(this.data.id, this.uiState);
+    }
 
     @ViewChild('notesArea') notesArea: ElementRef<HTMLTextAreaElement>;
     setTextAreaHeight() {
@@ -148,16 +136,17 @@ export class TaskComponent implements OnInit {
     completedTasks: Task[];
 
     setCompleted = (status: boolean) => {
-        const dispatchAction = (allSubtasks = false) => {
+        const openSubtasksLeft = !this.data.isCompleted && countOpenTasksRecursive(this.data.subTasks) > 0;
+        const dispatchAction = (completeAllSubtasks = false) => {
+            if (status && (!openSubtasksLeft || completeAllSubtasks)) this.toggleCollapseSubtaskList(true);
             this.isCompleted = status;
 
-            setTimeout(
-                () => this.store.dispatch(new AppDataActions.SetCompleted(this.data.id, status, allSubtasks)),
-                600
-            );
+            setTimeout(() => {
+                this.store.dispatch(new AppDataActions.SetCompleted(this.data.id, status, completeAllSubtasks));
+            }, 600);
         };
 
-        if (!this.data.isCompleted && countOpenTasksMultiLevel(this.data.subTasks) > 0)
+        if (openSubtasksLeft)
             this.dialogService
                 .confirm({
                     title: 'Open subtasks left!',
@@ -202,7 +191,6 @@ export class TaskComponent implements OnInit {
             this.focusQuickAddInputField();
         }
     };
-    toggleSubtaskList = () => this.store.dispatch(new AppDataActions.ToggleSubtaskList(this.data.id));
     editTaskDetails = (hightlight?: editmenuOptions['hightlight']) => {
         this.editMenuService
             .editTaskDetails(

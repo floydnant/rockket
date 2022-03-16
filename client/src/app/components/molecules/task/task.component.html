@@ -1,9 +1,9 @@
 <div class="task-wrapper">
-    <div
+    <!-- <div
         *ngIf="data.meta.notes && !isDetailsPopOutOpen"
         class="pop-out-collapsed"
         (click)="toggleDetailsPopOutOpen(); $event.stopPropagation()"
-    ></div>
+    ></div> -->
     <div #popOutContainer *ngIf="isDetailsPopOutOpen" class="pop-out-container">
         <textarea
             #notesArea
@@ -137,11 +137,11 @@
                     <div class="second-row">
                         <p *ngIf="this.data.subTasks.length != 0" class="subtask-list-toggle">
                             <collapse-toggle
-                                [isOpen]="!this.data.collapseSubtaskList"
+                                [isOpen]="!uiState.collapseSubtaskList"
                                 noSpacing
                                 hideToggleText
                                 dimm="none"
-                                (onToggle)="toggleSubtaskList()"
+                                (onToggle)="toggleCollapseSubtaskList()"
                             >
                                 <span
                                     *ngIf="countOpenTasks(this.data.subTasks) != 0; else completed"
@@ -165,7 +165,6 @@
                                 </span>
                             </collapse-toggle>
                         </p>
-                        <!-- && (data.meta.notes || data.meta.links.length) -->
                         <template *ngIf="data.subTasks.length" [ngTemplateOutlet]="detailIcons"></template>
                     </div>
                 </div>
@@ -185,8 +184,6 @@
                     (click)="data.isCompleted ? showDetails() : editTaskDetails(); toggleTaskActionBtns(false)"
                     style="--btn-index: 1; --btn-index-reverse: 1"
                 >
-                    <!-- [class.disabled]="this.data.isCompleted" -->
-                    <!-- <i class="fas fa-info"></i> -->
                     <i class="fas fa-ellipsis-v"></i></button
                 ><button
                     title="delete task"
@@ -228,9 +225,8 @@
 </div>
 
 <ul
-    *ngIf="this.data.subTasks.length != 0"
+    *ngIf="this.data.subTasks.length != 0 && !uiState.collapseSubtaskList"
     class="subtask-list subtask-list-{{ this.data.id }}"
-    [class.hide]="this.data.collapseSubtaskList"
 >
     <task
         *ngFor="let task of this.uncompletedTasks; let i = index"
@@ -239,7 +235,7 @@
     ></task>
 
     <single-input-form
-        *ngIf="this.data.subTasks.length != 0 && !this.data.collapseSubtaskList && !data.isCompleted"
+        *ngIf="this.data.subTasks.length != 0 && !uiState.collapseSubtaskList && !data.isCompleted"
         placeholder="add new subtask..."
         (onSubmit)="addSubTask($event)"
         [inputFieldId]="'_' + data.id"
@@ -248,11 +244,12 @@
     <collapse-toggle
         *ngIf="completedTasks.length && uncompletedTasks.length"
         [isOpen]="!uiState.collapseCompletedSubtasks"
-        (onToggle)="setCollapseCompletedSubtasks(!$event)"
+        (onToggle)="toggleCollapseCompletedSubtasks()"
         colorClass="btn-submit"
         dimm="dimm-1"
-        >{{ completedTasks.length }} completed subtask{{ completedTasks.length > 1 ? "s" : "" }}</collapse-toggle
     >
+        {{ completedTasks.length }} completed subtask{{ completedTasks.length > 1 ? "s" : "" }}
+    </collapse-toggle>
     <div *ngIf="!uiState.collapseCompletedSubtasks || !uncompletedTasks.length">
         <task
             *ngFor="let task of this.completedTasks; let i = index"
