@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Compare, getCopyOf } from '../shared/utility.model';
+import { theme } from './theme.service';
 
 export class TaskUiState {
     collapseSubtaskList: boolean = false;
@@ -14,10 +16,16 @@ export class TaskUiState {
         showLinks: false,
     };
 }
+export class ThemeState {
+    theme: theme = 'dark';
+    updateOnSystemThemeChange: boolean = true;
+}
 class UiState {
     tasks: {
         [taskId: string]: TaskUiState;
     } = {};
+
+    theme = new ThemeState();
 }
 
 @Injectable({
@@ -25,9 +33,21 @@ class UiState {
 })
 export class UiStateService {
     constructor() {
-        this.state = this.getUiState();
+        this.state = this.loadUiState();
     }
     private localStorageKey = 'todo-ui-state';
+    private state: UiState = new UiState();
+    private saveUiState() {
+        localStorage.setItem(this.localStorageKey, JSON.stringify(this.state));
+        console.log('%cUI State updated', 'color: orange');
+    }
+    private loadUiState(): UiState {
+        try {
+            return JSON.parse(localStorage.getItem(this.localStorageKey)) || new UiState();
+        } catch (err) {
+            return new UiState();
+        }
+    }
 
     getTaskState(taskId: string) {
         try {
@@ -38,19 +58,14 @@ export class UiStateService {
     }
     setTaskState(taskId: string, taskUiState: TaskUiState) {
         this.state.tasks[taskId] = taskUiState;
-        this.setUiState();
+        this.saveUiState();
     }
 
-    private state: UiState = new UiState();
-    private setUiState(state?: UiState) {
-        if (state) this.state = state;
-        localStorage.setItem(this.localStorageKey, JSON.stringify(this.state));
+    getThemeState() {
+        return this.state.theme || new ThemeState();
     }
-    private getUiState(): UiState {
-        try {
-            return JSON.parse(localStorage.getItem(this.localStorageKey)) || new UiState();
-        } catch (err) {
-            return new UiState();
-        }
+    setThemeState(themeState: UiState['theme']) {
+        this.state.theme = themeState;
+        this.saveUiState();
     }
 }
