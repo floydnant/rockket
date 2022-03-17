@@ -19,9 +19,9 @@ import { WINDOW_TITLE_SUFFIX } from '../shared/constants';
     styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-    data!: AppData;
-    activeTaskList!: TaskList;
-    taskNameInput!: string;
+    data: AppData;
+    activeTaskList: TaskList | undefined;
+    taskNameInput: string;
 
     uncompletedTasks: Task[];
     completedTasks: Task[];
@@ -49,6 +49,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.store.subscribe((data: unknown) => {
             this.data = (data as { appData: AppData }).appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
+
+            if (!this.activeTaskList) return;
 
             this.uncompletedTasks = this.activeTaskList.list.filter(task => !task.isCompleted);
             this.completedTasks = this.activeTaskList.list.filter(task => task.isCompleted).sort(sortCompletedTasks);
@@ -97,7 +99,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     ///////////////////////////////////////////// Lists ////////////////////////////////////////////////
-    getListById = (id: string): TaskList => this.data.lists.find(list => list.id == id);
+    getListById = (id: string): TaskList | undefined => this.data.lists.find(list => list.id == id);
     getListIndexById = (id: string): number => this.data.lists.indexOf(this.data.lists.find(list => list.id == id));
 
     setActiveList = (listId: string) => {
