@@ -5,7 +5,7 @@ import { AppDataService } from '../reducers/appData/appData.service';
 
 import { sortCompletedTasks, Task } from '../shared/task.model';
 import { TaskList, countOpenTasks } from '../shared/taskList.model';
-import { isTouchDevice } from '../shared/utility.model';
+import { isTouchDevice, shortenText } from '../shared/utility.model';
 import { ModalService } from './molecules/modal/modal.service';
 import { DialogService } from './organisms/custom-dialog';
 import { EditMenuService } from './organisms/edit-menu';
@@ -50,16 +50,16 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.data = (data as { appData: AppData }).appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
 
+            console.log('%cupdated state:', 'color: gray', this.data);
+
+            document.title = this.activeTaskList
+                ? `${shortenText(this.activeTaskList.name, 20)} - ${WINDOW_TITLE_SUFFIX}`
+                : WINDOW_TITLE_SUFFIX;
+
             if (!this.activeTaskList) return;
 
             this.uncompletedTasks = this.activeTaskList.list.filter(task => !task.isCompleted);
             this.completedTasks = this.activeTaskList.list.filter(task => task.isCompleted).sort(sortCompletedTasks);
-
-            document.title = `${this.activeTaskList.name.split('').slice(0, 20).join('')}${
-                this.activeTaskList.name.length > 20 ? '...' : ''
-            } - ${WINDOW_TITLE_SUFFIX}`;
-
-            console.log('%cupdated state:', 'color: gray', this.data);
         });
     }
 
@@ -135,9 +135,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     ////////////////////////////////////// database interaction /////////////////////////////////////////
     db = {
-        exportJson: () =>
+        exportActiveList: () =>
             this.dialogService
-                .confirm({ title: 'Download ToDo lists as file?', buttons: ['Cancel', 'Download'] })
+                .confirm({ title: `Download this list as file?`, buttons: ['Cancel', 'Download'] })
                 .then(() => this.appDataService.exportAsJSON())
                 .catch(err => {}),
         importJson: async (inputRef: any) => {

@@ -1,11 +1,10 @@
 <div class="top-bar" [class.sidebar-is-open]="isMobileMenuOpen">
     <span class="list-name-preview">
         <span class="name cut-text">
-            {{ this.activeTaskList ? this.activeTaskList.name : "no list selected"
-            }}<!-- <span *ngIf="this.activeTaskList.name.length > 30" class="dimm-1">...</span> -->
+            {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
         </span>
-        <!-- <button class="btn btn-primary btn-icon"></button> -->
         <i *ngIf="this.activeTaskList" class="fas fa-ellipsis-v" (click)="editList()"></i>
+        <!-- <apple-share-icon remove-host (click)="db.exportActiveList()"></apple-share-icon> -->
     </span>
     <menu-toggle-btn
         noDropDown
@@ -18,21 +17,26 @@
 </div>
 <div class="container">
     <div class="side-container" [class.open]="isMobileMenuOpen">
-        <!-- <app-side-menu></app-side-menu> -->
         <sidebar
             [data]="this.data"
             (onSetActiveList)="setActiveList($event)"
             (onCreateList)="createList()"
-            (onExportData)="db.exportJson()"
+            (onExportData)="null"
             (onImportData)="db.importJson($event)"
         ></sidebar>
     </div>
     <main>
         <h1 class="list-name">
             {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
-            <button *ngIf="this.activeTaskList" class="btn btn-primary btn-icon" (click)="editList()">
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
+            <div class="btn-group">
+                <button *ngIf="this.activeTaskList" class="btn btn-primary btn-icon" (click)="editList()">
+                    <i class="far fa-ellipsis-v"></i>
+                </button>
+                <button *ngIf="this.activeTaskList" class="btn btn-secondary btn-icon" (click)="db.exportActiveList()">
+                    <!-- <i class="far fa-share"></i> -->
+                    <apple-share-icon remove-host></apple-share-icon>
+                </button>
+            </div>
         </h1>
 
         <single-input-form
@@ -48,11 +52,7 @@
                 No tasks yet...
             </h5>
             <ul *ngIf="this.activeTaskList">
-                <task
-                    *ngFor="let task of this.uncompletedTasks; let i = index"
-                    [data]="task"
-                    [taskPosition]="i"
-                ></task>
+                <task *ngFor="let task of this.uncompletedTasks; let i = index" [data]="task" [taskPosition]="i"></task>
 
                 <single-input-form
                     *ngIf="countOpenTasks(activeTaskList.list)"

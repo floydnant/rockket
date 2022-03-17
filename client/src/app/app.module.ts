@@ -24,6 +24,7 @@ import { CollapseToggleComponent } from './components/atoms/collapse-toggle/coll
 import { LoadingSpinnerComponent } from './components/atoms/loading-spinner/loading-spinner.component';
 import { PriorityIconComponent } from './components/atoms/priority-icon/priority-icon.component';
 import { ToggleSwitchComponent } from './components/atoms/toggle-switch/toggle-switch.component';
+import { AppleShareIconComponent } from './components/atoms/apple-share-icon/apple-share-icon.component';
 
 @NgModule({
     declarations: [
@@ -41,6 +42,7 @@ import { ToggleSwitchComponent } from './components/atoms/toggle-switch/toggle-s
         LoadingSpinnerComponent,
         PriorityIconComponent,
         ToggleSwitchComponent,
+        AppleShareIconComponent,
     ],
     imports: [
         BrowserModule,

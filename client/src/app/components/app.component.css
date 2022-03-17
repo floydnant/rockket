@@ -160,6 +160,17 @@ main {
 .list-name {
     margin: 0;
 }
+.list-name .btn-group {
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    position: relative;
+    top: -5px;
+}
+.list-name button + button {
+    margin-left: 10px;
+}
 .new-task-form {
     margin: 25px 0;
     width: 100%;

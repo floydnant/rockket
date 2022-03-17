@@ -136,6 +136,14 @@ export const parseUrls = (text: string) => {
     };
 };
 
+/**
+ * @param appendElipsis wether to append three dots (**adds to the length**) [defaults to true]
+ */
+export const shortenText = (text: string, maxLength: number, appendElipsis = true) => {
+    const shortend = text.split('').slice(0, maxLength).join('');
+    return shortend + (appendElipsis && text.length > maxLength ? '...' : '');
+};
+
 export const escapeHTML = (unsafe: string) =>
     unsafe == '' || unsafe == null
         ? ''
@@ -166,7 +174,7 @@ export const downloadObjectAsJson = (exportObj: object, fileName: string, readab
     const dataString =
         'data:text/json;charset=utf-8,' +
         encodeURIComponent(readable ? JSON.stringify(exportObj, null, 4) : JSON.stringify(exportObj));
-    console.log('char length: ' + dataString.length);
+    console.log('file length: ' + dataString.length);
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.href = dataString;
     downloadAnchorNode.download = fileName + '.json';

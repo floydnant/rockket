@@ -9,7 +9,7 @@ export interface AppData {
     version: string;
 }
 export interface AppState {
-    data: AppData;
+    appData: AppData;
 }
 
 const newTasklist0 = new TaskList();
