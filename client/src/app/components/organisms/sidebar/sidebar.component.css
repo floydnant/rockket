@@ -86,7 +86,6 @@
 .list {
     position: relative;
     padding: 10px;
-    padding-right: 2rem;
     border-radius: 6px;
     cursor: pointer;
 
@@ -116,7 +115,9 @@
 
 .list .text {
     position: relative;
+    display: inline-block;
     transition: 220ms;
+    width: 100%;
 }
 .list.completed .text {
     color: hsla(0, 0%, 50%, 0.8);
@@ -137,13 +138,17 @@
 }
 
 .sidebar .taskListsList li :is(i, loading-spinner) {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    margin-left: 20px;
-    float: right;
+    margin-left: 10px;
+    margin-right: 3px;
     filter: opacity(0.6);
+}
+.active-icon {
+    animation: slide-and-back 400ms ease-in-out;
+}
+@keyframes slide-and-back {
+    50% {
+        transform: translateX(8px);
+    }
 }
 
 .upload-btn {

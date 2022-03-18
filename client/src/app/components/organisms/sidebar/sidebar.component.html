@@ -25,7 +25,7 @@
                 >{{ countOpenTasks(list.list) }}</span
             >
             <span class="text cut-text">{{ list.name }}</span>
-            <i *ngIf="this.data.activeListId == list.id" class="fas fa-chevron-right"></i>
+            <i *ngIf="this.data.activeListId == list.id" class="fas fa-chevron-right active-icon"></i>
             <loading-spinner *ngIf="isLoading == list.id && data.activeListId != list.id"></loading-spinner>
         </li>
         <label class="modal-btn btn-neutral upload-btn" title="Import lists from JSON file" style="padding: unset">
