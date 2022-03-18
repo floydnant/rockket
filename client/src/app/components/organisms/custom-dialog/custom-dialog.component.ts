@@ -1,4 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { repeatAfterDelay } from 'src/app/shared/utility.model';
 import { ModalService } from '../../molecules/modal/modal.service';
 import { CustomDialogComponentProps } from './custom-dialog.model';
 import { DialogService } from './custom-dialog.service';
@@ -24,8 +25,7 @@ export class CustomDialogComponent implements OnInit {
         this.props = props;
 
         this.promptInput = props.defaultValue;
-        if (props.type == 'prompt')
-            [100, 300, 500].forEach(delay => setTimeout(() => this.inputRef.nativeElement.focus(), delay));
+        if (props.type == 'prompt') repeatAfterDelay(() => this.inputRef.nativeElement.focus(), [100, 300, 500]);
     }
 
     closeDialog(resBtnIndex: number) {

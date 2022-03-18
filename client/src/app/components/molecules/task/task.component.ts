@@ -15,7 +15,7 @@ import { TaskUiState, UiStateService } from 'src/app/services/ui-state.service';
 import { AppData, AppDataActions } from '../../../reducers';
 import { sortCompletedTasks, Task } from '../../../shared/task.model';
 import { countOpenTasks, countOpenTasksRecursive } from '../../../shared/taskList.model';
-import { formatDateRelative, isTouchDevice } from '../../../shared/utility.model';
+import { formatDateRelative, isTouchDevice, moveToMacroQueue } from '../../../shared/utility.model';
 import { DialogService } from '../../organisms/custom-dialog';
 import { editmenuOptions } from '../../organisms/edit-menu/edit-menu.model';
 import { EditMenuService } from '../../organisms/edit-menu/edit-menu.service';
@@ -86,7 +86,7 @@ export class TaskComponent implements OnInit {
     }
     resetNotesArea() {
         this.notesAreaValue = this.data.meta.notes;
-        setTimeout(() => this.setTextAreaHeight(), 0);
+        moveToMacroQueue(() => this.setTextAreaHeight());
     }
 
     @ViewChild('detailIconsWrapper') detailIconsWrapper: ElementRef<HTMLSpanElement>;
@@ -111,10 +111,10 @@ export class TaskComponent implements OnInit {
         this.isDetailsPopOutOpen = !this.isDetailsPopOutOpen;
 
         if (this.isDetailsPopOutOpen) {
-            setTimeout(() => {
+            moveToMacroQueue(() => {
                 this.resetNotesArea();
                 this.notesArea?.nativeElement?.focus();
-            }, 0);
+            });
         } else {
             this.setKeepDetailsPopOutOpen(false);
             if (saveChanges) this.updateNotes();

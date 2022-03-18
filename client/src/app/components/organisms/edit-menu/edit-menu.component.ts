@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular
 import { DialogService } from '../custom-dialog';
 import { ModalService } from '../../molecules/modal/modal.service';
 import { TaskMeta } from '../../../shared/task.model';
-import { Compare, getCopyOf, repeatAfterDelay, validateAndFormatUrl } from '../../../shared/utility.model';
+import { Compare, getCopyOf, moveToMacroQueue, repeatAfterDelay, validateAndFormatUrl } from '../../../shared/utility.model';
 import { editmenuOptions, EditmenuTaskData, responseHandlerInterface, EditmenuTasklistData } from './edit-menu.model';
 import { EditMenuService } from './edit-menu.service';
 
@@ -67,7 +67,7 @@ export class EditMenuComponent implements OnInit {
 
         if (responseStatus == 'OK') this.isLoading = true;
 
-        setTimeout(() => {
+        moveToMacroQueue(() => {
             this.isOpen = false;
             this.modalService.close('edit-menu');
 
@@ -76,7 +76,7 @@ export class EditMenuComponent implements OnInit {
 
             this.nameInputRef.nativeElement.blur();
             this.linkInput = '';
-        }, 0);
+        });
     }
 
     linkInput: string;

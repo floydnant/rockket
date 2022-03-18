@@ -253,6 +253,8 @@ export class Compare {
 
 export const repeatAfterDelay = (callback: () => void, delays: number[]) =>
     delays.forEach(delay => setTimeout(callback, delay));
+    
+export const moveToMacroQueue = (callback: () => void) => setTimeout(callback, 0);
 
 export class Utility {
     public generateId = generateId;

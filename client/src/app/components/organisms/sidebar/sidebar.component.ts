@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { moveToMacroQueue } from 'src/app/shared/utility.model';
 import { AppData } from '../../../reducers';
 import { countOpenTasks } from '../../../shared/taskList.model';
 
@@ -18,7 +19,7 @@ export class SidebarComponent implements OnInit, OnChanges {
         if (this.data.activeListId == listId) return;
 
         this.isLoading = listId;
-        setTimeout(() => this.onSetActiveList.emit(listId), 0);
+        moveToMacroQueue(() => this.onSetActiveList.emit(listId));
     };
 
     @Output() onCreateList = new EventEmitter();
@@ -34,6 +35,6 @@ export class SidebarComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {}
     ngOnChanges(changes: SimpleChanges): void {
-        if ('data' in changes) setTimeout(() => (this.isLoading = null), 0);
+        if ('data' in changes) moveToMacroQueue(() => (this.isLoading = null));
     }
 }
