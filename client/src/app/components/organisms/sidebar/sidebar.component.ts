@@ -1,6 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { getCopyOf, moveToMacroQueue } from 'src/app/shared/utility.model';
+import { getCopyOf, isTouchDevice, moveToMacroQueue } from 'src/app/shared/utility.model';
 import { AppData } from '../../../reducers';
 import { countOpenTasks, TaskList } from '../../../shared/taskList.model';
 
@@ -11,7 +11,10 @@ import { countOpenTasks, TaskList } from '../../../shared/taskList.model';
 })
 export class SidebarComponent implements OnInit, OnChanges {
     constructor() {}
+    isTouchDevice = isTouchDevice();
+
     sortableListsData: TaskList[];
+    selectMode = false;
     @Input() @Output() data!: AppData;
 
     isLoading: string | null;
