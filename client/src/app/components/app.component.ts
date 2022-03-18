@@ -132,6 +132,9 @@ export class AppComponent implements OnInit, AfterViewInit {
             });
     };
     deleteList = (listId: string) => this.store.dispatch(new AppDataActions.DeleteList(listId));
+    sortLists(sortedLists: TaskList[]) {
+        this.store.dispatch(new AppDataActions.SortLists(sortedLists));
+    }
 
     ////////////////////////////////////// database interaction /////////////////////////////////////////
     db = {

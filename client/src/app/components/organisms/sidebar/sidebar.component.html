@@ -9,11 +9,21 @@
         </button>
     </h2>
 
-    <ul id="taskListsList" class="taskListsList">
+    <!-- <ul cdkDropList (cdkDropListDropped)="drop($event)">
+        <li *ngFor="let item of sortList" cdkDrag>
+            <p>{{ item.name }}</p>
+            <i class="fas fa-bars" cdkDragHandle></i>
+        </li>
+    </ul> -->
+    
+
+    <ul id="taskListsList" class="taskListsList" cdkDropList (cdkDropListDropped)="drop($event)">
         <h5 *ngIf="!this.data.lists.length" style="text-align: center">No lists yet...</h5>
         <li
-            *ngFor="let list of this.data.lists; let i = index"
+            *ngFor="let list of this.sortableListsData let i = index"
             class="list"
+            cdkDrag
+            cdkDragBoundary=".taskListsList"
             (click)="setActiveList(list.id)"
             [class.active]="this.data.activeListId == list.id"
             [class.completed]="countOpenTasks(list.list) == 0 && list.list.length"

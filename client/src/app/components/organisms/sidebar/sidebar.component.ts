@@ -1,7 +1,8 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { moveToMacroQueue } from 'src/app/shared/utility.model';
+import { getCopyOf, moveToMacroQueue } from 'src/app/shared/utility.model';
 import { AppData } from '../../../reducers';
-import { countOpenTasks } from '../../../shared/taskList.model';
+import { countOpenTasks, TaskList } from '../../../shared/taskList.model';
 
 @Component({
     selector: 'sidebar',
@@ -10,6 +11,7 @@ import { countOpenTasks } from '../../../shared/taskList.model';
 })
 export class SidebarComponent implements OnInit, OnChanges {
     constructor() {}
+    sortableListsData: TaskList[];
     @Input() @Output() data!: AppData;
 
     isLoading: string | null;
@@ -33,8 +35,20 @@ export class SidebarComponent implements OnInit, OnChanges {
 
     countOpenTasks = countOpenTasks;
 
-    ngOnInit(): void {}
+    drop(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.sortableListsData, event.previousIndex, event.currentIndex);
+        this.sortLists(this.sortableListsData);
+    }
+    @Output() onListSort = new EventEmitter<TaskList[]>();
+    sortLists = (sortedLists: TaskList[]) => this.onListSort.emit(sortedLists);
+
+    ngOnInit(): void {
+        this.sortableListsData = getCopyOf(this.data.lists);
+    }
     ngOnChanges(changes: SimpleChanges): void {
-        if ('data' in changes) moveToMacroQueue(() => (this.isLoading = null));
+        if ('data' in changes) {
+            this.sortableListsData = getCopyOf(this.data.lists);
+            moveToMacroQueue(() => (this.isLoading = null));
+        }
     }
 }

@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
@@ -45,7 +47,9 @@ import { AppleShareIconComponent } from './components/atoms/apple-share-icon/app
         AppleShareIconComponent,
     ],
     imports: [
+        DragDropModule,
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         StoreModule.forRoot(reducers, {
             metaReducers,

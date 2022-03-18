@@ -111,9 +111,8 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             let task = getTaskById(action.taskId) as Task;
             const subtasksCopy = getCopyOf(task.subTasks);
 
-            if (!task.isCompleted && action.allSubtasks)
-                setAllSubtasksCompleted(subtasksCopy);
-            
+            if (!task.isCompleted && action.allSubtasks) setAllSubtasksCompleted(subtasksCopy);
+
             task = Object.assign(task, {
                 isCompleted: action.shouldBeCompleted,
                 completedAt: new Date(),
@@ -165,6 +164,13 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
                 lists: [...(action.overwrite ? [] : newState.lists), ...importedState.lists],
                 version: ACTIVE_VERSION,
                 activeListId: action.overwrite ? importedState.activeListId : importedState.lists[0].id,
+            };
+        }
+
+        case AppDataActions.SORT_LISTS: {
+            return {
+                ...newState,
+                lists: action.sortedLists,
             };
         }
 

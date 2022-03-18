@@ -84,6 +84,7 @@
 }
 
 .list {
+    box-sizing: border-box;
     position: relative;
     padding: 10px;
     border-radius: 6px;
@@ -95,7 +96,11 @@
     
     background: var(--global-item-bg);  
     box-shadow: var(--box-shadow-s);
-    transition: 180ms;
+    transition: background 180ms, box-shadow 180ms, filter 180ms, color 180ms, transform 180ms;
+}
+
+.list + .list {
+    margin-top: 0.7rem;
 }
 .list:nth-child(2n) {
     background: var(--global-item-bg-alt);
@@ -111,6 +116,19 @@
 }
 .list:hover {
     background: var(--global-item-bg-highlight)
+}
+.list.cdk-drag-preview {
+    box-sizing: border-box;
+    /* border-radius: 4px; */
+    box-shadow: var(--box-shadow-m);
+    /* opacity: 0; */
+}
+.list.cdk-drag-placeholder {
+    /* opacity: .3; */
+    opacity: 0;
+}
+.list.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1), box-shadow 200ms;
 }
 
 .list .text {
