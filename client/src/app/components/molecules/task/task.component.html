@@ -152,12 +152,12 @@
                                 </span>
                                 <ng-template #completed>
                                     <span style="color: var(--submit-clr)">
-                                        {{ completedTasks.length }} completed
+                                        {{ completedTasksCount }} completed
                                     </span>
                                 </ng-template>
                                 <span class="dimm-1">
                                     {{
-                                        completedTasks.length && uncompletedTasks.length
+                                        completedTasksCount && uncompletedTasksCount
                                             ? "/ " + this.data.subTasks.length
                                             : ""
                                     }}
@@ -212,11 +212,11 @@
                 <div *ngIf="data.subTasks.length" class="task-progress">
                     <span
                         class="submit-clr"
-                        [style]="'width:' + (completedTasks.length / data.subTasks.length) * 100 + '%;'"
+                        [style]="'width:' + (completedTasksCount / data.subTasks.length) * 100 + '%;'"
                     ></span>
                     <span
                         class="secondary-clr"
-                        [style]="'width:' + (uncompletedTasks.length / data.subTasks.length) * 100 + '%;'"
+                        [style]="'width:' + (uncompletedTasksCount / data.subTasks.length) * 100 + '%;'"
                     ></span>
                 </div>
             </div>
@@ -224,37 +224,15 @@
     </li>
 </div>
 
-<ul
+<task-list
     *ngIf="this.data.subTasks.length != 0 && !uiState.collapseSubtaskList"
-    class="subtask-list subtask-list-{{ this.data.id }}"
->
-    <task
-        *ngFor="let task of this.uncompletedTasks; let i = index"
-        [data]="task"
-        [taskPosition]="this.taskPosition + i - 1"
-    ></task>
-
-    <single-input-form
-        *ngIf="this.data.subTasks.length != 0 && !uiState.collapseSubtaskList && !data.isCompleted"
-        placeholder="add new subtask..."
-        (onSubmit)="addSubTask($event)"
-        [inputFieldId]="'_' + data.id"
-    ></single-input-form>
-
-    <collapse-toggle
-        *ngIf="completedTasks.length && uncompletedTasks.length"
-        [isOpen]="!uiState.collapseCompletedSubtasks"
-        (onToggle)="toggleCollapseCompletedSubtasks()"
-        colorClass="btn-submit"
-        dimm="dimm-1"
-    >
-        {{ completedTasks.length }} completed subtask{{ completedTasks.length > 1 ? "s" : "" }}
-    </collapse-toggle>
-    <div *ngIf="!uiState.collapseCompletedSubtasks || !uncompletedTasks.length">
-        <task
-            *ngFor="let task of this.completedTasks; let i = index"
-            [data]="task"
-            [taskPosition]="this.taskPosition + i + 1 + this.uncompletedTasks.length"
-        ></task>
-    </div>
-</ul>
+    variant="subtask"
+    [tasklist]="data.subTasks"
+    [id]="data.id"
+    [taskPosition]="taskPosition"
+    [collapseCompletedTasks]="uiState.collapseCompletedSubtasks"
+    [isCompleted]="isCompleted"
+    [focusChangeEvents]="quickAddInputFieldEventSubject"
+    (onAddSubtask)="addSubTask($event)"
+    (onToggleCollapseCompleted)="toggleCollapseCompletedSubtasks()"
+></task-list>

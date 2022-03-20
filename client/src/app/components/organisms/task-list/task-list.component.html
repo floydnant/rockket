@@ -1,0 +1,31 @@
+<ul class="tasklist tasklist-{{ id }}" [class.subtasks]="variant == 'subtask'">
+    <task
+        *ngFor="let task of this.uncompletedTasks; let i = index"
+        [data]="task"
+        [taskPosition]="(variant == 'subtask' ? this.taskPosition - 1 : 0) + i"
+    ></task>
+
+    <single-input-form
+        *ngIf="variant == 'subtask' ? this.tasklist.length != 0 && !isCompleted : countOpenTasks(tasklist)"
+        placeholder="add new {{ variant }}..."
+        (onSubmit)="addTask($event)"
+        [inputFieldId]="'_' + id"
+    ></single-input-form>
+
+    <collapse-toggle
+        *ngIf="completedTasks.length && uncompletedTasks.length"
+        [isOpen]="!collapseCompletedTasks"
+        (onToggle)="toggleCollapseCompletedSubtasks()"
+        colorClass="btn-submit"
+        dimm="dimm-1"
+    >
+        {{ completedTasks.length }} completed {{ variant }}{{ completedTasks.length > 1 ? "s" : "" }}
+    </collapse-toggle>
+    <div *ngIf="!collapseCompletedTasks || !uncompletedTasks.length">
+        <task
+            *ngFor="let task of this.completedTasks; let i = index"
+            [data]="task"
+            [taskPosition]="(variant == 'subtask' ? this.taskPosition + 1 : 0) + i + this.uncompletedTasks.length"
+        ></task>
+    </div>
+</ul>

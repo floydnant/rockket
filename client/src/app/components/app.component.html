@@ -21,7 +21,7 @@
             [data]="this.data"
             (onSetActiveList)="setActiveList($event)"
             (onCreateList)="createList()"
-            (onExportData)="null"
+            (onExportData)="(null)"
             (onImportData)="db.importJson($event)"
             (onListSort)="sortLists($event)"
         ></sidebar>
@@ -52,31 +52,15 @@
             <h5 *ngIf="!this.activeTaskList || this.activeTaskList.list.length == 0" style="text-align: center">
                 No tasks yet...
             </h5>
-            <ul *ngIf="this.activeTaskList">
-                <task *ngFor="let task of this.uncompletedTasks; let i = index" [data]="task" [taskPosition]="i"></task>
-
-                <single-input-form
-                    *ngIf="countOpenTasks(activeTaskList.list)"
-                    (onSubmit)="addTask[1]($event)"
-                    [focusChangeEvents]="quickAddInputField.focusEventsSubject[1].asObservable()"
-                ></single-input-form>
-
-                <collapse-toggle
-                    *ngIf="completedTasks.length"
-                    [isOpen]="showCompleted"
-                    (onToggle)="showCompleted = $event"
-                    colorClass="btn-submit"
-                >
-                    {{ completedTasks.length }} completed task{{ completedTasks.length > 1 ? "s" : "" }}
-                </collapse-toggle>
-                <div *ngIf="showCompleted">
-                    <task
-                        *ngFor="let task of this.completedTasks; let i = index"
-                        [data]="task"
-                        [taskPosition]="i + this.uncompletedTasks.length"
-                    ></task>
-                </div>
-            </ul>
+            <task-list
+                variant="task"
+                [tasklist]="this.activeTaskList?.list"
+                [id]="this.activeTaskList?.id"
+                [collapseCompletedTasks]="!this.showCompleted"
+                [focusChangeEvents]="this.quickAddInputField.focusEventsSubject[1]"
+                (onToggleCollapseCompleted)="showCompleted = !showCompleted"
+                (onAddSubtask)="addTask[1]($event)"
+            ></task-list>
         </section>
     </main>
 </div>

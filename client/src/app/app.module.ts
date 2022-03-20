@@ -27,6 +27,7 @@ import { LoadingSpinnerComponent } from './components/atoms/loading-spinner/load
 import { PriorityIconComponent } from './components/atoms/priority-icon/priority-icon.component';
 import { ToggleSwitchComponent } from './components/atoms/toggle-switch/toggle-switch.component';
 import { AppleShareIconComponent } from './components/atoms/apple-share-icon/apple-share-icon.component';
+import { TasklistComponent } from './components/organisms/task-list/task-list.component';
 
 @NgModule({
     declarations: [
@@ -45,6 +46,7 @@ import { AppleShareIconComponent } from './components/atoms/apple-share-icon/app
         PriorityIconComponent,
         ToggleSwitchComponent,
         AppleShareIconComponent,
+        TasklistComponent,
     ],
     imports: [
         DragDropModule,

@@ -1,30 +1,29 @@
-import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewInit, ViewChild, SimpleChanges } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppData, AppState, AppDataActions } from '../reducers';
 import { AppDataService } from '../reducers/appData/appData.service';
 
 import { sortCompletedTasks, Task } from '../shared/task.model';
 import { TaskList, countOpenTasks } from '../shared/taskList.model';
-import { isTouchDevice, shortenText } from '../shared/utility.model';
+import { getCopyOf, isTouchDevice, moveToMacroQueue, shortenText } from '../shared/utility.model';
 import { ModalService } from './molecules/modal/modal.service';
 import { DialogService } from './organisms/custom-dialog';
 import { EditMenuService } from './organisms/edit-menu';
 
 import { Subject } from 'rxjs';
 import { WINDOW_TITLE_SUFFIX } from '../shared/constants';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent {
     data: AppData;
     activeTaskList: TaskList | undefined;
     taskNameInput: string;
 
-    uncompletedTasks: Task[];
-    completedTasks: Task[];
     showCompletedMaster = false;
     showCompleted = this.showCompletedMaster;
 
@@ -46,8 +45,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         private store: Store<AppState>,
         private appDataService: AppDataService
     ) {
-        this.store.subscribe((data: unknown) => {
-            this.data = (data as { appData: AppData }).appData;
+        this.store.subscribe(data => {
+            this.data = data.appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
 
             console.log('%cupdated state:', 'color: gray', this.data);
@@ -55,11 +54,6 @@ export class AppComponent implements OnInit, AfterViewInit {
             document.title = this.activeTaskList
                 ? `${shortenText(this.activeTaskList.name, 20)} - ${WINDOW_TITLE_SUFFIX}`
                 : WINDOW_TITLE_SUFFIX;
-
-            if (!this.activeTaskList) return;
-
-            this.uncompletedTasks = this.activeTaskList.list.filter(task => !task.isCompleted);
-            this.completedTasks = this.activeTaskList.list.filter(task => task.isCompleted).sort(sortCompletedTasks);
         });
     }
 
@@ -96,6 +90,15 @@ export class AppComponent implements OnInit, AfterViewInit {
             }
         };
         return recurse(taskId, taskList);
+    }
+    sortableTaskData: Task[];
+    dropTask(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.sortableTaskData, event.previousIndex, event.currentIndex);
+        this.sortTasks(this.sortableTaskData);
+    }
+    sortTasks(sortedTasks: Task[]) {
+        console.log('sort Tasks');
+        // this.store.dispatch(new AppDataActions.)
     }
 
     ///////////////////////////////////////////// Lists ////////////////////////////////////////////////
@@ -164,7 +167,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         },
     };
 
-    ngOnInit(): void {}
     ngAfterViewInit() {
         // this.nameInputRef.nativeElement.select();
         this.quickAddInputField.focus(0);

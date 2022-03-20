@@ -1,0 +1,13 @@
+.tasklist {
+    margin-top: 10px;
+}
+.tasklist:not(.subtasks) {
+    padding: 0;
+}
+.tasklist.subtasks {
+    border-left: 1px solid rgba(128, 128, 128, 0.466);
+}
+
+.tasklist *:not(:first-child) {
+    margin-top: 10px;
+}

@@ -11,6 +11,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Subject } from 'rxjs';
 import { TaskUiState, UiStateService } from 'src/app/services/ui-state.service';
 import { AppData, AppDataActions } from '../../../reducers';
 import { sortCompletedTasks, Task } from '../../../shared/task.model';
@@ -41,10 +42,9 @@ export class TaskComponent implements OnInit {
     /** toggle the task action buttons when on touch a device */
     toggleTaskActionBtns = (v: boolean) => (this.touchDevice_showBtns = v);
 
+    quickAddInputFieldEventSubject = new Subject<boolean>();
     focusQuickAddInputField = () => {
-        setTimeout(() => {
-            document.querySelector<HTMLInputElement>('#_' + this.data.id)?.focus();
-        }, 200);
+        this.quickAddInputFieldEventSubject.next(true);
     };
 
     uiState: TaskUiState;
@@ -129,11 +129,10 @@ export class TaskComponent implements OnInit {
         private uiStateService: UiStateService
     ) {}
 
-    @Input() @Output() data: Task;
+    @Input() data: Task;
     isCompleted: boolean;
-
-    uncompletedTasks: Task[];
-    completedTasks: Task[];
+    completedTasksCount: number;
+    uncompletedTasksCount: number;
 
     setCompleted = (status: boolean) => {
         const openSubtasksLeft = !this.data.isCompleted && countOpenTasksRecursive(this.data.subTasks) > 0;
@@ -236,8 +235,8 @@ export class TaskComponent implements OnInit {
     ngOnInit(): void {
         this.isCompleted = this.data.isCompleted;
 
-        this.uncompletedTasks = this.data.subTasks.filter(task => !task.isCompleted);
-        this.completedTasks = this.data.subTasks.filter(task => task.isCompleted).sort(sortCompletedTasks);
+        this.uncompletedTasksCount = this.data.subTasks.filter(task => !task.isCompleted).length;
+        this.completedTasksCount = this.data.subTasks.filter(task => task.isCompleted).length;
 
         this.uiState = this.uiStateService.getTaskState(this.data.id);
         this.isDetailsPopOutOpen = this.uiState.detailsPopOut.keepOpen;
