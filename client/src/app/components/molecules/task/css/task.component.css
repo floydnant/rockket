@@ -1,0 +1,143 @@
+:host {
+    display: block;
+    --bg: var(--global-item-bg);
+    --alt-bg: var(--global-item-bg-alt);
+}
+.task-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+}
+.task {
+    border-radius: 10px;
+    list-style: none;
+
+    --background: var(--bg);
+    background: var(--background);
+    box-shadow: var(--box-shadow-s);
+    transition: filter 150ms, background 80ms;
+}
+.alt-bg {
+    --background: var(--alt-bg);
+}
+.task:not(.touchDevice):hover {
+    --background: var(--global-item-bg-highlight) !important;
+}
+.task.completed {
+    filter: opacity(0.45) brightness(0.8);
+}
+.task.completed:hover {
+    filter: opacity(1);
+}
+
+.outer-wrapper {
+    display: flex;
+    align-items: center;
+}
+.inner-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    padding: 10px;
+    border-radius: 10px;
+
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.btn-complete {
+    position: relative;
+    margin-right: 10px;
+
+    --shadow: var(--box-shadow-s), 0 0 0px 0px hsla(var(--color-hue), 97%, 58%, 0.3);
+    --shadow-transition: box-shadow 300ms ease-in;
+    transition: var(--shadow-transition), transform 200ms, color 200ms, background 200ms;
+}
+.task.completed-transition .btn-complete,
+.task.completed .btn-complete:hover {
+    --shadow: var(--box-shadow-s), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
+    --shadow-transition: box-shadow 400ms ease;
+}
+.task:not(.completed, .completed-transition) .btn-complete:not(:hover),
+.task.touchDevice:not(.completed, .completed-transition) .btn-complete {
+    color: gray;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+p .taskName {
+    position: relative;
+    margin-right: 0.2rem;
+}
+p .taskName::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    height: 2px;
+    width: 0;
+
+    background: var(--submit-clr);
+    box-shadow: var(--box-shadow-m);
+    transition: width 320ms, box-shadow 220ms;
+}
+.task:is(.completed, .completed-transition) p .taskName::before {
+    width: 100%;
+    box-shadow: var(--box-shadow-s);
+}
+
+.second-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    position: relative;
+}
+
+p.subtask-list-toggle {
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+}
+
+menu-toggle-btn {
+    float: right;
+    margin: 10px;
+}
+.position-task-action-btns {
+    position: relative;
+    height: 100%;
+}
+.btn-group {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    padding: 0;
+    width: max-content;
+
+    float: right;
+    display: flex;
+}
+.btn-group .btn:not(:last-child) {
+    margin: 0 10px 0 0;
+}
+.task:not(:hover) .btn-group .btn {
+    transform: scale(0.5);
+    filter: opacity(0);
+
+    --delay: calc(50ms * var(--btn-index-reverse));
+}
+.btn-group .btn:not(:hover) {
+    --delay: calc(80ms * var(--btn-index));
+    transition: background 200ms, transform 200ms var(--delay), filter 150ms var(--delay);
+}

@@ -1,21 +1,10 @@
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    HostListener,
-    Input,
-    OnChanges,
-    OnInit,
-    Output,
-    SimpleChanges,
-    ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { TaskUiState, UiStateService } from 'src/app/services/ui-state.service';
 import { AppData, AppDataActions } from '../../../reducers';
-import { sortCompletedTasks, Task } from '../../../shared/task.model';
-import { countOpenTasks, countOpenTasksRecursive } from '../../../shared/taskList.model';
+import { Task } from '../../../shared/task.model';
+import { countTasks, countTasksRecursive } from '../../../shared/taskList.model';
 import { formatDateRelative, isTouchDevice, moveToMacroQueue } from '../../../shared/utility.model';
 import { DialogService } from '../../organisms/custom-dialog';
 import { editmenuOptions } from '../../organisms/edit-menu/edit-menu.model';
@@ -25,27 +14,52 @@ import { ModalService } from '../modal/modal.service';
 @Component({
     selector: 'task',
     templateUrl: './task.component.html',
-    styleUrls: ['./task.component.css'],
+    styleUrls: [
+        './css/task.component.css',
+        './css/priority-icon.task.component.css',
+        './css/task-progress.task.component.css',
+        './css/details-pop-out.task.component.css',
+        './css/detail-icons.task.component.css',
+        './css/completed-at.task.component.css',
+    ],
 })
 export class TaskComponent implements OnInit {
-    formatDateRelative = formatDateRelative;
-    countOpenTasks = countOpenTasks;
+    constructor(
+        public modalService: ModalService,
+        private store: Store<AppData>,
+        private dialogService: DialogService,
+        private editMenuService: EditMenuService,
+        private uiStateService: UiStateService
+    ) {}
+
+    ngOnInit(): void {
+        this.isCompleted = this.data.isCompleted;
+
+        this.uncompletedTasksCount = countTasks(this.data.subTasks);
+        this.completedTasksCount = countTasks(this.data.subTasks, 'closed');
+
+        this.formattedCompletionDate = this.isCompleted ? formatDateRelative(this.data.completedAt) || 'invalid' : null;
+
+        this.uiState = this.uiStateService.getTaskState(this.data.id);
+        this.isDetailsPopOutOpen = this.uiState.detailsPopOut.keepOpen;
+        this.notesAreaValue = this.data.meta.notes;
+    }
 
     @Input() taskPosition: number;
+    @Input() data: Task;
+    completedTasksCount: number;
+    uncompletedTasksCount: number;
 
-    log = (...v: any) => console.log(...v);
+    formattedCompletionDate: string | null;
 
-    completeBtnIsHovered = false;
+    completeBtnIsHovered = false; //TODO: outsource this into CSS
 
     isTouchDevice = isTouchDevice();
-    touchDevice_showBtns = false;
-    /** toggle the task action buttons when on touch a device */
-    toggleTaskActionBtns = (v: boolean) => (this.touchDevice_showBtns = v);
+    showTaskActionButtonsOnTouchDevice = false;
+    setShowTaskActionButtonsOnTouchDevice = (show: boolean) => (this.showTaskActionButtonsOnTouchDevice = show);
 
     quickAddInputFieldEventSubject = new Subject<boolean>();
-    focusQuickAddInputField = () => {
-        this.quickAddInputFieldEventSubject.next(true);
-    };
+    focusQuickAddInputField = () => this.quickAddInputFieldEventSubject.next(true);
 
     uiState: TaskUiState;
     isDetailsPopOutOpen: boolean;
@@ -61,52 +75,6 @@ export class TaskComponent implements OnInit {
         this.uiState.collapseSubtaskList = collapse !== undefined ? collapse : !this.uiState.collapseSubtaskList;
         this.uiStateService.setTaskState(this.data.id, this.uiState);
     }
-
-    @ViewChild('notesArea') notesArea: ElementRef<HTMLTextAreaElement>;
-    setTextAreaHeight() {
-        const area = this.notesArea?.nativeElement;
-        if (area) {
-            area.style.height = '10px';
-            area.style.height = area.scrollHeight + 2 + 'px';
-
-            if (
-                this.uiState.detailsPopOut.keepOpen &&
-                this.uiState.detailsPopOut.notesAreaHeight != area.style.height
-            ) {
-                this.uiState.detailsPopOut.notesAreaHeight = area.style.height;
-                this.uiStateService.setTaskState(this.data.id, {
-                    ...this.uiState,
-                    detailsPopOut: {
-                        ...this.uiState.detailsPopOut,
-                        notesAreaHeight: this.uiState.detailsPopOut.notesAreaHeight,
-                    },
-                });
-            }
-        }
-    }
-    resetNotesArea() {
-        this.notesAreaValue = this.data.meta.notes;
-        moveToMacroQueue(() => this.setTextAreaHeight());
-    }
-
-    @ViewChild('detailIconsWrapper') detailIconsWrapper: ElementRef<HTMLSpanElement>;
-    @ViewChild('popOutContainer') popOutContainer: ElementRef<HTMLDivElement>;
-    @HostListener('document:click', ['$event'])
-    notesAreaBlurHandler(event: MouseEvent) {
-        if (!this.isDetailsPopOutOpen || !this.popOutContainer?.nativeElement) return;
-
-        const elemsToCheck: ElementRef<HTMLElement>[] = [this.popOutContainer, this.detailIconsWrapper];
-        const clickedOneOfThem = event
-            .composedPath()
-            .some(elem => elemsToCheck.some(elemToCheck => elem == elemToCheck?.nativeElement));
-
-        // const notesAreaClicked = event.target == this.notesArea.nativeElement;
-        // const clickedInsidePopOut = event.composedPath().some(elem => elem == this.popOutContainer.nativeElement);
-
-        if (!clickedOneOfThem)
-            if (this.uiState.detailsPopOut.keepOpen) this.updateNotes();
-            else this.toggleDetailsPopOutOpen();
-    }
     toggleDetailsPopOutOpen(saveChanges = true) {
         this.isDetailsPopOutOpen = !this.isDetailsPopOutOpen;
 
@@ -121,21 +89,60 @@ export class TaskComponent implements OnInit {
         }
     }
 
-    constructor(
-        public modalService: ModalService,
-        private store: Store<AppData>,
-        private dialogService: DialogService,
-        private editMenuService: EditMenuService,
-        private uiStateService: UiStateService
-    ) {}
+    @ViewChild('notesArea') notesArea: ElementRef<HTMLTextAreaElement>;
+    setNotesAreaHeight() {
+        const area = this.notesArea?.nativeElement;
+        if (!area) return;
 
-    @Input() data: Task;
+        area.style.height = '10px';
+        area.style.height = area.scrollHeight + 2 + 'px';
+
+        if (this.uiState.detailsPopOut.keepOpen && this.uiState.detailsPopOut.notesAreaHeight != area.style.height) {
+            this.uiState.detailsPopOut.notesAreaHeight = area.style.height;
+            this.uiStateService.setTaskState(this.data.id, {
+                ...this.uiState,
+                detailsPopOut: {
+                    ...this.uiState.detailsPopOut,
+                    notesAreaHeight: this.uiState.detailsPopOut.notesAreaHeight,
+                },
+            });
+        }
+    }
+    resetNotesArea() {
+        this.notesAreaValue = this.data.meta.notes;
+        moveToMacroQueue(() => this.setNotesAreaHeight());
+    }
+    @ViewChild('detailIconsWrapper') detailIconsWrapper: ElementRef<HTMLSpanElement>;
+    @ViewChild('popOutContainer') popOutContainer: ElementRef<HTMLDivElement>;
+    @HostListener('document:click', ['$event'])
+    notesAreaBlurHandler(event: MouseEvent) {
+        if (!this.isDetailsPopOutOpen || !this.popOutContainer?.nativeElement) return;
+
+        const elemsToCheck: ElementRef<HTMLElement>[] = [this.popOutContainer, this.detailIconsWrapper];
+        const clickedOneOfThem = event
+            .composedPath()
+            .some(elem => elemsToCheck.some(elemToCheck => elem == elemToCheck?.nativeElement));
+
+        if (!clickedOneOfThem)
+            if (this.uiState.detailsPopOut.keepOpen) this.updateNotes();
+            else this.toggleDetailsPopOutOpen();
+    }
+    notesAreaValue: string;
+    updateNotes() {
+        if (this.notesAreaValue == this.data.meta.notes) return;
+
+        this.store.dispatch(
+            new AppDataActions.EditTask(this.data.id, {
+                ...this.data,
+                meta: { ...this.data.meta, notes: this.notesAreaValue },
+            })
+        );
+    }
+
     isCompleted: boolean;
-    completedTasksCount: number;
-    uncompletedTasksCount: number;
-
-    setCompleted = (status: boolean) => {
-        const openSubtasksLeft = !this.data.isCompleted && countOpenTasksRecursive(this.data.subTasks) > 0;
+    toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
+    private setCompleted = (status: boolean) => {
+        const openSubtasksLeft = !this.data.isCompleted && countTasksRecursive(this.data.subTasks) > 0;
         const dispatchAction = (completeAllSubtasks = false) => {
             if (status && (!openSubtasksLeft || completeAllSubtasks)) this.toggleCollapseSubtaskList(true);
             this.isCompleted = status;
@@ -156,25 +163,12 @@ export class TaskComponent implements OnInit {
                 .catch(clickedButton => clickedButton == 'Keep uncompleted' && dispatchAction());
         else dispatchAction();
     };
-    toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
 
     setPriority(priority: number) {
         this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, priority }));
     }
 
-    notesAreaValue: string;
-    updateNotes() {
-        if (this.notesAreaValue == this.data.meta.notes) return;
-
-        this.store.dispatch(
-            new AppDataActions.EditTask(this.data.id, {
-                ...this.data,
-                meta: { ...this.data.meta, notes: this.notesAreaValue },
-            })
-        );
-    }
-
-    dispatchNewSubtaskAction = (newTaskName: string) =>
+    private dispatchNewSubtaskAction = (newTaskName: string) =>
         this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
     addSubTask = (newTaskName?: string) => {
         if (!newTaskName)
@@ -190,6 +184,7 @@ export class TaskComponent implements OnInit {
             this.focusQuickAddInputField();
         }
     };
+
     editTaskDetails = (hightlight?: editmenuOptions['hightlight']) => {
         this.editMenuService
             .editTaskDetails(
@@ -212,11 +207,12 @@ export class TaskComponent implements OnInit {
                 if (err == 'Deleted') this.deleteTask(this.data.id);
             });
     };
+
     deleteTask = (id: string, prompt = true) => {
         const del = () => this.store.dispatch(new AppDataActions.DeleteTask(this.data.id));
         const openSubtasksCount = this.data.subTasks.filter(task => !task.isCompleted).length;
         if (prompt)
-            // TODO: make this an inline prompt
+            // TODO: make this an inline prompt / hold to delete
             this.dialogService
                 .confirm({
                     title: `Delete this task?`,
@@ -231,15 +227,4 @@ export class TaskComponent implements OnInit {
                 .catch(() => {});
         else del();
     };
-
-    ngOnInit(): void {
-        this.isCompleted = this.data.isCompleted;
-
-        this.uncompletedTasksCount = this.data.subTasks.filter(task => !task.isCompleted).length;
-        this.completedTasksCount = this.data.subTasks.filter(task => task.isCompleted).length;
-
-        this.uiState = this.uiStateService.getTaskState(this.data.id);
-        this.isDetailsPopOutOpen = this.uiState.detailsPopOut.keepOpen;
-        this.notesAreaValue = this.data.meta.notes;
-    }
 }

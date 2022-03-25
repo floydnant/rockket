@@ -1,0 +1,49 @@
+.task:not(.touchDevice) .first-row-detailIcons {
+    margin-right: 130px;
+}
+.detail-icons-wrapper {
+    font-size: 1.1rem;
+    margin: 0 0.5em 0 0;
+    padding-left: 2px;
+
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    transform-origin: left;
+    transition: background 80ms, box-shadow 80ms;
+    isolation: isolate;
+}
+.task:not(.completed, .completed-transition) .first-row-detailIcons .detail-icons-wrapper {
+    background: var(--background);
+    box-shadow: 0 0 5px var(--background), 0 0 10px var(--background), 0 0 7px var(--background), 0 0 15px var(--background);
+}
+.detail-icon {
+    display: block;
+    width: max-content;
+    color: hsl(var(--primary-clr-hue), 100%, 55%);
+    cursor: pointer;
+    transition: color 180ms, filter 180ms, opacity 130ms;
+}
+.detail-icon:not(:first-child) {
+    margin: 0 0 0 5px;
+}
+.task:not(.touchDevice) .detail-icon:hover {
+    color: var(--secondary-clr);
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.task:not(:hover, .touchDevice) .notes-icon.reveal,
+.task.completed .notes-icon.reveal  {
+    opacity: 0;
+}
+.task.touchDevice .notes-icon.reveal {
+    opacity: 0.3;
+}
+.notes-icon {
+    position: relative;
+    top: 2px;
+}
+.notes-icon.reveal:not(:hover) {
+    filter: grayscale(1);
+}

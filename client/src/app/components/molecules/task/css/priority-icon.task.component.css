@@ -1,0 +1,30 @@
+.position-priority-icon {
+    position: relative;
+}
+.reveal-on-hover priority-icon {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+
+    display: inline-block;
+    transition: opacity 180ms;
+}
+.task:hover .reveal-on-hover priority-icon {
+    transition: opacity 600ms 0.8s;
+}
+.reveal-on-hover priority-icon {
+    opacity: 0;
+}
+.task:not(.touchDevice):hover .reveal-on-hover priority-icon {
+    opacity: 1;
+}
+.reveal-on-hover ~ *:not(.first-row-detailIcons) {
+    transition: left 100ms ease-out;
+    position: relative;
+    left: 0px;
+}
+.task:not(.touchDevice):hover .reveal-on-hover ~ *:not(.first-row-detailIcons) {
+    transition: left 200ms 0.7s ease-in;
+    left: 20px;
+}

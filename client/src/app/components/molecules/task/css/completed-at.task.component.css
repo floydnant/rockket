@@ -1,0 +1,39 @@
+.position-completed-at {
+    position: relative;
+    height: 100%;
+}
+.completed-at {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 0%;
+    --translateY: 5px;
+    transform: translate(0, var(--translateY));
+    width: max-content;
+
+    color: var(--submit-clr);
+    padding: 8px;
+    border-radius: 10px;
+
+    background: var(--global-background);
+    box-shadow: var(--box-shadow-s);
+    opacity: 0;
+
+    pointer-events: none;
+    transition: 200ms;
+}
+.completed-at::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 30px;
+    transform: translateX(-50%);
+
+    margin-left: -5px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: var(--global-background) transparent transparent transparent;
+}
+.task.completed:hover .completed-at {
+    --translateY: 0;
+    opacity: 1;
+}

@@ -16,8 +16,8 @@
                     ? { height: uiState.detailsPopOut.notesAreaHeight }
                     : {}
             "
-            (input)="setTextAreaHeight()"
-            (focus)="setTextAreaHeight()"
+            (input)="setNotesAreaHeight()"
+            (focus)="setNotesAreaHeight()"
         ></textarea>
         <div class="position-pop-out-actions">
             <div class="pop-out-actions-container">
@@ -67,9 +67,9 @@
         [class.completed-transition]="this.isCompleted"
         [class.alt-bg]="this.taskPosition % 2 == 1"
     >
-        <div class="position-time-completed">
-            <span *ngIf="this.data.isCompleted" class="time-completed">
-                {{ formatDateRelative(this.data.completedAt) }}
+        <div class="position-completed-at">
+            <span *ngIf="this.data.isCompleted" class="completed-at">
+                {{ formattedCompletionDate }}
             </span>
         </div>
         <div class="wrapper outer-wrapper">
@@ -100,8 +100,7 @@
                                 title="toggle pop-out notes"
                                 (click)="toggleDetailsPopOutOpen()"
                             >
-                                <i *ngIf="isDetailsPopOutOpen" class="fas fa-comment-alt-lines"></i>
-                                <i *ngIf="!isDetailsPopOutOpen" class="far fa-comment-alt-lines"></i>
+                                <i class="fa{{isDetailsPopOutOpen ? 's' : 'r'}} fa-comment-alt-lines"></i>
                             </span>
                             <span
                                 *ngIf="this.data.meta.links.length"
@@ -129,13 +128,12 @@
                         <span class="taskName">
                             {{ this.data.name }}
                         </span>
-                        <!-- && (data.meta.notes || data.meta.links.length) -->
                         <span *ngIf="!data.subTasks.length" class="first-row-detailIcons">
                             <template [ngTemplateOutlet]="detailIcons"></template>
                         </span>
                     </p>
                     <div class="second-row">
-                        <p *ngIf="this.data.subTasks.length != 0" class="subtask-list-toggle">
+                        <p *ngIf="this.data.subTasks.length" class="subtask-list-toggle">
                             <collapse-toggle
                                 [isOpen]="!uiState.collapseSubtaskList"
                                 noSpacing
@@ -144,16 +142,14 @@
                                 (onToggle)="toggleCollapseSubtaskList()"
                             >
                                 <span
-                                    *ngIf="countOpenTasks(this.data.subTasks) != 0; else completed"
+                                    *ngIf="uncompletedTasksCount; else completed"
                                     class="text-shadow"
                                     style="color: var(--secondary-clr)"
                                 >
-                                    {{ countOpenTasks(this.data.subTasks) }} open
+                                    {{ uncompletedTasksCount }} open
                                 </span>
                                 <ng-template #completed>
-                                    <span style="color: var(--submit-clr)">
-                                        {{ completedTasksCount }} completed
-                                    </span>
+                                    <span style="color: var(--submit-clr)"> {{ completedTasksCount }} completed </span>
                                 </ng-template>
                                 <span class="dimm-1">
                                     {{
@@ -174,21 +170,24 @@
                     title="add sub task"
                     class="btn btn-icon btn-secondary"
                     [class.disabled]="this.data.isCompleted"
-                    (click)="addSubTask(); toggleTaskActionBtns(false)"
+                    (click)="addSubTask(); setShowTaskActionButtonsOnTouchDevice(false)"
                     style="--btn-index: 2; --btn-index-reverse: 0"
                 >
                     <i class="fas fa-plus"></i></button
                 ><button
                     title="show{{ this.data.isCompleted ? '' : '/edit' }} task details"
                     class="btn btn-icon btn-edit"
-                    (click)="data.isCompleted ? showDetails() : editTaskDetails(); toggleTaskActionBtns(false)"
+                    (click)="
+                        data.isCompleted ? showDetails() : editTaskDetails();
+                        setShowTaskActionButtonsOnTouchDevice(false)
+                    "
                     style="--btn-index: 1; --btn-index-reverse: 1"
                 >
                     <i class="fas fa-ellipsis-v"></i></button
                 ><button
                     title="delete task"
                     class="btn btn-icon btn-delete"
-                    (click)="deleteTask(this.data.id); toggleTaskActionBtns(false)"
+                    (click)="deleteTask(this.data.id); setShowTaskActionButtonsOnTouchDevice(false)"
                     style="--btn-index: 0; --btn-index-reverse: 2"
                 >
                     <i class="far fa-trash-alt"></i>
@@ -201,8 +200,8 @@
             </div>
             <menu-toggle-btn
                 *ngIf="isTouchDevice"
-                [isOpen]="touchDevice_showBtns"
-                (onMenuToggle)="toggleTaskActionBtns($event)"
+                [isOpen]="showTaskActionButtonsOnTouchDevice"
+                (onMenuToggle)="setShowTaskActionButtonsOnTouchDevice($event)"
             >
                 <template [ngTemplateOutlet]="taskActionBtns"></template>
             </menu-toggle-btn>
@@ -225,7 +224,7 @@
 </div>
 
 <task-list
-    *ngIf="this.data.subTasks.length != 0 && !uiState.collapseSubtaskList"
+    *ngIf="this.data.subTasks.length && !uiState.collapseSubtaskList"
     variant="subtask"
     [tasklist]="data.subTasks"
     [id]="data.id"
