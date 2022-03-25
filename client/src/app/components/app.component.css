@@ -133,11 +133,8 @@ menu-toggle-btn {
         max-width: unset;
         height: 100vh;
         padding: 20px;
-        /* outline: 1px solid rgb(255, 0, 234); */
 
         overflow: scroll;
-
-        /* box-sizing: border-box; */
 
         --bg-trans: 180ms;
         --bg-trans-delay: 0ms;
@@ -174,28 +171,4 @@ main {
 .new-task-form {
     margin: 25px 0;
     width: 100%;
-}
-
-.task-list ul {
-    padding: 0;
-    margin: 0;
-}
-.task-list ul > task {
-    display: block;
-}
-
-.cdk-drop-list-dragging > task {
-    /* outline: 1px solid red; */
-    transition: transform 180ms;
-}
-.cdk-drag-preview {
-    box-sizing: border-box;
-    transition: background 180ms, box-shadow 180ms, filter 180ms, color 180ms;
-}
-.cdk-drag-placeholder {
-    opacity: .3;
-    /* opacity: 0; */
-}
-task.cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1), box-shadow 200ms;
 }
