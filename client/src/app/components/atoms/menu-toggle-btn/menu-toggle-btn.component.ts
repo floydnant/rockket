@@ -6,10 +6,9 @@ import {
     Input,
     OnInit,
     Output,
-    ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { isTouchDevice } from '../../../shared/utility.model';
+import { isTouchDevice } from '../../../shared/utils';
 
 @Component({
     selector: 'menu-toggle-btn',

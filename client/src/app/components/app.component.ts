@@ -1,18 +1,17 @@
-import { Component, ElementRef, OnInit, AfterViewInit, ViewChild, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppData, AppState, AppDataActions } from '../reducers';
+import { Subject } from 'rxjs';
+import { AppData, AppDataActions, AppState } from '../reducers';
 import { AppDataService } from '../reducers/appData/appData.service';
-
-import { sortCompletedTasks, Task } from '../shared/task.model';
-import { TaskList, countTasks } from '../shared/taskList.model';
-import { getCopyOf, isTouchDevice, moveToMacroQueue, shortenText } from '../shared/utility.model';
+import { WINDOW_TITLE_SUFFIX } from '../shared/constants';
+import { Task } from '../shared/task.model';
+import { TaskList } from '../shared/taskList.model';
+import { isTouchDevice, shortenText } from '../shared/utils';
 import { ModalService } from './molecules/modal/modal.service';
 import { DialogService } from './organisms/custom-dialog';
 import { EditMenuService } from './organisms/edit-menu';
 
-import { Subject } from 'rxjs';
-import { WINDOW_TITLE_SUFFIX } from '../shared/constants';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+
 
 @Component({
     selector: 'app-root',

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { sortCompletedTasks, Task } from 'src/app/shared/task.model';
-import { countOpenTasks } from 'src/app/shared/taskList.model';
-import { generateId, getCopyOf } from 'src/app/shared/utility.model';
+import { countTasks } from 'src/app/shared/taskList.model';
+import { generateId, getCopyOf } from 'src/app/shared/utils';
 
 @Component({
     selector: 'task-list',
@@ -64,5 +64,5 @@ export class TasklistComponent implements OnInit, OnChanges {
         this.focusChangeEventsSubscription?.unsubscribe();
     }
 
-    countOpenTasks = countOpenTasks;
+    countOpenTasks = countTasks;
 }

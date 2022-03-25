@@ -1,5 +1,5 @@
 import { Task } from './task.model';
-import { generateId } from './utility.model';
+import { generateId } from './utils';
 
 export class TaskListMeta {
     notes: string = '';
@@ -19,12 +19,14 @@ export class TaskList {
     };
 }
 
-export const countOpenTasks = (arr: Task[]) => arr.filter(task => !task.isCompleted).length;
-export const countOpenTasksRecursive = (tasks: Task[]) => {
+export const countTasks = (arr: Task[], which: 'open' | 'closed' = 'open') =>
+    arr.filter(task => (which == 'open' ? !task.isCompleted : task.isCompleted)).length;
+
+export const countTasksRecursive = (tasks: Task[], which: 'open' | 'closed' = 'open') => {
     let uncompleted = 0;
     const recurse = (tasks_: Task[]) =>
         tasks_.forEach(task => {
-            if (!task.isCompleted) uncompleted++;
+            if (which == 'open' ? !task.isCompleted : task.isCompleted) uncompleted++;
             if (task.subTasks.length) recurse(task.subTasks);
         });
     recurse(tasks);

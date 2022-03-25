@@ -1,4 +1,4 @@
-import { generateId } from './utility.model';
+import { generateId } from './utils';
 
 export class TaskMeta {
     notes: string = '';

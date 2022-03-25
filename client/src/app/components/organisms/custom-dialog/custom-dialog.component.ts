@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { repeatAfterDelay } from 'src/app/shared/utility.model';
+import { repeatAfterDelay } from 'src/app/shared/utils';
 import { ModalService } from '../../molecules/modal/modal.service';
 import { CustomDialogComponentProps } from './custom-dialog.model';
 import { DialogService } from './custom-dialog.service';

@@ -1,4 +1,4 @@
-import { getCopyOf, parseUrls } from 'src/app/shared/utility.model';
+import { getCopyOf, parseUrls } from 'src/app/shared/utils';
 import { Task } from 'src/app/shared/task.model';
 import { sortTasksBy, TaskList } from '../../shared/taskList.model';
 import * as AppDataActions from './appData.actions';

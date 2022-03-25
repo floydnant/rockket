@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { downloadObjectAsJson, generateId } from 'src/app/shared/utility.model';
+import { downloadObjectAsJson, generateId } from 'src/app/shared/utils';
 
 import { AppDataActions } from '.';
 import { AppData, AppState } from './appData.model';

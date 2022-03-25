@@ -1,6 +1,5 @@
 import { TaskMeta, Task } from '../../../shared/task.model';
 import { TaskList, TaskListMeta } from '../../../shared/taskList.model';
-import { getCopyOf } from '../../../shared/utility.model';
 
 export class EditmenuTasklistData {
     name: TaskList['name'] = '';
