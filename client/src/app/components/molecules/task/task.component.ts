@@ -168,24 +168,24 @@ export class TaskComponent implements OnInit {
         this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, priority }));
     }
 
-    private dispatchNewSubtaskAction = (newTaskName: string) =>
-        this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
     addSubTask = (newTaskName?: string) => {
-        if (!newTaskName)
+        const dispatchNewSubtaskAction = (newTaskName: string) =>
+            this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
+
+        if (newTaskName) {
+            dispatchNewSubtaskAction(newTaskName);
+            this.focusQuickAddInputField();
+        } else
             this.dialogService
                 .prompt({ title: 'Create new subtask:', buttons: ['Cancel', 'Create'], placeholder: 'subtask name' })
                 .then((newTaskName: string) => {
-                    this.dispatchNewSubtaskAction(newTaskName);
+                    dispatchNewSubtaskAction(newTaskName);
                     this.focusQuickAddInputField();
                 })
                 .catch(() => {});
-        else {
-            this.dispatchNewSubtaskAction(newTaskName);
-            this.focusQuickAddInputField();
-        }
     };
 
-    editTaskDetails = (hightlight?: editmenuOptions['hightlight']) => {
+    editDetails = (hightlight?: editmenuOptions['hightlight']) => {
         this.editMenuService
             .editTaskDetails(
                 { ...this.data, meta: { ...this.data.meta, notes: this.notesAreaValue } },

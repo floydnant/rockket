@@ -24,7 +24,7 @@
                 <button
                     class="pop-out-action no-filter"
                     title="open details menu"
-                    (click)="data.isCompleted ? showDetails('notes') : editTaskDetails('notes')"
+                    (click)="data.isCompleted ? showDetails('notes') : editDetails('notes')"
                 >
                     <i class="fas fa-ellipsis-h"></i>
                 </button>
@@ -106,7 +106,7 @@
                                 *ngIf="this.data.meta.links.length"
                                 [title]="this.data.meta.links.join('\n')"
                                 class="detail-icon"
-                                (click)="data.isCompleted ? showDetails('links') : editTaskDetails('links')"
+                                (click)="data.isCompleted ? showDetails('links') : editDetails('links')"
                             >
                                 <i class="far fa-external-link-alt"></i>
                                 <i class="fas fa-caret-down" style="margin-left: 0.175em"></i>
@@ -178,7 +178,7 @@
                     title="show{{ this.data.isCompleted ? '' : '/edit' }} task details"
                     class="btn btn-icon btn-edit"
                     (click)="
-                        data.isCompleted ? showDetails() : editTaskDetails();
+                        data.isCompleted ? showDetails() : editDetails();
                         setShowTaskActionButtonsOnTouchDevice(false)
                     "
                     style="--btn-index: 1; --btn-index-reverse: 1"
