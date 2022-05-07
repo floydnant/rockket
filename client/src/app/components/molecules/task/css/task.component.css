@@ -56,8 +56,8 @@
 }
 .task.completed-transition .btn-complete,
 .task.completed .btn-complete:hover {
-    --shadow: var(--box-shadow-s), 0 0 50px 700px hsla(var(--color-hue), 97%, 58%, 0.3);
-    --shadow-transition: box-shadow 400ms ease;
+    --shadow: var(--box-shadow-s), 0 0 50px 100vw hsla(var(--color-hue), 97%, 58%, 0.2);
+    --shadow-transition: box-shadow 400ms ease-out;
 }
 .task:not(.completed, .completed-transition) .btn-complete:not(:hover),
 .task.touchDevice:not(.completed, .completed-transition) .btn-complete {
