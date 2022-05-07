@@ -96,16 +96,17 @@
                             <span
                                 *ngIf="!data.isCompleted || this.data.meta.notes"
                                 class="detail-icon notes-icon"
-                                [class.reveal]="!this.data.meta.notes"
+                                [class.grayscale]="!isDetailsPopOutOpen"
+                                [class.reveal]="!this.data.meta.notes && !isDetailsPopOutOpen"
                                 title="toggle pop-out notes"
                                 (click)="toggleDetailsPopOutOpen()"
                             >
-                                <i class="fa{{isDetailsPopOutOpen ? 's' : 'r'}} fa-comment-alt-lines"></i>
+                                <i class="fa{{this.data.meta.notes ? 's' : 'r'}} fa-comment-alt-lines"></i>
                             </span>
                             <span
                                 *ngIf="this.data.meta.links.length"
                                 [title]="this.data.meta.links.join('\n')"
-                                class="detail-icon"
+                                class="detail-icon grayscale"
                                 (click)="data.isCompleted ? showDetails('links') : editDetails('links')"
                             >
                                 <i class="far fa-external-link-alt"></i>

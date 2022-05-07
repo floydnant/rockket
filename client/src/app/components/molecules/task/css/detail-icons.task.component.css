@@ -44,6 +44,6 @@
     position: relative;
     top: 2px;
 }
-.notes-icon.reveal:not(:hover) {
+.detail-icon:is(.reveal, .grayscale):not(:hover) {
     filter: grayscale(1);
 }
