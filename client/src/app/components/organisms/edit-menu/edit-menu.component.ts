@@ -68,7 +68,7 @@ export class EditMenuComponent implements OnInit {
         if (responseStatus == 'OK') this.isLoading = true;
 
         moveToMacroQueue(() => {
-            this.isOpen = false;
+            setTimeout(() => (this.isOpen = false), 220);
             this.modalService.close('edit-menu');
 
             if (this.type == 'Task' && responseStatus == 'OK') this.addLink();

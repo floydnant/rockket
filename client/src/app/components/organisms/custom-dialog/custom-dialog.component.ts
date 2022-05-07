@@ -29,7 +29,7 @@ export class CustomDialogComponent implements OnInit {
     }
 
     closeDialog(resBtnIndex: number) {
-        this.isOpen = false;
+        setTimeout(() => (this.isOpen = false), 220);
         this.modalService.close('custom-dialog');
 
         this.dialogService.responseHandler({
