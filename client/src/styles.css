@@ -149,14 +149,14 @@ input,
     border: 0;
     border-radius: 10px;
     color: var(--global-background);
-
+    
     --shadow: var(--box-shadow-s);
-    box-shadow: var(--shadow);
+    /* box-shadow: var(--shadow); */
 }
 .input {
     background: var(--global-background);
     color: var(--global-color);
-
+    
     outline: none;
     border: var(--outline-weight) solid var(--outline-clr);
     --outline-clr: gray;
@@ -168,6 +168,7 @@ input,
     --outline-clr: var(--primary-clr);
 }
 .btn {
+    border-radius: 12px;
     --color: var(--clr);
     padding: 7.5px 15px;
     font-weight: 800;
@@ -176,10 +177,13 @@ input,
 
     transition: transform 150ms, background 200ms, color 180ms, filter 150ms;
 }
-body:not(.touchDevice) .btn:hover:not([disabled], .modal-btn),
-body.touchDevice .btn.hover:not([disabled], .modal-btn) {
+body:not(.touchDevice) .btn:hover:not([disabled], .modal-btn) {
     transform: scale(1.09);
     filter: opacity(1) brightness(1);
+    background: var(--clr);
+    --color: var(--global-background);
+}
+body.touchDevice .btn:is(.hover, :active):not([disabled], .modal-btn) {
     background: var(--clr);
     --color: var(--global-background);
 }
@@ -195,11 +199,12 @@ body .btn:active:not([disabled]) {
     justify-content: center;
     align-items: center;
 
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: 650;
     --color: var(--global-color);
     color: var(--color);
 
+    box-shadow: var(--box-shadow-s);
     /* prettier-ignore */
     background: hsl(
         var(--color-hue, var(--secondary-clr-hue)) 
@@ -226,8 +231,13 @@ body .btn:active:not([disabled]) {
     padding: 7px;
     border: none;
     color: var(--color);
-    background: var(--global-background);
-    box-shadow: var(--shadow), 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6);
+    /* background: var(--global-background); */
+    background: transparent;
+    /* box-shadow: var(--shadow), 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6); */
+    /* box-shadow: var(--shadow); */
+}
+.btn-icon:not(:hover) {
+    text-shadow: var(--box-shadow-s);
 }
 .btn-primary {
     --color-hue: var(--primary-clr-hue);

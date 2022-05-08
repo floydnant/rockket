@@ -11,7 +11,8 @@
 .container.dimm {
     filter: opacity(0.6) brightness(0.9);
 }
-.container span:hover {
+.container:not(.touchDevice) span:hover,
+.container.touchDevice span:active {
     filter: unset;
 }
 span {

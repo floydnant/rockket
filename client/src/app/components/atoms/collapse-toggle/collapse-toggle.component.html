@@ -1,4 +1,4 @@
-<div class="container" [class.open]="isOpen" [class.margin]="spacing">
+<div class="container" [class.open]="isOpen" [class.margin]="spacing" [class.touchDevice]="isTouchDevice">
     <span
         class="{{ colorClass }} {{ dimm != 'none' ? dimm : '' }}"
         (click)="this.isOpen = !this.isOpen; onToggle.emit(this.isOpen)"

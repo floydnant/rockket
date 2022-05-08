@@ -58,7 +58,7 @@ export class EditMenuComponent implements OnInit {
                 .confirm({
                     title: 'Abandone changes?',
                     text: "You already made some changes, don't you want to save them?",
-                    buttons: ['Abandone', 'Keep editing', 'Save'],
+                    buttons: ['!Abandone', 'Keep editing', 'Save'],
                 })
                 .catch(err => err);
             if (confirmationResponse == 'Keep editing') return;

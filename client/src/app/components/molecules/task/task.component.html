@@ -65,6 +65,8 @@
         [class.touchDevice]="isTouchDevice"
         [class.completed]="this.isCompleted && this.data.isCompleted"
         [class.completed-transition]="this.isCompleted"
+        [class.highlight-border]="this.isViewingDetails || this.isCompleted || this.isDeleting"
+        style="--border-clr: var(--{{ this.isCompleted ? 'submit': this.isDeleting ? 'danger' : 'primary' }}-clr);"
         [class.alt-bg]="this.taskPosition % 2 == 1"
     >
         <div class="position-completed-at">

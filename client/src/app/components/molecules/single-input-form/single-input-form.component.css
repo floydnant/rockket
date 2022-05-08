@@ -4,7 +4,7 @@
 
 .container {
     /* background: hsla(241, 30%, 39%, 0.788); */
-    border-radius: 10px;
+    border-radius: 12px;
     box-shadow: var(--box-shadow-s);
     
     display: flex;
@@ -18,8 +18,6 @@ input {
     box-sizing: border-box;
     width: 100%;
     
-    /* padding: 6px; */
-    border-radius: 10px;
     color: var(--global-color);
     
     background: none;

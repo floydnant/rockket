@@ -8,13 +8,18 @@
     flex-direction: column-reverse;
 }
 .task {
-    border-radius: 10px;
+    box-sizing: border-box;
+    border-radius: 14px;
     list-style: none;
 
     --background: var(--bg);
     background: var(--background);
-    box-shadow: var(--box-shadow-s);
-    transition: filter 150ms, background 80ms;
+    box-shadow: var(--box-shadow-s), 0 0 0px 0px var(--primary-clr);
+    transition: filter 150ms, background 80ms, box-shadow 200ms;
+}
+.task.highlight-border {
+    --border-clr: var(--primary-clr);
+    box-shadow: var(--box-shadow-s), 0 0 0px 2px var(--border-clr);
 }
 .alt-bg {
     --background: var(--alt-bg);
@@ -40,7 +45,7 @@
     align-items: center;
 
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 14px;
 
     isolation: isolate;
     overflow: hidden;
@@ -50,19 +55,25 @@
     position: relative;
     margin-right: 10px;
 
-    --shadow: var(--box-shadow-s), 0 0 0px 0px hsla(var(--color-hue), 97%, 58%, 0.3);
+    --shadow: 0 0 0px 0px hsla(var(--color-hue), 97%, 58%, 0.3);
     --shadow-transition: box-shadow 300ms ease-in;
+    box-shadow: var(--shadow);
     transition: var(--shadow-transition), transform 200ms, color 200ms, background 200ms;
 }
 .task.completed-transition .btn-complete,
 .task.completed .btn-complete:hover {
-    --shadow: var(--box-shadow-s), 0 0 50px 100vw hsla(var(--color-hue), 97%, 58%, 0.2);
+    --shadow: 0 0 50px 100vw hsla(var(--color-hue), 97%, 58%, 0.2);
     --shadow-transition: box-shadow 400ms ease-out;
+    /* text-shadow: var(--box-shadow-s), 0 0 10px hsla(var(--color-hue), 97%, 58%, 0.3); */
 }
-.task:not(.completed, .completed-transition) .btn-complete:not(:hover),
+.task:is(.completed-transition, .completed):not(.touchDevice) .btn-complete:not(:hover),
+.task.touchDevice:is(.completed-transition, .completed) .btn-complete {
+    background: hsla(var(--color-hue), 97%, 58%, 0.2);
+}
+/* .task:not(.completed, .completed-transition) .btn-complete:not(:hover),
 .task.touchDevice:not(.completed, .completed-transition) .btn-complete {
     color: gray;
-}
+} */
 
 .text-container {
     display: flex;
@@ -121,15 +132,24 @@ menu-toggle-btn {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
+    border-radius: 15px;
     margin: 0;
-    padding: 0;
+    /* padding: 7px; */
     width: max-content;
 
     float: right;
     display: flex;
+
+    transition: background 120ms;
 }
-.btn-group .btn:not(:last-child) {
-    margin: 0 10px 0 0;
+/* .btn-group:hover {
+    background: var(--global-background);
+} */
+.btn-group .btn + .btn {
+    margin-left: 10px;
+}
+.btn-group .btn:not(:hover) {
+    text-shadow: var(--box-shadow-m);
 }
 .task:not(:hover) .btn-group .btn {
     transform: scale(0.5);
@@ -139,5 +159,5 @@ menu-toggle-btn {
 }
 .btn-group .btn:not(:hover) {
     --delay: calc(80ms * var(--btn-index));
-    transition: background 200ms, transform 200ms var(--delay), filter 150ms var(--delay);
+    transition: background 200ms, transform 200ms var(--delay), filter 150ms /* 80ms */var(--delay);
 }

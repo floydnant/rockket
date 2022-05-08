@@ -13,18 +13,15 @@
     place-items: center;
     
     background: hsla(var(--bg-clr-hue), 13%, 11%, 0.5);
+    transition: backdrop-filter 100ms, -webkit-backdrop-filter 100ms, filter 100ms;
 }
 app-modal.open .modal-container {
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
-
-    transition: backdrop-filter 100ms, -webkit-backdrop-filter 100ms, filter 100ms;
 }
 app-modal:not(.open) .modal-container {
     filter: opacity(0);
     pointer-events: none;
-
-    transition: backdrop-filter 200ms, -webkit-backdrop-filter 200ms, filter 200ms;
 }
 
 .modal-body {

@@ -3,8 +3,8 @@
         <theme-toggle></theme-toggle>
     </div>
     <h2>
-        Lists <i class="fad fa-clipboard-list-check"></i>
-        <span *ngIf="isTouchDevice" style="font-size:1rem; color:var(--secondary-clr); margin-left:1rem;" (click)="selectMode = !selectMode">{{selectMode ? 'exit' : 'reorder'}}</span>
+        Lists <!-- <i class="fad fa-clipboard-list-check"></i> -->
+        <span *ngIf="isTouchDevice" style="font-size:1rem; color:var(--secondary-clr); margin-left:1rem;" (click)="selectMode = !selectMode">{{selectMode ? 'done' : 'edit'}}</span>
         <button class="btn btn-secondary btn-icon" style="float: right" (click)="createList()">
             <i class="fas fa-plus"></i>
         </button>

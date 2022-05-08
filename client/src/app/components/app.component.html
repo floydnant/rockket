@@ -31,11 +31,12 @@
             {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
             <div class="btn-group">
                 <button *ngIf="this.activeTaskList" class="btn btn-primary btn-icon" (click)="editList()">
-                    <i class="far fa-ellipsis-v"></i>
+                    <i class="fas fa-ellipsis-v"></i>
                 </button>
                 <button *ngIf="this.activeTaskList" class="btn btn-secondary btn-icon" (click)="db.exportActiveList()">
                     <!-- <i class="far fa-share"></i> -->
-                    <apple-share-icon remove-host></apple-share-icon>
+                    <i class="fas fa-file-download"></i>
+                    <!-- <apple-share-icon remove-host></apple-share-icon> -->
                 </button>
             </div>
         </h1>

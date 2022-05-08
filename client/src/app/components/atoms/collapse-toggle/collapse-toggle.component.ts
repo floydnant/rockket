@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BtnColorClasses } from 'src/app/shared/css-classes.model';
+import { isTouchDevice } from 'src/app/shared/utils';
 
 @Component({
     selector: 'collapse-toggle',
@@ -15,6 +16,8 @@ export class CollapseToggleComponent implements OnInit {
     @Input('noSpacing') spacing: true | '' = true;
 
     @Output() onToggle = new EventEmitter<boolean>();
+
+    isTouchDevice = isTouchDevice();
 
     ngOnInit(): void {}
 }

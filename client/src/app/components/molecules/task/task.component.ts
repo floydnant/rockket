@@ -50,6 +50,17 @@ export class TaskComponent implements OnInit {
     completedTasksCount: number;
     uncompletedTasksCount: number;
 
+    isViewingDetails = false;
+    setIsViewingDetails(isViewing: boolean) {
+        if (isViewing) this.isViewingDetails = true;
+        else setTimeout(() => (this.isViewingDetails = false), 500);
+    }
+    isDeleting = false;
+    setIsDeleting(isDeleting: boolean) {
+        if (isDeleting) this.isDeleting = true;
+        else setTimeout(() => (this.isDeleting = false), 500);
+    }
+
     formattedCompletionDate: string | null;
 
     completeBtnIsHovered = false; //TODO: outsource this into CSS
@@ -186,6 +197,7 @@ export class TaskComponent implements OnInit {
     };
 
     editDetails = (hightlight?: editmenuOptions['hightlight']) => {
+        this.setIsViewingDetails(true);
         this.editMenuService
             .editTaskDetails(
                 { ...this.data, meta: { ...this.data.meta, notes: this.notesAreaValue } },
@@ -193,22 +205,27 @@ export class TaskComponent implements OnInit {
                 hightlight
             )
             .then((updatedTask: Task) => {
+                this.setIsViewingDetails(false);
                 this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask }));
             })
             .catch(err => {
+                this.setIsViewingDetails(false);
                 if (err == 'Deleted') this.deleteTask(this.data.id);
             });
     };
     showDetails = (hightlight?: editmenuOptions['hightlight']) => {
+        this.setIsViewingDetails(true);
         this.editMenuService
             .editTaskDetails(this.data, true, hightlight)
-            .then(() => {})
+            .then(() => this.setIsViewingDetails(false))
             .catch(err => {
+                this.setIsViewingDetails(false);
                 if (err == 'Deleted') this.deleteTask(this.data.id);
             });
     };
 
     deleteTask = (id: string, prompt = true) => {
+        this.setIsDeleting(true);
         const del = () => this.store.dispatch(new AppDataActions.DeleteTask(this.data.id));
         const openSubtasksCount = this.data.subTasks.filter(task => !task.isCompleted).length;
         if (prompt)
@@ -224,7 +241,7 @@ export class TaskComponent implements OnInit {
                     buttons: ['Cancel', '!Delete' + (openSubtasksCount ? ' all' : '')],
                 })
                 .then(() => del())
-                .catch(() => {});
+                .catch(() => this.setIsDeleting(false));
         else del();
     };
 }
