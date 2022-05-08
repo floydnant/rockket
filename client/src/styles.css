@@ -179,9 +179,13 @@ input,
 body:not(.touchDevice) .btn:hover:not([disabled], .modal-btn),
 body.touchDevice .btn.hover:not([disabled], .modal-btn) {
     transform: scale(1.09);
-    filter: opacity(1) brightness(1) !important;
+    filter: opacity(1) brightness(1);
     background: var(--clr);
     --color: var(--global-background);
+}
+body .btn:active:not([disabled]) {
+    filter: opacity(.6) !important;
+    transform: scale(.95) !important;
 }
 
 .modal-btn {
