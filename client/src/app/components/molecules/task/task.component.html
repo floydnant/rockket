@@ -66,7 +66,7 @@
         [class.completed]="this.isCompleted && this.data.isCompleted"
         [class.completed-transition]="this.isCompleted"
         [class.highlight-border]="this.isViewingDetails || this.isCompleted || this.isDeleting"
-        style="--border-clr: var(--{{ this.isCompleted ? 'submit': this.isDeleting ? 'danger' : 'primary' }}-clr);"
+        style="--border-clr: var(--{{ this.isDeleting ? 'danger' : this.isCompleted ? 'submit' :  'primary' }}-clr);"
         [class.alt-bg]="this.taskPosition % 2 == 1"
     >
         <div class="position-completed-at">
@@ -103,7 +103,7 @@
                                 title="toggle pop-out notes"
                                 (click)="toggleDetailsPopOutOpen()"
                             >
-                                <i class="fa{{this.data.meta.notes ? 's' : 'r'}} fa-comment-alt-lines"></i>
+                                <i class="fa{{ this.data.meta.notes ? 's' : 'r' }} fa-comment-alt-lines"></i>
                             </span>
                             <span
                                 *ngIf="this.data.meta.links.length"
@@ -181,8 +181,7 @@
                     title="show{{ this.data.isCompleted ? '' : '/edit' }} task details"
                     class="btn btn-icon btn-edit"
                     (click)="
-                        data.isCompleted ? showDetails() : editDetails();
-                        setShowTaskActionButtonsOnTouchDevice(false)
+                        data.isCompleted ? showDetails() : editDetails(); setShowTaskActionButtonsOnTouchDevice(false)
                     "
                     style="--btn-index: 1; --btn-index-reverse: 1"
                 >
@@ -210,18 +209,11 @@
             </menu-toggle-btn>
         </div>
         <div class="position-task-progress">
-            <div class="task-progress-container">
-                <div *ngIf="data.subTasks.length" class="task-progress">
-                    <span
-                        class="submit-clr"
-                        [style]="'width:' + (completedTasksCount / data.subTasks.length) * 100 + '%;'"
-                    ></span>
-                    <span
-                        class="secondary-clr"
-                        [style]="'width:' + (uncompletedTasksCount / data.subTasks.length) * 100 + '%;'"
-                    ></span>
-                </div>
-            </div>
+            <task-progress
+                [tasksCount]="data.subTasks.length"
+                [completedTasksCount]="completedTasksCount"
+                [uncompletedTasksCount]="uncompletedTasksCount"
+            ></task-progress>
         </div>
     </li>
 </div>
@@ -237,4 +229,5 @@
     [focusChangeEvents]="quickAddInputFieldEventSubject"
     (onAddSubtask)="addSubTask($event)"
     (onToggleCollapseCompleted)="toggleCollapseCompletedSubtasks()"
+    (completion)="onSubtaskCompletion($event)"
 ></task-list>

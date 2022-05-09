@@ -3,6 +3,7 @@
         *ngFor="let task of this.uncompletedTasks; let i = index"
         [data]="task"
         [taskPosition]="(variant == 'subtask' ? this.taskPosition - 1 : 0) + i"
+        (completion)="this.onTaskCompletion($event)"
     ></task>
 
     <single-input-form
@@ -26,6 +27,7 @@
             *ngFor="let task of this.completedTasks; let i = index"
             [data]="task"
             [taskPosition]="(variant == 'subtask' ? this.taskPosition + 1 : 0) + i + this.uncompletedTasks.length"
+            (completion)="this.onTaskCompletion($event)"
         ></task>
     </div>
 </ul>

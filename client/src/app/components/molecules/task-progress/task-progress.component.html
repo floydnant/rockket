@@ -1,0 +1,9 @@
+<div class="task-progress-container">
+    <div *ngIf="tasksCount || showAlways" class="task-progress">
+        <span class="submit-clr" [style]="'width:' + (completedTasksCount / tasksCount) * 100 + '%;'"></span>
+        <span
+            class="secondary-clr"
+            [style]="'width:' + (tasksCount ? uncompletedTasksCount / tasksCount : 1) * 100 + '%;'"
+        ></span>
+    </div>
+</div>

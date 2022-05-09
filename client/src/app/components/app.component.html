@@ -14,6 +14,12 @@
         [isOpen]="isMobileMenuOpen"
         (onMenuToggle)="setMobileMenuOpen($event)"
     ></menu-toggle-btn>
+    <task-progress
+        [tasksCount]="activeTaskList.list.length"
+        [completedTasksCount]="completedTasksCount"
+        [uncompletedTasksCount]="uncompletedTasksCount"
+        [showAlways]="true"
+    ></task-progress>
 </div>
 <div class="container">
     <div class="side-container" [class.open]="isMobileMenuOpen">
@@ -61,6 +67,7 @@
                 [focusChangeEvents]="this.quickAddInputField.focusEventsSubject[1]"
                 (onToggleCollapseCompleted)="showCompleted = !showCompleted"
                 (onAddSubtask)="addTask[1]($event)"
+                (completion)="onTaskCompletion($event)"
             ></task-list>
         </section>
     </main>

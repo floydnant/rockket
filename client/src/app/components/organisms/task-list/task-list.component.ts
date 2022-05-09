@@ -42,6 +42,11 @@ export class TasklistComponent implements OnInit, OnChanges {
         else document.querySelector<HTMLInputElement>('#_' + this.id)?.blur();
     };
 
+    @Output() completion = new EventEmitter<boolean>();
+    onTaskCompletion(isCompleted: boolean) {
+        this.completion.emit(isCompleted);
+    }
+
     private initData() {
         this.tasklist ||= [];
         this.uncompletedTasks = this.tasklist.filter(task => !task.isCompleted);

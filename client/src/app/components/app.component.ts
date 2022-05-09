@@ -11,8 +11,6 @@ import { ModalService } from './molecules/modal/modal.service';
 import { DialogService } from './organisms/custom-dialog';
 import { EditMenuService } from './organisms/edit-menu';
 
-
-
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -29,6 +27,8 @@ export class AppComponent {
         this.store.subscribe(data => {
             this.data = data.appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
+            this.completedTasksCount = this.activeTaskList.list.filter(t => t.isCompleted).length;
+            this.uncompletedTasksCount = this.activeTaskList.list.filter(t => !t.isCompleted).length;
 
             console.log('%cupdated state:', 'color: gray', this.data);
 
@@ -39,6 +39,8 @@ export class AppComponent {
     }
 
     data: AppData;
+    completedTasksCount: number;
+    uncompletedTasksCount: number;
     activeTaskList: TaskList | undefined;
     taskNameInput: string;
 
@@ -68,6 +70,16 @@ export class AppComponent {
             }
         };
         return recurse(taskId, taskList);
+    }
+
+    onTaskCompletion(isCompleted: boolean) {
+        if (isCompleted) {
+            this.completedTasksCount++;
+            this.uncompletedTasksCount--;
+        } else {
+            this.completedTasksCount--;
+            this.uncompletedTasksCount++;
+        }
     }
 
     dispatchCreateTask = (newTaskName: string) =>

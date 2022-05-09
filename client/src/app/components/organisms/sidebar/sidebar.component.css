@@ -1,4 +1,4 @@
-:host { 
+:host {
     display: block;
     width: 100%;
     /* height: calc(100% - 100px); */
@@ -54,7 +54,6 @@
     }
 }
 
-
 .sidebar h2 {
     margin-top: 0;
     margin-bottom: 10px;
@@ -93,8 +92,8 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    
-    background: var(--global-item-bg);  
+
+    background: var(--global-item-bg);
     box-shadow: var(--box-shadow-s);
     transition: background 180ms, box-shadow 180ms, filter 180ms, color 180ms, transform 180ms;
 }
@@ -115,7 +114,7 @@
     filter: opacity(0.8);
 }
 .list:hover {
-    background: var(--global-item-bg-highlight)
+    background: var(--global-item-bg-highlight);
 }
 .list.cdk-drag-preview {
     box-sizing: border-box;
@@ -123,7 +122,7 @@
     transition: background 180ms, box-shadow 180ms, filter 180ms, color 180ms;
 }
 .list.cdk-drag-placeholder {
-    opacity: .3;
+    opacity: 0.3;
     /* opacity: 0; */
 }
 .list.cdk-drag-animating {

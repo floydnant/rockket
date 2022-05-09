@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { TaskUiState, UiStateService } from 'src/app/services/ui-state.service';
@@ -150,6 +150,7 @@ export class TaskComponent implements OnInit {
         );
     }
 
+    @Output() completion = new EventEmitter<boolean>();
     isCompleted: boolean;
     toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
     private setCompleted = (status: boolean) => {
@@ -157,6 +158,7 @@ export class TaskComponent implements OnInit {
         const dispatchAction = (completeAllSubtasks = false) => {
             if (status && (!openSubtasksLeft || completeAllSubtasks)) this.toggleCollapseSubtaskList(true);
             this.isCompleted = status;
+            this.completion.emit(status);
 
             setTimeout(() => {
                 this.store.dispatch(new AppDataActions.SetCompleted(this.data.id, status, completeAllSubtasks));
@@ -174,6 +176,15 @@ export class TaskComponent implements OnInit {
                 .catch(clickedButton => clickedButton == 'Keep uncompleted' && dispatchAction());
         else dispatchAction();
     };
+    onSubtaskCompletion(isCompleted: boolean) {
+        if (isCompleted) {
+            this.completedTasksCount++;
+            this.uncompletedTasksCount--;
+        } else {
+            this.completedTasksCount--;
+            this.uncompletedTasksCount++;
+        }
+    }
 
     setPriority(priority: number) {
         this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, priority }));

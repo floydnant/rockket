@@ -1,5 +1,7 @@
 .tasklist {
     margin-top: 10px;
+    border-radius: 0 0 14px 14px;
+    padding-bottom: 2px;
 }
 .tasklist:not(.subtasks) {
     padding: 0;

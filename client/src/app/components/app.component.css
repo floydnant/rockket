@@ -38,23 +38,28 @@
 
 .top-bar {
     z-index: 20;
-    width: 100vw;
     box-sizing: border-box;
     position: sticky;
     top: 0px;
     left: 0px;
     right: 0;
+    width: 100vw;
+
     padding: 10px;
     padding-left: 20px;
+    color: white;
+    border-radius: 0 0 15px 15px;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    background: var(--secondary-clr);
-    box-shadow: var(--box-shadow-s);
-    color: white;
-    border-radius: 0 0 15px 15px;
+    /* background: var(--secondary-clr); */
+    background: var(--global-background);
+    /* border-width: 0 0px 1px;
+    border-style: solid;
+    border-color: var(--submit-clr); */
+    /* box-shadow: var(--box-shadow-s), 0 -5px 5px -5px var(--secondary-clr) inset; */
     transition: transform 180ms ease-in-out;
 }
 .top-bar.sidebar-is-open {

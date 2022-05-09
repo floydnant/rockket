@@ -28,6 +28,7 @@ import { PriorityIconComponent } from './components/atoms/priority-icon/priority
 import { ToggleSwitchComponent } from './components/atoms/toggle-switch/toggle-switch.component';
 import { AppleShareIconComponent } from './components/atoms/apple-share-icon/apple-share-icon.component';
 import { TasklistComponent } from './components/organisms/task-list/task-list.component';
+import { TaskProgressComponent } from './components/molecules/task-progress/task-progress.component';
 
 @NgModule({
     declarations: [
@@ -47,6 +48,7 @@ import { TasklistComponent } from './components/organisms/task-list/task-list.co
         ToggleSwitchComponent,
         AppleShareIconComponent,
         TasklistComponent,
+        TaskProgressComponent,
     ],
     imports: [
         DragDropModule,

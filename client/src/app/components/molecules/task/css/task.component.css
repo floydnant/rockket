@@ -2,6 +2,8 @@
     display: block;
     --bg: var(--global-item-bg);
     --alt-bg: var(--global-item-bg-alt);
+    /* background: var(--global-item-bg-highlight); */
+    border-radius: 14px;
 }
 .task-wrapper {
     display: flex;
