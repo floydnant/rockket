@@ -5,6 +5,7 @@
 .container {
     /* background: hsla(241, 30%, 39%, 0.788); */
     border-radius: 12px;
+    overflow: hidden;
     box-shadow: var(--box-shadow-s);
     
     display: flex;
@@ -34,12 +35,11 @@ button {
     width: unset;
     margin-left: 10px;
     
-    border-radius: 10px;
     font-size: 15px;
     /* padding: 6px 15px; */
     
     transform: unset !important;
-    box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50% / 0.6);
+    box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50%) inset;
     transition: all 180ms, color 200ms;
     transform-origin: right;
     opacity: 1;

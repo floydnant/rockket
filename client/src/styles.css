@@ -92,7 +92,7 @@ body {
     background: var(--global-background);
 }
 ::-webkit-scrollbar-thumb {
-    background: var(--secondary-clr);
+    background: hsl(var(--secondary-clr-hue) 100% 50% / .4);
     border-radius: 100vh;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -147,7 +147,7 @@ input,
     font-size: 16px;
     padding: 7.5px;
     border: 0;
-    border-radius: 10px;
+    border-radius: 12px;
     color: var(--global-background);
     
     --shadow: var(--box-shadow-s);
@@ -168,7 +168,6 @@ input,
     --outline-clr: var(--primary-clr);
 }
 .btn {
-    border-radius: 12px;
     --color: var(--clr);
     padding: 7.5px 15px;
     font-weight: 800;

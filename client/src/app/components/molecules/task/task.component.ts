@@ -50,6 +50,13 @@ export class TaskComponent implements OnInit {
     completedTasksCount: number;
     uncompletedTasksCount: number;
 
+    updatedName: string;
+    updateTaskName() {
+        if (this.updatedName != this.data.name)
+            this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, name: this.updatedName }));
+    }
+
+    isFocused = false;
     isViewingDetails = false;
     setIsViewingDetails(isViewing: boolean) {
         if (isViewing) this.isViewingDetails = true;

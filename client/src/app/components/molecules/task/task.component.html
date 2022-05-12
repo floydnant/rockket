@@ -65,8 +65,9 @@
         [class.touchDevice]="isTouchDevice"
         [class.completed]="this.isCompleted && this.data.isCompleted"
         [class.completed-transition]="this.isCompleted"
-        [class.highlight-border]="this.isViewingDetails || this.isCompleted || this.isDeleting"
-        style="--border-clr: var(--{{ this.isDeleting ? 'danger' : this.isCompleted ? 'submit' :  'primary' }}-clr);"
+        [class.is-focused]="isFocused"
+        [class.highlight-border]="this.isViewingDetails || isFocused || this.isCompleted || this.isDeleting"
+        style="--border-clr: var(--{{ this.isDeleting ? 'danger' : this.isCompleted ? 'submit' : 'primary' }}-clr);"
         [class.alt-bg]="this.taskPosition % 2 == 1"
     >
         <div class="position-completed-at">
@@ -104,6 +105,7 @@
                                 (click)="toggleDetailsPopOutOpen()"
                             >
                                 <i class="fa{{ this.data.meta.notes ? 's' : 'r' }} fa-comment-alt-lines"></i>
+                                <!-- <i class="fa{{ this.data.meta.notes ? 's' : 'r' }} fa-memo-circle-info"></i> -->
                             </span>
                             <span
                                 *ngIf="this.data.meta.links.length"
@@ -120,7 +122,7 @@
                         <span
                             *ngIf="!isCompleted"
                             class="position-priority-icon"
-                            [class.reveal-on-hover]="data.priority == 0"
+                            [class.reveal-on-hover]="data.priority == 0 && !isFocused"
                         >
                             <priority-icon
                                 [priority]="data.priority"
@@ -128,9 +130,24 @@
                                 (change)="setPriority($event)"
                             ></priority-icon>
                         </span>
-                        <span class="taskName">
-                            {{ this.data.name }}
-                        </span>
+
+                        <!-- <span>
+                            <template [ngTemplateOutlet]="detailIcons"></template>
+                        </span> -->
+
+                        <span
+                            #taskName
+                            class="taskName"
+                            [contentEditable]="!isCompleted"
+                            (textChanges)="this.updatedName = $event"
+                            [domChangesOptions]="{ plainOnly: true, observe: isFocused }"
+                            (keydown.Enter)="taskName.blur()"
+                            (keydown.Escape)="updatedName = data.name; taskName.innerText = data.name; taskName.blur()"
+                            (focus)="isFocused = true; updatedName = data.name"
+                            (blur)="isFocused = false; updateTaskName()"
+                            >{{ this.data.name }}</span
+                        >
+
                         <span *ngIf="!data.subTasks.length" class="first-row-detailIcons">
                             <template [ngTemplateOutlet]="detailIcons"></template>
                         </span>

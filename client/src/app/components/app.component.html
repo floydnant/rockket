@@ -45,6 +45,13 @@
                     <!-- <apple-share-icon remove-host></apple-share-icon> -->
                 </button>
             </div>
+            <task-progress
+                *ngIf="!isTouchDevice"
+                [tasksCount]="activeTaskList.list.length"
+                [completedTasksCount]="completedTasksCount"
+                [uncompletedTasksCount]="uncompletedTasksCount"
+                [showAlways]="true"
+            ></task-progress>
         </h1>
 
         <single-input-form

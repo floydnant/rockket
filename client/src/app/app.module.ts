@@ -29,6 +29,8 @@ import { ToggleSwitchComponent } from './components/atoms/toggle-switch/toggle-s
 import { AppleShareIconComponent } from './components/atoms/apple-share-icon/apple-share-icon.component';
 import { TasklistComponent } from './components/organisms/task-list/task-list.component';
 import { TaskProgressComponent } from './components/molecules/task-progress/task-progress.component';
+import { DomValueAccessorDirective } from './directives/dom-value-accessor.directive';
+import { DomChangesListenerDirective } from './directives/dom-changes-listener.directive';
 
 @NgModule({
     declarations: [
@@ -49,6 +51,8 @@ import { TaskProgressComponent } from './components/molecules/task-progress/task
         AppleShareIconComponent,
         TasklistComponent,
         TaskProgressComponent,
+        DomValueAccessorDirective,
+        DomChangesListenerDirective,
     ],
     imports: [
         DragDropModule,

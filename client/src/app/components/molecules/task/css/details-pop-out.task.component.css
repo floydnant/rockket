@@ -5,7 +5,7 @@
     padding: 0;
     border-color: transparent;
 
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 14px 14px;
     box-shadow: var(--box-shadow-s);
     cursor: pointer;
     transition: border-color 180ms;
@@ -28,7 +28,7 @@
 
     color: var(--global-color);
     border-top: none !important;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 14px 14px;
     padding: 10px;
     padding-bottom: 10px;
 
@@ -72,7 +72,7 @@
     transition: color 130ms, filter 130ms;
 }
 .pop-out-action:hover {
-    color: var(--color, var(--secondary-clr));
+    color: var(--color, var(--primary-clr));
 }
 
 .pop-out-action:not(.no-filter):hover {

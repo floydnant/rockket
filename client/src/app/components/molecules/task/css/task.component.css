@@ -26,7 +26,7 @@
 .alt-bg {
     --background: var(--alt-bg);
 }
-.task:not(.touchDevice):hover {
+.task:not(.touchDevice, .is-focused):hover {
     --background: var(--global-item-bg-highlight) !important;
 }
 .task.completed {
@@ -90,7 +90,8 @@ p {
 
 p .taskName {
     position: relative;
-    margin-right: 0.2rem;
+    padding-right: 0.4rem;
+    outline: none;
 }
 p .taskName::before {
     content: "";
@@ -153,7 +154,10 @@ menu-toggle-btn {
 .btn-group .btn:not(:hover) {
     text-shadow: var(--box-shadow-m);
 }
-.task:not(:hover) .btn-group .btn {
+.task.is-focused .btn-group {
+    pointer-events: none;
+}
+.task:is(:not(:hover), .is-focused) .btn-group .btn {
     transform: scale(0.5);
     filter: opacity(0);
 
@@ -162,4 +166,8 @@ menu-toggle-btn {
 .btn-group .btn:not(:hover) {
     --delay: calc(80ms * var(--btn-index));
     transition: background 200ms, transform 200ms var(--delay), filter 150ms /* 80ms */var(--delay);
+}
+
+.position-task-progress {
+    position: relative;
 }

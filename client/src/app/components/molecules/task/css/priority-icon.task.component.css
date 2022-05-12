@@ -16,6 +16,9 @@
 .reveal-on-hover priority-icon {
     opacity: 0;
 }
+span:not(.reveal-on-hover) priority-icon {
+    margin-right: 10px;
+}
 .task:not(.touchDevice):hover .reveal-on-hover priority-icon {
     opacity: 1;
 }
@@ -26,5 +29,5 @@
 }
 .task:not(.touchDevice):hover .reveal-on-hover ~ *:not(.first-row-detailIcons) {
     transition: left 200ms 0.7s ease-in;
-    left: 20px;
+    left: 26px;
 }
