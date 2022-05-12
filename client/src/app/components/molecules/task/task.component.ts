@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
+import { TasksService } from 'src/app/services/tasks.service';
 import { TaskUiState, UiStateService } from 'src/app/services/ui-state.service';
 import { AppData, AppDataActions } from '../../../reducers';
 import { Task } from '../../../shared/task.model';
@@ -17,7 +18,6 @@ import { ModalService } from '../modal/modal.service';
     styleUrls: [
         './css/task.component.css',
         './css/priority-icon.task.component.css',
-        './css/task-progress.task.component.css',
         './css/details-pop-out.task.component.css',
         './css/detail-icons.task.component.css',
         './css/completed-at.task.component.css',
@@ -27,6 +27,7 @@ export class TaskComponent implements OnInit {
     constructor(
         public modalService: ModalService,
         private store: Store<AppData>,
+        private tasksService: TasksService,
         private dialogService: DialogService,
         private editMenuService: EditMenuService,
         private uiStateService: UiStateService
@@ -50,10 +51,10 @@ export class TaskComponent implements OnInit {
     completedTasksCount: number;
     uncompletedTasksCount: number;
 
-    updatedName: string;
+    updatedTaskName: string;
     updateTaskName() {
-        if (this.updatedName != this.data.name)
-            this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, name: this.updatedName }));
+        if (this.updatedTaskName != this.data.name)
+            this.tasksService.updateTaskDetails({ ...this.data, name: this.updatedTaskName });
     }
 
     isFocused = false;
@@ -149,39 +150,27 @@ export class TaskComponent implements OnInit {
     updateNotes() {
         if (this.notesAreaValue == this.data.meta.notes) return;
 
-        this.store.dispatch(
-            new AppDataActions.EditTask(this.data.id, {
-                ...this.data,
-                meta: { ...this.data.meta, notes: this.notesAreaValue },
-            })
-        );
+        this.tasksService.updateTaskDetails({
+            ...this.data,
+            meta: { ...this.data.meta, notes: this.notesAreaValue },
+        });
     }
 
     @Output() completion = new EventEmitter<boolean>();
     isCompleted: boolean;
     toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
-    private setCompleted = (status: boolean) => {
-        const openSubtasksLeft = !this.data.isCompleted && countTasksRecursive(this.data.subTasks) > 0;
-        const dispatchAction = (completeAllSubtasks = false) => {
-            if (status && (!openSubtasksLeft || completeAllSubtasks)) this.toggleCollapseSubtaskList(true);
-            this.isCompleted = status;
-            this.completion.emit(status);
+    private setCompleted = async (nowCompleted: boolean) => {
+        const { changedStatus, collapseSubtaskList } = await this.tasksService.updateTaskStatus(this.data.id, {
+            nowCompleted,
+            wasCompletedBefore: this.data.isCompleted,
+            hasOpenSubtasks: countTasksRecursive(this.data.subTasks) > 0,
+        });
 
-            setTimeout(() => {
-                this.store.dispatch(new AppDataActions.SetCompleted(this.data.id, status, completeAllSubtasks));
-            }, 600);
-        };
-
-        if (openSubtasksLeft)
-            this.dialogService
-                .confirm({
-                    title: 'Open subtasks left!',
-                    text: 'Do you want to mark all subtasks as completed too?',
-                    buttons: ['Keep uncompleted', 'Cancel', 'OK'],
-                })
-                .then(() => dispatchAction(true))
-                .catch(clickedButton => clickedButton == 'Keep uncompleted' && dispatchAction());
-        else dispatchAction();
+        if (changedStatus) {
+            this.isCompleted = nowCompleted;
+            this.completion.emit(nowCompleted);
+            if (collapseSubtaskList) this.toggleCollapseSubtaskList(true);
+        }
     };
     onSubtaskCompletion(isCompleted: boolean) {
         if (isCompleted) {
@@ -194,72 +183,29 @@ export class TaskComponent implements OnInit {
     }
 
     setPriority(priority: number) {
-        this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, priority }));
+        this.tasksService.updateTaskDetails({ ...this.data, priority });
     }
 
-    addSubTask = (newTaskName?: string) => {
-        const dispatchNewSubtaskAction = (newTaskName: string) =>
-            this.store.dispatch(new AppDataActions.AddSubtask(this.data.id, newTaskName));
+    async addSubTask(newTaskName?: string) {
+        const { created } = await this.tasksService.addSubtask(this.data.id, newTaskName);
+        if (created) this.focusQuickAddInputField();
+    }
 
-        if (newTaskName) {
-            dispatchNewSubtaskAction(newTaskName);
-            this.focusQuickAddInputField();
-        } else
-            this.dialogService
-                .prompt({ title: 'Create new subtask:', buttons: ['Cancel', 'Create'], placeholder: 'subtask name' })
-                .then((newTaskName: string) => {
-                    dispatchNewSubtaskAction(newTaskName);
-                    this.focusQuickAddInputField();
-                })
-                .catch(() => {});
-    };
-
-    editDetails = (hightlight?: editmenuOptions['hightlight']) => {
+    async openDetails(allowEdit: boolean, highlight?: editmenuOptions['hightlight']) {
         this.setIsViewingDetails(true);
-        this.editMenuService
-            .editTaskDetails(
-                { ...this.data, meta: { ...this.data.meta, notes: this.notesAreaValue } },
-                false,
-                hightlight
-            )
-            .then((updatedTask: Task) => {
-                this.setIsViewingDetails(false);
-                this.store.dispatch(new AppDataActions.EditTask(this.data.id, { ...this.data, ...updatedTask }));
-            })
-            .catch(err => {
-                this.setIsViewingDetails(false);
-                if (err == 'Deleted') this.deleteTask(this.data.id);
-            });
-    };
-    showDetails = (hightlight?: editmenuOptions['hightlight']) => {
-        this.setIsViewingDetails(true);
-        this.editMenuService
-            .editTaskDetails(this.data, true, hightlight)
-            .then(() => this.setIsViewingDetails(false))
-            .catch(err => {
-                this.setIsViewingDetails(false);
-                if (err == 'Deleted') this.deleteTask(this.data.id);
-            });
+        await this.tasksService.openTaskDetails(
+            { ...this.data, meta: { ...this.data.meta, notes: this.notesAreaValue } },
+            allowEdit,
+            highlight
+        );
+        this.setIsViewingDetails(false);
     };
 
-    deleteTask = (id: string, prompt = true) => {
+    async deleteTask() {
         this.setIsDeleting(true);
-        const del = () => this.store.dispatch(new AppDataActions.DeleteTask(this.data.id));
-        const openSubtasksCount = this.data.subTasks.filter(task => !task.isCompleted).length;
-        if (prompt)
-            // TODO: make this an inline prompt / hold to delete
-            this.dialogService
-                .confirm({
-                    title: `Delete this task?`,
-                    text: openSubtasksCount
-                        ? `and ${openSubtasksCount > 1 ? `all ` : ''}it's ${openSubtasksCount} open ${
-                              openSubtasksCount > 1 ? `subtasks` : 'subtask'
-                          }?`
-                        : null,
-                    buttons: ['Cancel', '!Delete' + (openSubtasksCount ? ' all' : '')],
-                })
-                .then(() => del())
-                .catch(() => this.setIsDeleting(false));
-        else del();
-    };
+
+        // TODO: make this an inline prompt / hold to delete
+        await this.tasksService.deleteTask(this.data.id, this.uncompletedTasksCount);
+        this.setIsDeleting(false);
+    }
 }

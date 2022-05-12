@@ -23,8 +23,8 @@
             <div class="pop-out-actions-container">
                 <button
                     class="pop-out-action no-filter"
-                    title="open details menu"
-                    (click)="data.isCompleted ? showDetails('notes') : editDetails('notes')"
+                    title="open task details"
+                    (click)="openDetails(!data.isCompleted, 'notes')"
                 >
                     <i class="fas fa-ellipsis-h"></i>
                 </button>
@@ -111,7 +111,7 @@
                                 *ngIf="this.data.meta.links.length"
                                 [title]="this.data.meta.links.join('\n')"
                                 class="detail-icon grayscale"
-                                (click)="data.isCompleted ? showDetails('links') : editDetails('links')"
+                                (click)="openDetails(!data.isCompleted, 'links')"
                             >
                                 <i class="far fa-external-link-alt"></i>
                                 <i class="fas fa-caret-down" style="margin-left: 0.175em"></i>
@@ -139,11 +139,13 @@
                             #taskName
                             class="taskName"
                             [contentEditable]="!isCompleted"
-                            (textChanges)="this.updatedName = $event"
+                            (textChanges)="updatedTaskName = $event"
                             [domChangesOptions]="{ plainOnly: true, observe: isFocused }"
                             (keydown.Enter)="taskName.blur()"
-                            (keydown.Escape)="updatedName = data.name; taskName.innerText = data.name; taskName.blur()"
-                            (focus)="isFocused = true; updatedName = data.name"
+                            (keydown.Escape)="
+                                updatedTaskName = data.name; taskName.innerText = data.name; taskName.blur()
+                            "
+                            (focus)="isFocused = true; updatedTaskName = data.name"
                             (blur)="isFocused = false; updateTaskName()"
                             >{{ this.data.name }}</span
                         >
@@ -195,18 +197,16 @@
                 >
                     <i class="fas fa-plus"></i></button
                 ><button
-                    title="show{{ this.data.isCompleted ? '' : '/edit' }} task details"
+                    title="open task details"
                     class="btn btn-icon btn-edit"
-                    (click)="
-                        data.isCompleted ? showDetails() : editDetails(); setShowTaskActionButtonsOnTouchDevice(false)
-                    "
+                    (click)="openDetails(!data.isCompleted); setShowTaskActionButtonsOnTouchDevice(false)"
                     style="--btn-index: 1; --btn-index-reverse: 1"
                 >
                     <i class="fas fa-ellipsis-v"></i></button
                 ><button
                     title="delete task"
                     class="btn btn-icon btn-delete"
-                    (click)="deleteTask(this.data.id); setShowTaskActionButtonsOnTouchDevice(false)"
+                    (click)="deleteTask(); setShowTaskActionButtonsOnTouchDevice(false)"
                     style="--btn-index: 0; --btn-index-reverse: 2"
                 >
                     <i class="far fa-trash-alt"></i>
