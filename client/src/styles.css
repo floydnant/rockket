@@ -95,7 +95,7 @@ body {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: hsl(var(--secondary-clr-hue) 100% 50% / .4);
+    background: var(--tinted-gray-600);
     border-radius: 100vh;
 }
 ::-webkit-scrollbar-thumb:hover {

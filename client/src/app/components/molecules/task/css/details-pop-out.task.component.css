@@ -42,7 +42,7 @@
     --outline-clr: var(--tinted-gray-600);
 }
 ::-webkit-scrollbar-thumb {
-    background: hsl(var(--secondary-clr-hue) 100% 50% / .8);
+    background: var(--tinted-gray-400);
 }
 
 .position-pop-out-actions {
