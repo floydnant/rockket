@@ -27,8 +27,7 @@
             [data]="this.data"
             (onSetActiveList)="setActiveList($event)"
             (onCreateList)="createList()"
-            (onExportData)="(null)"
-            (onImportData)="db.importJson($event)"
+            (onImportData)="importJson($event)"
             (onListSort)="sortLists($event)"
         ></sidebar>
     </div>
@@ -39,7 +38,7 @@
                 <button *ngIf="this.activeTaskList" class="btn btn-primary btn-icon" (click)="editList()">
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
-                <button *ngIf="this.activeTaskList" class="btn btn-secondary btn-icon" (click)="db.exportActiveList()">
+                <button *ngIf="this.activeTaskList" class="btn btn-secondary btn-icon" (click)="exportActiveList()">
                     <!-- <i class="far fa-share"></i> -->
                     <i class="fas fa-file-download"></i>
                     <!-- <apple-share-icon remove-host></apple-share-icon> -->

@@ -17,11 +17,9 @@ export class TasksService {
         private editMenuService: EditMenuService
     ) {}
 
-    // [X] update task completed status
-    // [X] update task details
-    // [ ] edit/view task details
-    // [X] add subtask
-    // [X] delete task
+    createTask(listId: string, taskName: string) {
+        this.store.dispatch(new AppDataActions.CreateTask(listId, taskName));
+    }
 
     async updateTaskStatus(
         taskId: string,
@@ -105,5 +103,20 @@ export class TasksService {
         } catch {
             return { deleted: false };
         }
+    }
+
+    getTaskById(taskId: string, taskList: Task[], getParentArr = false) {
+        const recurse = (taskId: string, arr: Task[]): Task | Task[] | void => {
+            for (let i in arr) {
+                const task: Task = arr[i];
+
+                if (task.id == taskId) return getParentArr ? arr : task;
+                else if (task.subTasks.length != 0) {
+                    const taskRef = recurse(taskId, task.subTasks);
+                    if (taskRef) return taskRef;
+                }
+            }
+        };
+        return recurse(taskId, taskList);
     }
 }
