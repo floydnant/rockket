@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { DialogService } from '../components/organisms/custom-dialog';
+import { DialogService } from '../components/organisms/dialog';
 import { EditMenuService } from '../components/organisms/edit-menu';
 import { AppDataActions, AppState } from '../reducers';
 import { TaskList } from '../shared/taskList.model';

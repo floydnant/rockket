@@ -1,10 +1,10 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { DialogService } from '../custom-dialog';
+import { DialogService } from '../dialog';
 import { ModalService } from '../../molecules/modal/modal.service';
 import { TaskMeta } from '../../../shared/task.model';
 import { Compare, getCopyOf, moveToMacroQueue, repeatAfterDelay, validateAndFormatUrl } from '../../../shared/utils';
 import { editmenuOptions, EditmenuTaskData, responseHandlerInterface, EditmenuTasklistData } from './edit-menu.model';
-import { EditMenuService } from './edit-menu.service';
+import { EditMenuService } from '../../../services/edit-menu.service';
 
 @Component({
     selector: 'edit-menu',

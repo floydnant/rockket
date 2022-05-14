@@ -15,7 +15,7 @@ import { SidebarComponent } from './components/organisms/sidebar/sidebar.compone
 import { EditMenuComponent } from './components/organisms/edit-menu/edit-menu.component';
 import { TaskComponent } from './components/molecules/task/task.component';
 import { ModalComponent } from './components/molecules/modal/modal.component';
-import { CustomDialogComponent } from './components/organisms/custom-dialog/custom-dialog.component';
+import { CustomDialogComponent } from './components/organisms/dialog/dialog.component';
 import { environment } from '../environments/environment';
 import { AppDataEffects } from './reducers/appData/appData.effects';
 import { ThemeToggleComponent } from './components/atoms/theme-toggle/theme-toggle.component';

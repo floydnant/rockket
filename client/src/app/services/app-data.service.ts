@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { downloadObjectAsJson, generateId } from 'src/app/shared/utils';
-import { DialogService } from '../components/organisms/custom-dialog';
+import { DialogService } from '../components/organisms/dialog';
 
 import { AppDataActions } from '../reducers/appData';
 import { AppData, AppState } from '../reducers/appData/appData.model';

@@ -1,1 +1,1 @@
-export * from './edit-menu.service';
+export * from '../../../services/edit-menu.service';

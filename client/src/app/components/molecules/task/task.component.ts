@@ -7,9 +7,9 @@ import { AppData, AppDataActions } from '../../../reducers';
 import { Task } from '../../../shared/task.model';
 import { countTasks, countTasksRecursive } from '../../../shared/taskList.model';
 import { formatDateRelative, isTouchDevice, moveToMacroQueue } from '../../../shared/utils';
-import { DialogService } from '../../organisms/custom-dialog';
+import { DialogService } from '../../organisms/dialog';
 import { editmenuOptions } from '../../organisms/edit-menu/edit-menu.model';
-import { EditMenuService } from '../../organisms/edit-menu/edit-menu.service';
+import { EditMenuService } from '../../../services/edit-menu.service';
 import { ModalService } from '../modal/modal.service';
 
 @Component({

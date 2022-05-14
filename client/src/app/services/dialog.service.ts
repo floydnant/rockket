@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Task } from '../../../shared/task.model';
-import { CustomDialogComponent } from './custom-dialog.component';
+import { Task } from '../shared/task.model';
+import { CustomDialogComponent } from '../components/organisms/dialog/dialog.component';
 import {
     CustomDialogConfirmOptions,
     CustomDialogFilterArray_filterItem,
     CustomDialogFilterArrayOptions,
     CustomDialogPromptOptions,
     responseHandlerInterface,
-} from './custom-dialog.model';
+} from '../components/organisms/dialog/dialog.model';
 
 @Injectable({
     providedIn: 'root',

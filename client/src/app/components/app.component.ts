@@ -10,7 +10,7 @@ import { Task } from '../shared/task.model';
 import { TaskList } from '../shared/taskList.model';
 import { isTouchDevice, shortenText } from '../shared/utils';
 import { ModalService } from './molecules/modal/modal.service';
-import { DialogService } from './organisms/custom-dialog';
+import { DialogService } from './organisms/dialog';
 import { EditMenuService } from './organisms/edit-menu';
 
 @Component({

@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
-import { EditMenuComponent } from './edit-menu.component';
-import { editmenuOptions, EditmenuTaskData, EditmenuTasklistData, responseHandlerInterface } from './edit-menu.model';
+import { EditMenuComponent } from '../components/organisms/edit-menu/edit-menu.component';
+import {
+    editmenuOptions,
+    EditmenuTaskData,
+    EditmenuTasklistData,
+    responseHandlerInterface,
+} from '../components/organisms/edit-menu/edit-menu.model';
 
 @Injectable({
     providedIn: 'root',
@@ -24,7 +29,7 @@ export class EditMenuService {
     editTaskDetails(
         data: EditmenuTaskData,
         noEdit = false,
-        hightlight: editmenuOptions["hightlight"]
+        hightlight: editmenuOptions['hightlight']
     ): Promise<string | EditmenuTaskData> {
         this.editMenu.open({ data, type: 'Task', noEdit, hightlight });
         return new Promise((resolve, reject) => {

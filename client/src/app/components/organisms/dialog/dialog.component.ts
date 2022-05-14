@@ -1,13 +1,13 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { repeatAfterDelay } from 'src/app/shared/utils';
 import { ModalService } from '../../molecules/modal/modal.service';
-import { CustomDialogComponentProps } from './custom-dialog.model';
-import { DialogService } from './custom-dialog.service';
+import { CustomDialogComponentProps } from './dialog.model';
+import { DialogService } from '../../../services/dialog.service';
 
 @Component({
     selector: 'custom-dialog',
-    templateUrl: './custom-dialog.component.html',
-    styleUrls: ['./custom-dialog.component.css'],
+    templateUrl: './dialog.component.html',
+    styleUrls: ['./dialog.component.css'],
 })
 export class CustomDialogComponent implements OnInit {
     constructor(private modalService: ModalService, private dialogService: DialogService) {}
