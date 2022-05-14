@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 export class TaskProgressComponent {
     @Input() tasksCount: number;
     @Input() completedTasksCount: number;
-    @Input() uncompletedTasksCount: number;
+    @Input() openTasksCount: number;
 
     @Input() showAlways = false;
 }

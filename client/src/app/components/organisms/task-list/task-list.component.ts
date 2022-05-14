@@ -13,7 +13,7 @@ export class TasklistComponent implements OnInit, OnChanges {
     constructor() {}
 
     @Input() tasklist: Task[];
-    uncompletedTasks: Task[];
+    openTasks: Task[];
     completedTasks: Task[];
     sortableTaskData: Task[];
 
@@ -49,10 +49,10 @@ export class TasklistComponent implements OnInit, OnChanges {
 
     private initData() {
         this.tasklist ||= [];
-        this.uncompletedTasks = this.tasklist.filter(task => !task.isCompleted);
+        this.openTasks = this.tasklist.filter(task => !task.isCompleted);
         this.completedTasks = this.tasklist.filter(task => task.isCompleted).sort(sortCompletedTasks);
 
-        this.sortableTaskData = getCopyOf(this.uncompletedTasks);
+        this.sortableTaskData = getCopyOf(this.openTasks);
     }
     ngOnInit(): void {
         this.initData();

@@ -19,6 +19,9 @@
     --submit-clr-hue: 150;
     --submit-clr: hsl(var(--submit-clr-hue), 100%, 47%);
 
+    --tinted-gray-400: hsl(var(--secondary-clr-hue) 15% 50% / .8);
+    --tinted-gray-600: hsl(var(--secondary-clr-hue) 15% 50% / .5);
+
     --btn-icon-size: 2rem;
 
     /* --bg-clr-hue: 234; */
@@ -89,7 +92,7 @@ body {
     height: 0.3rem;
 }
 ::-webkit-scrollbar-track {
-    background: var(--global-background);
+    background: transparent;
 }
 ::-webkit-scrollbar-thumb {
     background: hsl(var(--secondary-clr-hue) 100% 50% / .4);
@@ -159,7 +162,7 @@ input,
     
     outline: none;
     border: var(--outline-weight) solid var(--outline-clr);
-    --outline-clr: gray;
+    --outline-clr: var(--tinted-gray-400);
     --outline-weight: 1px;
     box-shadow: var(--box-shadow-s);
     transition: 180ms, height 0ms;

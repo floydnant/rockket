@@ -5,20 +5,19 @@
         (click)="toggleDetailsPopOutOpen(); $event.stopPropagation()"
     ></div> -->
     <div #popOutContainer *ngIf="isDetailsPopOutOpen" class="pop-out-container">
-        <textarea
-            #notesArea
-            class="input pop-out dimm-0"
-            placeholder="notes"
-            [(ngModel)]="notesAreaValue"
-            [disabled]="isCompleted"
-            [ngStyle]="
-                isDetailsPopOutOpen && uiState.detailsPopOut.notesAreaHeight
-                    ? { height: uiState.detailsPopOut.notesAreaHeight }
-                    : {}
-            "
-            (input)="setNotesAreaHeight()"
-            (focus)="setNotesAreaHeight()"
-        ></textarea>
+        <div
+            #notesBlock
+            class="notesBlock input dimm-0"
+            [innerHTML]="this.data.meta.notes"
+            [contentEditable]="!isCompleted"
+            [spellcheck]="isNotesBlockFocused"
+            (textChanges)="updatedNotes = $event"
+            [domChangesOptions]="{ plainOnly: false, observe: isNotesBlockFocused }"
+            (keydown)="notesBlockKeydownHandler($event)"
+            (focus)="isNotesBlockFocused = true"
+            [class.is-focused]="isNotesBlockFocused"
+            (document:click)="notesBlockOutsideClickHandler($event)"
+        ></div>
         <div class="position-pop-out-actions">
             <div class="pop-out-actions-container">
                 <button
@@ -39,19 +38,19 @@
                     <i *ngIf="!uiState.detailsPopOut.keepOpen" class="far fa-lock-open-alt"></i>
                 </button>
                 <button
-                    *ngIf="notesAreaValue != data.meta.notes"
+                    *ngIf="updatedNotes != data.meta.notes"
                     class="pop-out-action danger-clr"
                     title="revert changes"
                     style="transform: scaleX(-1) rotate(40deg)"
-                    (click)="resetNotesArea()"
+                    (click)="resetNotesBlock()"
                 >
                     <i class="fas fa-share"></i>
                 </button>
                 <button
                     class="pop-out-action"
-                    title="{{ notesAreaValue != data.meta.notes ? 'save changes & ' : '' }}close"
-                    [class.submit-clr]="notesAreaValue != data.meta.notes"
-                    [class.no-filter]="notesAreaValue == data.meta.notes"
+                    title="{{ updatedNotes != data.meta.notes ? 'save changes & ' : '' }}close"
+                    [class.submit-clr]="updatedNotes != data.meta.notes"
+                    [class.no-filter]="updatedNotes == data.meta.notes"
                     (click)="toggleDetailsPopOutOpen()"
                 >
                     <i class="fas fa-times"></i>
@@ -81,15 +80,15 @@
                     class="btn btn-icon btn-complete"
                     title="mark task as {{ this.data.isCompleted ? 'un' : '' }}completed"
                     (click)="toggleCompleted()"
-                    (mouseenter)="completeBtnIsHovered = true"
-                    (mouseleave)="completeBtnIsHovered = false"
+                    (mouseenter)="isCompleteBtnHovered = true"
+                    (mouseleave)="isCompleteBtnHovered = false"
                 >
                     <i
                         *ngIf="this.data.isCompleted; else uncompleted"
-                        class="{{ completeBtnIsHovered ? 'far fa-circle' : 'fas fa-check-circle' }}"
+                        class="{{ isCompleteBtnHovered ? 'far fa-circle' : 'fas fa-check-circle' }}"
                     ></i>
                     <ng-template #uncompleted
-                        ><i class="{{ completeBtnIsHovered ? 'fas fa-check-circle' : 'far fa-circle' }}"></i>
+                        ><i class="{{ isCompleteBtnHovered ? 'fas fa-check-circle' : 'far fa-circle' }}"></i>
                     </ng-template>
                 </button>
 
@@ -139,6 +138,7 @@
                             #taskName
                             class="taskName"
                             [contentEditable]="!isCompleted"
+                            [spellcheck]="isFocused"
                             (textChanges)="updatedTaskName = $event"
                             [domChangesOptions]="{ plainOnly: true, observe: isFocused }"
                             (keydown.Enter)="taskName.blur()"
@@ -164,21 +164,17 @@
                                 (onToggle)="toggleCollapseSubtaskList()"
                             >
                                 <span
-                                    *ngIf="uncompletedTasksCount; else completed"
+                                    *ngIf="openTasksCount; else completed"
                                     class="text-shadow"
                                     style="color: var(--secondary-clr)"
                                 >
-                                    {{ uncompletedTasksCount }} open
+                                    {{ openTasksCount }} open
                                 </span>
                                 <ng-template #completed>
                                     <span style="color: var(--submit-clr)"> {{ completedTasksCount }} completed </span>
                                 </ng-template>
                                 <span class="dimm-1">
-                                    {{
-                                        completedTasksCount && uncompletedTasksCount
-                                            ? "/ " + this.data.subTasks.length
-                                            : ""
-                                    }}
+                                    {{ completedTasksCount && openTasksCount ? "/ " + this.data.subTasks.length : "" }}
                                     {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
                                 </span>
                             </collapse-toggle>
@@ -192,21 +188,21 @@
                     title="add sub task"
                     class="btn btn-icon btn-secondary"
                     [class.disabled]="this.data.isCompleted"
-                    (click)="addSubTask(); setShowTaskActionButtonsOnTouchDevice(false)"
+                    (click)="addSubTask(); setIsTaskActionBtnsMenuOpenOnTouchDevice(false)"
                     style="--btn-index: 2; --btn-index-reverse: 0"
                 >
                     <i class="fas fa-plus"></i></button
                 ><button
                     title="open task details"
                     class="btn btn-icon btn-edit"
-                    (click)="openDetails(!data.isCompleted); setShowTaskActionButtonsOnTouchDevice(false)"
+                    (click)="openDetails(!data.isCompleted); setIsTaskActionBtnsMenuOpenOnTouchDevice(false)"
                     style="--btn-index: 1; --btn-index-reverse: 1"
                 >
                     <i class="fas fa-ellipsis-v"></i></button
                 ><button
                     title="delete task"
                     class="btn btn-icon btn-delete"
-                    (click)="deleteTask(); setShowTaskActionButtonsOnTouchDevice(false)"
+                    (click)="deleteTask(); setIsTaskActionBtnsMenuOpenOnTouchDevice(false)"
                     style="--btn-index: 0; --btn-index-reverse: 2"
                 >
                     <i class="far fa-trash-alt"></i>
@@ -219,8 +215,8 @@
             </div>
             <menu-toggle-btn
                 *ngIf="isTouchDevice"
-                [isOpen]="showTaskActionButtonsOnTouchDevice"
-                (onMenuToggle)="setShowTaskActionButtonsOnTouchDevice($event)"
+                [isOpen]="isTaskActionBtnsMenuOpenOnTouchDevice"
+                (onMenuToggle)="setIsTaskActionBtnsMenuOpenOnTouchDevice($event)"
             >
                 <template [ngTemplateOutlet]="taskActionBtns"></template>
             </menu-toggle-btn>
@@ -229,7 +225,7 @@
             <task-progress
                 [tasksCount]="data.subTasks.length"
                 [completedTasksCount]="completedTasksCount"
-                [uncompletedTasksCount]="uncompletedTasksCount"
+                [openTasksCount]="openTasksCount"
             ></task-progress>
         </div>
     </li>
@@ -243,7 +239,7 @@
     [taskPosition]="taskPosition"
     [collapseCompletedTasks]="uiState.collapseCompletedSubtasks"
     [isCompleted]="isCompleted"
-    [focusChangeEvents]="quickAddInputFieldEventSubject"
+    [focusChangeEvents]="quickAddInputFocusEventSubject"
     (onAddSubtask)="addSubTask($event)"
     (onToggleCollapseCompleted)="toggleCollapseCompletedSubtasks()"
     (completion)="onSubtaskCompletion($event)"

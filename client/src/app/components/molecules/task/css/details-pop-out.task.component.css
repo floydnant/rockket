@@ -18,26 +18,31 @@
 .pop-out-container {
     margin: 0 1rem;
 }
-.pop-out {
+.notesBlock {
     box-sizing: border-box;
     min-height: 50px;
     max-height: 200px;
-    resize: vertical;
     width: 100%;
-    font-size: 1em;
+    font-size: .93em;
+
+    overflow-y: scroll;
+    word-break: break-all;
 
     color: var(--global-color);
     border-top: none !important;
+    border-width: 2px;
     border-radius: 0 0 14px 14px;
-    padding: 10px;
-    padding-bottom: 10px;
+    padding: 15px;
 
     background: none;
     /* box-shadow: var(--box-shadow-s); */
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.61);
 }
-.pop-out:not(:focus) {
-    border: 1px solid var(--global-background);
+.notesBlock:not(:focus) {
+    --outline-clr: var(--tinted-gray-600);
+}
+::-webkit-scrollbar-thumb {
+    background: hsl(var(--secondary-clr-hue) 100% 50% / .8);
 }
 
 .position-pop-out-actions {

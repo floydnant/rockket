@@ -18,7 +18,6 @@ import { EditMenuService } from './organisms/edit-menu';
 })
 export class AppComponent {
     constructor(
-        public modalService: ModalService,
         private dialogService: DialogService,
         private editMenuService: EditMenuService,
         private store: Store<AppState>,
@@ -28,7 +27,7 @@ export class AppComponent {
             this.data = data.appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
             this.completedTasksCount = this.activeTaskList.list.filter(t => t.isCompleted).length;
-            this.uncompletedTasksCount = this.activeTaskList.list.filter(t => !t.isCompleted).length;
+            this.openTasksCount = this.activeTaskList.list.filter(t => !t.isCompleted).length;
 
             console.log('%cupdated state:', 'color: gray', this.data);
 
@@ -40,7 +39,7 @@ export class AppComponent {
 
     data: AppData;
     completedTasksCount: number;
-    uncompletedTasksCount: number;
+    openTasksCount: number;
     activeTaskList: TaskList | undefined;
     taskNameInput: string;
 
@@ -75,10 +74,10 @@ export class AppComponent {
     onTaskCompletion(isCompleted: boolean) {
         if (isCompleted) {
             this.completedTasksCount++;
-            this.uncompletedTasksCount--;
+            this.openTasksCount--;
         } else {
             this.completedTasksCount--;
-            this.uncompletedTasksCount++;
+            this.openTasksCount++;
         }
     }
 

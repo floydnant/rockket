@@ -7,7 +7,7 @@
     padding: 0;
 }
 .tasklist.subtasks {
-    border-left: 1px solid rgba(128, 128, 128, 0.466);
+    border-left: 1px solid var(--tinted-gray-600);
 }
 
 .tasklist *:not(:first-child) {

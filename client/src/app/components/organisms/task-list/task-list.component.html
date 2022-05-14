@@ -1,6 +1,6 @@
 <ul class="tasklist tasklist-{{ id }}" [class.subtasks]="variant == 'subtask'">
     <task
-        *ngFor="let task of this.uncompletedTasks; let i = index"
+        *ngFor="let task of this.openTasks; let i = index"
         [data]="task"
         [taskPosition]="(variant == 'subtask' ? this.taskPosition - 1 : 0) + i"
         (completion)="this.onTaskCompletion($event)"
@@ -14,7 +14,7 @@
     ></single-input-form>
 
     <collapse-toggle
-        *ngIf="completedTasks.length && uncompletedTasks.length"
+        *ngIf="completedTasks.length && openTasks.length"
         [isOpen]="!collapseCompletedTasks"
         (onToggle)="toggleCollapseCompletedSubtasks()"
         colorClass="btn-submit"
@@ -22,11 +22,11 @@
     >
         {{ completedTasks.length }} completed {{ variant }}{{ completedTasks.length > 1 ? "s" : "" }}
     </collapse-toggle>
-    <div *ngIf="!collapseCompletedTasks || !uncompletedTasks.length">
+    <div *ngIf="!collapseCompletedTasks || !openTasks.length">
         <task
             *ngFor="let task of this.completedTasks; let i = index"
             [data]="task"
-            [taskPosition]="(variant == 'subtask' ? this.taskPosition + 1 : 0) + i + this.uncompletedTasks.length"
+            [taskPosition]="(variant == 'subtask' ? this.taskPosition + 1 : 0) + i + this.openTasks.length"
             (completion)="this.onTaskCompletion($event)"
         ></task>
     </div>

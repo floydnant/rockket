@@ -7,11 +7,9 @@ export class TaskUiState {
 
     detailsPopOut: {
         keepOpen: boolean;
-        notesAreaHeight?: string;
         showLinks: boolean;
     } = {
         keepOpen: false,
-        notesAreaHeight: null,
         showLinks: false,
     };
 }

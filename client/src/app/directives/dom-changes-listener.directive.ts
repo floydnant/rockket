@@ -14,16 +14,10 @@ export class DomChangesListenerDirective implements OnDestroy, OnChanges {
                     return;
                 }
 
-                switch (mutation.type) {
-                    case 'characterData':
-                        // console.log(element.innerText);
-                        this.textChanges.emit(element.innerText.trim());
-                        break;
-                    case 'childList':
-                        // console.log(mutation);
-                        this.domChanges.emit(mutation);
-                        break;
-                }
+                this.domChanges.emit(mutation);
+                this.textChanges.emit(
+                    this.domChangesOptions.plainOnly ? element.innerText.trim() : element.innerHTML.trim()
+                );
             });
         });
     }
