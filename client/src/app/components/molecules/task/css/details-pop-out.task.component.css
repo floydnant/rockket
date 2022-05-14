@@ -41,6 +41,9 @@
 .notesBlock:not(:focus) {
     --outline-clr: var(--tinted-gray-600);
 }
+::-webkit-scrollbar-track {
+    background: transparent;
+}
 ::-webkit-scrollbar-thumb {
     background: var(--tinted-gray-400);
 }
