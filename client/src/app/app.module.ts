@@ -31,6 +31,7 @@ import { TasklistComponent } from './components/organisms/task-list/task-list.co
 import { TaskProgressComponent } from './components/molecules/task-progress/task-progress.component';
 import { DomValueAccessorDirective } from './directives/dom-value-accessor.directive';
 import { DomChangesListenerDirective } from './directives/dom-changes-listener.directive';
+import { ContentEditableComponent } from './components/molecules/content-editable/content-editable.component';
 
 @NgModule({
     declarations: [
@@ -53,6 +54,7 @@ import { DomChangesListenerDirective } from './directives/dom-changes-listener.d
         TaskProgressComponent,
         DomValueAccessorDirective,
         DomChangesListenerDirective,
+        ContentEditableComponent,
     ],
     imports: [
         DragDropModule,

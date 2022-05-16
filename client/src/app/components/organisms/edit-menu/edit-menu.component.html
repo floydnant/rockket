@@ -7,7 +7,7 @@
         <input
             class="nameInput edit-item input"
             type="text"
-            placeholder="{{ this.type == 'Task' ? 'task' : 'list' }} name"
+            placeholder="{{ this.type == 'Task' ? 'Task' : 'List' }} name"
             #nameInputRef
             [disabled]="noEdit"
             [(ngModel)]="data.name"
@@ -24,23 +24,24 @@
             </select>
         </label>
 
-        <textarea
-            #notesTextarea
-            class="notesTextarea edit-item input"
+        <content-editable
+            variant="input style"
+            class="notesBlock edit-item"
             [class.animate-highlight]="this.hightlight == 'notes'"
-            placeholder="notes"
-            [disabled]="noEdit"
-            [(ngModel)]="data.meta.notes"
-        ></textarea>
+            [focusEventSubject]="notesBlockFocusSubject.asObservable()"
+            (focusEvents)="!$event && updateOriginalNotes()"
+            (contentChanges)="data.meta.notes = $event"
+            [contentEditableOptions]="{
+                content: originalNotes,
+                allowEdit: !noEdit,
+                noKeybindings: true,
+                placeholder: 'Notes'
+            }"
+            (keydownEvents)="$event.stopImmediatePropagation(); $event.key == 'Escape' && this.close('Cancelled')"
+        >
+        </content-editable>
 
         <div *ngIf="this.type == 'Task' && !noEdit" class="add-link-container">
-            <!-- <input
-                class="linkInput edit-item input"
-                [(ngModel)]="this.linkInput"
-                />
-                <button class="btn btn-primary" [disabled]="!this.trimLinkInput() || !this.linkInput" (click)="addLink()">
-                    add
-                </button> -->
             <single-input-form
                 noFocusNoBorder
                 noTopMargin
@@ -61,7 +62,7 @@
                 <div class="link-container" *ngFor="let link of this.data.meta.links; let i = index">
                     <hr *ngIf="i" />
                     <li>
-                        <a [href]="link" target="_blank">{{ link }}</a>
+                        <a class="wrap-text" [href]="link" target="_blank">{{ link }}</a>
                         <button
                             *ngIf="!noEdit"
                             class="btn btn-delete btn-icon"

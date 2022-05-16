@@ -131,6 +131,9 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.wrap-text {
+    word-break: break-all;
+}
 
 .toggle-icons:not(:hover) > i:last-of-type {
     display: none;

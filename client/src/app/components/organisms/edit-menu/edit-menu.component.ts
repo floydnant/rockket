@@ -5,6 +5,7 @@ import { TaskMeta } from '../../../shared/task.model';
 import { Compare, getCopyOf, moveToMacroQueue, repeatAfterDelay, validateAndFormatUrl } from '../../../shared/utils';
 import { editmenuOptions, EditmenuTaskData, responseHandlerInterface, EditmenuTasklistData } from './edit-menu.model';
 import { EditMenuService } from '../../../services/edit-menu.service';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'edit-menu',
@@ -24,7 +25,7 @@ export class EditMenuComponent implements OnInit {
 
     @ViewChild('nameInputRef') nameInputRef: ElementRef<HTMLInputElement>;
     @ViewChild('linkList') linkList: ElementRef<HTMLDivElement>;
-    @ViewChild('notesTextarea') notesTextarea: ElementRef<HTMLTextAreaElement>;
+    notesBlockFocusSubject = new Subject<boolean>();
 
     constructor(
         private modalService: ModalService,
@@ -44,11 +45,13 @@ export class EditMenuComponent implements OnInit {
         this.originalData = getCopyOf(data);
         this.data = getCopyOf(data);
 
+        this.originalNotes = this.data.meta.notes;
+
         if (!hightlight) repeatAfterDelay(() => this.nameInputRef.nativeElement.focus(), [100, 300, 500]);
         else {
             if (this.hightlight == 'links') this.linkList?.nativeElement.scrollIntoView({ behavior: 'smooth' });
             if (this.hightlight == 'notes')
-                repeatAfterDelay(() => this.notesTextarea?.nativeElement.focus(), [100, 300, 500]);
+                repeatAfterDelay(() => this.notesBlockFocusSubject.next(true), [100, 300, 500]);
         }
     }
 
@@ -74,9 +77,14 @@ export class EditMenuComponent implements OnInit {
             if (this.type == 'Task' && responseStatus == 'OK') this.addLink();
             this.editMenuService.responseHandler({ updatedData: getCopyOf(this.data), responseStatus });
 
-            this.nameInputRef.nativeElement.blur();
+            this.nameInputRef?.nativeElement?.blur();
             this.linkInput = '';
         });
+    }
+
+    originalNotes: string;
+    updateOriginalNotes() {
+        this.originalNotes = this.data.meta.notes;
     }
 
     linkInput: string;

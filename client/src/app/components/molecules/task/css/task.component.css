@@ -91,7 +91,6 @@ p {
 p .taskName {
     position: relative;
     padding-right: 0.4rem;
-    word-break: break-all;
     outline: none;
 }
 p .taskName::before {

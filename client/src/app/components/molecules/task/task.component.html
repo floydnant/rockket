@@ -5,19 +5,21 @@
         (click)="toggleDetailsPopOutOpen(); $event.stopPropagation()"
     ></div> -->
     <div #popOutContainer *ngIf="isDetailsPopOutOpen" class="pop-out-container">
-        <div
-            #notesBlock
-            class="notesBlock input dimm-0"
-            [innerHTML]="this.data.meta.notes"
-            [contentEditable]="!isCompleted"
-            [spellcheck]="isNotesBlockFocused"
-            (textChanges)="updatedNotes = $event"
-            [domChangesOptions]="{ plainOnly: false, observe: isNotesBlockFocused }"
-            (keydown)="notesBlockKeydownHandler($event)"
-            (focus)="isNotesBlockFocused = true"
-            [class.is-focused]="isNotesBlockFocused"
+        <content-editable
+            (focusEvents)="isNotesBlockFocused = $event"
+            [focusEventSubject]="notesBlockFocusSubject.asObservable()"
+            (keydownEvents)="notesBlockKeydownHandler($event)"
+            (contentChanges)="updatedNotes = $event"
+            [resetEventsSubject]="resetEventsSubject.asObservable()"
+            [contentEditableOptions]="{
+                content: this.data.meta.notes,
+                allowEdit: !isCompleted,
+                forceFocusedOnBlur: true,
+                placeholder: 'Notes'
+            }"
             (document:click)="notesBlockOutsideClickHandler($event)"
-        ></div>
+        >
+        </content-editable>
         <div class="position-pop-out-actions">
             <div class="pop-out-actions-container">
                 <button
@@ -136,7 +138,7 @@
 
                         <span
                             #taskName
-                            class="taskName"
+                            class="taskName wrap-text"
                             [contentEditable]="!isCompleted"
                             [spellcheck]="isFocused"
                             (textChanges)="updatedTaskName = $event"

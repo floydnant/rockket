@@ -49,7 +49,8 @@ export class TaskComponent implements OnInit {
 
     isTouchDevice = isTouchDevice();
     isTaskActionBtnsMenuOpenOnTouchDevice = false;
-    setIsTaskActionBtnsMenuOpenOnTouchDevice = (nowOpen: boolean) => (this.isTaskActionBtnsMenuOpenOnTouchDevice = nowOpen);
+    setIsTaskActionBtnsMenuOpenOnTouchDevice = (nowOpen: boolean) =>
+        (this.isTaskActionBtnsMenuOpenOnTouchDevice = nowOpen);
 
     quickAddInputFocusEventSubject = new Subject<boolean>();
     focusQuickAddInputField = () => this.quickAddInputFocusEventSubject.next(true);
@@ -65,7 +66,7 @@ export class TaskComponent implements OnInit {
         if (isDeleting) this.isDeleting = true;
         else setTimeout(() => (this.isDeleting = false), 500);
     }
-    
+
     isFocused = false;
     updatedTaskName: string;
     updateTaskName() {
@@ -85,10 +86,10 @@ export class TaskComponent implements OnInit {
     }
     @ViewChild('notesBlock') notesBlock: ElementRef<HTMLDivElement>;
     notesBlockKeydownHandler(e: KeyboardEvent) {
-        if (e.key == 'Enter' && (e.ctrlKey || e.metaKey)) this.leaveNotesBlock();
+        if (e.key == 'Enter' && (e.ctrlKey || e.metaKey)) this.onLeaveNotesBlock();
         if (e.key == 'Escape') {
-            this.resetNotesBlock();
-            this.leaveNotesBlock();
+            // this.resetNotesBlock();
+            this.onLeaveNotesBlock(false);
         }
     }
     @ViewChild('detailIconsWrapper') detailIconsWrapper: ElementRef<HTMLSpanElement>;
@@ -100,18 +101,24 @@ export class TaskComponent implements OnInit {
         const clickedOutsideNotesBlock = !event
             .composedPath()
             .some(elem => elemsToCheckIfClicked.some(elemToCheck => elem == elemToCheck?.nativeElement));
-        if (clickedOutsideNotesBlock) this.leaveNotesBlock();
+        if (clickedOutsideNotesBlock) this.onLeaveNotesBlock();
     }
-    leaveNotesBlock() {
-        this.notesBlock.nativeElement.blur();
+    onLeaveNotesBlock(saveChanges = true) {
+        // this.notesBlock.nativeElement.blur();
         this.isNotesBlockFocused = false;
 
-        if (this.uiState.detailsPopOut.keepOpen) this.updateNotes();
-        else this.toggleDetailsPopOutOpen();
+        if (!this.uiState.detailsPopOut.keepOpen) this.toggleDetailsPopOutOpen(saveChanges);
+        if (saveChanges) this.updateNotes();
     }
+    notesBlockFocusSubject = new Subject<boolean>();
+    focusNotesBlock() {
+        this.notesBlockFocusSubject.next(true);
+    }
+    resetEventsSubject = new Subject();
     resetNotesBlock() {
         this.updatedNotes = this.data.meta.notes;
-        this.notesBlock.nativeElement.innerHTML = this.data.meta.notes;
+        // this.notesBlock.nativeElement.innerHTML = this.data.meta.notes;
+        this.resetEventsSubject.next();
     }
 
     uiState: TaskUiState;
@@ -134,7 +141,7 @@ export class TaskComponent implements OnInit {
         if (this.isDetailsPopOutOpen) {
             moveToMacroQueue(() => {
                 this.resetNotesBlock();
-                this.notesBlock?.nativeElement?.focus();
+                this.focusNotesBlock();
             });
         } else {
             this.setKeepDetailsPopOutOpen(false);

@@ -63,18 +63,12 @@ select {
     font-size: 1rem;
     border-radius: 6px;
 }
-.notesTextarea {
-    width: calc(100% - var(--modal-padding));
-    height: 70px;
-    resize: vertical;
-    max-height: 60vh;
+.notesBlock {
+    width: 100%;
+    max-height: 50vh;
 
-    font-family: var(--primary-font);
     font-size: 1rem;
     color: var(--global-color);
-}
-.notesTextarea:focus {
-    --outline-clr: var(--primary-clr);
 }
 .list-edit :is(.add-link-container, .link-list) {
     display: none;
@@ -114,7 +108,6 @@ select {
 }
 .link-container li a {
     transform: translateY(-2px);
-    word-break: break-all;
 }
 .link-container li a:not(:hover) {
     text-decoration: none;

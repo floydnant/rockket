@@ -1,0 +1,64 @@
+:host {
+    display: block;
+    padding: 0 !important;
+}
+.position-placeholder {
+    position: relative;
+}
+.placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: .93em;
+    padding: 15px;
+    --margin: 2px;
+    margin-left: var(--margin);
+    opacity: .45;
+}
+.placeholder.hide {
+    opacity: 0;
+}
+.placeholder.full-border {
+    margin-top: var(--margin);
+}
+.placeholder.input-style {
+    padding: 5px;
+    --margin: 1px;
+}
+.contentBlock {
+    box-sizing: border-box;
+    min-height: 25px;
+    max-height: 200px;
+    width: 100%;
+    font-size: .93em;
+
+    overflow-y: scroll;
+
+    color: var(--global-color);
+    border-radius: var(--b-radius);
+    --b-radius: 10px;
+    padding: 5px;
+    
+    background: none;
+    /* box-shadow: var(--box-shadow-s); */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.61);
+}
+.contentBlock:not(:focus) {
+    --outline-clr: var(--tinted-gray-600);
+}
+.contentBlock:not(.input-style) {
+    --b-radius: 14px;
+    border-width: 2px;
+    padding: 15px;
+}
+.contentBlock:not(.full-border, .input-style) {
+    border-radius: 0 0 var(--b-radius) var(--b-radius);
+    border-top: none !important;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--tinted-gray-400);
+}

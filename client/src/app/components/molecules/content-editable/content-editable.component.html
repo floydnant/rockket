@@ -1,0 +1,26 @@
+<div class="position-placeholder">
+    <div
+        class="placeholder"
+        [class.hide]="updatedContent"
+        [class.full-border]="variant == 'full border'"
+        [class.input-style]="variant == 'input style'"
+    >
+        {{ props.placeholder }}
+    </div>
+</div>
+<div
+    #contentBlock
+    class="contentBlock input wrap-text"
+    [class.dimm-0]="variant == 'pop out'"
+    [class.full-border]="variant == 'full border'"
+    [class.input-style]="variant == 'input style'"
+    [class.is-focused]="isBlockFocused"
+    [innerHTML]="props.content"
+    [contentEditable]="props.allowEdit"
+    [spellcheck]="props.spellCheck && isBlockFocused"
+    (textChanges)="updatedContent = $event; contentChanges.emit($event)"
+    [domChangesOptions]="{ plainOnly: props.plainOnly, observe: isBlockFocused }"
+    (keydown)="keydownHandler($event)"
+    (focus)="focusEventshandler(true)"
+    (blur)="focusEventshandler(false)"
+></div>
