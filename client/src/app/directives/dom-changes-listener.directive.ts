@@ -15,9 +15,8 @@ export class DomChangesListenerDirective implements OnDestroy, OnChanges {
                 }
 
                 this.domChanges.emit(mutation);
-                this.textChanges.emit(
-                    this.domChangesOptions.plainOnly ? element.innerText.trim() : element.innerHTML.trim()
-                );
+                if (this.domChangesOptions.plainOnly) this.textChanges.emit(element.innerText.trim());
+                else this.textChanges.emit(element.innerText.trim() ? element.innerHTML.trim() : '');
             });
         });
     }
