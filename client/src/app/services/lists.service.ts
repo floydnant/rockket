@@ -20,16 +20,16 @@ export class ListsService {
     }
 
     async createList(listName?: string) {
-        if (!listName)
-            try {
-                listName = await this.dialogService.prompt({
-                    title: 'Create new list:',
-                    buttons: ['Cancel', 'Create'],
-                    placeholder: 'list name',
-                });
-            } catch {
-                return { created: false };
-            }
+        if (!listName) {
+            const { clickedButton, responseValue } = await this.dialogService.prompt({
+                title: 'Create new list:',
+                buttons: ['Cancel', 'Create'],
+                placeholder: 'list name',
+            });
+            if (clickedButton == 'Cancel') return { created: false };
+
+            listName = responseValue;
+        }
 
         this.store.dispatch(new AppDataActions.CreateList(listName));
         return { created: true };
@@ -49,11 +49,11 @@ export class ListsService {
     }
 
     async deleteList(listId: string) {
-        try {
-            await this.dialogService.confirm({ title: 'Delete this list?', buttons: ['Cancel', '!Delete'] });
-        } catch {
-            return { deleted: false };
-        }
+        const { clickedButton } = await this.dialogService.confirm({
+            title: 'Delete this list?',
+            buttons: ['Cancel', '!Delete'],
+        });
+        if (clickedButton == 'Cancel') return { deleted: false };
 
         this.store.dispatch(new AppDataActions.DeleteList(listId));
         return { deleted: true };

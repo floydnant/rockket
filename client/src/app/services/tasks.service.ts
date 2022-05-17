@@ -41,21 +41,23 @@ export class TasksService {
         };
 
         if (wasCompletedBefore || !hasOpenSubtasks) return dispatchAction();
-        try {
-            await this.dialogService.confirm({
-                title: 'Open subtasks left!',
-                text: 'Do you want to mark all subtasks as completed too?',
-                buttons: ['Keep uncompleted', 'Cancel', 'OK'],
-            });
 
-            return dispatchAction(true);
-        } catch (clickedButton) {
-            if (clickedButton == 'Keep uncompleted') return dispatchAction();
-            return {
-                changedStatus: false,
-                collapseSubtaskList: false,
-            };
-        }
+        const { clickedButton } = await this.dialogService.confirm({
+            title: 'Open subtasks left!',
+            text: 'Do you want to mark all subtasks as completed too?',
+            buttons: ['Keep uncompleted', 'Cancel', 'OK'],
+        });
+        switch (clickedButton) {
+            case 'OK':
+                return dispatchAction(true);
+            case 'Keep uncompleted':
+                return dispatchAction();
+            default:
+                return {
+                    changedStatus: false,
+                    collapseSubtaskList: false,
+                };
+        } // prettier-ignore
     }
 
     updateTaskDetails(taskData: Task) {
@@ -71,38 +73,34 @@ export class TasksService {
     }
 
     async addSubtask(taskId: string, subtaskName?: string) {
-        if (!subtaskName)
-            try {
-                subtaskName = await this.dialogService.prompt({
-                    title: 'Create new subtask:',
-                    buttons: ['Cancel', 'Create'],
-                    placeholder: 'subtask name',
-                });
-            } catch {
-                return { created: false };
-            }
+        if (!subtaskName) {
+            const { clickedButton, responseValue } = await this.dialogService.prompt({
+                title: 'Create new subtask:',
+                buttons: ['Cancel', 'Create'],
+                placeholder: 'subtask name',
+            });
+            if (clickedButton == 'Cancel') return { created: false };
+            subtaskName = responseValue;
+        }
 
         this.store.dispatch(new AppDataActions.AddSubtask(taskId, subtaskName));
         return { created: true };
     }
 
     async deleteTask(taskId: string, openSubtasksCount: number) {
-        try {
-            await this.dialogService.confirm({
-                title: `Delete this task?`,
-                text: openSubtasksCount
-                    ? `and ${openSubtasksCount > 1 ? `all ` : ''}it's ${openSubtasksCount} open ${
-                          openSubtasksCount > 1 ? `subtasks` : 'subtask'
-                      }?`
-                    : null,
-                buttons: ['Cancel', '!Delete' + (openSubtasksCount ? ' all' : '')],
-            });
+        const { clickedButton } = await this.dialogService.confirm({
+            title: `Delete this task?`,
+            text: openSubtasksCount
+                ? `and ${openSubtasksCount > 1 ? `all ` : ''}it's ${openSubtasksCount} open ${
+                      openSubtasksCount > 1 ? `subtasks` : 'subtask'
+                  }?`
+                : null,
+            buttons: ['Cancel', '!Delete' + (openSubtasksCount ? ' all' : '')],
+        });
+        if (clickedButton == 'Cancel') return { deleted: false };
 
-            this.store.dispatch(new AppDataActions.DeleteTask(taskId));
-            return { deleted: true };
-        } catch {
-            return { deleted: false };
-        }
+        this.store.dispatch(new AppDataActions.DeleteTask(taskId));
+        return { deleted: true };
     }
 
     getTaskById(taskId: string, taskList: Task[], getParentArr = false) {

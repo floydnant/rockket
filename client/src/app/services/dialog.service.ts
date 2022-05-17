@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { Task } from '../shared/task.model';
 import { CustomDialogComponent } from '../components/organisms/dialog/dialog.component';
 import {
-    CustomDialogConfirmOptions,
-    CustomDialogFilterArray_filterItem,
-    CustomDialogFilterArrayOptions,
-    CustomDialogPromptOptions,
-    responseHandlerInterface,
+    DialogBaseOptions,
+    DialogConfirmOptions,
+    DialogFilterListOptions,
+    DialogPromptOptions,
+    DialogResponse,
+    DialogResponseHandlerInterface,
+    DialogResponsePromise,
 } from '../components/organisms/dialog/dialog.model';
 
 @Injectable({
@@ -14,10 +16,36 @@ import {
 })
 export class DialogService {
     dialog: CustomDialogComponent;
-    responseHandler: (response: responseHandlerInterface) => void;
 
-    confirm(options: CustomDialogConfirmOptions): Promise<string> {
-        const defaultOptions = new CustomDialogConfirmOptions();
+    responseHandler: (response: DialogResponseHandlerInterface) => void;
+    private setResponseHandler<T extends object>({
+        resolve,
+        reject,
+        rejectOnButton,
+        transformer,
+    }: {
+        resolve: (res: T) => void;
+        reject: (res: any) => void;
+        rejectOnButton: DialogBaseOptions['rejectOnButton'];
+        transformer?: (res: DialogResponseHandlerInterface) => T;
+    }) {
+        this.responseHandler = res => {
+            let response: T;
+            if (transformer) response = { clickedButton: res.clickedButton, ...transformer(res) };
+            else response = res as T;
+
+            if (!rejectOnButton?.length) {
+                resolve(response);
+                return;
+            }
+
+            if (typeof rejectOnButton == 'string') rejectOnButton = [rejectOnButton];
+            if (rejectOnButton.some(btn => btn == (response as DialogResponse).clickedButton)) reject(response);
+        };
+    }
+
+    confirm(options: DialogConfirmOptions): DialogResponsePromise {
+        const defaultOptions = new DialogConfirmOptions();
         return new Promise((resolve, reject) => {
             this.dialog.open({
                 ...defaultOptions,
@@ -25,14 +53,17 @@ export class DialogService {
                 type: 'confirm',
             });
 
-            this.responseHandler = ({ buttons, resBtnIndex }) => {
-                if (resBtnIndex == buttons.length - 1) resolve(buttons[resBtnIndex]);
-                else reject(buttons[resBtnIndex]);
-            };
+            // this.responseHandler = ({ clickedButton }) => resolve({ clickedButton });
+            this.setResponseHandler({
+                resolve,
+                reject,
+                rejectOnButton: options.rejectOnButton,
+            });
         });
     }
-    prompt(options: CustomDialogPromptOptions): Promise<string> {
-        const defaultOptions = new CustomDialogPromptOptions();
+
+    prompt(options: DialogPromptOptions): DialogResponsePromise<{ responseValue: string }> {
+        const defaultOptions = new DialogPromptOptions();
         return new Promise((resolve, reject) => {
             this.dialog.open({
                 ...defaultOptions,
@@ -40,39 +71,55 @@ export class DialogService {
                 type: 'prompt',
             });
 
-            this.responseHandler = ({ promptInput, buttons, resBtnIndex }) => {
-                if (promptInput.trim() && resBtnIndex == buttons.length - 1) resolve(promptInput);
-                else reject(buttons[resBtnIndex]);
-            };
+            this.setResponseHandler({
+                resolve,
+                reject,
+                rejectOnButton: options.rejectOnButton,
+                transformer: ({ clickedButton, responseValue }) => ({ clickedButton, responseValue }),
+            });
         });
     }
-    filterArray<T extends object>({ array, itemKey, ...options }: CustomDialogFilterArrayOptions<T>): Promise<T[]> {
-        const defaultOptions = new CustomDialogFilterArrayOptions();
+
+    filterList<T extends object>({
+        list,
+        itemNameKey,
+        rejectOnButton,
+        ...options
+    }: DialogFilterListOptions<T>): DialogResponsePromise<{ filteredList: T[] }> {
+        const defaultOptions = new DialogFilterListOptions();
         return new Promise((resolve, reject) => {
             this.dialog.open({
                 ...defaultOptions,
                 ...options,
-                filterArray: array.map<CustomDialogFilterArray_filterItem>((item, i) => ({
-                    name: item[itemKey],
+                filterList: list.map((item, i) => ({
+                    name: item[itemNameKey] as unknown as string,
                     index: i,
                     selected: false,
                 })),
                 type: 'filterArray',
             });
 
-            this.responseHandler = ({ buttons, resBtnIndex, filterdArray }) => {
-                if (resBtnIndex == buttons.length - 1)
-                    resolve(
-                        filterdArray
-                            .filter(filterItem => filterItem.selected)
-                            .map(filterItem => array[filterItem.index])
-                    );
-                else reject(buttons[resBtnIndex]);
-            };
+            this.setResponseHandler({
+                resolve,
+                reject,
+                rejectOnButton,
+                transformer: ({ clickedButton, selectedItems }) => ({
+                    clickedButton,
+                    filteredList: selectedItems
+                        .filter(filterItem => filterItem.selected)
+                        .map(filterItem => list[filterItem.index]),
+                }),
+            });
         });
     }
 }
 
 async () => {
-    const arr = await new DialogService().filterArray({ title: 'test', array: [new Task()], itemKey: 'name' });
+    const { filteredList, clickedButton } = await new DialogService().filterList({
+        title: 'test',
+        list: [new Task()],
+        itemNameKey: 'name',
+        buttons: ['Cancel', 'OK'],
+        rejectOnButton: 'Cancel',
+    });
 };

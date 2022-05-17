@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { repeatAfterDelay } from 'src/app/shared/utils';
 import { ModalService } from '../../molecules/modal/modal.service';
-import { CustomDialogComponentProps } from './dialog.model';
+import { DialogComponentProps } from './dialog.model';
 import { DialogService } from '../../../services/dialog.service';
 
 @Component({
@@ -13,12 +13,12 @@ export class CustomDialogComponent implements OnInit {
     constructor(private modalService: ModalService, private dialogService: DialogService) {}
 
     promptInput: string;
-    props: CustomDialogComponentProps;
+    props: DialogComponentProps;
     @ViewChild('localInputRef') inputRef: ElementRef;
 
     isOpen = false;
 
-    open(props: CustomDialogComponentProps) {
+    open(props: DialogComponentProps) {
         this.isOpen = true;
         this.modalService.open('custom-dialog');
 
@@ -33,10 +33,9 @@ export class CustomDialogComponent implements OnInit {
         this.modalService.close('custom-dialog');
 
         this.dialogService.responseHandler({
-            buttons: this.props.buttons,
-            resBtnIndex,
-            promptInput: this.promptInput,
-            filterdArray: this.props.filterArray,
+            clickedButton: this.props.buttons[resBtnIndex],
+            responseValue: this.promptInput?.trim(),
+            selectedItems: this.props.filterList,
         });
 
         this.promptInput = '';

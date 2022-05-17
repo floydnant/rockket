@@ -57,15 +57,13 @@ export class EditMenuComponent implements OnInit {
 
     async close(responseStatus: responseHandlerInterface['responseStatus']) {
         if (responseStatus == 'Cancelled' && /* dataHasChanged */ !Compare.object(this.data, this.originalData)) {
-            const confirmationResponse = await this.dialogService
-                .confirm({
-                    title: 'Abandone changes?',
-                    text: "You already made some changes, don't you want to save them?",
-                    buttons: ['!Abandone', 'Keep editing', 'Save'],
-                })
-                .catch(err => err);
-            if (confirmationResponse == 'Keep editing') return;
-            if (confirmationResponse == 'Save') responseStatus = 'OK';
+            const { clickedButton } = await this.dialogService.confirm({
+                title: 'Abandone changes?',
+                text: "You already made some changes, don't you want to save them?",
+                buttons: ['!Abandone', 'Keep editing', 'Save'],
+            });
+            if (clickedButton == 'Keep editing') return;
+            if (clickedButton == 'Save') responseStatus = 'OK';
         }
 
         if (responseStatus == 'OK') this.isLoading = true;

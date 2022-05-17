@@ -40,11 +40,11 @@ export class AppDataService {
     }
 
     async exportAsJSON(...listIds: string[]) {
-        try {
-            await this.dialogService.confirm({ title: `Download this list as file?`, buttons: ['Cancel', 'Download'] });
-        } catch {
-            return;
-        }
+        const { clickedButton } = await this.dialogService.confirm({
+            title: `Download this list as file?`,
+            buttons: ['Cancel', 'Download'],
+        });
+        if (clickedButton == 'Cancel') return;
 
         const exportData = {
             appData: {
