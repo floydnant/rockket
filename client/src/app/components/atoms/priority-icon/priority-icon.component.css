@@ -1,10 +1,6 @@
 :host {
     position: relative;
-    transition: transform 180ms;
     cursor: pointer;
-}
-:host:hover {
-    transform: scale(1.2);
 }
 
 .drop-down {

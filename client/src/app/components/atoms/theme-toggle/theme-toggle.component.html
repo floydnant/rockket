@@ -1,8 +1,8 @@
-<menu-toggle-btn position="right" [fa-icon]="themeService.themeState.theme == 'dark' ? 'fas fa-moon' : 'fas fa-sun'" color="primary" dropdownOffset="25px">
+<menu-toggle-btn position="right" [fa-icon]="themeService.themeState.theme == 'dark' ? 'fas fa-moon' : 'fas fa-sun'" color="secondary" dropdownOffset="25px">
     <button class="btn modal-btn" (click)="setTheme('dark')"><i class="fas fa-moon"></i>&nbsp;dark</button>
     <button class="light btn modal-btn" (click)="setTheme('light')"><i class="fas fa-sun"></i>&nbsp;light</button>
     <span
-        ><i class="fas fa-adjust"></i>&nbsp;System
+        ><i class="fas fa-adjust"></i>&nbsp;auto
         <toggle-switch [isOn]="themeService.themeState.updateOnSystemThemeChange" (onToggle)="toggleUpdateThemeOnEvent()"></toggle-switch
     ></span>
 </menu-toggle-btn>

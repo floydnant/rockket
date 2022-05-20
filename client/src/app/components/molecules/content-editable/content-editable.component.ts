@@ -54,15 +54,14 @@ export class ContentEditableComponent implements OnInit, OnDestroy {
 
     @Output() keydownEvents = new EventEmitter<KeyboardEvent>();
     keydownHandler(e: KeyboardEvent) {
-        
-        this.keydownEvents.emit(e);
-        if (this.props.noKeybindings) return;
-
-        if (e.key == 'Enter' && (e.ctrlKey || e.metaKey)) this.leaveBlock();
-        if (e.key == 'Escape') {
-            this.resetBlock();
-            this.leaveBlock();
+        if (!this.props.noKeybindings) {
+            if (e.key == 'Enter' && (e.ctrlKey || e.metaKey)) this.leaveBlock();
+            if (e.key == 'Escape') {
+                this.resetBlock();
+                this.leaveBlock();
+            }
         }
+        this.keydownEvents.emit(e);
     }
     leaveBlock() {
         this.isBlockFocused = false;
@@ -79,8 +78,11 @@ export class ContentEditableComponent implements OnInit, OnDestroy {
     resetBlock() {
         const originalContent = this.props.content;
         this.updatedContent = this.props.content;
+
+        // change the value to something different so change detection kicks in
         this.props.content = originalContent + ' ';
         this.contentChanges.emit(originalContent);
+        // and change it back, after change detection
         moveToMacroQueue(() => (this.props.content = originalContent));
     }
 }

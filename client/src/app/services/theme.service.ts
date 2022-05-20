@@ -38,6 +38,7 @@ export class ThemeService {
 
     toggleUpdateOnSystemThemeChange() {
         this.themeState.updateOnSystemThemeChange = !this.themeState.updateOnSystemThemeChange;
+        this.uiStateService.setThemeState(this.themeState);
 
         if (this.themeState.updateOnSystemThemeChange) this.setTheme(getTheme(this.darkThemeMqMatches));
     }

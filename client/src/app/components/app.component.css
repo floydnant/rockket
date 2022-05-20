@@ -75,17 +75,19 @@ menu-toggle-btn {
     white-space: nowrap;
     font-size: 1.2rem;
     max-width: 80%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 @media (max-width: 420px) {
     .list-name-preview {
         max-width: 60%;
     }
 }
-.list-name-preview .name ~ i {
-    padding: 3px 7px;
-    
-    transform: translateY(-6px);
-    cursor: pointer;
+.list-name-preview .name  {
+    transform: translateY(-2px);
+    margin-right: 10px;
 }
 
 @media screen and (min-width: 650px) {

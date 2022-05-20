@@ -32,8 +32,7 @@ h2 {
     width: calc(100% - var(--modal-padding));
     margin-bottom: 10px;
 
-    border-radius: 10px;
-    padding: 6px;
+    padding: 10px;
 
     background: var(--global-background);
 }

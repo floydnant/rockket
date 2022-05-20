@@ -151,7 +151,7 @@ button {
 input,
 .btn {
     font-size: 16px;
-    padding: 7.5px;
+    padding: 10px;
     border: 0;
     border-radius: 12px;
     color: var(--global-background);
@@ -168,10 +168,13 @@ input,
     --outline-clr: var(--tinted-gray-400);
     --outline-weight: 1px;
     box-shadow: var(--box-shadow-s);
-    transition: 180ms, height 0ms;
+    transition: 180ms, height 0ms, background 120ms;
 }
 .input:focus {
     --outline-clr: var(--primary-clr);
+}
+.input:hover:not(:focus) {
+    background: var(--global-item-bg-alt);
 }
 .btn {
     --color: var(--clr);

@@ -24,8 +24,8 @@
         >
             <span
                 *ngIf="countOpenTasks(list.list)"
-                class="chip chip-no-bg no-outline secondary-clr text-shadow"
-                style="--text-clr: white; margin-right: 10px"
+                class="text-shadow"
+                style="color: var(--secondary-clr); margin-right: 10px"
                 >{{ countOpenTasks(list.list) }}</span
             >
             <span class="text cut-text">{{ list.name }}</span>

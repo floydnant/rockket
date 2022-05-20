@@ -3,7 +3,9 @@
         <span class="name cut-text">
             {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
         </span>
-        <i *ngIf="this.activeTaskList" class="fas fa-ellipsis-v" (click)="editList()"></i>
+        <button *ngIf="this.activeTaskList" class="btn btn-icon btn-primary" (click)="editList()">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
         <!-- <apple-share-icon remove-host (click)="db.exportActiveList()"></apple-share-icon> -->
     </span>
     <menu-toggle-btn

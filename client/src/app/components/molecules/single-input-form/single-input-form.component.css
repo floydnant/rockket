@@ -6,7 +6,6 @@
     /* background: hsla(241, 30%, 39%, 0.788); */
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: var(--box-shadow-s);
     
     display: flex;
     transition: 180ms;
@@ -18,6 +17,7 @@
 input {
     box-sizing: border-box;
     width: 100%;
+    margin: 0 !important;
     
     color: var(--global-color);
     
@@ -33,7 +33,7 @@ button {
     box-sizing: border-box;
     height: unset;
     width: unset;
-    margin-left: 10px;
+    margin: 0 0 0 10px;
     
     font-size: 15px;
     /* padding: 6px 15px; */
