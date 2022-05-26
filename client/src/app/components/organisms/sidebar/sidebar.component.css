@@ -101,7 +101,7 @@
 .list + .list {
     margin-top: 0.7rem;
 }
-.list:nth-child(2n) {
+.list.alt-bg {
     background: var(--global-item-bg-alt);
 }
 .list + .list {
@@ -110,8 +110,11 @@
 .list.active {
     color: var(--primary-clr);
 }
+.list:not(.active, .completed, :hover) .text {
+    filter: opacity(.6)
+}
 .list.completed {
-    filter: opacity(0.8);
+    filter: opacity(0.9);
 }
 .list:hover {
     background: var(--global-item-bg-highlight);

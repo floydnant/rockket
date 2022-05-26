@@ -21,6 +21,7 @@
             (click)="setActiveList(list.id)"
             [class.active]="this.data.activeListId == list.id"
             [class.completed]="countOpenTasks(list.list) == 0 && list.list.length"
+            [class.alt-bg]="i % 2 == 1"
         >
             <span
                 *ngIf="countOpenTasks(list.list)"

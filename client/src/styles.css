@@ -33,11 +33,11 @@
 }
 
 :root.light {
-    --global-background: hsl(var(--bg-clr-hue), 5%, 91%);
+    --global-background: hsl(var(--bg-clr-hue), 5%, 98%);
     /* --global-item-bg: hsl(var(--bg-clr-hue), 10%, 88%); */
     --global-item-bg: var(--global-background);
-    --global-item-bg-alt: hsl(var(--bg-clr-hue), 5%, 85%);
-    --global-item-bg-highlight: hsl(var(--bg-clr-hue), 5%, 98%);
+    --global-item-bg-alt: hsl(var(--bg-clr-hue), 5%, 94%);
+    --global-item-bg-highlight: hsl(var(--bg-clr-hue), 60%, 95%);
 
     --global-color: hsl(var(--bg-clr-hue), 14%, 14%);
 
@@ -175,6 +175,9 @@ input,
 }
 .input:hover:not(:focus) {
     background: var(--global-item-bg-alt);
+}
+*::placeholder {
+    color: var(--tinted-gray-400);
 }
 .btn {
     --color: var(--clr);
