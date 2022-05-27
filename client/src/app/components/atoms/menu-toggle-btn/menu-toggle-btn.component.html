@@ -14,6 +14,7 @@
     <div
         class="drop-down {{ orientation }} {{ position }}"
         [class.open]="isOpen && !(noDropDown === true || noDropDown === '')"
+        [class.noDropdownPadding]="noDropdownPadding"
         style="--offset: {{ dropdownOffset }};"
     >
         <ng-content></ng-content>

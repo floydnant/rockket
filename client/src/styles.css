@@ -32,7 +32,7 @@
     --breakpoint-m: 650px;
 }
 
-:root.light {
+:root[data-theme="light"] {
     --global-background: hsl(var(--bg-clr-hue), 5%, 98%);
     /* --global-item-bg: hsl(var(--bg-clr-hue), 10%, 88%); */
     --global-item-bg: var(--global-background);
@@ -51,7 +51,7 @@
     --box-shadow-m: 0 0 10px rgba(0, 0, 0, 0.418), 0 0 20px rgba(0, 0, 0, 0.425);
     --box-shadow-l: 0 0 150px rgba(0, 0, 0, 0.473), 0 0 30px rgba(0, 0, 0, 0.418);
 }
-:root.dark {
+:root[data-theme="dark"] {
     --global-background: hsl(var(--bg-clr-hue), 13%, 14%);
     --global-item-bg: hsl(var(--bg-clr-hue), 15%, 16%);
     --global-item-bg-alt: hsl(var(--bg-clr-hue), 15%, 20%);
@@ -77,7 +77,7 @@ body {
 
     background: var(--global-background);
 
-    transition: 500ms;
+    /* transition: color, 500ms; */
 }
 
 * {
@@ -173,7 +173,7 @@ input,
 .input:focus {
     --outline-clr: var(--primary-clr);
 }
-.input:hover:not(:focus) {
+body:not(.touchDevice) .input:hover:not(:focus) {
     background: var(--global-item-bg-alt);
 }
 *::placeholder {

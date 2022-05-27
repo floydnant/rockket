@@ -1,4 +1,4 @@
-<div class="task-wrapper">
+<div class="task-wrapper" [class.isNotesBlockFocused]="isNotesBlockFocused" [class.touchDevice]="isTouchDevice">
     <!-- <div
         *ngIf="data.meta.notes && !isDetailsPopOutOpen"
         class="pop-out-collapsed"
@@ -30,23 +30,12 @@
                     <i class="fas fa-ellipsis-h"></i>
                 </button>
                 <button
-                    class="pop-out-action"
-                    [class.primary-clr]="uiState.detailsPopOut.keepOpen"
-                    [class.no-filter]="!uiState.detailsPopOut.keepOpen"
-                    title="{{ uiState.detailsPopOut.keepOpen ? 'DON\'T keep details open' : 'keep details open' }}"
-                    (click)="setKeepDetailsPopOutOpen(!uiState.detailsPopOut.keepOpen)"
-                >
-                    <i *ngIf="uiState.detailsPopOut.keepOpen" class="far fa-lock-alt"></i>
-                    <i *ngIf="!uiState.detailsPopOut.keepOpen" class="far fa-lock-open-alt"></i>
-                </button>
-                <button
                     *ngIf="updatedNotes != data.meta.notes"
                     class="pop-out-action danger-clr"
                     title="revert changes"
-                    style="transform: scaleX(-1) rotate(40deg)"
                     (click)="resetNotesBlock()"
                 >
-                    <i class="fas fa-share"></i>
+                    <i class="fas fa-share" style="transform: scaleX(-1) rotate(40deg)"></i>
                 </button>
                 <button
                     class="pop-out-action"
@@ -76,6 +65,19 @@
                 {{ formattedCompletionDate }}
             </span>
         </div>
+
+        <div class="position-snackbar">
+            <div class="snackbar">
+                <template [ngTemplateOutlet]="taskActionBtnsGroup1"></template>
+            </div>
+        </div>
+        <div class="position-indicators">
+            <div class="indicators">
+                <span [class.hide]="!data.meta.links.length" class="links"></span>
+                <span [class.hide]="!data.meta.notes" class="notes"></span>
+            </div>
+        </div>
+
         <div class="wrapper outer-wrapper">
             <div class="wrapper inner-wrapper">
                 <button
@@ -95,46 +97,14 @@
                 </button>
 
                 <div class="text-container">
-                    <ng-template #detailIcons>
-                        <span #detailIconsWrapper class="detail-icons-wrapper">
-                            <span
-                                *ngIf="!data.isCompleted || this.data.meta.notes"
-                                class="detail-icon notes-icon"
-                                [class.grayscale]="!isDetailsPopOutOpen"
-                                [class.reveal]="!this.data.meta.notes && !isDetailsPopOutOpen"
-                                title="toggle pop-out notes"
-                                (click)="toggleDetailsPopOutOpen()"
-                            >
-                                <i class="fa{{ this.data.meta.notes ? 's' : 'r' }} fa-comment-alt-lines"></i>
-                                <!-- <i class="fa{{ this.data.meta.notes ? 's' : 'r' }} fa-memo-circle-info"></i> -->
-                            </span>
-                            <span
-                                *ngIf="this.data.meta.links.length"
-                                [title]="this.data.meta.links.join('\n')"
-                                class="detail-icon grayscale"
-                                (click)="openDetails(!data.isCompleted, 'links')"
-                            >
-                                <i class="far fa-external-link-alt"></i>
-                                <i class="fas fa-caret-down" style="margin-left: 0.175em"></i>
-                            </span>
-                        </span>
-                    </ng-template>
                     <p>
-                        <span
-                            *ngIf="!isCompleted"
-                            class="position-priority-icon"
-                            [class.reveal-on-hover]="data.priority == 0 && !isFocused"
-                        >
+                        <span *ngIf="!isCompleted && data.priority != 0" class="position-priority-icon">
                             <priority-icon
                                 [priority]="data.priority"
                                 [showDropDown]="!isTouchDevice"
                                 (change)="setPriority($event)"
                             ></priority-icon>
                         </span>
-
-                        <!-- <span>
-                            <template [ngTemplateOutlet]="detailIcons"></template>
-                        </span> -->
 
                         <span
                             #taskName
@@ -151,10 +121,6 @@
                             (blur)="isFocused = false; updateTaskName()"
                             >{{ this.data.name }}</span
                         >
-
-                        <span *ngIf="!data.subTasks.length" class="first-row-detailIcons">
-                            <template [ngTemplateOutlet]="detailIcons"></template>
-                        </span>
                     </p>
                     <div class="second-row">
                         <p *ngIf="this.data.subTasks.length" class="subtask-list-toggle">
@@ -181,20 +147,58 @@
                                 </span>
                             </collapse-toggle>
                         </p>
-                        <template *ngIf="data.subTasks.length" [ngTemplateOutlet]="detailIcons"></template>
                     </div>
                 </div>
             </div>
-            <ng-template #taskActionBtns>
+            <ng-template #taskActionBtnsGroup1>
+                <menu-toggle-btn
+                    *ngIf="!isCompleted"
+                    color="secondary"
+                    fa-icon="fa{{ data.priority == 0 ? 'r' : 's' }} fa-exclamation"
+                    title="priority"
+                    style="--btn-index: 3.5; --btn-index-reverse: 0; margin: 0"
+                    [noDropdownPadding]="true"
+                >
+                    <div class="priority-list">
+                        <priority-icon
+                            *ngFor="let prio of [-1, 0, 1, 2, 3]"
+                            [priority]="prio"
+                            [class.active-priority]="prio == data.priority"
+                            (click)="setPriority(prio)"
+                            [showDropDown]="false"
+                        ></priority-icon>
+                    </div>
+                </menu-toggle-btn>
                 <button
+                    class="btn btn-icon btn-secondary"
+                    title="notes"
+                    (click)="toggleDetailsPopOutOpen()"
+                    style="--btn-index: 3; --btn-index-reverse: 0"
+                >
+                    <i class="far fa-comment-alt-lines"></i>
+                    <!-- <i class="far fa-memo-circle-info"></i> -->
+                </button>
+                <button
+                    title="links"
+                    class="btn btn-icon btn-secondary"
+                    (click)="openDetails(!data.isCompleted, 'links')"
+                    style="--btn-index: 2.5; --btn-index-reverse: 0"
+                >
+                    <i class="far fa-external-link-alt"></i>
+                </button>
+            </ng-template>
+            <ng-template #taskActionBtnsGroup2>
+                <button
+                    *ngIf="!isCompleted"
                     title="add sub task"
                     class="btn btn-icon btn-secondary"
-                    [class.disabled]="this.data.isCompleted"
                     (click)="addSubTask(); setIsTaskActionBtnsMenuOpenOnTouchDevice(false)"
                     style="--btn-index: 2; --btn-index-reverse: 0"
                 >
-                    <i class="fas fa-plus"></i></button
-                ><button
+                    <!-- [class.disabled]="this.data.isCompleted" -->
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button
                     title="open task details"
                     class="btn btn-icon btn-edit"
                     (click)="openDetails(!data.isCompleted); setIsTaskActionBtnsMenuOpenOnTouchDevice(false)"
@@ -212,7 +216,7 @@
             </ng-template>
             <div *ngIf="!isTouchDevice" class="position-task-action-btns">
                 <div class="btn-group">
-                    <template [ngTemplateOutlet]="taskActionBtns"></template>
+                    <template [ngTemplateOutlet]="taskActionBtnsGroup2"></template>
                 </div>
             </div>
             <menu-toggle-btn
@@ -220,7 +224,14 @@
                 [isOpen]="isTaskActionBtnsMenuOpenOnTouchDevice"
                 (onMenuToggle)="setIsTaskActionBtnsMenuOpenOnTouchDevice($event)"
             >
-                <template [ngTemplateOutlet]="taskActionBtns"></template>
+                <div class="action-btns-mobile-grid">
+                    <div class="action-btn-col">
+                        <template [ngTemplateOutlet]="taskActionBtnsGroup1"></template>
+                    </div>
+                    <div class="action-btn-col">
+                        <template [ngTemplateOutlet]="taskActionBtnsGroup2"></template>
+                    </div>
+                </div>
             </menu-toggle-btn>
         </div>
         <div class="position-task-progress">

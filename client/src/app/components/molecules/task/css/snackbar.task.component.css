@@ -1,0 +1,93 @@
+.position-snackbar {
+    position: relative;
+
+    transition: opacity 120ms 700ms, transform 80ms 700ms;
+}
+.task:not(:hover, .is-focused, .touchDevice) .position-snackbar,
+.task.touchDevice:not(.is-focused) .position-snackbar {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 120ms, transform 120ms;
+    transform: translateY(15px);
+}
+.snackbar {
+    z-index: 10;
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    padding: 5px;
+    padding-bottom: 10px;
+    border-radius: 16px;
+    /* border-width: 0;
+    border-style: solid;
+    border-color: var(--primary-clr); */
+    background: var(--global-background);
+    box-shadow: var(--box-shadow-s);
+
+    transform: backround 80ms, border-color 200ms;
+}
+/* .snackbar button {
+    font-size: .9rem;
+} */
+/* .task.is-focused .snackbar {
+    border-width: 2px;
+} */
+.position-indicators {
+    z-index: 11;
+    position: relative;
+    pointer-events: none;
+}
+.indicators {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    /* gap: 32px; */
+    gap: 5px;
+
+    --transition-delay: 0ms;
+    --transition-duration: 120ms;
+    transition: transform var(--transition-duration) var(--transition-delay);
+}
+.task:not(.touchDevice):is(:hover, .is-focused) .indicators,
+.task.touchDevice.is-focused .indicators {
+    --transition-delay: 700ms;
+    transform: translateY(-8px);
+}
+.indicators span {
+    border-radius: 50%;
+    width: 5px;
+    height: 5px;
+    background: var(--secondary-clr);
+
+    transition: transform var(--transition-duration) var(--transition-delay),
+        opacity var(--transition-duration) var(--transition-delay);
+}
+.task:not(.touchDevice):is(:hover, .is-focused) .indicators .links,
+.task.touchDevice.is-focused .indicators .links {
+    transform: translateX(-40px);
+}
+.task:not(.touchDevice):is(:hover, .is-focused) .indicators .notes,
+.task.touchDevice.is-focused .indicators .notes {
+    transform: translateX(-13px);
+}
+.indicators span.hide {
+    opacity: 0;
+}
+.task:not(.touchDevice):is(:hover, .is-focused) .indicators span.hide,
+.task.touchDevice.is-focused .indicators span.hide {
+    opacity: 0.2;
+}

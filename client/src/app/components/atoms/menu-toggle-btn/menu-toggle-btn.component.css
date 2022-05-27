@@ -100,14 +100,20 @@ span::after {
     width:max-content;
     
     display: flex;
-    padding: 6px;
     border-radius: 14px;
     
     background: var(--global-item-bg);
     box-shadow: var(--box-shadow-s);
     
     transition: transform 150ms;
+}    
+.drop-down:not(.noDropdownPadding) {
+    padding: 6px;
 }
+.drop-down.noDropdownPadding {
+    overflow: hidden;
+}
+
 .drop-down.column {
     flex-direction: column;
 }

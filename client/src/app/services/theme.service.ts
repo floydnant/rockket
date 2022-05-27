@@ -44,13 +44,7 @@ export class ThemeService {
     }
 
     private executeTheme() {
-        const root = document.querySelector(':root');
-        if (this.themeState.theme == 'dark') {
-            root.classList.remove('light');
-            root.classList.add('dark');
-        } else {
-            root.classList.remove('dark');
-            root.classList.add('light');
-        }
+        const root = document.querySelector<HTMLElement>(':root');
+        root.dataset.theme = this.themeState.theme;
     }
 }

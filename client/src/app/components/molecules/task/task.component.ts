@@ -1,16 +1,11 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TasksService } from 'src/app/services/tasks.service';
 import { TaskUiState, UiStateService } from 'src/app/services/ui-state.service';
-import { AppData, AppDataActions } from '../../../reducers';
 import { Task } from '../../../shared/task.model';
 import { countTasks, countTasksRecursive } from '../../../shared/taskList.model';
 import { formatDateRelative, isTouchDevice, moveToMacroQueue } from '../../../shared/utils';
-import { DialogService } from '../../organisms/dialog';
 import { editmenuOptions } from '../../organisms/edit-menu/edit-menu.model';
-import { EditMenuService } from '../../../services/edit-menu.service';
-import { ModalService } from '../modal/modal.service';
 
 @Component({
     selector: 'task',
@@ -21,6 +16,8 @@ import { ModalService } from '../modal/modal.service';
         './css/details-pop-out.task.component.css',
         './css/detail-icons.task.component.css',
         './css/completed-at.task.component.css',
+        './css/snackbar.task.component.css',
+        './css/task-actions.task.component.css',
     ],
 })
 export class TaskComponent implements OnInit {
@@ -84,7 +81,6 @@ export class TaskComponent implements OnInit {
             meta: { ...this.data.meta, notes: this.updatedNotes },
         });
     }
-    @ViewChild('notesBlock') notesBlock: ElementRef<HTMLDivElement>;
     notesBlockKeydownHandler(e: KeyboardEvent) {
         if (e.key == 'Enter' && (e.ctrlKey || e.metaKey)) this.onLeaveNotesBlock();
         if (e.key == 'Escape') {
@@ -104,11 +100,12 @@ export class TaskComponent implements OnInit {
         if (clickedOutsideNotesBlock) this.onLeaveNotesBlock();
     }
     onLeaveNotesBlock(saveChanges = true) {
-        // this.notesBlock.nativeElement.blur();
         this.isNotesBlockFocused = false;
 
-        if (!this.uiState.detailsPopOut.keepOpen) this.toggleDetailsPopOutOpen(saveChanges);
+        // if (!this.uiState.detailsPopOut.keepOpen) this.toggleDetailsPopOutOpen(saveChanges);
         if (saveChanges) this.updateNotes();
+
+        if (!this.updatedNotes) this.toggleDetailsPopOutOpen(saveChanges);
     }
     notesBlockFocusSubject = new Subject<boolean>();
     focusNotesBlock() {
@@ -117,7 +114,6 @@ export class TaskComponent implements OnInit {
     resetEventsSubject = new Subject();
     resetNotesBlock() {
         this.updatedNotes = this.data.meta.notes;
-        // this.notesBlock.nativeElement.innerHTML = this.data.meta.notes;
         this.resetEventsSubject.next();
     }
 
@@ -137,16 +133,14 @@ export class TaskComponent implements OnInit {
     }
     toggleDetailsPopOutOpen(saveChanges = true) {
         this.isDetailsPopOutOpen = !this.isDetailsPopOutOpen;
+        this.setKeepDetailsPopOutOpen(this.isDetailsPopOutOpen);
 
         if (this.isDetailsPopOutOpen) {
             moveToMacroQueue(() => {
                 this.resetNotesBlock();
                 this.focusNotesBlock();
             });
-        } else {
-            this.setKeepDetailsPopOutOpen(false);
-            if (saveChanges) this.updateNotes();
-        }
+        } else if (saveChanges) this.updateNotes();
     }
 
     @Output() completion = new EventEmitter<boolean>();
