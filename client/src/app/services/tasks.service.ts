@@ -27,12 +27,17 @@ export class TasksService {
             nowCompleted,
             wasCompletedBefore,
             hasOpenSubtasks,
-        }: { nowCompleted: boolean; wasCompletedBefore: boolean; hasOpenSubtasks: boolean }
+            delayForAnimation,
+        }: {
+            nowCompleted: boolean;
+            wasCompletedBefore: boolean;
+            hasOpenSubtasks: boolean;
+            delayForAnimation: (completeAllSubtasks: boolean) => Promise<void>;
+        }
     ) {
-        const dispatchAction = (completeAllSubtasks = false) => {
-            setTimeout(() => {
-                this.store.dispatch(new AppDataActions.SetCompleted(taskId, nowCompleted, completeAllSubtasks));
-            }, 600);
+        const dispatchAction = async (completeAllSubtasks = false) => {
+            await delayForAnimation(completeAllSubtasks);
+            this.store.dispatch(new AppDataActions.SetCompleted(taskId, nowCompleted, completeAllSubtasks));
 
             return {
                 changedStatus: true,
@@ -40,7 +45,7 @@ export class TasksService {
             };
         };
 
-        if (wasCompletedBefore || !hasOpenSubtasks) return dispatchAction();
+        if (wasCompletedBefore || !hasOpenSubtasks) return await dispatchAction();
 
         const { clickedButton } = await this.dialogService.confirm({
             title: 'Open subtasks left!',
@@ -49,9 +54,9 @@ export class TasksService {
         });
         switch (clickedButton) {
             case 'OK':
-                return dispatchAction(true);
+                return await dispatchAction(true);
             case 'Keep uncompleted':
-                return dispatchAction();
+                return await dispatchAction();
             default:
                 return {
                     changedStatus: false,

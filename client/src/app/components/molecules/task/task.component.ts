@@ -151,13 +151,34 @@ export class TaskComponent implements OnInit {
             nowCompleted,
             wasCompletedBefore: this.data.isCompleted,
             hasOpenSubtasks: countTasksRecursive(this.data.subTasks) > 0,
+            delayForAnimation: completeAll =>
+                new Promise(resolve => {
+                    if (nowCompleted && completeAll) {
+                        const openTasksIds = this.data.subTasks.filter(t => !t.isCompleted).map(t => '#task-' + t.id);
+                        const taskElems = document.querySelectorAll(openTasksIds.join(', '));
+
+                        const delay = 200;
+                        taskElems.forEach((taskElem, i) => {
+                            setTimeout(() => taskElem.classList.add('completed-transition'), delay * i);
+                        });
+                        const timeToFinishChildAnimations = delay * openTasksIds.length + 100;
+
+                        setTimeout(() => {
+                            this.isCompleted = nowCompleted;
+                            this.completion.emit(nowCompleted);
+
+                            setTimeout(() => resolve(), 600);
+                        }, timeToFinishChildAnimations + 300);
+                    } else {
+                        this.isCompleted = nowCompleted;
+                        this.completion.emit(nowCompleted);
+
+                        setTimeout(() => resolve(), 600);
+                    }
+                }),
         });
 
-        if (changedStatus) {
-            this.isCompleted = nowCompleted;
-            this.completion.emit(nowCompleted);
-            if (collapseSubtaskList) this.toggleCollapseSubtaskList(true);
-        }
+        if (changedStatus && collapseSubtaskList) this.toggleCollapseSubtaskList(true);
     };
 
     onSubtaskCompletion(isCompleted: boolean) {
