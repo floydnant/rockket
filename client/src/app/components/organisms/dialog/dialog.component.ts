@@ -7,7 +7,7 @@ import { DialogService } from '../../../services/dialog.service';
 @Component({
     selector: 'custom-dialog',
     templateUrl: './dialog.component.html',
-    styleUrls: ['./dialog.component.css'],
+    styleUrls: ['./dialog.component.scss'],
 })
 export class CustomDialogComponent implements OnInit {
     constructor(private modalService: ModalService, private dialogService: DialogService) {}

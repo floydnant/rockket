@@ -5,7 +5,7 @@ import { isTouchDevice } from 'src/app/shared/utils';
 @Component({
     selector: 'collapse-toggle',
     templateUrl: './collapse-toggle.component.html',
-    styleUrls: ['./collapse-toggle.component.css'],
+    styleUrls: ['./collapse-toggle.component.scss'],
 })
 export class CollapseToggleComponent implements OnInit {
     constructor() {}

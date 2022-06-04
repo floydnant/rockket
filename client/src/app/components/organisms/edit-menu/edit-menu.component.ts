@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
 @Component({
     selector: 'edit-menu',
     templateUrl: './edit-menu.component.html',
-    styleUrls: ['./edit-menu.component.css'],
+    styleUrls: ['./edit-menu.component.scss'],
 })
 export class EditMenuComponent implements OnInit {
     public data: any; //needs to be 'any' because typecasting in the html template is a bit funky

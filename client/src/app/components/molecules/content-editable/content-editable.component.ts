@@ -5,7 +5,7 @@ import { moveToMacroQueue } from 'src/app/shared/utils';
 @Component({
     selector: 'content-editable',
     templateUrl: './content-editable.component.html',
-    styleUrls: ['./content-editable.component.css'],
+    styleUrls: ['./content-editable.component.scss'],
 })
 export class ContentEditableComponent implements OnInit, OnDestroy {
     constructor() {}

@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 @Component({
     selector: 'priority-icon',
     templateUrl: './priority-icon.component.html',
-    styleUrls: ['./priority-icon.component.css'],
+    styleUrls: ['./priority-icon.component.scss'],
 })
 export class PriorityIconComponent implements OnInit, OnChanges {
     @Input() priority: string | number;

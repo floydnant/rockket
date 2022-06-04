@@ -13,7 +13,7 @@ import { isTouchDevice } from '../../../shared/utils';
 @Component({
     selector: 'menu-toggle-btn',
     templateUrl: './menu-toggle-btn.component.html',
-    styleUrls: ['./menu-toggle-btn.component.css'],
+    styleUrls: ['./menu-toggle-btn.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
 export class MenuToggleBtnComponent implements OnInit {

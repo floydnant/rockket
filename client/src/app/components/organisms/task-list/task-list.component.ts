@@ -7,7 +7,7 @@ import { generateId, getCopyOf } from 'src/app/shared/utils';
 @Component({
     selector: 'task-list',
     templateUrl: './task-list.component.html',
-    styleUrls: ['./task-list.component.css'],
+    styleUrls: ['./task-list.component.scss'],
 })
 export class TasklistComponent implements OnInit, OnChanges {
     constructor() {}

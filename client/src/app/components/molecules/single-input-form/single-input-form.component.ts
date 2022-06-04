@@ -15,7 +15,7 @@ import { BtnColorClasses } from 'src/app/shared/css-classes.model';
 @Component({
     selector: 'single-input-form',
     templateUrl: './single-input-form.component.html',
-    styleUrls: ['./single-input-form.component.css'],
+    styleUrls: ['./single-input-form.component.scss'],
 })
 export class SingleInputFormComponent implements OnInit, OnDestroy {
     @Input('noTopMargin') topMargin: true | '' = true;

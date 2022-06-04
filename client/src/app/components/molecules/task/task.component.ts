@@ -11,13 +11,13 @@ import { editmenuOptions } from '../../organisms/edit-menu/edit-menu.model';
     selector: 'task',
     templateUrl: './task.component.html',
     styleUrls: [
-        './css/task.component.css',
-        './css/priority-icon.task.component.css',
-        './css/details-pop-out.task.component.css',
-        './css/detail-icons.task.component.css',
-        './css/completed-at.task.component.css',
-        './css/snackbar.task.component.css',
-        './css/task-actions.task.component.css',
+        './scss/task.component.scss',
+        './scss/priority-icon.task.component.scss',
+        './scss/details-pop-out.task.component.scss',
+        './scss/detail-icons.task.component.scss',
+        './scss/completed-at.task.component.scss',
+        './scss/snackbar.task.component.scss',
+        './scss/task-actions.task.component.scss',
     ],
 })
 export class TaskComponent implements OnInit {
