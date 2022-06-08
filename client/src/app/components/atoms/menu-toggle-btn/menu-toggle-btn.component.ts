@@ -8,6 +8,7 @@ import {
     Output,
     ViewEncapsulation,
 } from '@angular/core';
+import { colorClasses } from 'src/app/shared/css-classes.model';
 import { isTouchDevice } from '../../../shared/utils';
 
 @Component({
@@ -18,11 +19,11 @@ import { isTouchDevice } from '../../../shared/utils';
 })
 export class MenuToggleBtnComponent implements OnInit {
     @Input() @Output() isOpen = false;
-    @Input() size: 's' | 'l' = 's';
+    @Input() size: 's' | 'm' = 'm';
     @Input() type: 'hamburger' | 'chevron' = 'chevron';
-    @Input("fa-icon") icon: string;
-    @Input() color: string = 'primary';
-    @Input() dropdownOffset: string = "0px";
+    @Input('fa-icon') icon: string;
+    @Input() colorClass: colorClasses = 'clr-primary';
+    @Input() dropdownOffset: string = '0px';
     @Input() noDropdownPadding = false;
 
     isTouchDevice = isTouchDevice();
@@ -33,10 +34,14 @@ export class MenuToggleBtnComponent implements OnInit {
     @Input() position: 'left' | 'right' = 'left';
 
     @Output() onMenuToggle = new EventEmitter<boolean>();
-    setIsOpen = (v: boolean) => (this.isOpen = v);
+    setIsOpen = (nowOpen: boolean) => {
+        if (this.isOpen == nowOpen) return;
+
+        this.isOpen = nowOpen;
+        this.onMenuToggle.emit(this.isOpen);
+    };
     toggleMenu = () => {
         this.setIsOpen(!this.isOpen);
-        this.onMenuToggle.emit(this.isOpen);
     };
 
     constructor(private eRef: ElementRef) {}

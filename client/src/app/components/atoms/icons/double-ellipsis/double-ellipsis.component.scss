@@ -1,0 +1,21 @@
+:host {
+    display: inline-block;
+    position: relative;
+
+    // outline: 1px solid red;
+    width: 15px;
+    padding: var(--spacing-s) var(--spacing-m);
+}
+
+i {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    &:first-child {
+        left: 12px;
+    }
+    &:last-child {
+        right: 12px;
+    }
+}

@@ -1,19 +1,30 @@
-<div class="sidebar">
+<div class="sidebar {{ activeTheme.theme }}-theme">
     <div class="tool-bar">
         <theme-toggle></theme-toggle>
     </div>
     <h2>
-        Lists <!-- <i class="fad fa-clipboard-list-check"></i> -->
-        <span *ngIf="isTouchDevice" style="font-size:1rem; color:var(--secondary-clr); margin-left:1rem;" (click)="selectMode = !selectMode">{{selectMode ? 'done' : 'edit'}}</span>
-        <button class="btn btn-secondary btn-icon" style="float: right" (click)="createList()">
+        Lists
+        <!-- <i class="fad fa-clipboard-list-check"></i> -->
+        <span
+            *ngIf="isTouchDevice"
+            style="font-size: 1rem; color: var(--secondary-clr); margin-left: 1rem"
+            (click)="selectMode = !selectMode"
+            >{{ selectMode ? "done" : "edit" }}</span
+        >
+        <button class="btn-icon-m clr-primary" style="float: right" (click)="createList()">
             <i class="fas fa-plus"></i>
         </button>
-    </h2>    
+    </h2>
 
-    <ul id="taskListsList" class="taskListsList" cdkDropList (cdkDropListDropped)="drop($event)">
+    <ul
+        id="taskListsList"
+        class="taskListsList"
+        cdkDropList
+        (cdkDropListDropped)="drop($event)"
+    >
         <h5 *ngIf="!this.data.lists.length" style="text-align: center">No lists yet...</h5>
         <li
-            *ngFor="let list of this.sortableListsData let i = index"
+            *ngFor="let list of this.sortableListsData; let i = index"
             class="list"
             cdkDrag
             cdkDragBoundary=".taskListsList"
@@ -22,19 +33,15 @@
             [class.active]="this.data.activeListId == list.id"
             [class.completed]="countOpenTasks(list.list) == 0 && list.list.length"
             [class.alt-bg]="i % 2 == 1"
+            [class.selectModeEnabled]="selectMode && isTouchDevice"
         >
-            <span
-                *ngIf="countOpenTasks(list.list)"
-                class="text-shadow"
-                style="color: var(--secondary-clr); margin-right: 10px"
-                >{{ countOpenTasks(list.list) }}</span
-            >
+            <span *ngIf="countOpenTasks(list.list)" class="counter text-shadow">{{ countOpenTasks(list.list) }}</span>
             <span class="text cut-text">{{ list.name }}</span>
             <i *ngIf="this.data.activeListId == list.id && !selectMode" class="fas fa-chevron-right active-icon"></i>
             <loading-spinner *ngIf="isLoading == list.id && data.activeListId != list.id"></loading-spinner>
-            <i *ngIf="selectMode && isTouchDevice" cdkDragHandle class="far fa-bars"></i>
+            <double-ellipsis *ngIf="isTouchDevice" cdkDragHandle class="mobile-drag-handle" [class.show]="selectMode"></double-ellipsis>
         </li>
-        <label class="modal-btn btn-neutral upload-btn" title="Import lists from JSON file" style="padding: unset">
+        <label class="btn-l clr-tinted-neutral btn-alt upload-btn" title="Import lists from JSON file" role="button">
             <i class="far fa-file-import"></i>&nbsp; import
             <input
                 id="importDataInput"
@@ -46,7 +53,7 @@
             />
         </label>
     </ul>
-    <!-- <button class="btn btn-neutral modal-btn download-btn" title="Download lists as JSON file" (click)="exportData()">
+    <!-- <button class="btn-m clr-neutral download-btn" title="Download lists as JSON file" (click)="exportData()">
         <i class="far fa-download"></i> export
     </button> -->
 </div>

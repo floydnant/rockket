@@ -1,0 +1,33 @@
+.chip {
+    box-sizing: border-box;
+    height: 23px;
+    min-width: 23px;
+    width: max-content;
+    padding: 0 5px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 14px;
+    /* font-weight: 700; */
+    border-radius: 10px;
+    color: var(--text-clr, var(--global-background));
+
+    background: var(--color);
+}
+.chip.badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+.chip-no-bg {
+    color: var(--color);
+    background: var(--global-background);
+}
+.chip:not(.no-outline) {
+    border: 1px solid var(--color);
+    color: var(--color);
+    background: var(--global-background);
+}

@@ -11,4 +11,6 @@ export class TaskProgressComponent {
     @Input() openTasksCount: number;
 
     @Input() showAlways = false;
+
+    @Input() variant: 'border' | 'bar' = 'border';
 }

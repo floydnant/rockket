@@ -16,6 +16,15 @@ export class CustomDialogComponent implements OnInit {
     props: DialogComponentProps;
     @ViewChild('localInputRef') inputRef: ElementRef;
 
+    getColorClass(btnText: string, i: number, buttons: string[]) {
+        if (btnText[0] == '!') return 'clr-danger'
+        if (i == buttons.length - 1) return 'clr-submit'
+        return 'clr-neutral'
+        // [class.clr-danger]="btnText[0] == '!'"
+        // [class.clr-submit]="i == buttons.length - 1 && btnText[0] != '!'"
+        // [class.clr-neutral]="true"
+    }
+
     isOpen = false;
 
     open(props: DialogComponentProps) {

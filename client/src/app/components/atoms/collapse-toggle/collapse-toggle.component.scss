@@ -1,24 +1,33 @@
+@use "../../../../sass/abstracts/mixins.scss" as *;
+
 .container {
-    border-radius: 8px;
     user-select: none;
-    
+
     display: flex;
 }
 .container.margin {
     margin-top: 10px;
     padding: 5px;
 }
-.container.dimm {
-    filter: opacity(0.6) brightness(0.9);
-}
-.container:not(.touchDevice) span:hover,
-.container.touchDevice span:active {
-    filter: unset;
-}
+// .container.dimm {
+//     filter: opacity(0.6) brightness(0.9);
+// }
 span {
-    color: var(--clr);
+    color: var(--color-400);
     cursor: pointer;
+    transition: color 120ms, filter 120ms;
+
+    @include hover() {
+        color: var(--color-300);
+        filter: unset;
+        // color: red;
+    }
 }
+// .container:not(.touchDevice) span:hover,
+// .container.touchDevice span:active {
+    // filter: unset;
+//     color: var(--color-300);
+// }
 /* span:hover {
     text-decoration: underline;
 } */
@@ -26,6 +35,6 @@ span {
 i {
     transition: transform 180ms;
 }
-div:not(.open) i {
+.container:not(.open) i {
     transform: rotate(-90deg);
 }

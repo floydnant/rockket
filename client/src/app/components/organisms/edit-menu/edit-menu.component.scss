@@ -36,11 +36,11 @@ h2 {
 
     background: var(--global-background);
 }
-.btn-close {
+.close-btn {
     position: absolute;
     top: 10px;
     right: 10px;
-    box-shadow: var(--box-shadow-s);
+    // box-shadow: var(--box-shadow-s);
 }
 .nameInput {
     display: block;
@@ -65,6 +65,7 @@ select {
 .notesBlock {
     width: 100%;
     max-height: 50vh;
+    
 
     font-size: 1rem;
     color: var(--global-color);
@@ -122,12 +123,12 @@ select {
 .btn-group button {
     margin-left: 10px;
 }
-.btn-group button.btn-danger {
+.btn-group button.clr-danger {
     position: absolute;
     left: 0;
     margin-left: 0;
 }
-/* .btn-neutral {
+/* .clr-neutral {
     --bg-clr-sat: 0%;
     --bg-opacity: .5;
     box-shadow: var(--box-shadow-s);

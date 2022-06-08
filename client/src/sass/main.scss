@@ -1,0 +1,89 @@
+@use "base.scss";
+@use "utilities.scss";
+@use "components";
+
+// @import "abstracts/mixins.scss";
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-start; /* TODO: make this user decidable */
+
+    margin: 0;
+    padding: 0;
+
+    font-family: futura, helvetica, arial, sans-serif;
+    color: var(--global-color);
+
+    background: var(--global-background);
+
+    /* transition: color, 500ms; */
+}
+
+* {
+    font-family: var(--primary-font);
+}
+::selection {
+    background: var(--secondary-400);
+    color: rgb(27, 27, 27);
+}
+::-webkit-scrollbar {
+    width: 0.3rem;
+    height: 0.3rem;
+}
+::-webkit-scrollbar-track {
+    background: var(--global-background);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--tinted-neutral-700);
+    border-radius: 100vh;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-400);
+}
+
+/* COLOR THEME */
+:root {
+    // --primary-hue: 270;
+    // --primary-clr: hsl(var(--primary-hue), 100%, 60%);
+
+    // --secondary-hue: 53;
+    // --secondary-clr: hsl(var(--secondary-hue), 100%, 50%);
+
+    // --danger-hue: 345;
+    // --danger-clr: hsl(var(--danger-hue), 100%, 50%);
+
+    // --submit-hue: 150;
+    // --submit-clr: hsl(var(--submit-hue), 100%, 47%);
+
+    /* BACKGROUND COLORS */
+    /* --bg-main */
+    /* --bg-item */
+    /* --bg-item-alt */
+    /* --bg-highlight */
+    /* --bg-highlight-alt */
+
+    /* BORDERS and SHADOWS */
+    /* --box-shadow-s */
+    /* --box-shadow-m <-- MAIN  */
+    /* --box-shadow-l */
+
+    /* SIZING */
+    /* --margins */
+    /* --paddings */
+    /* --font-sizings */
+    /* --font-boldnesses */
+}
+
+/* BUTTONS */
+/* .btn-m */
+/* .btn-l */
+/* .btn-icon-s */
+/* .btn-icon-m */
+
+/* COLOR CLASSES */
+/* .primary */
+/* .secondary */
+/* .danger */
+/* .submit */
+/* .neutral */

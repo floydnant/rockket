@@ -1,0 +1,24 @@
+.input {
+    background: var(--global-background);
+    color: var(--global-color);
+
+    padding: var(--spacing-s) var(--spacing-m);
+    border-radius: var(--border-rad-l);
+    font-size: 1rem;
+
+    outline: none;
+    border: var(--outline-weight) solid var(--outline-clr);
+    --outline-clr: var(--tinted-neutral-400);
+    --outline-weight: 1px;
+    box-shadow: var(--box-shadow-s);
+    transition: 180ms, height 0ms, background 120ms;
+}
+.input:focus {
+    --outline-clr: var(--primary-clr);
+}
+body:not(.touchDevice) .input:hover:not(:focus) {
+    background: var(--global-item-bg-alt);
+}
+*::placeholder {
+    color: var(--tinted-neutral-400);
+}

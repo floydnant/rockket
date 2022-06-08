@@ -1,3 +1,5 @@
+@use "../../../../sass/abstracts/mixins.scss" as *;
+
 :host {
     display: block;
     width: 100%;
@@ -6,6 +8,8 @@
 
     display: flex;
     flex-direction: column;
+
+    user-select: none;
 
     /* outline: 3px solid rgb(255, 81, 0); */
 }
@@ -85,8 +89,9 @@
 .list {
     box-sizing: border-box;
     position: relative;
-    padding: 10px;
-    border-radius: 10px;
+    padding: var(--spacing-s);
+    padding-left: var(--spacing-m);
+    border-radius: var(--border-rad-m);
     cursor: pointer;
 
     display: flex;
@@ -95,30 +100,97 @@
 
     background: var(--global-item-bg);
     box-shadow: var(--box-shadow-s);
-    transition: background 180ms, box-shadow 180ms, filter 180ms, color 180ms, transform 180ms;
+    transition: background 120ms, box-shadow 180ms, filter 180ms, color 120ms, transform 180ms;
+
+    @include hover() {
+        background: var(--background-highlight);
+        // .counter {
+        //     color: var(--tinted-neutral-300);
+        // }
+    }
+    & + & {
+        margin-top: 5px;
+    }
+    &.selectModeEnabled {
+        padding-right: 30px;
+    }
+    
+    &.alt-bg {
+        background: var(--global-item-bg-alt);
+        // background: transparent;
+        // box-shadow: none;
+    }
+    &.active {
+        background: var(--global-item-bg-highlight);
+        .counter {
+            color: var(--secondary-400);
+        }
+    }
+    &.completed {
+        .text {
+            text-decoration: line-through;
+            text-decoration-color: var(--submit-400);
+            text-decoration-thickness: 2px;
+            // text-decoration-style: wavy;
+        }
+
+        &:not(.active, :hover) {
+            filter: opacity(0.9);
+            
+            .text {
+                color: var(--tinted-neutral-400);
+            }
+        }
+    }
+
+    .counter {
+        color: var(--primary-300); 
+        margin-right: var(--spacing-s);
+        transition: color 120ms;
+    }
+
+    @include not-hover() {
+        &:not(.active, .completed) .text {
+            color: var(--tinted-neutral-300);
+        }
+        // .text {
+        //     color: var(--tinted-neutral-300);
+        // }
+    }
+    .text {
+        position: relative;
+        display: inline-block;
+        transition: 220ms;
+        width: 100%;
+    }
+
+    .active-icon, loading-spinner {
+        margin-left: 10px;
+        margin-right: 3px;
+        filter: opacity(0.6);
+    }
+    .active-icon {
+        animation: slide-and-back 400ms ease-in-out;
+        color: var(--tinted-neutral-200);
+    }
+
+    .mobile-drag-handle {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        color: var(--secondary-400);
+
+        transition: transform 300ms, opacity 300ms;
+        &:not(.show) {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(10px);
+        }
+    }
 }
 
-.list + .list {
-    margin-top: 0.7rem;
-}
-.list.alt-bg {
-    background: var(--global-item-bg-alt);
-}
-.list + .list {
-    margin-top: 5px;
-}
-.list.active {
-    color: var(--primary-clr);
-}
-.list:not(.active, .completed, :hover) .text {
-    filter: opacity(.6)
-}
-.list.completed {
-    filter: opacity(0.9);
-}
-.list:hover {
-    background: var(--global-item-bg-highlight);
-}
+
 .list.cdk-drag-preview {
     box-sizing: border-box;
     box-shadow: var(--box-shadow-m);
@@ -132,38 +204,6 @@
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1), box-shadow 200ms;
 }
 
-.list .text {
-    position: relative;
-    display: inline-block;
-    transition: 220ms;
-    width: 100%;
-}
-.list.completed .text {
-    color: hsla(0, 0%, 50%, 0.8);
-}
-.list .text::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    height: 2px;
-    width: 0;
-
-    background: var(--submit-clr);
-    box-shadow: var(--box-shadow-s);
-    transition: 220ms;
-}
-.list.completed .text::before {
-    width: 100%;
-}
-
-.sidebar .taskListsList li :is(i, loading-spinner) {
-    margin-left: 10px;
-    margin-right: 3px;
-    filter: opacity(0.6);
-}
-.active-icon {
-    animation: slide-and-back 400ms ease-in-out;
-}
 @keyframes slide-and-back {
     50% {
         transform: translateX(8px);
@@ -171,11 +211,15 @@
 }
 
 .upload-btn {
-    font-weight: 600;
     margin-top: 10px;
-    background: var(--global-item-bg);
-    padding-block: 7px !important;
+    display: block;
+    text-align: center;
+    @include not-hover() {
+        filter: opacity(.6);
+    }
 }
-.upload-btn:hover {
-    background: var(--global-item-bg-highlight);
+.light-theme .upload-btn {
+    @include not-hover() {
+        color: white;
+    }
 }

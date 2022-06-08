@@ -49,7 +49,10 @@ export class EditMenuComponent implements OnInit {
 
         if (!hightlight) repeatAfterDelay(() => this.nameInputRef.nativeElement.focus(), [100, 300, 500]);
         else {
-            if (this.hightlight == 'links') this.linkList?.nativeElement.scrollIntoView({ behavior: 'smooth' });
+            if (this.hightlight == 'links') {
+                this.linkList?.nativeElement.scrollIntoView({ behavior: 'smooth' });
+                repeatAfterDelay(() => this.linkFormFocusEventSubject.next(true), [100, 300, 500]);
+            }
             if (this.hightlight == 'notes')
                 repeatAfterDelay(() => this.notesBlockFocusSubject.next(true), [100, 300, 500]);
         }
@@ -85,6 +88,7 @@ export class EditMenuComponent implements OnInit {
         this.originalNotes = this.data.meta.notes;
     }
 
+    linkFormFocusEventSubject = new Subject<boolean>();
     linkInput: string;
     addLink() {
         const { resUrl, isDomainValid } = validateAndFormatUrl(this.linkInput);

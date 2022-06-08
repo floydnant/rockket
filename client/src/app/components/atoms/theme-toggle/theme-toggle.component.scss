@@ -16,14 +16,14 @@ button {
 button + :is(span, button) {
     margin-top: 5px !important;
 }
-.light {
-    /* background-color: white; */
-    --bg-clr-lightness: 100%;
-    color: var(--secondary-clr)
-}
-.light:hover {
-    opacity: .5;
-}
+// .light {
+//     /* background-color: white; */
+//     --bg-clr-lightness: 100%;
+//     color: var(--secondary-clr)
+// }
+// .light:hover {
+//     opacity: .5;
+// }
 span {
     display: inline-flex;
     justify-content: center;

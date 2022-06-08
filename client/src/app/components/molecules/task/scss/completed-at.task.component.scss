@@ -1,3 +1,5 @@
+@use "../../../../../sass/abstracts/mixins.scss" as *;
+
 .position-completed-at {
     position: relative;
     height: 100%;
@@ -33,7 +35,15 @@
     border-style: solid;
     border-color: var(--global-background) transparent transparent transparent;
 }
-.task.completed:hover .completed-at {
-    --translateY: 0;
-    opacity: 1;
+// .task.completed:hover .completed-at {
+//     --translateY: 0;
+//     opacity: 1;
+// }
+.task.completed {
+    @include hover() {
+        .completed-at {
+           --translateY: 0;
+           opacity: 1;
+       }
+    }
 }

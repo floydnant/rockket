@@ -43,7 +43,7 @@ menu-toggle-btn {
 }
 .active-priority {
     /* background: var(--global-item-bg-alt); */
-    background: hsl(var(--secondary-clr-hue) 40% 50% / 0.5);
+    background: hsl(var(--primary-clr-hue) 40% 50% / 0.5);
 }
 .priority-list > *:hover {
     background: var(--global-item-bg-highlight);
@@ -81,7 +81,7 @@ menu-toggle-btn {
     margin: 0;
 }
 .btn-group > * + * {
-    margin-left: 10px;
+    margin-left: var(--spacing-s);
 }
 /* .btn-group .btn:not(:hover) {
     text-shadow: var(--box-shadow-m);

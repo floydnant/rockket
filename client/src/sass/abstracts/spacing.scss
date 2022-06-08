@@ -1,0 +1,17 @@
+$spacings: (
+    xs: 3px,
+    s: 7px,
+    m: 10px,
+    l: 15px,
+    xl: 20px,
+);
+
+:root {
+    @each $size, $value in $spacings {
+        --spacing-#{$size}: #{$value};
+    }
+
+
+
+    --modal-padding: var(--spacing-xl);
+}

@@ -1,9 +1,11 @@
+@use "../../../../../sass/abstracts/mixins.scss" as *;
+
 :host {
     display: block;
     --bg: var(--global-item-bg);
     --alt-bg: var(--global-item-bg-alt);
     /* background: var(--global-item-bg-highlight); */
-    border-radius: 14px;
+    border-radius: var(--border-rad-xl);
 }
 .task-wrapper {
     display: flex;
@@ -11,17 +13,17 @@
 }
 .task {
     box-sizing: border-box;
-    border-radius: 14px;
+    border-radius: var(--border-rad-xl);
     list-style: none;
 
     --background: var(--bg);
     background: var(--background);
-    box-shadow: var(--box-shadow-s), 0 0 0px 0px var(--primary-clr);
+    box-shadow: var(--box-shadow-m), 0 0 0px 0px var(--border-clr);
     transition: filter 150ms, background 80ms, box-shadow 200ms;
 }
 .task.highlight-border {
     --border-clr: var(--primary-clr);
-    box-shadow: var(--box-shadow-s), 0 0 0px 2px var(--border-clr);
+    box-shadow: var(--box-shadow-m), 0 0 0px 2px var(--border-clr);
 }
 .alt-bg {
     --background: var(--alt-bg);
@@ -32,8 +34,19 @@
 .task.completed {
     filter: opacity(0.45) brightness(0.8);
 }
-.task.completed:hover {
-    filter: opacity(1);
+// .task.completed:hover {
+//     filter: opacity(1);
+// }
+.task.completed {
+    @media (hover: none) {
+        user-select: none;
+    }
+    @include hover() {
+        filter: unset;
+    }
+    &.mobile-menu-open {
+        filter: unset;
+    }
 }
 
 .outer-wrapper {
@@ -47,13 +60,13 @@
     align-items: center;
 
     padding: 10px;
-    border-radius: 14px;
+    border-radius: var(--border-rad-xl);
 
     isolation: isolate;
     overflow: hidden;
 }
 
-.btn-complete {
+.complete-btn {
     position: relative;
     margin-right: 10px;
 
@@ -62,18 +75,18 @@
     box-shadow: var(--shadow);
     transition: var(--shadow-transition), transform 200ms, color 200ms, background 200ms;
 }
-.task.completed-transition .btn-complete,
-.task.completed .btn-complete:hover {
+.task.completed-transition .complete-btn,
+.task.completed .complete-btn:hover {
     --shadow: 0 0 50px 100vw hsla(var(--color-hue), 97%, 58%, 0.2);
     --shadow-transition: box-shadow 400ms ease-out;
     /* text-shadow: var(--box-shadow-s), 0 0 10px hsla(var(--color-hue), 97%, 58%, 0.3); */
 }
-.task:is(.completed-transition, .completed):not(.touchDevice) .btn-complete:not(:hover),
-.task.touchDevice:is(.completed-transition, .completed) .btn-complete {
+.task:is(.completed-transition, .completed):not(.touchDevice) .complete-btn:not(:hover),
+.task.touchDevice:is(.completed-transition, .completed) .complete-btn {
     background: hsla(var(--color-hue), 97%, 58%, 0.2);
 }
-/* .task:not(.completed, .completed-transition) .btn-complete:not(:hover),
-.task.touchDevice:not(.completed, .completed-transition) .btn-complete {
+/* .task:not(.completed, .completed-transition) .complete-btn:not(:hover),
+.task.touchDevice:not(.completed, .completed-transition) .complete-btn {
     color: gray;
 } */
 

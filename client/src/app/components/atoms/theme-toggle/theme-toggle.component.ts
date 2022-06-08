@@ -9,6 +9,8 @@ import { theme, ThemeService } from 'src/app/services/theme.service';
 export class ThemeToggleComponent {
     constructor(public themeService: ThemeService) {}
 
+    activeTheme = this.themeService.themeState;
+
     setTheme = (theme: theme) => {
         this.themeService.setTheme(theme);
     };

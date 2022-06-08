@@ -1,0 +1,17 @@
+.spin {
+    animation: spin 0.5s infinite linear;
+}
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-highlight {
+    animation: highlight 1000ms 350ms;
+}
+@keyframes highlight {
+    50% {
+        background: var(--global-item-bg-highlight);
+    }
+}

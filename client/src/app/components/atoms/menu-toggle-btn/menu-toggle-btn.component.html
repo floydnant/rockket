@@ -2,7 +2,7 @@
     <input type="checkbox" id="checkbox" style="display: none" [checked]="isOpen" />
     <label
         role="button"
-        class="btn btn-icon btn-{{ color }} size-{{ size }}"
+        class="btn-icon-{{ size }} {{ colorClass }} size-{{ size }}"
         [class.hover]="isTouchDevice && isOpen"
         (click)="toggleMenu()"
     >

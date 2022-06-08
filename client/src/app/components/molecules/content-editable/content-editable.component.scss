@@ -1,6 +1,7 @@
 :host {
     display: block;
     padding: 0 !important;
+    border-radius: var(--border-rad-xl);
 }
 .position-placeholder {
     position: relative;
@@ -13,7 +14,8 @@
     padding: 15px;
     --margin: 2px;
     margin-left: var(--margin);
-    opacity: .45;
+    color: var(--tinted-neutral-400);
+    // opacity: .45;
 }
 .placeholder.hide {
     opacity: 0;
@@ -36,7 +38,7 @@
 
     color: var(--global-color);
     border-radius: var(--b-radius);
-    --b-radius: 10px;
+    --b-radius: var(--border-rad-m);
     padding: 10px;
     
     background: none;
@@ -46,7 +48,7 @@
     --outline-clr: var(--tinted-gray-600);
 }
 .contentBlock:not(.input-style) {
-    --b-radius: 14px;
+    --b-radius: var(--border-rad-xl);
     border-width: 2px;
     padding: 15px;
 }

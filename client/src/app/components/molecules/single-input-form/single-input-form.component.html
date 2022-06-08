@@ -13,7 +13,7 @@
         (focus)="onFocusChange(true)"
         (blur)="onFocusChange(false)"
     />
-    <button class="btn {{ btnColorClass }}" [disabled]="this.value.trim() == ''" (click)="submit()">
+    <button class="btn-l btn-alt {{ btnColorClass }}" [disabled]="this.value.trim() == ''" (click)="submit()">
         {{ btnText }}
     </button>
 </div>

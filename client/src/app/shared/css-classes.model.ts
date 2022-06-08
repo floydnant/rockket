@@ -1,1 +1,7 @@
-export type BtnColorClasses = 'btn-primary' | 'btn-secondary' | 'btn-danger' | 'btn-submit';
+export type colorClasses =
+    | 'clr-primary'
+    | 'clr-secondary'
+    | 'clr-danger'
+    | 'clr-submit'
+    | 'clr-neutral'
+    | 'clr-tinted-neutral';

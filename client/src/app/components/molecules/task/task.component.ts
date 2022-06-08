@@ -45,9 +45,12 @@ export class TaskComponent implements OnInit {
     isCompleteBtnHovered = false; //TODO: outsource this into CSS
 
     isTouchDevice = isTouchDevice();
+    optButtonSize: 'm' | 's' = this.isTouchDevice ? 'm' : 's';
     isTaskActionBtnsMenuOpenOnTouchDevice = false;
-    setIsTaskActionBtnsMenuOpenOnTouchDevice = (nowOpen: boolean) =>
-        (this.isTaskActionBtnsMenuOpenOnTouchDevice = nowOpen);
+    setIsTaskActionBtnsMenuOpenOnTouchDevice = (nowOpen: boolean) => {
+        console.log('mobile menu toggled');
+        return (this.isTaskActionBtnsMenuOpenOnTouchDevice = nowOpen);
+    };
 
     quickAddInputFocusEventSubject = new Subject<boolean>();
     focusQuickAddInputField = () => this.quickAddInputFocusEventSubject.next(true);
@@ -88,16 +91,13 @@ export class TaskComponent implements OnInit {
             this.onLeaveNotesBlock(false);
         }
     }
-    @ViewChild('detailIconsWrapper') detailIconsWrapper: ElementRef<HTMLSpanElement>;
-    @ViewChild('popOutContainer') popOutContainer: ElementRef<HTMLDivElement>;
+
+    @ViewChild('taskWrapper') taskWrapper: ElementRef<HTMLDivElement>;
     notesBlockOutsideClickHandler(event: MouseEvent) {
         if (!this.isDetailsPopOutOpen || !this.isNotesBlockFocused) return;
 
-        const elemsToCheckIfClicked: ElementRef<HTMLElement>[] = [this.popOutContainer, this.detailIconsWrapper];
-        const clickedOutsideNotesBlock = !event
-            .composedPath()
-            .some(elem => elemsToCheckIfClicked.some(elemToCheck => elem == elemToCheck?.nativeElement));
-        if (clickedOutsideNotesBlock) this.onLeaveNotesBlock();
+        const clickedOutsideTask = !event.composedPath().some(elem => elem == this.taskWrapper?.nativeElement);
+        if (clickedOutsideTask) this.onLeaveNotesBlock();
     }
     onLeaveNotesBlock(saveChanges = true) {
         this.isNotesBlockFocused = false;

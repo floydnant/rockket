@@ -17,7 +17,7 @@
         *ngIf="completedTasks.length && openTasks.length"
         [isOpen]="!collapseCompletedTasks"
         (onToggle)="toggleCollapseCompletedSubtasks()"
-        colorClass="btn-submit"
+        colorClass="clr-submit"
         dimm="dimm-1"
     >
         {{ completedTasks.length }} completed {{ variant }}{{ completedTasks.length > 1 ? "s" : "" }}

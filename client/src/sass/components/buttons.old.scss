@@ -1,0 +1,133 @@
+:root {
+    --btn-icon-size: 2rem;
+}
+
+button {
+    cursor: pointer;
+}
+input,
+.btn {
+    font-size: 16px;
+    // padding: 10px;
+    // border: 0;
+    // border-radius: 12px;
+    color: var(--global-background);
+
+    --shadow: var(--box-shadow-s);
+    /* box-shadow: var(--shadow); */
+}
+.btn {
+    --color: var(--clr);
+    padding: 7.5px 15px;
+    font-weight: 800;
+    cursor: pointer;
+    background: var(--color);
+
+    transition: transform 150ms, background 200ms, color 180ms, filter 150ms;
+}
+body:not(.touchDevice) .btn:hover:not([disabled], .modal-btn) {
+    transform: scale(1.09);
+    filter: opacity(1) brightness(1);
+    background: var(--clr);
+    --color: var(--global-background);
+}
+body.touchDevice .btn:is(.hover, :active):not([disabled], .modal-btn) {
+    background: var(--clr);
+    --color: var(--global-background);
+}
+body .btn:active:not([disabled]) {
+    filter: opacity(0.6) !important;
+    transform: scale(0.95) !important;
+}
+
+.modal-btn {
+    padding: 3px 15px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 8px;
+    font-weight: 650;
+    --color: var(--global-color);
+    color: var(--color);
+
+    box-shadow: var(--box-shadow-s);
+    /* prettier-ignore */
+    background: hsl(
+        var(--color-hue, var(--secondary-clr-hue)) 
+        var(--bg-clr-sat, 100%) 
+        var(--bg-clr-lightness, 50%) 
+        / var(--bg-opacity, .5));
+    --bg-opacity: 1;
+
+    transition: color 110ms, background 115ms;
+}
+.modal-btn:is(:hover, :focus) {
+    --bg-clr-lightness: 35%;
+}
+
+.btn-icon {
+    // width: var(--btn-icon-size);
+    // height: var(--btn-icon-size);
+
+    // display: inline-flex;
+    // justify-content: center;
+    // align-items: center;
+
+    font-size: 1.2rem;
+    // padding: 7px;
+    border: none;
+    // color: var(--color);
+    // background: transparent;
+}
+.btn-icon:not(:hover) {
+    text-shadow: var(--box-shadow-s);
+}
+.btn-primary {
+    --color-hue: var(--primary-clr-hue);
+    --clr: var(--primary-clr);
+}
+.primary-clr {
+    --color: var(--primary-clr);
+}
+.btn-secondary {
+    --color-hue: var(--secondary-clr-hue);
+    --clr: var(--secondary-clr);
+}
+.secondary-clr {
+    --color: var(--secondary-clr);
+}
+.btn-edit {
+    --color-hue: var(--primary-clr-hue);
+    --clr: var(--primary-clr);
+}
+
+.btn-delete,
+.btn-danger {
+    --color-hue: var(--danger-clr-hue) !important;
+    --clr: var(--danger-clr) !important;
+}
+.danger-clr {
+    --color: var(--danger-clr);
+}
+.modal-btn.btn-delete,
+.modal-btn.btn-danger {
+    color: white;
+}
+
+.btn-complete,
+.btn-submit,
+.submit-clr {
+    --color-hue: var(--submit-clr-hue);
+    --clr: var(--submit-clr);
+    --color: var(--submit-clr);
+}
+.modal-btn.btn-submit {
+    color: black;
+}
+.btn-neutral {
+    background: hsl(0 0% var(--bg-clr-lightness, 50%) / 0.5);
+    color: var(--global-color);
+    box-shadow: var(--box-shadow-s);
+}

@@ -23,15 +23,16 @@ import { MenuToggleBtnComponent } from './components/atoms/menu-toggle-btn/menu-
 import { RemoveHostDirective } from './directives/remove-host.directive';
 import { SingleInputFormComponent } from './components/molecules/single-input-form/single-input-form.component';
 import { CollapseToggleComponent } from './components/atoms/collapse-toggle/collapse-toggle.component';
-import { LoadingSpinnerComponent } from './components/atoms/loading-spinner/loading-spinner.component';
-import { PriorityIconComponent } from './components/atoms/priority-icon/priority-icon.component';
+import { LoadingSpinnerComponent } from './components/atoms/icons/loading-spinner/loading-spinner.component';
+import { PriorityIconComponent } from './components/atoms/icons/priority-icon/priority-icon.component';
 import { ToggleSwitchComponent } from './components/atoms/toggle-switch/toggle-switch.component';
-import { AppleShareIconComponent } from './components/atoms/apple-share-icon/apple-share-icon.component';
+import { AppleShareIconComponent } from './components/atoms/icons/apple-share-icon/apple-share-icon.component';
 import { TasklistComponent } from './components/organisms/task-list/task-list.component';
 import { TaskProgressComponent } from './components/molecules/task-progress/task-progress.component';
 import { DomValueAccessorDirective } from './directives/dom-value-accessor.directive';
 import { DomChangesListenerDirective } from './directives/dom-changes-listener.directive';
 import { ContentEditableComponent } from './components/molecules/content-editable/content-editable.component';
+import { DoubleEllipsisComponent } from './components/atoms/icons/double-ellipsis/double-ellipsis.component';
 
 @NgModule({
     declarations: [
@@ -55,6 +56,7 @@ import { ContentEditableComponent } from './components/molecules/content-editabl
         DomValueAccessorDirective,
         DomChangesListenerDirective,
         ContentEditableComponent,
+        DoubleEllipsisComponent,
     ],
     imports: [
         DragDropModule,

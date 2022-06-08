@@ -3,7 +3,7 @@
         <span class="name cut-text">
             {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
         </span>
-        <button *ngIf="this.activeTaskList" class="btn btn-icon btn-primary" (click)="editList()">
+        <button *ngIf="this.activeTaskList" class="btn-icon-m clr-secondary" (click)="editList()">
             <i class="fas fa-ellipsis-v"></i>
         </button>
         <!-- <apple-share-icon remove-host (click)="db.exportActiveList()"></apple-share-icon> -->
@@ -11,8 +11,8 @@
     <menu-toggle-btn
         noDropDown
         type="hamburger"
-        size="s"
-        color="submit"
+        size="m"
+        colorClass="clr-submit"
         [isOpen]="isMobileMenuOpen"
         (onMenuToggle)="setMobileMenuOpen($event)"
     ></menu-toggle-btn>
@@ -28,6 +28,7 @@
         <sidebar
             [data]="this.data"
             (onSetActiveList)="setActiveList($event)"
+            (closeMobileMenu)="this.isMobileMenuOpen = false;"
             (onCreateList)="createList()"
             (onImportData)="importJson($event)"
             (onListSort)="sortLists($event)"
@@ -37,22 +38,25 @@
         <h1 class="list-name">
             {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
             <div class="btn-group">
-                <button *ngIf="this.activeTaskList" class="btn btn-primary btn-icon" (click)="editList()">
+                <button *ngIf="this.activeTaskList" class="btn-icon-m clr-secondary" (click)="editList()">
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
-                <button *ngIf="this.activeTaskList" class="btn btn-secondary btn-icon" (click)="exportActiveList()">
+                <button *ngIf="this.activeTaskList" class="btn-icon-m clr-tinted-neutral" (click)="exportActiveList()">
                     <!-- <i class="far fa-share"></i> -->
                     <i class="fas fa-file-download"></i>
                     <!-- <apple-share-icon remove-host></apple-share-icon> -->
                 </button>
             </div>
-            <task-progress
-                *ngIf="!isTouchDevice"
-                [tasksCount]="activeTaskList.list.length"
-                [completedTasksCount]="completedTasksCount"
-                [openTasksCount]="openTasksCount"
-                [showAlways]="true"
-            ></task-progress>
+            <div class="task-progress">
+                <task-progress
+                    *ngIf="!isTouchDevice"
+                    variant="bar"
+                    [tasksCount]="activeTaskList.list.length"
+                    [completedTasksCount]="completedTasksCount"
+                    [openTasksCount]="openTasksCount"
+                    [showAlways]="true"
+                ></task-progress>
+            </div>
         </h1>
 
         <single-input-form

@@ -1,0 +1,76 @@
+@use "abstracts" as *;
+
+:root {
+    @each $color-name, $hue in $hues {
+        --#{$color-name}-clr-hue: #{$hue};
+        --#{$color-name}-hue: #{$hue};
+    }
+    @include color-map-loop($colors-default);
+
+    
+    ///////////////////////// Migration support /////////////////////////
+
+    // --tinted-gray-600: hsl(var(--secondary-clr-hue) 15% 50% / 0.5);
+    // --tinted-gray-400: hsl(var(--secondary-clr-hue) 15% 50% / 0.8);
+    --tinted-gray-600: var(--tinted-neutral-600);
+    --tinted-gray-400: var(--tinted-neutral-400);
+
+    --primary-clr: var(--primary-clr-400);
+    --secondary-clr: var(--secondary-clr-400);
+    --danger-clr: var(--danger-clr-400);
+    --submit-clr: var(--submit-clr-400);
+
+    --global-background: var(--background-main);
+    --global-item-bg: var(--background-item);
+    --global-item-bg-alt: var(--background-item-alt);
+    --global-item-bg-highlight: var(--background-highlight);
+
+    --global-color: var(--text-color-900);
+}
+
+@each $theme, $overwrites in $theme-overwrites {
+    :root[data-theme="#{$theme}"] {
+        @include color-map-loop($overwrites);
+    }
+}
+
+:root[data-theme="light"] {
+    // --global-background: hsl(var(--primary-clr-hue), 5%, 98%);
+    // --global-item-bg: var(--global-background);
+    // --global-item-bg-alt: hsl(var(--primary-clr-hue), 5%, 94%);
+    // --global-item-bg-highlight: hsl(var(--primary-clr-hue), 60%, 95%);
+
+    // --global-color: hsl(var(--primary-clr-hue), 14%, 14%);
+
+    --primary-clr-hue: 43;
+    // --primary-clr: hsl(var(--primary-clr-hue), 100%, 48%);
+
+    // --submit-clr: hsl(var(--submit-clr-hue), 100%, 42%);
+
+    // --box-shadow-s: 0 0 10px rgba(0, 0, 0, 0.466);
+    // --box-shadow-m: 0 0 10px rgba(0, 0, 0, 0.418), 0 0 20px rgba(0, 0, 0, 0.425);
+    // --box-shadow-l: 0 0 150px rgba(0, 0, 0, 0.473), 0 0 30px rgba(0, 0, 0, 0.418);
+}
+// :root[data-theme="dark"] {
+    // --global-background: hsl(var(--primary-clr-hue), 13%, 14%);
+    // --global-item-bg: hsl(var(--primary-clr-hue), 15%, 16%);
+    // --global-item-bg-alt: hsl(var(--primary-clr-hue), 15%, 20%);
+    // --global-item-bg-highlight: hsl(var(--primary-clr-hue), 20%, 30%);
+
+    // --global-color: white;
+
+    // --box-shadow-s: 0 0 10px rgba(0, 0, 0, 0.61);
+    // --box-shadow-m: 0 0 10px rgba(0, 0, 0, 0.603), 0 0 20px rgba(0, 0, 0, 0.61);
+    // --box-shadow-l: 0 0 20px rgba(0, 0, 0, 0.514), 0 0 40px rgba(0, 0, 0, 0.514);
+// }
+
+@each $color-name, $shades in $colors-default {
+    .clr-#{$color-name}/* , .btn-#{$color-name} */ {
+        @each $shade, $value in $shades {
+            --color-#{$shade}: var(--#{$color-name}-#{$shade});
+        }
+
+        --color: var(--color-400);
+        --color-hue: var(--#{$color-name}-hue);
+    }
+}

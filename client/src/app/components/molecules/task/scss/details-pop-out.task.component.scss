@@ -40,13 +40,13 @@
     box-shadow: none;
 }
 .notesBlock:not(:focus) {
-    --outline-clr: var(--tinted-gray-600);
+    --outline-clr: var(--tinted-neutral-600);
 }
 ::-webkit-scrollbar-track {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: var(--tinted-gray-400);
+    background: var(--tinted-neutral-400);
 }
 
 .position-pop-out-actions {
@@ -58,36 +58,36 @@
 }
 .pop-out-actions-container {
     position: absolute;
-    bottom: 15px;
-    right: 17.5px;
+    bottom: 10px;
+    right: 12.5px;
 
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
 }
-.pop-out-action {
-    margin: 0 0 0 10px;
-    font-size: 1.2rem;
+// .pop-out-action {
+//     margin: 0 0 0 10px;
+//     font-size: 1.2rem;
 
-    color: var(--color, var(--global-color));
-    border: none;
-    padding: 0;
+//     color: var(--color, var(--global-color));
+//     border: none;
+//     padding: 0;
 
-    background: none;
-    /* prettier-ignore */
-    text-shadow: 0 0 2px var(--global-background), 
-                 0 0 5px var(--global-background), 
-                 0 0 8px var(--global-background),
-                 0 0 10px var(--global-background), 
-                 0 0 12px var(--global-background), 
-                 0 0 15px var(--global-background);
-    transition: color 130ms, filter 130ms;
-}
-.pop-out-action:hover {
-    color: var(--color, var(--primary-clr));
-}
+//     background: none;
+//     /* prettier-ignore */
+//     text-shadow: 0 0 2px var(--global-background), 
+//                  0 0 5px var(--global-background), 
+//                  0 0 8px var(--global-background),
+//                  0 0 10px var(--global-background), 
+//                  0 0 12px var(--global-background), 
+//                  0 0 15px var(--global-background);
+//     transition: color 130ms, filter 130ms;
+// }
+// .pop-out-action:hover {
+//     color: var(--color, var(--primary-clr));
+// }
 
-.pop-out-action:not(.no-filter):hover {
-    filter: opacity(0.6);
-}
+// .pop-out-action:not(.no-filter):hover {
+//     filter: opacity(0.6);
+// }

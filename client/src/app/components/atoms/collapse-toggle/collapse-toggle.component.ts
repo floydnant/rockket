@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BtnColorClasses } from 'src/app/shared/css-classes.model';
+import { colorClasses } from 'src/app/shared/css-classes.model';
 import { isTouchDevice } from 'src/app/shared/utils';
 
 @Component({
@@ -12,7 +12,7 @@ export class CollapseToggleComponent implements OnInit {
     @Input() @Output() isOpen = false;
     @Input('hideToggleText') toggleText: true | 'dimm' | '' = true;
     @Input() dimm: 'none' | 'dimm-1' | 'dimm-2' = 'dimm-1';
-    @Input() colorClass: BtnColorClasses | 'neutral' = 'neutral';
+    @Input() colorClass: colorClasses = 'clr-tinted-neutral';
     @Input('noSpacing') spacing: true | '' = true;
 
     @Output() onToggle = new EventEmitter<boolean>();

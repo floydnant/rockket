@@ -1,7 +1,7 @@
 <app-modal id="edit-menu" (onClose)="close('Cancelled')">
     <div class="edit-menu" *ngIf="isOpen">
         <h2>{{ this.type }} details</h2>
-        <button class="btn btn-icon btn-close" title="[esc]" (click)="close('Cancelled')">
+        <button class="btn-icon-m clr-neutral close-btn" title="[esc]" (click)="close('Cancelled')">
             <i class="fas fa-times"></i>
         </button>
         <input
@@ -48,6 +48,7 @@
                 type="url"
                 placeholder="Link"
                 class="linkInput"
+                [focusChangeEvents]="linkFormFocusEventSubject.asObservable()"
                 (onSubmit)="linkInput = $event; addLink()"
             ></single-input-form>
         </div>
@@ -65,7 +66,7 @@
                         <a class="wrap-text" [href]="link" target="_blank">{{ link }}</a>
                         <button
                             *ngIf="!noEdit"
-                            class="btn btn-delete btn-icon"
+                            class="btn-icon-m clr-danger"
                             (click)="removeLink(i)"
                             style="margin-left: 1rem"
                         >
@@ -77,11 +78,11 @@
         </div>
 
         <div class="btn-group">
-            <button class="btn modal-btn btn-danger" style="float: left" (click)="close('Deleted')">delete</button>
-            <button class="btn modal-btn btn-neutral" title="[esc]" (click)="close('Cancelled')">
+            <button class="btn-m clr-danger" style="float: left" (click)="close('Deleted')">delete</button>
+            <button class="btn-m clr-neutral" title="[esc]" (click)="close('Cancelled')">
                 {{ noEdit ? "close" : "cancel" }}
             </button>
-            <button *ngIf="!noEdit" class="btn modal-btn btn-submit" title="[↵]" (click)="close('OK')">
+            <button *ngIf="!noEdit" class="btn-m clr-submit" title="[↵]" (click)="close('OK')">
                 Done <loading-spinner *ngIf="isLoading"></loading-spinner>
             </button>
         </div>

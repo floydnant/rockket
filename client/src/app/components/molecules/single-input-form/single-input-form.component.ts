@@ -10,7 +10,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
-import { BtnColorClasses } from 'src/app/shared/css-classes.model';
+import { colorClasses } from 'src/app/shared/css-classes.model';
 
 @Component({
     selector: 'single-input-form',
@@ -28,7 +28,7 @@ export class SingleInputFormComponent implements OnInit, OnDestroy {
     @Input() noFocusNoBorder: true | '' = true;
 
     @Input() btnText: string = 'add';
-    @Input() btnColorClass: BtnColorClasses = 'btn-secondary';
+    @Input() btnColorClass: colorClasses = 'clr-secondary';
 
     @Output() onSubmit = new EventEmitter<string>();
     submit = () => {

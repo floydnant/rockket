@@ -31,7 +31,7 @@
 							"src/manifest.webmanifest"
 						],
 						"styles": [
-							"src/sass/styles.new.scss"
+							"src/sass/main.scss"
 						],
 						"scripts": [],
 						"serviceWorker": true,

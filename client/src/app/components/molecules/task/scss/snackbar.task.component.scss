@@ -11,7 +11,7 @@
     transform: translateY(15px);
 }
 .snackbar {
-    z-index: 10;
+    z-index: 8;
     position: absolute;
     bottom: -7px;
     left: 50%;
@@ -25,7 +25,7 @@
 
     padding: 5px;
     padding-bottom: 10px;
-    border-radius: 16px;
+    border-radius: var(--border-rad-l);
     /* border-width: 0;
     border-style: solid;
     border-color: var(--primary-clr); */
@@ -41,9 +41,12 @@
     border-width: 2px;
 } */
 .position-indicators {
-    z-index: 11;
+    z-index: 9;
     position: relative;
     pointer-events: none;
+}
+.task.completed .position-indicators {
+    transform: translateX(14px);
 }
 .indicators {
     position: absolute;
@@ -71,14 +74,14 @@
     border-radius: 50%;
     width: 5px;
     height: 5px;
-    background: var(--secondary-clr);
+    background: var(--primary-400);
 
     transition: transform var(--transition-duration) var(--transition-delay),
         opacity var(--transition-duration) var(--transition-delay);
 }
 .task:not(.touchDevice):is(:hover, .is-focused) .indicators .links,
 .task.touchDevice.is-focused .indicators .links {
-    transform: translateX(-40px);
+    transform: translateX(-32px);
 }
 .task:not(.touchDevice):is(:hover, .is-focused) .indicators .notes,
 .task.touchDevice.is-focused .indicators .notes {
@@ -89,5 +92,6 @@
 }
 .task:not(.touchDevice):is(:hover, .is-focused) .indicators span.hide,
 .task.touchDevice.is-focused .indicators span.hide {
-    opacity: 0.2;
+    opacity: 0.5;
+    background: var(--tinted-neutral-700);
 }

@@ -1,5 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { ThemeService } from 'src/app/services/theme.service';
 import { getCopyOf, isTouchDevice, moveToMacroQueue } from 'src/app/shared/utils';
 import { Compare } from 'src/app/shared/utils/objects';
 import { AppData } from '../../../reducers';
@@ -11,7 +12,8 @@ import { countTasks, TaskList } from '../../../shared/taskList.model';
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit, OnChanges {
-    constructor() {}
+    constructor(private themeService: ThemeService) {}
+    activeTheme = this.themeService.themeState
     isTouchDevice = isTouchDevice();
 
     sortableListsData: TaskList[];
@@ -20,9 +22,15 @@ export class SidebarComponent implements OnInit, OnChanges {
 
     isLoading: string | null;
 
+    @Output() closeMobileMenu = new EventEmitter<never>();
     @Output() onSetActiveList = new EventEmitter<string>();
     setActiveList = (listId: string) => {
-        if (this.data.activeListId == listId) return;
+        if (this.selectMode) return;
+
+        if (this.data.activeListId == listId) {
+            this.closeMobileMenu.emit();
+            return;
+        }
 
         this.isLoading = listId;
         moveToMacroQueue(() => this.onSetActiveList.emit(listId));

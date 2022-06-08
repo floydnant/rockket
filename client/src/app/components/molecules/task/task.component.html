@@ -1,10 +1,10 @@
-<div class="task-wrapper" [class.isNotesBlockFocused]="isNotesBlockFocused" [class.touchDevice]="isTouchDevice">
+<div #taskWrapper class="task-wrapper" [class.isNotesBlockFocused]="isNotesBlockFocused" [class.touchDevice]="isTouchDevice">
     <!-- <div
         *ngIf="data.meta.notes && !isDetailsPopOutOpen"
         class="pop-out-collapsed"
         (click)="toggleDetailsPopOutOpen(); $event.stopPropagation()"
     ></div> -->
-    <div #popOutContainer *ngIf="isDetailsPopOutOpen" class="pop-out-container">
+    <div *ngIf="isDetailsPopOutOpen" class="pop-out-container">
         <content-editable
             (focusEvents)="isNotesBlockFocused = $event"
             [focusEventSubject]="notesBlockFocusSubject.asObservable()"
@@ -22,8 +22,9 @@
         </content-editable>
         <div class="position-pop-out-actions">
             <div class="pop-out-actions-container">
+                <!-- class=pop-out-action -->
                 <button
-                    class="pop-out-action no-filter"
+                    class="btn-icon-{{ optButtonSize }} btn-safe-bg clr-tinted-neutral"
                     title="open task details"
                     (click)="openDetails(!data.isCompleted, 'notes')"
                 >
@@ -31,19 +32,19 @@
                 </button>
                 <button
                     *ngIf="updatedNotes != data.meta.notes"
-                    class="pop-out-action danger-clr"
+                    class="btn-icon-{{ optButtonSize }} btn-safe-bg clr-danger"
                     title="revert changes"
                     (click)="resetNotesBlock()"
                 >
                     <i class="fas fa-share" style="transform: scaleX(-1) rotate(40deg)"></i>
                 </button>
                 <button
-                    class="pop-out-action"
+                    class="btn-icon-{{ optButtonSize }} btn-safe-bg {{ updatedNotes != data.meta.notes ? 'clr-submit' : 'clr-tinted-neutral' }}"
                     title="{{ updatedNotes != data.meta.notes ? 'save changes & ' : '' }}close"
-                    [class.submit-clr]="updatedNotes != data.meta.notes"
-                    [class.no-filter]="updatedNotes == data.meta.notes"
                     (click)="toggleDetailsPopOutOpen()"
-                >
+                    >
+                    <!-- [class.no-filter]="updatedNotes == data.meta.notes" -->
+                    <!-- [class.submit-clr]="updatedNotes != data.meta.notes" -->
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -59,6 +60,7 @@
         [class.highlight-border]="this.isViewingDetails || isFocused || this.isCompleted || this.isDeleting"
         style="--border-clr: var(--{{ this.isDeleting ? 'danger' : this.isCompleted ? 'submit' : 'primary' }}-clr);"
         [class.alt-bg]="this.taskPosition % 2 == 1"
+        [class.mobile-menu-open]="this.isTaskActionBtnsMenuOpenOnTouchDevice"
     >
         <div class="position-completed-at">
             <span *ngIf="this.data.isCompleted" class="completed-at">
@@ -81,7 +83,7 @@
         <div class="wrapper outer-wrapper">
             <div class="wrapper inner-wrapper">
                 <button
-                    class="btn btn-icon btn-complete"
+                    class="btn-icon-m clr-submit complete-btn"
                     title="mark task as {{ this.data.isCompleted ? 'un' : '' }}completed"
                     (click)="toggleCompleted()"
                     (mouseenter)="isCompleteBtnHovered = true"
@@ -134,14 +136,15 @@
                                 <span
                                     *ngIf="openTasksCount; else completed"
                                     class="text-shadow"
-                                    style="color: var(--secondary-clr)"
+                                    style="color: var(--primary-300)"
                                 >
                                     {{ openTasksCount }} open
                                 </span>
                                 <ng-template #completed>
-                                    <span style="color: var(--submit-clr)"> {{ completedTasksCount }} completed </span>
+                                    <span style="color: var(--submit-400)"> {{ completedTasksCount }} completed </span>
                                 </ng-template>
-                                <span class="dimm-1">
+                                <span>
+                                    <!-- class="dimm-1" -->
                                     {{ completedTasksCount && openTasksCount ? "/ " + this.data.subTasks.length : "" }}
                                     {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
                                 </span>
@@ -153,9 +156,10 @@
             <ng-template #taskActionBtnsGroup1>
                 <menu-toggle-btn
                     *ngIf="!isCompleted"
-                    color="secondary"
+                    colorClass="clr-tinted-neutral"
                     fa-icon="fa{{ data.priority == 0 ? 'r' : 's' }} fa-exclamation"
                     title="priority"
+                    [size]="optButtonSize"
                     style="--btn-index: 3.5; --btn-index-reverse: 0; margin: 0"
                     [noDropdownPadding]="true"
                 >
@@ -170,7 +174,7 @@
                     </div>
                 </menu-toggle-btn>
                 <button
-                    class="btn btn-icon btn-secondary"
+                    class="btn-icon-{{ optButtonSize }} clr-tinted-neutral"
                     title="notes"
                     (click)="toggleDetailsPopOutOpen()"
                     style="--btn-index: 3; --btn-index-reverse: 0"
@@ -180,7 +184,7 @@
                 </button>
                 <button
                     title="links"
-                    class="btn btn-icon btn-secondary"
+                    class="btn-icon-{{ optButtonSize }} clr-tinted-neutral"
                     (click)="openDetails(!data.isCompleted, 'links')"
                     style="--btn-index: 2.5; --btn-index-reverse: 0"
                 >
@@ -191,7 +195,7 @@
                 <button
                     *ngIf="!isCompleted"
                     title="add sub task"
-                    class="btn btn-icon btn-secondary"
+                    class="btn-icon-m btn-safe-bg clr-primary"
                     (click)="addSubTask(); setIsTaskActionBtnsMenuOpenOnTouchDevice(false)"
                     style="--btn-index: 2; --btn-index-reverse: 0"
                 >
@@ -200,14 +204,14 @@
                 </button>
                 <button
                     title="open task details"
-                    class="btn btn-icon btn-edit"
+                    class="btn-icon-m btn-safe-bg clr-secondary"
                     (click)="openDetails(!data.isCompleted); setIsTaskActionBtnsMenuOpenOnTouchDevice(false)"
                     style="--btn-index: 1; --btn-index-reverse: 1"
                 >
                     <i class="fas fa-ellipsis-v"></i></button
                 ><button
                     title="delete task"
-                    class="btn btn-icon btn-delete"
+                    class="btn-icon-m btn-safe-bg clr-danger"
                     (click)="deleteTask(); setIsTaskActionBtnsMenuOpenOnTouchDevice(false)"
                     style="--btn-index: 0; --btn-index-reverse: 2"
                 >

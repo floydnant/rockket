@@ -1,0 +1,140 @@
+@use "../abstracts/mixins.scss" as *;
+
+/*///////////////////// buttons /////////////////////////*/
+%base-button {
+    position: relative;
+    border: none;
+    cursor: pointer;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+
+    background: var(--btn-bg);
+
+    // transition: color 110ms, background 115ms;
+    transition: transform 120ms, background 120ms, color 120ms, filter 120ms;
+
+    @include hover() {
+        color: var(--color-300);
+        --btn-bg: var(--color-700);
+    }
+    &:active {
+        transform: scale(0.95) !important;
+        filter: opacity(0.6) !important;
+    }
+    &[disabled] {
+        background: var(--global-background) !important;
+        color: var(--global-color) !important;
+    }
+}
+.btn-safe-bg {
+    background: transparent;
+    isolation: isolate;
+
+    &::before, &::after {
+        z-index: -1;
+        position: absolute;
+        content: "";
+        inset: 0;
+        border-radius: inherit;
+
+    }
+    &::before {
+        // transition: background 120ms;
+        // background: transparent;
+        // opacity: .8;
+        
+        transition: opacity 120ms;
+        opacity: 0;
+        background: var(--background, var(--background-main));
+        // background: red;
+    }
+    &::after {
+        transition: background 120ms;
+        background: var(--btn-bg);
+    }
+
+    @include hover() {
+        &::before {
+            // background: var(--background, var(--background-main));
+            opacity: .8;
+        }
+    }
+}
+
+/*///////////////////// text buttons /////////////////////////*/
+%button-text {
+    @extend %base-button;
+
+    font-size: 1rem;
+    font-weight: 650;
+    box-shadow: 0 0 0 1px var(--color-400) inset;
+
+    // default
+    color: var(--neutral-800);
+    --btn-bg: var(--color-400);
+}
+.btn-m {
+    @extend %button-text;
+    
+    border-radius: var(--border-rad-s);
+    padding: var(--spacing-xs) var(--spacing-l);
+}
+.btn-l {
+    @extend %button-text;
+    
+    border-radius: var(--border-rad-l);
+    padding: var(--spacing-s) var(--spacing-l);
+}
+.btn-alt {
+    // alt
+    color: var(--color-400);
+    --btn-bg: var(--color-700);
+
+    @include hover() {
+        // alt
+        --btn-bg: var(--color-400);
+        color: var(--neutral-800);
+    }
+}
+
+/*///////////////////// icon buttons /////////////////////////*/
+%button-icon {
+    @extend %base-button;
+
+    color: var(--color-400);
+    --btn-bg: transparent;
+    
+    width: var(--btn-size);
+    height: var(--btn-size);
+
+    @include theme(dark) {
+        text-shadow: var(--box-shadow-s);
+    }
+    @include theme(light) {
+        @include hover() {
+            text-shadow: var(--box-shadow-s);
+        }
+    }
+}
+.btn-icon-s {
+    @extend %button-icon;
+    
+    font-size: .9rem;
+    border-radius: var(--border-rad-xs);
+    --btn-size: 1.5rem;
+    padding: var(--spacing-xs);
+}
+.btn-icon-m {
+    @extend %button-icon;
+    
+    font-size: 1.2rem;
+    border-radius: var(--border-rad-m);
+    --btn-size: 2rem;
+    padding: var(--spacing-s);
+}
+
+// .btn-group {
+// }

@@ -84,29 +84,29 @@ button {
 	font-size: 1rem;
 	border: 0;
 }
-button:not(.btn-danger, .btn-submit) {
-	/* border: none;
-	border-radius: 6px;
-	padding-block: 3px !important;
-	padding-inline: 15px;
+// button:not(.clr-danger, .clr-submit) {
+// 	/* border: none;
+// 	border-radius: 6px;
+// 	padding-block: 3px !important;
+// 	padding-inline: 15px;
 
-	margin-inline: 7.5px;
+// 	margin-inline: 7.5px;
 
-	display: flex;
-	justify-content: center;
-	align-items: center;
+// 	display: flex;
+// 	justify-content: center;
+// 	align-items: center;
 
-	font-size: 1rem;
-	font-weight: 650; */
-	color: var(--global-color);
-	background: hsl(0 0% var(--bg-clr-lightness, 50%) / .5);
+// 	font-size: 1rem;
+// 	font-weight: 650; */
+// 	// color: var(--global-color);
+// 	// background: hsl(0 0% var(--bg-clr-lightness, 50%) / .5);
 	
-	/* transition: color 110ms, background 115ms; */
-}
-/* button:not(.btn-delete) {
+// 	/* transition: color 110ms, background 115ms; */
+// }
+/* button:not(.clr-delete) {
 	--bg-clr-sat: 0%;
 } */
-/* btn-primary */
+/* clr-primary */
 /* button:last-child {
 	color: white;
 	--color-hue: var(--submit-clr-hue);

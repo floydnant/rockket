@@ -31,23 +31,27 @@ input {
 
 button {
     box-sizing: border-box;
-    height: unset;
-    width: unset;
     margin: 0 0 0 10px;
     
-    font-size: 15px;
     /* padding: 6px 15px; */
     
     transform: unset !important;
-    box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50%) inset;
     transition: all 180ms, color 200ms;
     transform-origin: right;
     opacity: 1;
 }
+// button {
+//     // height: unset;
+//     // width: unset;
+//     // font-size: 15px;
+    
+//     box-shadow: 0 0 0 1px hsl(var(--color-hue) 100% 50%) inset;
+// }
 input:not(.is-focused) ~ button {
+    // color: rgba(0, 0, 0, 0);
+
     transition: all 180ms, color 0ms, opacity 20ms;
     opacity: 0;
-    color: rgba(0, 0, 0, 0);
     /* transform: scale(0, 1) !important; */
     width: 0;
     padding: 0;

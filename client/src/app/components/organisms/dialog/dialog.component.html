@@ -18,13 +18,11 @@
             <div class="btn-group">
                 <button
                     *ngFor="let btnText of this.props.buttons as buttons; index as i"
-                    class="modal-btn"
+                    class="btn-m {{ getColorClass(btnText, i, buttons) }}"
                     [title]="i == buttons.length - 2 ? '[esc]' : i == buttons.length - 1 ? '[↵]' : ''"
-                    [class.btn-danger]="btnText[0] == '!'"
-                    [class.btn-submit]="i == buttons.length - 1 && btnText[0] != '!'"
                     (click)="closeDialog(i)"
                 >
-                    {{ btnText[0] == '!' ? btnText.replace("!", "") : btnText}}
+                    {{ btnText[0] == "!" ? btnText.replace("!", "") : btnText }}
                 </button>
             </div>
         </div>
