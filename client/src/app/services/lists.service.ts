@@ -35,6 +35,10 @@ export class ListsService {
         return { created: true };
     }
 
+    updateList(updatedList: TaskList) {
+        this.store.dispatch(new AppDataActions.EditList(updatedList.id, updatedList));
+    }
+
     async openListDetails(listData: TaskList) {
         let updatedTaskList: TaskList;
         try {
@@ -44,7 +48,7 @@ export class ListsService {
             return { updated: false };
         }
 
-        this.store.dispatch(new AppDataActions.EditList(listData.id, { ...listData, ...updatedTaskList }));
+        this.updateList({ ...listData, ...updatedTaskList });
         return { updated: true };
     }
 

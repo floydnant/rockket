@@ -38,7 +38,19 @@
     </div>
     <main>
         <h1 class="list-name">
-            <span class="wrap-text">{{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}</span>
+            <span 
+                class="text wrap-text"
+                #editableListName
+                [contentEditable]="this.activeTaskList != null"
+                [spellcheck]="isListNameFocused"
+                (textChanges)="updatedListName = $event;"
+                [domChangesOptions]="{ plainOnly: true, observe: isListNameFocused }"
+                (keydown)="listNameKeydownHandler($event, editableListName)"
+                (focus)="listNameFocusHandler(true)"
+                (blur)="listNameFocusHandler(false)"
+            >{{ this.boundListName ? this.boundListName : "no list selected" }}</span>
+            <!-- >{{ this.activeTaskList ? this.boundListName : "no list selected" }}</span> -->
+
             <div class="btn-group">
                 <button *ngIf="this.activeTaskList" class="btn-icon-m clr-secondary" (click)="editList()">
                     <i class="fas fa-ellipsis-v"></i>
@@ -49,6 +61,7 @@
                     <!-- <apple-share-icon remove-host></apple-share-icon> -->
                 </button>
             </div>
+
             <div class="task-progress">
                 <task-progress
                     *ngIf="!isTouchDevice && activeTaskList"

@@ -8,7 +8,7 @@ import { TasksService } from '../services/tasks.service';
 import { WINDOW_TITLE_SUFFIX } from '../shared/constants';
 import { Task } from '../shared/task.model';
 import { TaskList } from '../shared/taskList.model';
-import { isTouchDevice, shortenText } from '../shared/utils';
+import { isTouchDevice, moveToMacroQueue, shortenText } from '../shared/utils';
 import { ModalService } from './molecules/modal/modal.service';
 import { DialogService } from './organisms/dialog';
 import { EditMenuService } from './organisms/edit-menu';
@@ -29,6 +29,7 @@ export class AppComponent implements AfterViewInit {
         this.store.subscribe(data => {
             this.data = data.appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
+            this.boundListName = this.activeTaskList.name;
             this.completedTasksCount = this.activeTaskList?.list.filter(t => t.isCompleted).length;
             this.openTasksCount = this.activeTaskList?.list.filter(t => !t.isCompleted).length;
 
@@ -56,6 +57,33 @@ export class AppComponent implements AfterViewInit {
     isTouchDevice = isTouchDevice();
     isMobileMenuOpen: boolean;
     setMobileMenuOpen = (open: boolean) => (this.isMobileMenuOpen = open);
+
+    updatedListName: string;
+    boundListName: string;
+    updateListName() {
+        this.listsService.updateList({ ...this.activeTaskList, name: this.updatedListName });
+    }
+    isListNameFocused = false;
+    listNameFocusHandler(nowFocused: boolean) {
+        this.isListNameFocused = nowFocused;
+
+        if (nowFocused) this.resetListName();
+        else if (this.updatedListName != this.activeTaskList.name) this.updateListName();
+    }
+    listNameKeydownHandler(e: KeyboardEvent, elem: HTMLSpanElement) {
+        if (e.key == 'Enter') elem.blur(); // focus handler handles the rest
+        if (e.key == 'Escape') {
+            this.resetListName();
+            elem.blur();
+            // change to something slightly different so change detection kicks in
+            this.boundListName = this.activeTaskList.name + ' ';
+            // and then change it back
+            moveToMacroQueue(() => (this.boundListName = this.activeTaskList.name));
+        }
+    }
+    resetListName() {
+        this.updatedListName = this.activeTaskList.name;
+    }
 
     quickAddInputField = {
         focusEventsSubject: [new Subject<boolean>(), new Subject<boolean>()],
