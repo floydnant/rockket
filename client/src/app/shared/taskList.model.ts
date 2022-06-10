@@ -1,5 +1,5 @@
 import { Task } from './task.model';
-import { generateId } from './utils';
+import { generateId, shortenText } from './utils';
 
 export class TaskListMeta {
     notes: string = '';
@@ -53,4 +53,11 @@ export const sortTasksBy = (tasks: Task[], property: string) => {
         });
     };
     recurse(tasks);
+};
+
+export const textFromListArr = (lists: { name: string }[]): string => {
+    const firstListName = shortenText(lists[0].name, 15, true),
+        listCount = lists.length;
+    const moreListsStr = listCount == 1 ? '' : ` and ${listCount - 1} other list${listCount - 1 == 1 ? '' : 's'}`;
+    return `'${firstListName}'` + moreListsStr;
 };

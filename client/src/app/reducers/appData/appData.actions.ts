@@ -7,6 +7,7 @@ export const CREATE_LIST = '[List] Create';
 export const SET_ACTIVE_LIST = '[List] SetActive';
 export const EDIT_LIST = '[List] Edit';
 export const DELETE_LIST = '[List] Delete';
+export const DELETE_ALL_LISTS = '[List] Delete all';
 export const SORT_LISTS = '[List] SortLists';
 
 export const CREATE_TASK = '[Task] Create';
@@ -36,6 +37,11 @@ export class DeleteList implements Action {
     readonly type = DELETE_LIST;
 
     constructor(public listId: string) {}
+}
+export class DeleteAllLists implements Action {
+    readonly type = DELETE_ALL_LISTS;
+
+    constructor(public listIds: string[]) {}
 }
 export class SortLists implements Action {
     readonly type = SORT_LISTS;
@@ -85,6 +91,7 @@ export type All =
     | SetActiveList
     | EditList
     | DeleteList
+    | DeleteAllLists
     | SortLists
     | CreateTask
     | EditTask

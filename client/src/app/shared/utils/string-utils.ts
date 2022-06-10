@@ -85,7 +85,7 @@ export const parseUrls = (text: string) => {
  * @param appendElipsis wether to append three dots (**adds to the length**) [defaults to true]
  */
 export const shortenText = (text: string, maxLength: number, appendElipsis = true) => {
-    const shortend = text.split('').slice(0, maxLength).join('');
+    const shortend = text.slice(0, maxLength);
     return shortend + (appendElipsis && text.length > maxLength ? '...' : '');
 };
 

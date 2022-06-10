@@ -71,10 +71,17 @@
     font-size: 1rem;
     font-weight: 650;
     box-shadow: 0 0 0 1px var(--color-400) inset;
-
+    
     // default
     color: var(--neutral-800);
     --btn-bg: var(--color-400);
+}
+.btn-s {
+    @extend %button-text;
+    
+    font-size: .8rem;
+    border-radius: var(--border-rad-s);
+    padding: var(--spacing-xs) var(--spacing-l);
 }
 .btn-m {
     @extend %button-text;

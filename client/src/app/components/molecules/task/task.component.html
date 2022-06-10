@@ -99,7 +99,7 @@
                 </button>
 
                 <div class="text-container">
-                    <p>
+                    <p class="wrap-text">
                         <span *ngIf="!isCompleted && data.priority != 0" class="position-priority-icon">
                             <priority-icon
                                 [priority]="data.priority"
@@ -110,7 +110,7 @@
 
                         <span
                             #taskName
-                            class="taskName wrap-text"
+                            class="taskName"
                             [contentEditable]="!isCompleted"
                             [spellcheck]="isFocused"
                             (textChanges)="updatedTaskName = $event"
@@ -133,21 +133,11 @@
                                 dimm="none"
                                 (onToggle)="toggleCollapseSubtaskList()"
                             >
-                                <span
-                                    *ngIf="openTasksCount; else completed"
-                                    class="text-shadow"
-                                    style="color: var(--primary-300)"
-                                >
-                                    {{ openTasksCount }} open
+                                <span class="text-shadow" style="opacity: .85" [ngStyle]="{ color: openTasksCount ? 'var(--primary-300)' : 'var(--submit-400)' }">
+                                    {{ openTasksCount ? openTasksCount + ' open' : completedTasksCount + ' completed' }}
                                 </span>
-                                <ng-template #completed>
-                                    <span style="color: var(--submit-400)"> {{ completedTasksCount }} completed </span>
-                                </ng-template>
-                                <span>
-                                    <!-- class="dimm-1" -->
-                                    {{ completedTasksCount && openTasksCount ? "/ " + this.data.subTasks.length : "" }}
-                                    {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
-                                </span>
+                                {{ completedTasksCount && openTasksCount ? "/ " + this.data.subTasks.length : "" }}
+                                {{ this.data.subTasks.length == 1 ? "subtask" : "subtasks" }}
                             </collapse-toggle>
                         </p>
                     </div>

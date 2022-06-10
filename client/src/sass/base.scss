@@ -25,7 +25,7 @@
     --global-item-bg-alt: var(--background-item-alt);
     --global-item-bg-highlight: var(--background-highlight);
 
-    --global-color: var(--text-color-900);
+    --global-color: var(--text-color-800);
 }
 
 @each $theme, $overwrites in $theme-overwrites {

@@ -1,6 +1,7 @@
 <ul class="tasklist tasklist-{{ id }}" [class.subtasks]="variant == 'subtask'">
     <task
         *ngFor="let task of this.openTasks; let i = index"
+        [class.hasSubtasks]="task.subTasks.length"
         [data]="task"
         [taskPosition]="(variant == 'subtask' ? this.taskPosition - 1 : 0) + i"
         (completion)="this.onTaskCompletion($event)"
@@ -25,6 +26,7 @@
     <div *ngIf="!collapseCompletedTasks || !openTasks.length">
         <task
             *ngFor="let task of this.completedTasks; let i = index"
+            [class.hasSubtasks]="task.subTasks.length"
             [data]="task"
             [taskPosition]="(variant == 'subtask' ? this.taskPosition + 1 : 0) + i + this.openTasks.length"
             (completion)="this.onTaskCompletion($event)"

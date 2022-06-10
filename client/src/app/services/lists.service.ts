@@ -58,6 +58,16 @@ export class ListsService {
         this.store.dispatch(new AppDataActions.DeleteList(listId));
         return { deleted: true };
     }
+    async deleteLists(listIds: string[]) {
+        const { clickedButton } = await this.dialogService.confirm({
+            title: `Delete ${listIds.length} lists?`,
+            buttons: ['Cancel', '!Delete all'],
+        });
+        if (clickedButton == 'Cancel') return { deleted: false };
+
+        this.store.dispatch(new AppDataActions.DeleteAllLists(listIds));
+        return { deleted: true };
+    }
 
     sortLists(sortedLists: TaskList[]) {
         this.store.dispatch(new AppDataActions.SortLists(sortedLists));

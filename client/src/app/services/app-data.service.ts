@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { downloadObjectAsJson, generateId } from 'src/app/shared/utils';
+import { downloadObjectAsJson, generateId, shortenText } from 'src/app/shared/utils';
 import { DialogService } from '../components/organisms/dialog';
 
 import { AppDataActions } from '../reducers/appData';
 import { AppData, AppState } from '../reducers/appData/appData.model';
+import { textFromListArr } from '../shared/taskList.model';
 
 @Injectable({
     providedIn: 'root',
@@ -40,24 +41,17 @@ export class AppDataService {
     }
 
     async exportAsJSON(...listIds: string[]) {
+        const lists = this.data.appData.lists.filter(list => listIds.some(id => list.id == id));
+        
         const { clickedButton } = await this.dialogService.confirm({
-            title: `Download this list as file?`,
-            buttons: ['Cancel', 'Download'],
+            title: `Export ${textFromListArr(lists)}?`,
+            buttons: ['Cancel', 'Export'],
         });
         if (clickedButton == 'Cancel') return;
-
-        const exportData = {
-            appData: {
-                ...this.data.appData,
-                // only export the lists with the given id's or active list if none were given
-                lists: this.data.appData.lists.filter(l => {
-                    return (listIds || []).some(id => l.id == id) || l.id == this.data.appData.activeListId;
-                }),
-            },
-        };
-        const listCount = exportData.appData.lists.length;
-        const fileName = listCount > 1 ? listCount + ' ToDo lists' : exportData.appData.lists[0].name + ' - todo list';
-
+        
+        const firstListName = lists[0].name;
+        const exportData = { appData: { ...this.data.appData, lists } };
+        const fileName = lists.length > 1 ? lists.length + ' todo lists' : firstListName + ' - todo list';
         downloadObjectAsJson(exportData, fileName, true);
     }
     importFromJSON(unparsed: string) {
@@ -65,7 +59,10 @@ export class AppDataService {
         try {
             jsonData = JSON.parse(unparsed.replace(/metaData/g, 'meta'));
         } catch (e) {
-            this.dialogService.confirm({ title: 'Failed to read file.', text: 'Have you modified it?' });
+            this.dialogService.confirm({
+                title: 'Failed to read file.',
+                text: 'The file is either damaged or modified so that it is no longer readable.',
+            });
             console.error('Failed to parse JSON: ' + e);
             return;
         }

@@ -29,6 +29,13 @@
     text-overflow: ellipsis;
 }
 .wrap-text {
+    max-width: 100%;
+    
+    // overflow-wrap: break-word; // <-- these dont seem to do anything
+    // word-wrap: break-word; // <--
+    hyphens: auto;
+}
+.break-all {
     word-break: break-all;
 }
 

@@ -63,7 +63,7 @@
                 <div class="link-container" *ngFor="let link of this.data.meta.links; let i = index">
                     <hr *ngIf="i" />
                     <li>
-                        <a class="wrap-text" [href]="link" target="_blank">{{ link }}</a>
+                        <a class="break-all" [href]="link" target="_blank">{{ link }}</a>
                         <button
                             *ngIf="!noEdit"
                             class="btn-icon-m clr-danger"

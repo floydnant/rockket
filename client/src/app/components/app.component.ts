@@ -118,8 +118,11 @@ export class AppComponent implements AfterViewInit {
         this.listsService.sortLists(sortedLists);
     }
 
+    exportLists(listIds: string[]) {
+        return this.appDataService.exportAsJSON(...listIds);
+    }
     exportActiveList() {
-        return this.appDataService.exportAsJSON();
+        return this.appDataService.exportAsJSON(this.activeTaskList.id);
     }
     async importJson(inputRef: HTMLInputElement) {
         const unparsed = await inputRef.files[0].text();

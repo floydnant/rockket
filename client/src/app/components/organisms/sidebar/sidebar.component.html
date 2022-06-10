@@ -4,12 +4,11 @@
     </div>
     <h2>
         Lists
-        <!-- <i class="fad fa-clipboard-list-check"></i> -->
-        <span
-            *ngIf="isTouchDevice"
-            style="font-size: 1rem; color: var(--secondary-clr); margin-left: 1rem"
-            (click)="selectMode = !selectMode"
-            >{{ selectMode ? "done" : "edit" }}</span
+        <button
+            class="btn-s clr-tinted-neutral btn-alt"
+            style="margin-left:1rem; top:-3px;"
+            (click)="toggleSelectMode()"
+            >{{ selectMode ? "done" : "edit" }}</button
         >
         <button class="btn-icon-m clr-primary" style="float: right" (click)="createList()">
             <i class="fas fa-plus"></i>
@@ -29,19 +28,26 @@
             cdkDrag
             cdkDragBoundary=".taskListsList"
             [cdkDragDisabled]="isTouchDevice && !selectMode"
-            (click)="setActiveList(list.id)"
+            (click)="selectMode ? toggleSelection(i) : setActiveList(list.id)"
             [class.active]="this.data.activeListId == list.id"
             [class.completed]="countOpenTasks(list.list) == 0 && list.list.length"
             [class.alt-bg]="i % 2 == 1"
-            [class.selectModeEnabled]="selectMode && isTouchDevice"
+            [class.selectModeEnabled]="selectMode"
+            [class.touchDevice]="isTouchDevice"
+            [class.selected]="list.selected"
         >
+            <i class="select-icon {{ list.selected ? 'fas fa-check-circle' : 'far fa-circle'}}" [class.show]="selectMode"></i>
             <span *ngIf="countOpenTasks(list.list)" class="counter text-shadow">{{ countOpenTasks(list.list) }}</span>
             <span class="text cut-text">{{ list.name }}</span>
             <i *ngIf="this.data.activeListId == list.id && !selectMode" class="fas fa-chevron-right active-icon"></i>
             <loading-spinner *ngIf="isLoading == list.id && data.activeListId != list.id"></loading-spinner>
             <double-ellipsis *ngIf="isTouchDevice" cdkDragHandle class="mobile-drag-handle" [class.show]="selectMode"></double-ellipsis>
         </li>
-        <label class="btn-l clr-tinted-neutral btn-alt upload-btn" title="Import lists from JSON file" role="button">
+        <div class="btn-group">
+            <button *ngIf="selectMode" (click)="deleteSelectedLists()" class="btn-m clr-danger btn-alt"><i class="far fa-trash-alt"></i>&nbsp;delete</button>
+            <button *ngIf="selectMode" (click)="exportSelectedLists()" class="btn-m clr-tinted-neutral btn-alt"><i class="fas fa-file-download"></i>&nbsp;export</button>
+        </div>
+        <label *ngIf="!selectMode" class="btn-l clr-tinted-neutral btn-alt upload-btn" title="Import lists from JSON file" role="button">
             <i class="far fa-file-import"></i>&nbsp; import
             <input
                 id="importDataInput"

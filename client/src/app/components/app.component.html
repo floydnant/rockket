@@ -30,13 +30,14 @@
             (onSetActiveList)="setActiveList($event)"
             (closeMobileMenu)="this.isMobileMenuOpen = false;"
             (onCreateList)="createList()"
-            (onImportData)="importJson($event)"
+            (importLists)="importJson($event)"
+            (exportLists)="exportLists($event)"
             (onListSort)="sortLists($event)"
         ></sidebar>
     </div>
     <main>
         <h1 class="list-name">
-            {{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}
+            <span class="wrap-text">{{ this.activeTaskList ? this.activeTaskList.name : "no list selected" }}</span>
             <div class="btn-group">
                 <button *ngIf="this.activeTaskList" class="btn-icon-m clr-secondary" (click)="editList()">
                     <i class="fas fa-ellipsis-v"></i>

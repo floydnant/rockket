@@ -88,6 +88,24 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             newState.activeListId = listCount == 0 ? null : newState.lists[nextListIndex].id;
             return newState;
         }
+        case AppDataActions.DELETE_ALL_LISTS: {
+            const prevActiveListId = newState.activeListId;
+            const firstDeletedIndex = newState.lists.findIndex(list => list.id == action.listIds[0]);
+
+            const newLists = newState.lists.filter(l => !action.listIds.some(listId => listId == l.id));
+            let newActiveListId = prevActiveListId;
+            // if prev active list was deleted
+            if (!newLists.some(l => l.id == prevActiveListId)) {
+                const nextListIndex = firstDeletedIndex > 0 ? firstDeletedIndex - 1 : 0;
+                newActiveListId = newLists[nextListIndex].id;
+            }
+
+            return {
+                ...newState,
+                activeListId: newActiveListId,
+                lists: newLists,
+            };
+        }
 
         case AppDataActions.CREATE_TASK: {
             const taskList = getListById(action.listId);

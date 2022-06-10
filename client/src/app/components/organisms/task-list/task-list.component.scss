@@ -1,5 +1,5 @@
 .tasklist {
-    margin-top: 10px;
+    margin-top: var(--spacing-s);
     border-radius: 0 0 14px 14px;
     padding-bottom: 2px;
 }
@@ -11,5 +11,5 @@
 }
 
 .tasklist *:not(:first-child) {
-    margin-top: 10px;
+    margin-top: var(--spacing-s);
 }
