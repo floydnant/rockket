@@ -17,6 +17,7 @@
         (onMenuToggle)="setMobileMenuOpen($event)"
     ></menu-toggle-btn>
     <task-progress
+        *ngIf="activeTaskList"
         [tasksCount]="activeTaskList.list.length"
         [completedTasksCount]="completedTasksCount"
         [openTasksCount]="openTasksCount"
@@ -50,7 +51,7 @@
             </div>
             <div class="task-progress">
                 <task-progress
-                    *ngIf="!isTouchDevice"
+                    *ngIf="!isTouchDevice && activeTaskList"
                     variant="bar"
                     [tasksCount]="activeTaskList.list.length"
                     [completedTasksCount]="completedTasksCount"

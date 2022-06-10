@@ -29,8 +29,8 @@ export class AppComponent implements AfterViewInit {
         this.store.subscribe(data => {
             this.data = data.appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
-            this.completedTasksCount = this.activeTaskList.list.filter(t => t.isCompleted).length;
-            this.openTasksCount = this.activeTaskList.list.filter(t => !t.isCompleted).length;
+            this.completedTasksCount = this.activeTaskList?.list.filter(t => t.isCompleted).length;
+            this.openTasksCount = this.activeTaskList?.list.filter(t => !t.isCompleted).length;
 
             console.log('%cupdated state:', 'color: gray', this.data);
 

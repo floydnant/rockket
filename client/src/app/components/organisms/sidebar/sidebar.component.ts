@@ -84,9 +84,12 @@ export class SidebarComponent implements OnInit, OnChanges {
     @Output() onListSort = new EventEmitter<TaskList[]>();
     sortLists() {
         if (this.selectMode && this.getSelectedListIds().length > 0) return;
-        // nothing has actually changed
-        if (Compare.array(this.sortableListsData, this.data.lists)) return;
-        this.onListSort.emit(this.sortableListsData);
+
+        const cleanedUpLists = this.sortableListsData.map(({ selected, ...list }) => list);
+        const nothingHasChanged = Compare.array(cleanedUpLists, this.data.lists);
+        if (nothingHasChanged) return;
+
+        this.onListSort.emit(cleanedUpLists);
     }
 
     ngOnInit(): void {

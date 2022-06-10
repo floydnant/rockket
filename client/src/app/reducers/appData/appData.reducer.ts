@@ -97,7 +97,7 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             // if prev active list was deleted
             if (!newLists.some(l => l.id == prevActiveListId)) {
                 const nextListIndex = firstDeletedIndex > 0 ? firstDeletedIndex - 1 : 0;
-                newActiveListId = newLists[nextListIndex].id;
+                newActiveListId = newLists.length == 0 ? null : newLists[nextListIndex].id;
             }
 
             return {
@@ -117,7 +117,7 @@ export function appDataReducer(state: AppData = defaultState, action: Action) {
             return getNewState(newState);
         }
         case AppDataActions.EDIT_TASK: {
-            let task = getTaskById(action.taskId);
+            let task = getTaskById(action.taskId) as Task;
             task = Object.assign(task, action.updatedTask);
 
             const taskParentArr = getTaskById(action.taskId, true) as Task[];
