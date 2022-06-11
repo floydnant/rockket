@@ -56,7 +56,11 @@ export class AppComponent implements AfterViewInit {
 
     isTouchDevice = isTouchDevice();
     isMobileMenuOpen: boolean;
-    setMobileMenuOpen = (open: boolean) => (this.isMobileMenuOpen = open);
+    setMobileMenuOpen(open: boolean) {
+        if (!open) this.selectModeEvents.next(false);
+        this.isMobileMenuOpen = open;
+    }
+    selectModeEvents = new Subject<boolean>();
 
     updatedListName: string;
     boundListName: string;

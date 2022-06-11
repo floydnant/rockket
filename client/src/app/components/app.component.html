@@ -34,6 +34,7 @@
             (importLists)="importJson($event)"
             (exportLists)="exportLists($event)"
             (onListSort)="sortLists($event)"
+            [selectModeEvents]="this.selectModeEvents.asObservable()"
         ></sidebar>
     </div>
     <main>
