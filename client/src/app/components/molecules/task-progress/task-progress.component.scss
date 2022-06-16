@@ -52,11 +52,11 @@
 
         &:first-child {
             --br-1: 2px;
-            --br-2: 2px;
+            --br-4: 2px;
         }
         &:last-child, &.last {
+            --br-2: 2px;
             --br-3: 2px;
-            --br-4: 2px;
         }
     }
 }

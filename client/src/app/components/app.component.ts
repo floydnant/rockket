@@ -1,17 +1,15 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
-import { AppData, AppDataActions, AppState } from '../reducers';
+import { AppData, AppState } from '../reducers';
 import { AppDataService } from '../services/app-data.service';
 import { ListsService } from '../services/lists.service';
 import { TasksService } from '../services/tasks.service';
 import { WINDOW_TITLE_SUFFIX } from '../shared/constants';
-import { Task } from '../shared/task.model';
+import { getProgressFromCompletedCount, getProgressRecursive, ProgressChangeEvent } from '../shared/task.model';
 import { TaskList } from '../shared/taskList.model';
 import { isTouchDevice, moveToMacroQueue, shortenText } from '../shared/utils';
-import { ModalService } from './molecules/modal/modal.service';
 import { DialogService } from './organisms/dialog';
-import { EditMenuService } from './organisms/edit-menu';
 
 @Component({
     selector: 'app-root',
@@ -29,9 +27,8 @@ export class AppComponent implements AfterViewInit {
         this.store.subscribe(data => {
             this.data = data.appData;
             this.activeTaskList = this.getListById(this.data.activeListId);
-            this.boundListName = this.activeTaskList.name;
-            this.completedTasksCount = this.activeTaskList?.list.filter(t => t.isCompleted).length;
-            this.openTasksCount = this.activeTaskList?.list.filter(t => !t.isCompleted).length;
+            this.boundListName = this.activeTaskList?.name;
+            this.getProgressFirstTime();
 
             console.log('%cupdated state:', 'color: gray', this.data);
 
@@ -48,9 +45,29 @@ export class AppComponent implements AfterViewInit {
 
     data: AppData;
     completedTasksCount: number;
-    openTasksCount: number;
     activeTaskList: TaskList | undefined;
     taskNameInput: string;
+
+    listProgress: number;
+    private async getProgressFirstTime() {
+        if (!this.activeTaskList) {
+            this.listProgress = 0;
+            this.completedTasksCount = 0;
+            return;
+        }
+
+        const progressDecimal = await getProgressRecursive(this.activeTaskList.list);
+        this.listProgress = progressDecimal;
+
+        const completedCount = progressDecimal * this.activeTaskList.list.length;
+        this.completedTasksCount = completedCount;
+    }
+    onProgressChanged({ prevProgress, currProgress }: ProgressChangeEvent) {
+        const completedCount = this.completedTasksCount - prevProgress + currProgress;
+        this.completedTasksCount = completedCount;
+
+        this.listProgress = getProgressFromCompletedCount(completedCount, this.activeTaskList.list.length);
+    }
 
     showCompleted = false;
 
@@ -95,16 +112,6 @@ export class AppComponent implements AfterViewInit {
     };
 
     //////////////////// Tasks ////////////////////
-    onTaskCompletion(isCompleted: boolean) {
-        if (isCompleted) {
-            this.completedTasksCount++;
-            this.openTasksCount--;
-        } else {
-            this.completedTasksCount--;
-            this.openTasksCount++;
-        }
-    }
-
     createTask(newTaskName: string) {
         this.tasksService.createTask(this.activeTaskList.id, newTaskName);
     }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { sortCompletedTasks, Task } from 'src/app/shared/task.model';
+import { ProgressChangeEvent, sortCompletedTasks, Task } from 'src/app/shared/task.model';
 import { countTasks } from 'src/app/shared/taskList.model';
 import { generateId, getCopyOf } from 'src/app/shared/utils';
 
@@ -42,9 +42,9 @@ export class TasklistComponent implements OnInit, OnChanges {
         else document.querySelector<HTMLInputElement>('#_' + this.id)?.blur();
     };
 
-    @Output() completion = new EventEmitter<boolean>();
-    onTaskCompletion(isCompleted: boolean) {
-        this.completion.emit(isCompleted);
+    @Output() progressChange = new EventEmitter<ProgressChangeEvent>();
+    onProgressChanged(progress: ProgressChangeEvent) {
+        this.progressChange.emit(progress);
     }
 
     private initData() {

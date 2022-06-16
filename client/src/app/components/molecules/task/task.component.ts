@@ -2,8 +2,13 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { Subject } from 'rxjs';
 import { TasksService } from 'src/app/services/tasks.service';
 import { TaskUiState, UiStateService } from 'src/app/services/ui-state.service';
-import { Task } from '../../../shared/task.model';
-import { countTasks, countTasksRecursive } from '../../../shared/taskList.model';
+import {
+    getProgressRecursive,
+    ProgressChangeEvent,
+    Task,
+    getProgressFromCompletedCount,
+} from '../../../shared/task.model';
+import { countTasksRecursive } from '../../../shared/taskList.model';
 import { formatDateRelative, isTouchDevice, moveToMacroQueue } from '../../../shared/utils';
 import { editmenuOptions } from '../../organisms/edit-menu/edit-menu.model';
 
@@ -22,23 +27,50 @@ import { editmenuOptions } from '../../organisms/edit-menu/edit-menu.model';
 })
 export class TaskComponent implements OnInit {
     constructor(private tasksService: TasksService, private uiStateService: UiStateService) {}
-    ngOnInit() {
+    async ngOnInit() {
         this.isCompleted = this.data.isCompleted;
-
-        this.openTasksCount = countTasks(this.data.subTasks);
-        this.completedTasksCount = countTasks(this.data.subTasks, 'closed');
 
         this.formattedCompletionDate = this.isCompleted ? formatDateRelative(this.data.completedAt) || 'invalid' : null;
 
         this.uiState = this.uiStateService.getTaskState(this.data.id);
         this.isDetailsPopOutOpen = this.uiState.detailsPopOut.keepOpen;
         this.updatedNotes = this.data.meta.notes;
+
+        if (this.data.subTasks.length == 0) this.updateProgress(this.isCompleted ? 1 : 0);
+        else this.updateProgress(await getProgressRecursive(this.data.subTasks));
     }
 
     @Input() taskPosition: number;
     @Input() data: Task;
-    completedTasksCount: number;
-    openTasksCount: number;
+    completedTasksCount = 0;
+    openTasksCount = 0;
+
+    progressDecimal = 0;
+    private updateProgress(progressDecimal: number) {
+        this.progressDecimal = progressDecimal;
+
+        const completedCount = progressDecimal * this.data.subTasks.length;
+        this.completedTasksCount = completedCount;
+        this.openTasksCount = this.data.subTasks.length - Math.floor(completedCount);
+    }
+    private updateProgressFromCompletedCount(completedCount: number) {
+        const progressDecimal = getProgressFromCompletedCount(completedCount, this.data.subTasks.length);
+        this.emitNewProgress(progressDecimal);
+        this.progressDecimal = progressDecimal;
+
+        this.completedTasksCount = completedCount;
+        this.openTasksCount = this.data.subTasks.length - Math.floor(completedCount);
+    }
+    @Output() progressChange = new EventEmitter<ProgressChangeEvent>();
+    emitNewProgress(newProgress: number) {
+        this.progressChange.emit({ prevProgress: this.progressDecimal, currProgress: newProgress });
+    }
+    onSubtaskProgressChanged({
+        prevProgress: prevSubtaskProgress,
+        currProgress: currSubtaskProgress,
+    }: ProgressChangeEvent) {
+        this.updateProgressFromCompletedCount(this.completedTasksCount - prevSubtaskProgress + currSubtaskProgress);
+    }
 
     formattedCompletionDate: string | null;
 
@@ -47,10 +79,8 @@ export class TaskComponent implements OnInit {
     isTouchDevice = isTouchDevice();
     optButtonSize: 'm' | 's' = this.isTouchDevice ? 'm' : 's';
     isTaskActionBtnsMenuOpenOnTouchDevice = false;
-    setIsTaskActionBtnsMenuOpenOnTouchDevice = (nowOpen: boolean) => {
-        console.log('mobile menu toggled');
-        return (this.isTaskActionBtnsMenuOpenOnTouchDevice = nowOpen);
-    };
+    setIsTaskActionBtnsMenuOpenOnTouchDevice = (nowOpen: boolean) =>
+        (this.isTaskActionBtnsMenuOpenOnTouchDevice = nowOpen);
 
     quickAddInputFocusEventSubject = new Subject<boolean>();
     focusQuickAddInputField = () => this.quickAddInputFocusEventSubject.next(true);
@@ -143,7 +173,6 @@ export class TaskComponent implements OnInit {
         } else if (saveChanges) this.updateNotes();
     }
 
-    @Output() completion = new EventEmitter<boolean>();
     isCompleted: boolean;
     toggleCompleted = () => this.setCompleted(!this.data.isCompleted);
     private setCompleted = async (nowCompleted: boolean) => {
@@ -165,13 +194,17 @@ export class TaskComponent implements OnInit {
 
                         setTimeout(() => {
                             this.isCompleted = nowCompleted;
-                            this.completion.emit(nowCompleted);
+                            this.emitNewProgress(1);
 
                             setTimeout(() => resolve(), 600);
                         }, timeToFinishChildAnimations + 300);
                     } else {
                         this.isCompleted = nowCompleted;
-                        this.completion.emit(nowCompleted);
+
+                        (async () => {
+                            if (nowCompleted) this.emitNewProgress(1);
+                            else this.emitNewProgress(await getProgressRecursive(this.data.subTasks));
+                        })();
 
                         setTimeout(() => resolve(), 600);
                     }
@@ -180,16 +213,6 @@ export class TaskComponent implements OnInit {
 
         if (changedStatus && collapseSubtaskList) this.toggleCollapseSubtaskList(true);
     };
-
-    onSubtaskCompletion(isCompleted: boolean) {
-        if (isCompleted) {
-            this.completedTasksCount++;
-            this.openTasksCount--;
-        } else {
-            this.completedTasksCount--;
-            this.openTasksCount++;
-        }
-    }
 
     setPriority(priority: number) {
         this.tasksService.updateTaskDetails({ ...this.data, priority });
