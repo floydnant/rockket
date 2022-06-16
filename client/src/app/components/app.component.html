@@ -19,8 +19,7 @@
     <task-progress
         *ngIf="activeTaskList"
         [tasksCount]="activeTaskList.list.length"
-        [completedTasksCount]="completedTasksCount"
-        [openTasksCount]="openTasksCount"
+        [progress]="listProgress * 100"
         [showAlways]="true"
     ></task-progress>
 </div>
@@ -34,6 +33,7 @@
             (importLists)="importJson($event)"
             (exportLists)="exportLists($event)"
             (onListSort)="sortLists($event)"
+            [selectModeEvents]="this.selectModeEvents.asObservable()"
         ></sidebar>
     </div>
     <main>
@@ -67,8 +67,7 @@
                     *ngIf="!isTouchDevice && activeTaskList"
                     variant="bar"
                     [tasksCount]="activeTaskList.list.length"
-                    [completedTasksCount]="completedTasksCount"
-                    [openTasksCount]="openTasksCount"
+                    [progress]="listProgress * 100"
                     [showAlways]="true"
                 ></task-progress>
             </div>
@@ -94,7 +93,7 @@
                 [focusChangeEvents]="this.quickAddInputField.focusEventsSubject[1]"
                 (onToggleCollapseCompleted)="showCompleted = !showCompleted"
                 (onAddSubtask)="addTask[1]($event)"
-                (completion)="onTaskCompletion($event)"
+                (progressChange)="onProgressChanged($event)"
             ></task-list>
         </section>
     </main>

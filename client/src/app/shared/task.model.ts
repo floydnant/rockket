@@ -44,3 +44,30 @@ export const sortCompletedTasks = (a: Task, b: Task): 0 | 1 | -1 => {
         return -1;
     }
 };
+
+export interface ProgressChangeEvent {
+    prevProgress: number;
+    currProgress: number;
+}
+
+export async function getProgressRecursive(list: Task[], inPercent = false) {
+    const getListProgress = async (l: Task[]): Promise<number> => {
+        const completedMap = await Promise.all(
+            l.map(task => {
+                if (task.isCompleted) return Promise.resolve(1);
+                if (task.subTasks.length) return getListProgress(task.subTasks);
+                return Promise.resolve(0);
+            })
+        );
+        const completed = completedMap.reduce((a, b) => a + b, 0);
+
+        if (completed == 0 || l.length == 0) return 0;
+        return completed / l.length;
+    };
+
+    const progress = await getListProgress(list);
+    return inPercent ? progress * 100 : progress;
+}
+
+export const getProgressFromCompletedCount = (completedCount: number, taskCount: number) =>
+    completedCount != 0 && taskCount != 0 ? completedCount / taskCount : 0;

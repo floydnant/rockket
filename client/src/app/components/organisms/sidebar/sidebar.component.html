@@ -44,8 +44,8 @@
             <double-ellipsis *ngIf="isTouchDevice" cdkDragHandle class="mobile-drag-handle" [class.show]="selectMode"></double-ellipsis>
         </li>
         <div class="btn-group">
-            <button *ngIf="selectMode" (click)="deleteSelectedLists()" class="btn-m clr-danger btn-alt"><i class="far fa-trash-alt"></i>&nbsp;delete</button>
-            <button *ngIf="selectMode" (click)="exportSelectedLists()" class="btn-m clr-tinted-neutral btn-alt"><i class="fas fa-file-download"></i>&nbsp;export</button>
+            <button *ngIf="selectMode" [disabled]="selectedListCount == 0" (click)="deleteSelectedLists()" class="btn-m clr-danger btn-alt"><i class="far fa-trash-alt"></i>&nbsp;delete</button>
+            <button *ngIf="selectMode" [disabled]="selectedListCount == 0" (click)="exportSelectedLists()" class="btn-m clr-tinted-neutral btn-alt"><i class="fas fa-file-download"></i>&nbsp;export</button>
         </div>
         <label *ngIf="!selectMode" class="btn-l clr-tinted-neutral btn-alt upload-btn" title="Import lists from JSON file" role="button">
             <i class="far fa-file-import"></i>&nbsp; import

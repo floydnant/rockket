@@ -231,8 +231,7 @@
         <div class="position-task-progress">
             <task-progress
                 [tasksCount]="data.subTasks.length"
-                [completedTasksCount]="completedTasksCount"
-                [openTasksCount]="openTasksCount"
+                [progress]="progressDecimal * 100"
             ></task-progress>
         </div>
     </li>
@@ -249,5 +248,5 @@
     [focusChangeEvents]="quickAddInputFocusEventSubject"
     (onAddSubtask)="addSubTask($event)"
     (onToggleCollapseCompleted)="toggleCollapseCompletedSubtasks()"
-    (completion)="onSubtaskCompletion($event)"
+    (progressChange)="onSubtaskProgressChanged($event)"
 ></task-list>

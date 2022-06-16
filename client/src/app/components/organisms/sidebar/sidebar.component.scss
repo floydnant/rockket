@@ -178,7 +178,7 @@
     }
 
     @include not-hover() {
-        &:not(.active, .completed, .selected) .text {
+        &:not(.active, .completed, .selectModeEnabled.selected) .text {
             color: var(--tinted-neutral-300);
         }
         // .text {
@@ -243,6 +243,7 @@
     justify-content: center;
     align-items: center;
     margin-top: var(--spacing-m);
+    gap: var(--spacing-xs);
 
     button {
         flex-basis: 100%;

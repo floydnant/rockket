@@ -25,7 +25,7 @@
         filter: opacity(0.6) !important;
     }
     &[disabled] {
-        background: var(--global-background) !important;
+        --btn-bg: var(--global-background) !important;
         color: var(--global-color) !important;
     }
 }

@@ -4,7 +4,7 @@
         [class.hasSubtasks]="task.subTasks.length"
         [data]="task"
         [taskPosition]="(variant == 'subtask' ? this.taskPosition - 1 : 0) + i"
-        (completion)="this.onTaskCompletion($event)"
+        (progressChange)="onProgressChanged($event)"
     ></task>
 
     <single-input-form
@@ -29,7 +29,7 @@
             [class.hasSubtasks]="task.subTasks.length"
             [data]="task"
             [taskPosition]="(variant == 'subtask' ? this.taskPosition + 1 : 0) + i + this.openTasks.length"
-            (completion)="this.onTaskCompletion($event)"
+            (progressChange)="onProgressChanged($event)"
         ></task>
     </div>
 </ul>

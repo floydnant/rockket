@@ -1,5 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { ListsService } from 'src/app/services/lists.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { getCopyOf, isTouchDevice, moveToMacroQueue } from 'src/app/shared/utils';
@@ -24,16 +25,20 @@ export class SidebarComponent implements OnInit, OnChanges {
         this.sortableListsData = this.sortableListsData.map(l => ({ ...l, selected: false }));
     }
     selectMode = false;
-    toggleSelectMode() {
-        this.selectMode = !this.selectMode;
+    toggleSelectMode(nowSelectIsOn?: boolean) {
+        this.selectMode = nowSelectIsOn !== undefined ? nowSelectIsOn : !this.selectMode;
         if (!this.selectMode) {
             this.sortLists();
             setTimeout(() => this.resetSelection(), 400);
         }
     }
+    @Input() selectModeEvents: Observable<boolean>;
+    selectModeEventsSubscription: Subscription;
 
+    selectedListCount: number;
     toggleSelection(index: number) {
         this.sortableListsData[index].selected = !this.sortableListsData[index].selected;
+        this.selectedListCount = this.sortableListsData.filter(l => l.selected).length;
     }
     private getSelectedListIds(): string[] {
         return this.sortableListsData.filter(l => l.selected).map(l => l.id);
@@ -94,11 +99,17 @@ export class SidebarComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.sortableListsData = getCopyOf(this.data.lists.map(l => ({ ...l, selected: false })));
+        this.selectModeEventsSubscription = this.selectModeEvents.subscribe(nowSelectIsOn => {
+            this.toggleSelectMode(nowSelectIsOn);
+        });
     }
     ngOnChanges(changes: SimpleChanges): void {
         if ('data' in changes) {
             this.sortableListsData = getCopyOf(this.data.lists.map(l => ({ ...l, selected: false })));
             moveToMacroQueue(() => (this.isLoading = null));
         }
+    }
+    ngOnDestroy() {
+        this.selectModeEventsSubscription.unsubscribe();
     }
 }
