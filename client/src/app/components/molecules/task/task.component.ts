@@ -183,21 +183,27 @@ export class TaskComponent implements OnInit {
             delayForAnimation: completeAll =>
                 new Promise(resolve => {
                     if (nowCompleted && completeAll) {
-                        const openTasksIds = this.data.subTasks.filter(t => !t.isCompleted).map(t => '#task-' + t.id);
-                        const taskElems = document.querySelectorAll(openTasksIds.join(', '));
+                        this.uiState.collapseSubtaskList = false;
 
-                        const delay = 200;
-                        taskElems.forEach((taskElem, i) => {
-                            setTimeout(() => taskElem.classList.add('completed-transition'), delay * i);
+                        moveToMacroQueue(() => {
+                            const openTasksIds = this.data.subTasks
+                                .filter(t => !t.isCompleted)
+                                .map(t => '#task-' + t.id);
+                            const taskElems = document.querySelectorAll(openTasksIds.join(', '));
+
+                            const delay = 200;
+                            taskElems.forEach((taskElem, i) => {
+                                setTimeout(() => taskElem.classList.add('completed-transition'), delay * i);
+                            });
+                            const timeToFinishChildAnimations = delay * openTasksIds.length + 100;
+
+                            setTimeout(() => {
+                                this.isCompleted = nowCompleted;
+                                this.emitNewProgress(1);
+
+                                setTimeout(() => resolve(), 600);
+                            }, timeToFinishChildAnimations + 300);
                         });
-                        const timeToFinishChildAnimations = delay * openTasksIds.length + 100;
-
-                        setTimeout(() => {
-                            this.isCompleted = nowCompleted;
-                            this.emitNewProgress(1);
-
-                            setTimeout(() => resolve(), 600);
-                        }, timeToFinishChildAnimations + 300);
                     } else {
                         this.isCompleted = nowCompleted;
 
