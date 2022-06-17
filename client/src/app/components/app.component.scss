@@ -35,7 +35,6 @@
     background: var(--secondary-clr);
 }
 
-
 .top-bar {
     z-index: 20;
     box-sizing: border-box;
@@ -85,7 +84,7 @@ menu-toggle-btn {
         max-width: 60%;
     }
 }
-.list-name-preview .name  {
+.list-name-preview .name {
     transform: translateY(-2px);
     margin-right: 10px;
 }
@@ -180,7 +179,6 @@ main {
             // outline-offset: var(--spacing-s);
 
             // box-shadow: 0 0 0 2px var(--primary-400);
-
         }
     }
 
@@ -203,4 +201,30 @@ main {
 .new-task-form {
     margin: 25px 0;
     width: 100%;
+}
+
+.dev-indicator {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+
+    width: 0;
+    height: 0;
+    border-top: 30px solid transparent;
+    border-bottom: 30px solid transparent;
+    border-left: 30px solid var(--secondary-400);
+    
+    opacity: .6;
+    transform: translate(-24px, 40px) rotate(135deg);
+    cursor: pointer;
+    
+    &::before {
+        content: "dev";
+        position: absolute;
+        bottom: 0;
+        right: 20px;
+        transform: rotate(-90deg) translate(-10px, 12px);
+        color: var(--tinted-neutral-900);
+        font-weight: 500;
+    }
 }
