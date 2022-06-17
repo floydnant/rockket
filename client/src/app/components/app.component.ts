@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { AppData, AppState } from '../reducers';
 import { AppDataService } from '../services/app-data.service';
 import { ListsService } from '../services/lists.service';
@@ -166,5 +167,12 @@ export class AppComponent implements AfterViewInit {
     async importJson(inputRef: HTMLInputElement) {
         const unparsed = await inputRef.files[0].text();
         this.appDataService.importFromJSON(unparsed);
+    }
+
+    /////////////////// misc ////////////////////
+    showDevIndicator = !environment.production && sessionStorage.showDevIndicator != 'false';
+    hideDevIndicator() {
+        sessionStorage.showDevIndicator = false;
+        this.showDevIndicator = false;
     }
 }
