@@ -144,7 +144,7 @@ export class TaskComponent implements OnInit {
     resetEventsSubject = new Subject();
     resetNotesBlock() {
         this.updatedNotes = this.data.meta.notes;
-        this.resetEventsSubject.next();
+        this.resetEventsSubject.next(undefined);
     }
 
     uiState: TaskUiState;
