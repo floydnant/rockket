@@ -14,7 +14,7 @@ module.exports = {
         es2021: true,
     },
     overrides: [],
-    ignorePatterns: ['.eslintrc.js'],
+    ignorePatterns: ['.eslintrc.js', 'tailwind.config.js', 'postcss.config.js'],
     rules: {
         'linebreak-style': ['error', 'unix'],
         'prettier/prettier': ['error', {}, { usePrettierrc: true }],
