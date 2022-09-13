@@ -28,7 +28,7 @@
         "@ngrx/store-devtools": "^13.2.0",
         "rxjs": "~7.5.5",
         "tslib": "^2.2.0",
-        "zone.js": "~0.11.4"
+        "zone.js": "~0.11.8"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "~13.3.8",
