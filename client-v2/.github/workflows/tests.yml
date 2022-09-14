@@ -1,0 +1,38 @@
+name: Run linting and tests
+
+on:
+    pull_request:
+        branches: [main]
+
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16.x
+                  cache: 'npm'
+                  cache-dependency-path: client-v2/package-lock.json
+            - run: cd client-v2
+            - run: npm ci
+              working-directory: ./client-v2
+            - run: npm run build --if-present
+              working-directory: ./client-v2
+            - run: npm run lint
+              working-directory: ./client-v2
+            - run: npm run comp:ci
+              working-directory: ./client-v2
+            - run: npm run e2e:ci
+              working-directory: ./client-v2
+            - name: Upload coverage artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: coverage-report
+                  path: client-v2/coverage
+                  retention-days: 7
+
+            # - run: npm run test:unit:ci
+            #   working-directory: ./client-v2
