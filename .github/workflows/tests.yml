@@ -20,27 +20,22 @@ jobs:
                   cache-dependency-path: client-v2/package-lock.json
 
             - run: cd client-v2
-
             - run: npm ci
               working-directory: ./client-v2
 
             - run: npm run build --if-present
               working-directory: ./client-v2
 
-            - name: Run linter
-              run: npm run lint
+            - run: npm run lint
               working-directory: ./client-v2
 
-            # - name: Run unit tests
-            #   run: npm run unit:ci
+            # - run: npm run unit:ci
             #   working-directory: ./client-v2
 
-            - name: Run component tests (comp:ci)
-              run: npm run comp:ci
+            - run: npm run comp:ci
               working-directory: ./client-v2
 
-            - name: Run e2e tests (e2e:ci)
-              run: npm run e2e:ci
+            - run: npm run e2e:ci
               working-directory: ./client-v2
 
             - name: Upload cypress videos
