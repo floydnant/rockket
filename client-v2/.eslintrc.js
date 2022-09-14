@@ -26,7 +26,14 @@ module.exports = {
             // extends: ['plugin:prettier/recommended', 'prettier', 'plugin:tailwindcss/recommended'],
         },
     ],
-    ignorePatterns: ['.eslintrc.js', 'tailwind.config.js', 'postcss.config.js', 'karma.conf.js', 'src/index.html'],
+    ignorePatterns: [
+        '.eslintrc.js',
+        'tailwind.config.js',
+        'postcss.config.js',
+        'karma.conf.js',
+        'src/index.html',
+        'cypress/support/component-index.html',
+    ],
     rules: {
         'linebreak-style': ['error', 'unix'],
         'prettier/prettier': ['error', {}, { usePrettierrc: true }],
