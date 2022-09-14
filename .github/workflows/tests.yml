@@ -7,7 +7,7 @@ on:
         branches: ['main', 'dev/*']
 
 jobs:
-    'build, test and lint':
+    build-and-test:
         runs-on: ubuntu-latest
 
         steps:
