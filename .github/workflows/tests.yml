@@ -29,21 +29,14 @@ jobs:
             - run: npm run lint
               working-directory: ./client-v2
 
-            # - run: npm run unit:ci
-            #   working-directory: ./client-v2
+            - run: npm run unit:ci
+              working-directory: ./client-v2
 
             - run: npm run comp:ci
               working-directory: ./client-v2
 
             - run: npm run e2e:ci
               working-directory: ./client-v2
-
-            - name: Upload cypress videos
-              uses: actions/upload-artifact@v3
-              with:
-                  name: cypress-videos
-                  path: client-v2/cypress/videos
-                  retention-days: 7
 
             # - name: Upload coverage artifacts
             #   uses: actions/upload-artifact@v3
