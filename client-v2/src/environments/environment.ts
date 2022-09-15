@@ -4,6 +4,7 @@
 
 export const environment = {
     production: false,
+    PACKAGE_VERSION: process.env.NG_APP_PACKAGE_VERSION,
 }
 
 /*
