@@ -28,4 +28,11 @@ describe('AppComponent', () => {
         const compiled = fixture.nativeElement as HTMLElement
         expect(compiled.querySelector('.content span')?.textContent).toContain('client-v2 app is running!')
     })
+
+    it('should display the app version', () => {
+        const fixture = TestBed.createComponent(AppComponent)
+        fixture.detectChanges()
+        const compiled = fixture.nativeElement as HTMLElement
+        expect(compiled.textContent).toContain('2.0.0')
+    })
 })
