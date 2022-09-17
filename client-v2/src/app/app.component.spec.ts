@@ -16,23 +16,10 @@ describe('AppComponent', () => {
         expect(app).toBeTruthy()
     })
 
-    it("should have as title 'client-v2'", () => {
-        const fixture = TestBed.createComponent(AppComponent)
-        const app = fixture.componentInstance
-        expect(app.title).toEqual('client-v2')
-    })
-
-    it('should render title', () => {
-        const fixture = TestBed.createComponent(AppComponent)
-        fixture.detectChanges()
-        const compiled = fixture.nativeElement as HTMLElement
-        expect(compiled.querySelector('.content span')?.textContent).toContain('client-v2 app is running!')
-    })
-
     it('should display the app version', () => {
         const fixture = TestBed.createComponent(AppComponent)
         fixture.detectChanges()
-        const compiled = fixture.nativeElement as HTMLElement
-        expect(compiled.textContent).toContain('2.0.0')
+        const app = fixture.componentInstance
+        expect(app.packageVersion).toEqual('2.0.0')
     })
 })

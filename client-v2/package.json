@@ -10,6 +10,7 @@
         "lint": "eslint \"{src,app,test,cypress}/**/**.{ts,html}\"",
         "lint:fix": "npm run lint -- --fix",
         "unit": "ng test",
+        "unit:browser": "ng test --karma-config=karma.conf-browser.js",
         "unit:ci": "ng test --karma-config=karma.conf-ci.js",
         "e2e": "ng e2e",
         "e2e:ci": "ng run client-v2:e2e-ci",
