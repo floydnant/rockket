@@ -3,6 +3,7 @@
     "version": "2.0.0",
     "scripts": {
         "dev": "ng serve",
+        "dev:lan": "ng serve --host 0.0.0.0",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
         "update-colors": "ts-node ./tools/update-colors.cts",

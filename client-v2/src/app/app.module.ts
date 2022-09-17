@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { DemoComponent } from './components/demo/demo.component'
+import { TaskComponent } from './components/organisms/task/task.component'
 import { StatusIconComponent } from './components/atoms/icons/status-icon/status-icon.component'
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
 import { IconComponent } from './components/atoms/icons/icon/icon.component'
@@ -16,6 +17,7 @@ import { PriorityIconComponent } from './components/atoms/icons/priority-icon/pr
     declarations: [
         AppComponent,
         DemoComponent,
+        TaskComponent,
         StatusIconComponent,
         ComponentPlaygroundComponent,
         IconComponent,
