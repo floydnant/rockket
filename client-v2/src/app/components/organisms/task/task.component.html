@@ -4,7 +4,8 @@
         'bg-submit-800': data.status == TaskStatus.COMPLETED,
         'text-submit-200': data.status == TaskStatus.COMPLETED,
         completed: data.status == TaskStatus.COMPLETED,
-        titleHasFocus: titleFocusable.isFocused
+        titleHasFocus: titleFocusable.isFocused,
+        notesHasFocus: notesFocusable.isFocused
     }"
 >
     <div class="mb-1 box-border flex max-w-full items-center justify-between gap-2 px-2">

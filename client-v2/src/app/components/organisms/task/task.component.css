@@ -1,47 +1,47 @@
-@supports selector(A:has(B)) {
-    .task:hover:not(.titleHasFocus, :has(.notes:hover)) {
-        @apply bg-tinted-700;
-    }
-    .task.completed:hover:not(.titleHasFocus, :has(.notes:hover)) {
-        @apply bg-submit-700;
-    }
-
-    .notes:hover:not(:focus) {
-        @apply bg-tinted-700;
-    }
-
-    .task:has(.notes:focus) double-ellipsis-icon {
-        @apply !opacity-100;
-    }
-    .task:has(.notes:focus) .icon-group {
-        @apply -translate-x-6;
-    }
-}
 @supports not selector(A:has(B)) {
+    /* [task] */
     .task:hover:not(.titleHasFocus) {
         @apply bg-tinted-700;
     }
+    /* same as above */
     .task.completed:hover:not(.titleHasFocus) {
         @apply bg-submit-700;
     }
 
+    /* [notes] highlight if not focused */
     .notes:hover:not(:focus) {
         @apply bg-tinted-800;
     }
 }
+@supports selector(A:has(B)) {
+    /* [task] highlight only if notes are NOT hovered */
+    .task:hover:not(.titleHasFocus, :has(.notes:hover)) {
+        @apply bg-tinted-700;
+    }
+    /* same as above */
+    .task.completed:hover:not(.titleHasFocus, :has(.notes:hover)) {
+        @apply bg-submit-700;
+    }
+}
 
+/* [task] */
 .task.titleHasFocus {
     @apply ring-2 ring-primary-400;
 }
-.task.titleHasFocus .notes:hover {
+
+/* [notes] highlight if not focused */
+.task:is(.task, .titleHasFocus) .notes:hover:not(:focus) {
     @apply bg-tinted-700;
 }
 
-.task:not(:hover, .titleHasFocus) double-ellipsis-icon {
-    @apply opacity-0;
-}
-.task:is(:hover, .titleHasFocus) .icon-group {
+/* [icon-group] */
+.task:is(:hover, .titleHasFocus, .notesHasFocus) .icon-group {
     @apply -translate-x-6;
+}
+
+/* [ellipsis] */
+.task:not(:hover, .titleHasFocus, .notesHasFocus) double-ellipsis-icon {
+    @apply opacity-0;
 }
 .task.completed double-ellipsis-icon {
     @apply text-submit-300;

@@ -8,7 +8,6 @@ export enum TaskState {
 
 type TaskDisplayState = TaskStatus | TaskState
 
-// @TODO: add blocked state -> far fa-minus-circle
 const statusIconClassMap: Record<TaskDisplayState, string> = {
     [TaskStatus.OPEN]: 'far fa-circle text-tinted-300',
     [TaskStatus.IN_PROGRESS]: 'far fa-clock text-secondary-400',
