@@ -1,0 +1,60 @@
+<li
+    class="task | flex w-full max-w-full list-none flex-col rounded-xl bg-tinted-800 py-2 px-1 pb-1 transition-colors duration-75"
+    [class]="{
+        'bg-submit-800': data.status == TaskStatus.COMPLETED,
+        'text-submit-200': data.status == TaskStatus.COMPLETED,
+        completed: data.status == TaskStatus.COMPLETED,
+        titleHasFocus: titleFocusable.isFocused,
+        notesHasFocus: notesFocusable.isFocused
+    }"
+>
+    <div class="mb-1 box-border flex max-w-full items-center justify-between gap-2 px-2">
+        <div class="max-w-[calc(100%-1.7rem)]">
+            <span class="status | mr-2 text-lg">
+                <status-icon [status]="loading || blocked || data.status"></status-icon>
+            </span>
+            <span
+                focusable
+                #titleFocusable="focusable"
+                class="title | outline-none"
+                [class]="{
+                    'line-through': data.status == TaskStatus.CLOSED,
+                    'decoration-danger-400': data.status == TaskStatus.CLOSED
+                }"
+                contenteditable
+            >
+                {{ data.title }}
+            </span>
+        </div>
+        <div class="relative mr-0.5 max-w-max">
+            <div class="icon-group | flex max-w-max flex-wrap items-center justify-end gap-3 transition-transform">
+                <app-icon
+                    *ngIf="isOverdue"
+                    class="overdue-icon | animate-ping"
+                    iconClass="fas fa-exclamation-triangle text-danger-400"
+                ></app-icon>
+                <priority-icon
+                    *ngIf="
+                        data.status != TaskStatus.COMPLETED &&
+                        data.status != TaskStatus.CLOSED &&
+                        data.priority != TaskPriority.NONE
+                    "
+                    [priority]="data.priority"
+                ></priority-icon>
+            </div>
+            <double-ellipsis-icon
+                class="absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
+            ></double-ellipsis-icon>
+        </div>
+    </div>
+
+    <div
+        focusable
+        #notesFocusable="focusable"
+        [class]="{ hidden: !data.notes && !notesFocusable.isFocused }"
+        class="notes | mt-1 rounded-lg bg-tinted-900 py-1 px-2 text-tinted-300 outline-none ring-primary-400 transition-colors duration-75 focus:ring-2"
+        contenteditable
+    >
+        {{ this.loading || data.notes }}
+    </div>
+</li>

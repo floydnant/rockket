@@ -7,7 +7,5 @@ import { environment } from 'src/environments/environment'
     styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-    title = 'client-v2'
-
     packageVersion = environment.PACKAGE_VERSION
 }
