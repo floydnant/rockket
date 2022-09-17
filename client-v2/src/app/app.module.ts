@@ -7,6 +7,7 @@ import { DemoComponent } from './components/demo/demo.component'
 import { StatusIconComponent } from './components/atoms/icons/status-icon/status-icon.component'
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
 import { IconComponent } from './components/atoms/icons/icon/icon.component'
+import { FocusableDirective } from './directives/focusable.directive'
 import { FormsModule } from '@angular/forms'
 import { DoubleEllipsisIconComponent } from './components/atoms/icons/double-ellipsis-icon/double-ellipsis-icon.component'
 import { PriorityIconComponent } from './components/atoms/icons/priority-icon/priority-icon.component'
@@ -18,6 +19,7 @@ import { PriorityIconComponent } from './components/atoms/icons/priority-icon/pr
         StatusIconComponent,
         ComponentPlaygroundComponent,
         IconComponent,
+        FocusableDirective,
         DoubleEllipsisIconComponent,
         PriorityIconComponent,
     ],
