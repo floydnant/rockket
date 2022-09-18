@@ -6,6 +6,9 @@ on:
     pull_request:
         branches: ['main', 'dev/*']
 
+env:
+    DATABASE_URL: postgresql://${{ github.secrets.DB_USER }}:${{ github.secrets.DB_PWD }}@localhost:5432/todo-app-testing?schema=public
+
 jobs:
     build-client-and-test:
         runs-on: ubuntu-latest
@@ -74,19 +77,15 @@ jobs:
               uses: Daniel-Marynicz/postgresql-action@master
               with:
                   postgres_image_tag: 12-alpine
-                  app_user: app
-                  app_user_password: develop
-                  app_db: todo-app
+                  app_user: ${{ github.secrets.DB_USER }}
+                  app_user_password: ${{ github.secrets.DB_PWD }}
+                  app_db: todo-app-testing
 
             - name: Run db migrations
-              env:
-                  DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app?schema=public
               run: npx prisma migrate deploy
               working-directory: ./server
 
             - name: Run e2e tests
-              env:
-                  DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app?schema=public
               run: npm run e2e:ci
               working-directory: ./server
 
