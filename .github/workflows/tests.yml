@@ -45,6 +45,19 @@ jobs:
             #       path: client-v2/coverage
             #       retention-days: 7
 
+    setup-postgres:
+        runs-on: ubuntu-latest
+          - name: Setup Postgres
+            env: 
+              
+            uses: Daniel-Marynicz/postgresql-action@master
+            with:
+              postgres_image_tag: 12-alpine
+              app_user: postgres
+              app_user_password: postgres
+              app_db: todo-app
+              postgres_extensions: uuid-ossp ltree
+
     build-server-and-test:
         runs-on: ubuntu-latest
 
@@ -71,6 +84,8 @@ jobs:
               working-directory: ./server
 
             - run: npm run e2e:ci
+              env:
+                  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/todo-app?schema=public
               working-directory: ./server
 
             # - name: Upload coverage artifacts
