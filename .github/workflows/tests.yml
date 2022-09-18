@@ -81,9 +81,9 @@ jobs:
             - run: npm run unit:ci
               working-directory: ./server
 
-            - run: npm run e2e:ci
-              env:
+            - env:
                   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/todo-app?schema=public
+              run: npm run e2e:ci
               working-directory: ./server
 
             # - name: Upload coverage artifacts
