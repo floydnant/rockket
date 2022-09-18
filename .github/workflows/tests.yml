@@ -82,6 +82,7 @@ jobs:
               env:
                   DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app?schema=public
               run: npx prisma migrate deploy
+              working-directory: ./server
 
             - name: Run e2e tests
               env:
