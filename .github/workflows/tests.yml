@@ -74,13 +74,13 @@ jobs:
               uses: Daniel-Marynicz/postgresql-action@master
               with:
                   postgres_image_tag: 12-alpine
-                  app_user: postgres
-                  app_user_password: postgres
+                  app_user: app
+                  app_user_password: develop
                   app_db: todo-app
-                  postgres_extensions: uuid-ossp ltree
+                  # postgres_extensions: uuid-ossp ltree
             - name: Run e2e tests
               env:
-                  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/todo-app?schema=public
+                  DATABASE_URL: postgresql://develop:app@localhost:5432/todo-app?schema=public
               run: npm run e2e:ci
               working-directory: ./server
 
