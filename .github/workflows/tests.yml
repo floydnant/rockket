@@ -82,12 +82,10 @@ jobs:
                   app_user_password: ${{ secrets.DB_PWD }}
                   app_db: todo-app-testing
 
-            - name: Run db migrations
-              run: npx prisma migrate deploy
+            - run: npx prisma migrate deploy
               working-directory: ./server
 
-            - name: Run e2e tests
-              run: npm run e2e:ci
+            - run: npm run e2e:ci
               working-directory: ./server
 
             # - name: Upload coverage artifacts
