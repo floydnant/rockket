@@ -77,7 +77,12 @@ jobs:
                   app_user: app
                   app_user_password: develop
                   app_db: todo-app
-                  # postgres_extensions: uuid-ossp ltree
+
+            - name: Run db migrations
+              env:
+                  DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app?schema=public
+              run: npx prisma migrate deploy
+
             - name: Run e2e tests
               env:
                   DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app?schema=public
