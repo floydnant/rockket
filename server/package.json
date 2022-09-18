@@ -23,7 +23,9 @@
         "e2e:ci": "jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
+        "@hapi/joi": "^17.1.1",
         "@nestjs/common": "^9.0.11",
+        "@nestjs/config": "^2.2.0",
         "@nestjs/core": "^9.0.11",
         "@nestjs/platform-express": "^9.0.11",
         "@prisma/client": "^4.3.1",
