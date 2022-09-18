@@ -9,7 +9,7 @@
     }
 
     /* [notes] highlight if not focused */
-    .notes:hover:not(:focus) {
+    .task:is(.task, .titleHasFocus) .notes:hover:not(:focus) {
         @apply bg-tinted-800;
     }
 }
@@ -22,16 +22,16 @@
     .task.completed:hover:not(.titleHasFocus, :has(.notes:hover)) {
         @apply bg-submit-700;
     }
+
+    /* [notes] highlight if not focused */
+    .task:is(.task, .titleHasFocus) .notes:hover:not(:focus) {
+        @apply bg-tinted-700;
+    }
 }
 
 /* [task] */
 .task.titleHasFocus {
     @apply ring-2 ring-primary-400;
-}
-
-/* [notes] highlight if not focused */
-.task:is(.task, .titleHasFocus) .notes:hover:not(:focus) {
-    @apply bg-tinted-700;
 }
 
 /* [icon-group] */
