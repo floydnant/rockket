@@ -1,0 +1,145 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id         String   @id @default(uuid())
+    username   String
+    email      String   @unique
+    password   String
+    signedUpAt DateTime @default(now())
+    avatarUrl  String?
+
+    // relations
+    lastActiveListId    String?
+    tasklistsOwned      Tasklist[]
+    tasksOwned          Task[]
+    listsParticipating  ListParticipant[]
+    taskEventsCreated   TaskEvent[]
+    taskCommentsWritten TaskComment[]
+}
+
+model Tasklist {
+    id          String   @id @default(uuid())
+    name        String
+    description String?
+    createdAt   DateTime @default(now())
+
+    // relations
+    owner        User      @relation(fields: [ownerId], references: [id])
+    ownerId      String
+    //
+    parentList   Tasklist? @relation("list-parent-child", fields: [parentListId], references: [id])
+    parentListId String?
+
+    childLists   Tasklist[]        @relation("list-parent-child")
+    tasks        Task[]
+    participants ListParticipant[]
+}
+
+enum ListPermission {
+    Manage
+    Edit
+    Comment
+    View
+}
+
+model ListParticipant {
+    id         String         @id @default(uuid())
+    permission ListPermission @default(Edit)
+
+    // relations
+    list   Tasklist @relation(fields: [listId], references: [id])
+    listId String
+    //
+    user   User     @relation(fields: [userId], references: [id])
+    userId String
+}
+
+enum TaskStatus {
+    Backlog
+    Open
+    In_Progress
+    Completed
+    Closed
+}
+
+enum TaskPriority {
+    Optional
+    None
+    Moderate
+    High
+    Urgent
+}
+
+model Task {
+    id          String       @id @default(uuid())
+    title       String
+    description String?
+    status      TaskStatus   @default(Open)
+    priority    TaskPriority @default(None)
+
+    createdAt       DateTime  @default(now())
+    openedAt        DateTime?
+    deadline        DateTime?
+    inProgressSince DateTime?
+    closedAt        DateTime?
+    // @TODO: store sorting information
+
+    // relations
+    owner        User     @relation(fields: [ownerId], references: [id])
+    ownerId      String
+    //
+    list         Tasklist @relation(fields: [listId], references: [id])
+    listId       String
+    //
+    parentTask   Task?    @relation("task-parent-child", fields: [parentTaskId], references: [id])
+    parentTaskId String?
+    //
+    blockedBy    Task?    @relation("blocking", fields: [blockedById], references: [id])
+    blockedById  String?
+
+    subtasks     Task[]        @relation("task-parent-child")
+    tasksBlocked Task[]        @relation("blocking")
+    events       TaskEvent[]
+    comments     TaskComment[]
+}
+
+enum TaskEventUpdateField {
+    Status
+    Priority
+    Deadline
+}
+
+model TaskEvent {
+    id           String               @id @default(uuid())
+    updatedField TaskEventUpdateField
+    timestamp    DateTime             @default(now())
+    prevValue    String
+    newValue     String
+
+    // relations
+    task   Task   @relation(fields: [taskId], references: [id])
+    taskId String
+    //
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+}
+
+model TaskComment {
+    id          String   @id @default(uuid())
+    text        String
+    commentedAt DateTime @default(now())
+
+    // relations
+    task   Task   @relation(fields: [taskId], references: [id])
+    taskId String
+    //
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+}

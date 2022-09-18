@@ -6,6 +6,10 @@ on:
     pull_request:
         branches: ['main', 'dev/*']
 
+env:
+    DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PWD }}@localhost:5432/todo-app-testing?schema=public
+    JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
 jobs:
     build-client-and-test:
         runs-on: ubuntu-latest
@@ -43,5 +47,51 @@ jobs:
             #   with:
             #       name: coverage-report
             #       path: client-v2/coverage
+            #       retention-days: 7
+
+    build-server-and-test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16.x
+                  cache: 'npm'
+                  cache-dependency-path: server/package-lock.json
+
+            - run: cd server
+            - run: npm ci
+              working-directory: ./server
+
+            - run: npm run build --if-present
+              working-directory: ./server
+
+            - run: npm run lint
+              working-directory: ./server
+
+            - run: npm run unit:ci
+              working-directory: ./server
+
+            - name: Setup Postgres              
+              uses: Daniel-Marynicz/postgresql-action@master
+              with:
+                  postgres_image_tag: 12-alpine
+                  app_user: ${{ secrets.DB_USER }}
+                  app_user_password: ${{ secrets.DB_PWD }}
+                  app_db: todo-app-testing
+
+            - run: npx prisma migrate deploy
+              working-directory: ./server
+
+            - run: npm run e2e:ci
+              working-directory: ./server
+
+            # - name: Upload coverage artifacts
+            #   uses: actions/upload-artifact@v3
+            #   with:
+            #       name: coverage-report
+            #       path: server/coverage
             #       retention-days: 7
 
