@@ -80,7 +80,7 @@ jobs:
                   # postgres_extensions: uuid-ossp ltree
             - name: Run e2e tests
               env:
-                  DATABASE_URL: postgresql://develop:app@localhost:5432/todo-app?schema=public
+                  DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app?schema=public
               run: npm run e2e:ci
               working-directory: ./server
 
