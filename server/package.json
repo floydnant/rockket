@@ -19,8 +19,9 @@
         "unit:ci": "jest",
         "unit:cov": "jest --coverage",
         "unit:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "e2e": "jest --watch --config ./test/jest-e2e.json",
-        "e2e:ci": "jest --config ./test/jest-e2e.json"
+        "e2e": "DATABASE_URL=\"$(sh ./get-testing-db-url.sh $TESTING_DATABASE_URL)\" npm run db:reset && jest --watch --config ./test/jest-e2e.json",
+        "e2e:ci": "DATABASE_URL=\"$(sh ./get-testing-db-url.sh $TESTING_DATABASE_URL)\" npm run db:reset && jest --config ./test/jest-e2e.json",
+        "db:reset": "prisma db push --force-reset --accept-data-loss --skip-generate"
     },
     "dependencies": {
         "@nestjs/common": "^9.0.11",
