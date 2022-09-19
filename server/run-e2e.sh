@@ -6,4 +6,5 @@ if [[ -z $TESTING_DATABASE_URL ]];
 fi;
 
 DATABASE_URL=$db npm run db:reset
+echo '' && echo "Now running e2e tests (jest $1)"
 DATABASE_URL=$db jest $1
