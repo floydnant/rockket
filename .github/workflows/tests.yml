@@ -7,7 +7,7 @@ on:
         branches: ['main', 'dev/*']
 
 env:
-    DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PWD }}@localhost:5432/todo-app-testing?schema=public
+    TESTING_DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PWD }}@localhost:5432/todo-app-testing?schema=public
     JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
 jobs:
