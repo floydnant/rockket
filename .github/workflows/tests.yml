@@ -7,7 +7,7 @@ on:
         branches: ['main', 'dev/*']
 
 env:
-    DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PWD }}@localhost:5432/todo-app-testing?schema=public
+    TESTING_DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PWD }}@localhost:5432/todo-app-testing?schema=public
     JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
 jobs:
@@ -81,9 +81,6 @@ jobs:
                   app_user: ${{ secrets.DB_USER }}
                   app_user_password: ${{ secrets.DB_PWD }}
                   app_db: todo-app-testing
-
-            - run: npx prisma migrate deploy
-              working-directory: ./server
 
             - run: npm run e2e:ci
               working-directory: ./server
