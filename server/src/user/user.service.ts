@@ -9,12 +9,12 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
-import { PrismaService } from 'src/prisma-abstractions/prisma.service'
+import { PrismaService } from '../prisma-abstractions/prisma.service'
 import { LoginCredentialsDto, SignupCredentialsDto } from './dto/auth-credetials.dto'
 import { UpdatePasswordDto, UpdateUserDto } from './dto/update-user.dto'
 import { IJwtPayload } from './jwt-payload.interface'
-import { IUserPreview, IUserSearchResult } from 'src/shared/index.model'
-import { SELECT_user_preview } from 'src/prisma-abstractions/query-helpers'
+import { IUserPreview, IUserSearchResult } from '../shared/index.model'
+import { SELECT_user_preview } from '../prisma-abstractions/query-helpers'
 
 @Injectable()
 export class UserService {
