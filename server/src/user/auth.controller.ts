@@ -17,7 +17,7 @@ export class AuthController {
     }
 
     @Post('/login') login(@Body() credentials: LoginCredentialsDto) {
-        this.logger.verbose(`User logging in: '${credentials.usernameOrEmail}'`)
+        this.logger.verbose(`User logging in: '${credentials.email}'`)
         return this.usersService.login(credentials)
     }
 

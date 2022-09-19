@@ -11,7 +11,7 @@ import { User } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 import { PrismaService } from '../prisma-abstractions/prisma.service'
 import { LoginCredentialsDto, SignupCredentialsDto } from './dto/auth-credetials.dto'
-import { UpdatePasswordDto, UpdateUserDto } from './dto/update-user.dto'
+import { UpdateEmailDto, UpdatePasswordDto, UpdateUserDto } from './dto/update-user.dto'
 import { IJwtPayload } from './jwt-payload.interface'
 import { IUserPreview, IUserSearchResult } from '../shared/index.model'
 import { SELECT_user_preview } from '../prisma-abstractions/query-helpers'
@@ -31,11 +31,9 @@ export class UserService {
         }
     }
 
-    async login({ password, usernameOrEmail }: LoginCredentialsDto) {
-        const foundUser = await this.prisma.user.findFirst({
-            where: {
-                OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
-            },
+    async login({ password, email }: LoginCredentialsDto) {
+        const foundUser = await this.prisma.user.findUnique({
+            where: { email },
             select: {
                 id: true,
                 username: true,
@@ -82,30 +80,36 @@ export class UserService {
         }
     }
 
-    async updateUser(user: User, updateUserDto: UpdateUserDto) {
+    async updateUser(user: User, { username: newUsername }: UpdateUserDto) {
+        const updatedUser = await this.prisma.user.update({
+            where: { id: user.id },
+            data: { username: newUsername },
+        })
+
+        return {
+            user: this.getValidatedUser(updatedUser),
+            successMessage: `Updated username to '${newUsername}'.`,
+        }
+    }
+    async updateEmail(user: User, { email: newEmail, password }: UpdateEmailDto) {
         try {
+            await this.validatePassword(password, user.password)
+
             const updatedUser = await this.prisma.user.update({
                 where: { id: user.id },
-                data: updateUserDto,
+                data: { email: newEmail },
             })
-            const { username, email } = updatedUser
-            const usernameChanged = user.username != username
-            const emailChanged = user.email != email
 
             return {
                 user: this.getValidatedUser(updatedUser),
-                successMessage: `Updated ${usernameChanged ? `username to '${username}'` : ''}${
-                    usernameChanged && emailChanged ? ' and ' : ''
-                }${emailChanged ? `email to '${email}'` : ''}.`,
+                successMessage: `Updated email to '${newEmail}'.`,
             }
         } catch (err) {
-            if (err.code != 'P2002') throw new InternalServerErrorException(err)
+            if (err.code != 'P2002') throw err
             // conflict: duplicate email
 
-            this.logger.verbose(`update user failed => '${updateUserDto.email}' already exists`)
-            throw new ConflictException(
-                `There is already an account associated with '${updateUserDto.email}'.`,
-            )
+            this.logger.verbose(`update user failed => '${newEmail}' already exists`)
+            throw new ConflictException(`There is already an account associated with '${newEmail}'.`)
         }
     }
 
@@ -151,8 +155,8 @@ export class UserService {
     private async validatePassword(passwordToValidate: string, password: string) {
         if (await bcrypt.compare(passwordToValidate, password)) return true
         else {
-            this.logger.verbose('auth failed => Username/Email or Password is wrong')
-            throw new UnauthorizedException('Username/Email or Password is wrong')
+            this.logger.verbose('auth failed => Username, Email or Password is wrong')
+            throw new UnauthorizedException('Username, Email or Password is wrong')
         }
     }
 

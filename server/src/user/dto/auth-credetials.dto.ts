@@ -57,9 +57,9 @@ export class SignupCredentialsDto extends Username {
 }
 
 export class LoginCredentialsDto {
-    @IsNotEmpty({ message: 'You must provide your username or email adress' })
+    @IsNotEmpty({ message: 'You must provide your email adress' })
     @IsString()
-    usernameOrEmail: string
+    email: string
 
     @IsNotEmpty()
     @IsString()
