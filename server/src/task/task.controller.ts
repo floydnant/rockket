@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { User } from '@prisma/client'
-import { GetUser } from 'src/decorators/get-user.decorator'
+import { GetUser } from '../decorators/get-user.decorator'
 import { CreateTaskCommentDto, CreateTaskDto, UpdateTaskCommentDto, UpdateTaskDto } from './task.dto'
 
 @Controller('task')

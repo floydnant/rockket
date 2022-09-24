@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common'
 import { PrismaClient, Tasklist } from '@prisma/client'
-import { CreateTasklistDto, UpdateTasklistDto } from 'src/task/list/list.dto'
+import { CreateTasklistDto, UpdateTasklistDto } from '../src/task/list/list.dto'
 import { DbHelper } from './db-helper'
 import { users } from './fixtures'
 import { initApplication, request, signup, typeBearer } from './testing-utils'
