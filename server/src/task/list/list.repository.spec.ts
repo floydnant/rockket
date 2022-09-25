@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
+import { PrismaModule } from '../../prisma-abstractions/prisma.module'
 import { ListRepository } from './list.repository'
 
 describe('ListRepositoryService', () => {
@@ -6,6 +7,7 @@ describe('ListRepositoryService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
+            imports: [PrismaModule],
             providers: [ListRepository],
         }).compile()
 
