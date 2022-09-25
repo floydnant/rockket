@@ -3,7 +3,7 @@ import { PrismaClient, Tasklist } from '@prisma/client'
 import { CreateTasklistDto, UpdateTasklistDto } from '../src/task/list/list.dto'
 import { DbHelper } from './db-helper'
 import { users } from './fixtures'
-import { initApplication, request, signup, typeBearer } from './testing-utils'
+import { createTasklist, initApplication, request, signup, typeBearer } from './testing-utils'
 
 const dbHelper = new DbHelper(new PrismaClient(), { cacheTableNames: true })
 
@@ -17,60 +17,83 @@ describe('Task feature (e2e)', () => {
         await dbHelper.clearDb()
         app = await initApplication()
 
-        await signup(app, users.jonathan)
-            .expect(201)
-            .then(async (res) => {
-                authToken = res.body.user.authToken
-            })
+        const res = await signup(app, users.jonathan).expect(201)
+        authToken = res.body.user.authToken
     })
 
     const newList: CreateTasklistDto = {
         name: 'The new tasklist',
     }
 
-    it.skip('can create a tasklist', async () => {
-        await request(app)
-            .post('/list')
-            .auth(authToken, typeBearer)
-            .send(newList)
-            .expect(201)
-            .then((res) => {
-                const createdList = res.body
-                expect(createdList.name).toEqual(newList.name)
-            })
+    it('can create a tasklist', async () => {
+        const createdList: Tasklist = await createTasklist(app, authToken, newList)
+        expect(createdList.name).toEqual(newList.name)
     })
-    it.skip('can update a tasklist', async () => {
-        const createdList: Tasklist = await request(app)
-            .post('/list')
-            .auth(authToken, typeBearer)
-            .send(newList)
-            .expect(201)
-            .then((res) => res.body)
+    it('can update a tasklist', async () => {
+        const createdList = await createTasklist(app, authToken, newList)
+
         const updatedListData: UpdateTasklistDto = {
             description: 'A new description',
         }
-        await request(app).patch(`/list/${createdList.id}`).send(updatedListData).expect(200)
-    })
-    it.skip('can delete a tasklist', async () => {
-        const createdList: Tasklist = await request(app)
-            .post('/list')
+        const res = await request(app)
+            .patch(`/list/${createdList.id}`)
             .auth(authToken, typeBearer)
-            .send(newList)
-            .expect(201)
-            .then((res) => res.body)
-        await request(app).delete(`/list/${createdList.id}`).expect(200)
+            .send(updatedListData)
+            .expect(200)
+        const updatedList = res.body as Tasklist
+        expect(updatedList.description).toEqual(updatedListData.description)
+    })
+    it('can delete a tasklist', async () => {
+        const createdList: Tasklist = await createTasklist(app, authToken, newList)
+
+        await request(app).delete(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(200)
     })
 
-    it.todo('can add a child-tasklist')
+    it('can add a child-tasklist', async () => {
+        const createdList = await createTasklist(app, authToken, newList)
+        await createTasklist(app, authToken, {
+            ...newList,
+            parentListId: createdList.id,
+        })
+
+        const res = await request(app).get(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(200)
+        expect(res.body.childLists.length).toEqual(1)
+    })
 
     // @TODO: test moving lists around the hierarchy
 
-    // ListParticipants
-    it.skip('can share a list with other users', () => {
-        // create a list
-        // create another user
-        // share the list with the new user
-        // check if the new user has access to the list
+    describe('Sharing', () => {
+        it('can share a list with other users', async () => {
+            // jonathan creates a list
+            const createdList = await createTasklist(app, authToken, newList)
+
+            // annie signes up
+            const anniesRes = await signup(app, users.annie).expect(201)
+            const annie = anniesRes.body.user
+
+            // jonathan shares the list with annie
+            await request(app)
+                .post(`/list/${createdList.id}/share/${annie.id}`)
+                .auth(authToken, typeBearer)
+                .expect(201)
+
+            // annie checks if she has access to the list
+            await request(app).get(`/list/${createdList.id}`).auth(annie.authToken, typeBearer).expect(200)
+        })
+        it('cannot access list without it being shared', async () => {
+            // jonathan creates a list
+            const createdList = await createTasklist(app, authToken, newList)
+
+            // annie signes up
+            const anniesRes = await signup(app, users.annie).expect(201)
+            const annie = anniesRes.body.user
+
+            // jonathan doesn't share the list with annie
+
+            // annie checks if she has access to the list
+            await request(app).get(`/list/${createdList.id}`).auth(annie.authToken, typeBearer).expect(403)
+        })
+        it.todo('test permissions')
     })
 
     describe('Tasks', () => {

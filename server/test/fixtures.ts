@@ -9,4 +9,9 @@ export const users = {
         username: 'Bob Vance from Vance Refrigeration',
         email: 'b.vance@vance-refrigeration.com',
     },
+    annie: {
+        password: 'password',
+        username: 'Annie Edison',
+        email: 'annie.e@example.com',
+    },
 }
