@@ -2,47 +2,73 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@n
 import { AuthGuard } from '@nestjs/passport'
 import { User } from '@prisma/client'
 import { GetUser } from '../../decorators/get-user.decorator'
-import { CreateTasklistDto, UpdateTasklistDto, ShareTasklistDto } from './list.dto'
+import { CreateTasklistDto, UpdateTasklistDto, ShareTasklistDto, UpdatePermissionsDto } from './list.dto'
+import { ListService } from './list.service'
 
 @UseGuards(AuthGuard())
 @Controller()
 export class ListController {
-    @Get('lists')
-    getRootLevelTasklists(@GetUser() user: User) {
-        return // call list service
-    }
-
-    @Get('list/:listId/child-lists')
-    getChildTasklists(@GetUser() user: User, @Param('listId') listId: string) {
-        return // call list service
-    }
-
-    @Get('list/:listId')
-    getTasklist(@GetUser() user: User, @Param('listId') listId: string) {
-        return // call list service
-    }
-    @Get('list/:listId/tasks')
-    getTasks(@GetUser() user: User, @Param('listId') listId: string) {
-        return // call task service
-    }
+    constructor(private listService: ListService) {}
 
     @Post('list')
     createTasklist(@GetUser() user: User, @Body() dto: CreateTasklistDto) {
-        return // call list service
+        return this.listService.createTaskList(user.id, dto)
     }
-
+    @Get('list/:listId')
+    getTasklist(@GetUser() user: User, @Param('listId') listId: string) {
+        return this.listService.getTasklist(user.id, listId)
+    }
     @Patch('list/:listId')
     updateTasklist(@GetUser() user: User, @Param('listId') listId: string, @Body() dto: UpdateTasklistDto) {
-        return // call list service
+        return this.listService.updateTasklist(user.id, listId, dto)
     }
-
     @Delete('list/:listId')
     deleteTasklist(@GetUser() user: User, @Param('listId') listId: string) {
-        return // call list service
+        return this.listService.deletelist(user.id, listId)
     }
 
-    @Post('list/:listId/share')
-    shareList(@GetUser() user: User, @Param('listId') listId: string, @Body() { userId }: ShareTasklistDto) {
-        return // call list service
+    // root level list previews
+    @Get('lists')
+    getRootLevelTasklists(@GetUser() user: User) {
+        return this.listService.getRootLevelTasklists(user.id)
+    }
+    // nested child list previews
+    @Get('list/:listId/child-lists')
+    getChildTasklists(@GetUser() user: User, @Param('listId') listId: string) {
+        return this.listService.getChildTasklists(user.id, listId)
+    }
+
+    // tasklist sharing
+    @Post('list/:listId/share/:userId')
+    shareList(
+        @GetUser() user: User,
+        @Param('listId') listId: string,
+        @Param('userId') userId: string,
+        @Body() dto: ShareTasklistDto,
+    ) {
+        return this.listService.shareTasklist(user.id, listId, userId, dto)
+    }
+    @Patch('list/:listId/share/:userId')
+    updateParticipantPermissions(
+        @GetUser() user: User,
+        @Param('listId') listId: string,
+        @Param('userId') userId: string,
+        @Body() dto: UpdatePermissionsDto,
+    ) {
+        // @TODO: implement this
+    }
+    @Delete('list/:listId/share/:userId')
+    removeParticipant(
+        @GetUser() user: User,
+        @Param('listId') listId: string,
+        @Param('userId') userId: string,
+    ) {
+        // @TODO: implement this
+    }
+
+    // the actual tasks (but probably just the previews)
+    @Get('list/:listId/tasks')
+    getTasks(@GetUser() user: User, @Param('listId') listId: string) {
+        return // @TODO: implement this
     }
 }

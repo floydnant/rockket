@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { ListPermission } from '@prisma/client'
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class CreateTasklistDto {
     @IsString()
@@ -8,6 +9,10 @@ export class CreateTasklistDto {
     @IsOptional()
     @IsString()
     description?: string
+
+    @IsOptional()
+    @IsString()
+    parentListId?: string
 }
 export class UpdateTasklistDto {
     @IsOptional()
@@ -19,6 +24,12 @@ export class UpdateTasklistDto {
     description?: string
 }
 export class ShareTasklistDto {
-    @IsNotEmpty()
-    userId: string
+    @IsOptional()
+    @IsEnum(ListPermission)
+    permission?: ListPermission
+}
+
+export class UpdatePermissionsDto {
+    @IsEnum(ListPermission)
+    permission: ListPermission
 }
