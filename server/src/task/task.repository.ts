@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Task, TaskEventUpdateField } from '@prisma/client'
-import { SELECT_user_preview } from 'src/prisma-abstractions/query-helpers'
+import { SELECT_user_preview } from '../prisma-abstractions/query-helpers'
 import { PrismaService } from '../prisma-abstractions/prisma.service'
 import { CreateTaskCommentDto, CreateTaskDto, UpdateTaskCommentDto, UpdateTaskDto } from './task.dto'
 
