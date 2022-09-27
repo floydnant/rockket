@@ -2,13 +2,14 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@n
 import { AuthGuard } from '@nestjs/passport'
 import { User } from '@prisma/client'
 import { GetUser } from '../../decorators/get-user.decorator'
+import { TaskService } from '../task.service'
 import { CreateTasklistDto, UpdateTasklistDto, ShareTasklistDto, UpdatePermissionsDto } from './list.dto'
 import { ListService } from './list.service'
 
 @UseGuards(AuthGuard())
 @Controller()
 export class ListController {
-    constructor(private listService: ListService) {}
+    constructor(private listService: ListService, private taskService: TaskService) {}
 
     @Post('list')
     createTasklist(@GetUser() user: User, @Body() dto: CreateTasklistDto) {
@@ -66,9 +67,9 @@ export class ListController {
         // @TODO: implement this
     }
 
-    // the actual tasks (but probably just the previews)
+    // the actual tasks
     @Get('list/:listId/tasks')
     getTasks(@GetUser() user: User, @Param('listId') listId: string) {
-        return // @TODO: implement this
+        return this.taskService.getRootLevelTasks(user.id, listId)
     }
 }

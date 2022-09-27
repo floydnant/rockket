@@ -1,7 +1,8 @@
 import { TaskPriority, TaskStatus } from '@prisma/client'
 import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
+import { enumInvalidMessage } from '../utilities/validation'
 
-export class CreateTaskDto {
+class TaskDto {
     @IsNotEmpty()
     @IsString()
     title: string
@@ -11,14 +12,14 @@ export class CreateTaskDto {
     description: string
 
     @IsOptional()
-    @IsEnum(TaskStatus)
+    @IsEnum(TaskStatus, enumInvalidMessage('status', TaskStatus))
     status: TaskStatus
 
     @IsOptional()
-    @IsEnum(TaskPriority)
+    @IsEnum(TaskPriority, enumInvalidMessage('priority', TaskPriority))
     priority: TaskPriority
 
-    @IsOptional()
+    // listId must always be given, even when the task is not a root level task
     @IsUUID()
     listId: string
 
@@ -35,9 +36,15 @@ export class CreateTaskDto {
     blockedById: string
 }
 
-export class UpdateTaskDto extends CreateTaskDto {
+export class CreateTaskDto extends TaskDto {}
+
+export class UpdateTaskDto extends TaskDto {
     @IsOptional()
     title: string
+
+    // but we only need the listId here if we move the task to a different list
+    @IsOptional()
+    listId: string
 }
 
 export class CreateTaskCommentDto {
