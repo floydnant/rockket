@@ -8,11 +8,10 @@ import { CreateTasklistDto, ShareTasklistDto, UpdateTasklistDto } from './list.d
 export class ListRepository {
     constructor(private prisma: PrismaService) {}
 
-    async createTasklist(userId: string, { name, description, parentListId }: CreateTasklistDto) {
+    async createTasklist(userId: string, { parentListId, ...dto }: CreateTasklistDto) {
         return await this.prisma.tasklist.create({
             data: {
-                name,
-                description,
+                ...dto,
                 ...(!parentListId ? {} : { parentList: { connect: { id: parentListId } } }),
                 owner: { connect: { id: userId } },
                 participants: {
@@ -51,10 +50,10 @@ export class ListRepository {
         }
     }
 
-    async updateTasklist(listId: string, { name, description }: UpdateTasklistDto) {
+    async updateTasklist(listId: string, dto: UpdateTasklistDto) {
         return this.prisma.tasklist.update({
             where: { id: listId },
-            data: { name, description },
+            data: dto,
         })
     }
 
@@ -93,9 +92,9 @@ export class ListRepository {
         return lists
     }
 
-    async shareTasklist(listId: string, userId: string, { permission }: ShareTasklistDto) {
+    async shareTasklist(listId: string, userId: string, dto: ShareTasklistDto) {
         const listParticipants = await this.prisma.listParticipant.create({
-            data: { listId, userId, permission },
+            data: { listId, userId, ...dto },
         })
         return listParticipants
     }

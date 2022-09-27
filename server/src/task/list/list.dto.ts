@@ -1,5 +1,6 @@
 import { ListPermission } from '@prisma/client'
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { enumInvalidMessage } from '../../utilities/validation'
 
 export class CreateTasklistDto {
     @IsString()
@@ -25,11 +26,11 @@ export class UpdateTasklistDto {
 }
 export class ShareTasklistDto {
     @IsOptional()
-    @IsEnum(ListPermission)
+    @IsEnum(ListPermission, enumInvalidMessage('permission', ListPermission))
     permission?: ListPermission
 }
 
 export class UpdatePermissionsDto {
-    @IsEnum(ListPermission)
+    @IsEnum(ListPermission, enumInvalidMessage('permission', ListPermission))
     permission: ListPermission
 }
