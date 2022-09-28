@@ -9,9 +9,9 @@ import { TaskService } from './task.service'
 @Controller('task')
 export class TaskController {
     constructor(private taskService: TaskService) {}
+
     @Post()
     createTask(@GetUser() user: User, @Body() dto: CreateTaskDto) {
-        console.log(user)
         return this.taskService.createTask(user.id, dto)
     }
     @Get(':taskId')

@@ -1,117 +1,91 @@
 import { INestApplication } from '@nestjs/common'
 import { PrismaClient, Tasklist } from '@prisma/client'
-import { CreateTasklistDto, UpdateTasklistDto } from '../src/task/list/list.dto'
 import { DbHelper } from './db-helper'
-import { users } from './fixtures'
-import { createTasklist, initApplication, request, signup, typeBearer } from './testing-utils'
+import { newList, users } from './fixtures'
+import { createTask, createTasklist, initApplication, request, signup, typeBearer } from './testing-utils'
 
 const dbHelper = new DbHelper(new PrismaClient(), { cacheTableNames: true })
 
 // @TODO: look into socket testing https://socket.io/docs/v4/testing/#example-with-jest
 
-describe('Task feature (e2e)', () => {
-    let app: INestApplication
-    let authToken: string
+let app: INestApplication
+let authToken: string
 
-    beforeEach(async () => {
-        await dbHelper.clearDb()
-        app = await initApplication()
+beforeEach(async () => {
+    await dbHelper.clearDb()
+    app = await initApplication()
 
-        const res = await signup(app, users.jonathan).expect(201)
-        authToken = res.body.user.authToken
+    const res = await signup(app, users.jonathan).expect(201)
+    authToken = res.body.user.authToken
+})
+
+let createdList: Tasklist
+beforeEach(async () => {
+    createdList = await createTasklist(app, authToken, newList)
+})
+
+describe('Task CRUD (e2e)', () => {
+    it('can create a task', async () => {
+        const createdTask = await createTask(app, authToken, {
+            title: 'This is the task title',
+            listId: createdList.id,
+        })
+
+        expect(createdTask.title).toBe('This is the task title')
     })
 
-    const newList: CreateTasklistDto = {
-        name: 'The new tasklist',
-    }
+    it('can update a task', async () => {
+        const createdTask = await createTask(app, authToken, {
+            title: 'This is the task title',
+            listId: createdList.id,
+        })
 
-    it('can create a tasklist', async () => {
-        const createdList: Tasklist = await createTasklist(app, authToken, newList)
-        expect(createdList.name).toEqual(newList.name)
-    })
-    it('can update a tasklist', async () => {
-        const createdList = await createTasklist(app, authToken, newList)
-
-        const updatedListData: UpdateTasklistDto = {
-            description: 'A new description',
-        }
         const res = await request(app)
-            .patch(`/list/${createdList.id}`)
+            .patch(`/task/${createdTask.id}`)
             .auth(authToken, typeBearer)
-            .send(updatedListData)
+            .send({ description: 'This is a description', status: 'In_Progress' })
             .expect(200)
-        const updatedList = res.body as Tasklist
-        expect(updatedList.description).toEqual(updatedListData.description)
-    })
-    it('can delete a tasklist', async () => {
-        const createdList: Tasklist = await createTasklist(app, authToken, newList)
 
-        await request(app).delete(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(200)
+        expect(res.body.description).toBe('This is a description')
+        expect(res.body.status).toBe('In_Progress')
     })
 
-    it('can add a child-tasklist', async () => {
-        const createdList = await createTasklist(app, authToken, newList)
-        await createTasklist(app, authToken, {
-            ...newList,
-            parentListId: createdList.id,
+    it('can delete a task', async () => {
+        const createdTask = await createTask(app, authToken, {
+            title: 'This is the task title',
+            listId: createdList.id,
         })
 
-        const res = await request(app).get(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(200)
-        expect(res.body.childLists.length).toEqual(1)
+        await request(app).delete(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(200)
+        await request(app).get(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(404)
     })
 
-    // @TODO: test moving lists around the hierarchy
-
-    describe('Sharing', () => {
-        it('can share a list with other users', async () => {
-            // jonathan creates a list
-            const createdList = await createTasklist(app, authToken, newList)
-
-            // annie signes up
-            const anniesRes = await signup(app, users.annie).expect(201)
-            const annie = anniesRes.body.user
-
-            // jonathan shares the list with annie
-            await request(app)
-                .post(`/list/${createdList.id}/share/${annie.id}`)
-                .auth(authToken, typeBearer)
-                .expect(201)
-
-            // annie checks if she has access to the list
-            await request(app).get(`/list/${createdList.id}`).auth(annie.authToken, typeBearer).expect(200)
+    it('can create a subtask', async () => {
+        const createdParentTask = await createTask(app, authToken, {
+            title: 'This is the task title',
+            listId: createdList.id,
         })
-        it('cannot access list without it being shared', async () => {
-            // jonathan creates a list
-            const createdList = await createTasklist(app, authToken, newList)
-
-            // annie signes up
-            const anniesRes = await signup(app, users.annie).expect(201)
-            const annie = anniesRes.body.user
-
-            // jonathan doesn't share the list with annie
-
-            // annie checks if she has access to the list
-            await request(app).get(`/list/${createdList.id}`).auth(annie.authToken, typeBearer).expect(403)
+        const createdSubTask = await createTask(app, authToken, {
+            title: 'This is the task title',
+            listId: createdList.id,
+            parentTaskId: createdParentTask.id,
         })
-        it.todo('test permissions')
+
+        const res = await request(app)
+            .get(`/task/${createdParentTask.id}/subtasks`)
+            .auth(authToken, typeBearer)
+
+        expect(res.body.length).toEqual(1)
+        expect(res.body[0].id).toEqual(createdSubTask.id)
     })
 
-    describe('Tasks', () => {
-        beforeEach(async () => {
-            // @TODO: create a tasklist here
-        })
-
-        it.todo('can create a task')
-        it.todo("can update a task's title")
-        it.todo("can update a task's status")
-        it.todo("can update a task's priority")
-        it.todo("can update a task's description")
-        it.todo('can delete a task')
-
-        // @TODO: test blocking tasks
-
-        it.todo('can add a subtask')
-
-        // @TODO: test TaskComments
+    it.todo('test blocking tasks')
+    describe('TaskEvents', () => {
+        it.todo("can update a task's status -> verify task events")
+        it.todo("can update a task's priority -> verify task events")
+        it.todo("can update a task's dealine -> verify task events")
+        it.todo('can add a blocking task -> verify task events')
     })
+
+    it.todo('test TaskComments')
 })

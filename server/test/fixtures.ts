@@ -1,3 +1,5 @@
+import { CreateTasklistDto } from '../src/task/list/list.dto'
+
 export const users = {
     jonathan: {
         password: 'Password_WithoutComplains123',
@@ -14,4 +16,8 @@ export const users = {
         username: 'Annie Edison',
         email: 'annie.e@example.com',
     },
+}
+
+export const newList: CreateTasklistDto = {
+    name: 'The new tasklist',
 }
