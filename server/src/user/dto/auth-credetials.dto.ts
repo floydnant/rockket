@@ -26,7 +26,7 @@ export const validation: {
     },
     usr: {
         minLength: [3, { message: 'Username should be at least 3 characters long' }],
-        maxLength: [20, { message: 'Username should not be longer than 20 characters' }],
+        maxLength: [35, { message: 'Username should not be longer than 35 characters' }],
     },
     email: {
         isEmail: [{}, { message: 'You must provide a valid email address' }],
