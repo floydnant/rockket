@@ -36,7 +36,7 @@ export class ListService {
         if (!(await this.listRepository.hasPermission(userId, listId, ListPermission.View)))
             throw new ForbiddenException("You don't have permission to view this tasklist")
 
-        return this.listRepository.getChildTasklists(userId, listId)
+        return this.listRepository.getChildTasklists(listId)
     }
 
     async shareTasklist(userId: string, listId: string, newParticipantId: string, dto: ShareTasklistDto) {

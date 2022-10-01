@@ -65,7 +65,7 @@ export class ListRepository {
     async getRootLevelTasklists(userId: string) {
         const lists = await this.prisma.tasklist.findMany({
             where: {
-                participants: { some: { userId } }, // @TODO: we should probably check this with `hasPermisson` in the service
+                participants: { some: { userId } },
                 parentListId: null,
             },
             select: {
@@ -81,22 +81,17 @@ export class ListRepository {
         }))
     }
 
-    async getChildTasklists(userId: string, listId: string) {
-        const lists = await this.prisma.tasklist.findMany({
-            where: {
-                participants: { some: { userId } }, // @TODO: we should probably check this with `hasPermisson` in the service
-                parentListId: listId,
-            },
+    async getChildTasklists(listId: string) {
+        return await this.prisma.tasklist.findMany({
+            where: { parentListId: listId },
         })
-
-        return lists
     }
 
     async shareTasklist(listId: string, userId: string, dto: ShareTasklistDto) {
-        const listParticipants = await this.prisma.listParticipant.create({
+        const listParticipant = await this.prisma.listParticipant.create({
             data: { listId, userId, ...dto },
         })
-        return listParticipants
+        return listParticipant
     }
 
     async hasPermission(userId: string, listId: string, requiredPermission: ListPermission) {

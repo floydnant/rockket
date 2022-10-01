@@ -3,8 +3,8 @@ import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 import { enumInvalidMessage } from '../../utilities/validation'
 
 export class CreateTasklistDto {
-    @IsString()
     @IsNotEmpty()
+    @IsString()
     name: string
 
     @IsOptional()
