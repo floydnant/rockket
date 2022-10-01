@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { ListPermission } from '@prisma/client'
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
 import { SELECT_list_participant } from '../../prisma-abstractions/query-helpers'
-import { CreateTasklistDto, ShareTasklistDto, UpdateTasklistDto } from './list.dto'
+import { CreateTasklistDto, ShareTasklistDto, UpdatePermissionsDto, UpdateTasklistDto } from './list.dto'
 
 @Injectable()
 export class ListRepository {
@@ -89,5 +89,30 @@ export class ListRepository {
             data: { listId, userId, ...dto },
         })
         return listParticipant
+    }
+    async updateParticipantPermissions(
+        listId: string,
+        participantUserId: string,
+        { permission }: UpdatePermissionsDto,
+    ) {
+        const listParticipant = await this.prisma.listParticipant.findFirst({
+            where: { userId: participantUserId, listId },
+            select: { id: true },
+        })
+        if (!listParticipant) throw new NotFoundException('Could not find participant')
+
+        return this.prisma.listParticipant.update({
+            where: { id: listParticipant.id },
+            data: { permission },
+        })
+    }
+    async removeParticipant(listId: string, participantUserId: string) {
+        const listParticipant = await this.prisma.listParticipant.findFirst({
+            where: { userId: participantUserId, listId },
+            select: { id: true },
+        })
+        if (!listParticipant) throw new NotFoundException('Could not find participant')
+
+        return this.prisma.listParticipant.delete({ where: { id: listParticipant.id } })
     }
 }

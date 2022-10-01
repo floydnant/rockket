@@ -79,4 +79,14 @@ export class PermissionsService {
         // if the user is not the author, he must have Managing permissions for the task
         return this.hasPermissionForTask(userId, comment.taskId, ListPermission.Manage)
     }
+
+    async isListOwner(userId: string, listId: string) {
+        const list = await this.prisma.tasklist.findUnique({
+            where: { id: listId },
+            select: { ownerId: true },
+        })
+        if (!list) throw new NotFoundException('Could not find tasklist')
+
+        return list.ownerId == userId
+    }
 }

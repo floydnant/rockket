@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { ListPermission } from '@prisma/client'
 import { PermissionsService } from '../permissions/permissions.service'
-import { CreateTasklistDto, ShareTasklistDto, UpdateTasklistDto } from './list.dto'
+import { CreateTasklistDto, ShareTasklistDto, UpdatePermissionsDto, UpdateTasklistDto } from './list.dto'
 import { ListRepository } from './list.repository'
 
 @Injectable()
@@ -65,5 +65,24 @@ export class ListService {
         if (!hasPermissions) throw new ForbiddenException("You don't have permission to share this tasklist")
 
         return this.listRepository.shareTasklist(listId, newParticipantId, dto)
+    }
+    async updateParticipantPermissions(
+        userId: string,
+        listId: string,
+        participantUserId: string,
+        dto: UpdatePermissionsDto,
+    ) {
+        const hasPermissions = await this.permissions.isListOwner(userId, listId)
+        if (!hasPermissions)
+            throw new ForbiddenException("You don't have permission to manage participants on this tasklist")
+
+        return this.listRepository.updateParticipantPermissions(listId, participantUserId, dto)
+    }
+    async removeParticipant(userId: string, listId: string, participantUserId: string) {
+        const hasPermissions = await this.permissions.isListOwner(userId, listId)
+        if (!hasPermissions)
+            throw new ForbiddenException("You don't have permission to manage participants on this tasklist")
+
+        return this.listRepository.removeParticipant(listId, participantUserId)
     }
 }

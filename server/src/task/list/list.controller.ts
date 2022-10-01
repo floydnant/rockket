@@ -56,10 +56,7 @@ export class ListController {
         @Param('userId') userId: string,
         @Body() dto: UpdatePermissionsDto,
     ) {
-        // @TODO: implement this
-        return {
-            message: 'not implemented',
-        }
+        return this.listService.updateParticipantPermissions(user.id, listId, userId, dto)
     }
     @Delete('list/:listId/share/:userId')
     removeParticipant(
@@ -67,10 +64,7 @@ export class ListController {
         @Param('listId') listId: string,
         @Param('userId') userId: string,
     ) {
-        // @TODO: implement this
-        return {
-            message: 'not implemented',
-        }
+        return this.listService.removeParticipant(user.id, listId, userId)
     }
 
     // the actual tasks
