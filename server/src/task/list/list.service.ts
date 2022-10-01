@@ -19,7 +19,7 @@ export class ListService {
         )
         if (!hasPermissions) throw new ForbiddenException("You don't have permission to view this tasklist")
 
-        return this.listRepository.getTasklistById(userId, listId)
+        return this.listRepository.getTasklistById(listId)
     }
     async updateTasklist(userId: string, listId: string, dto: UpdateTasklistDto) {
         const hasPermissions = await this.permissions.hasPermissionForList(

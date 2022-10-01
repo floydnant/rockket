@@ -24,12 +24,9 @@ export class ListRepository {
         })
     }
 
-    async getTasklistById(userId: string, listId: string) {
-        const list = await this.prisma.tasklist.findFirst({
-            where: {
-                id: listId,
-                participants: { some: { userId } }, // @TODO: we should probably check this with `hasPermisson` in the service instead
-            },
+    async getTasklistById(listId: string) {
+        const list = await this.prisma.tasklist.findUnique({
+            where: { id: listId },
             select: {
                 id: true,
                 name: true,
