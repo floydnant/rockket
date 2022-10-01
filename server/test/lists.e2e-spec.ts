@@ -55,7 +55,6 @@ describe('List CRUD (e2e)', () => {
     })
 
     it.todo('test moving lists around the hierarchy')
-    it.todo('test permissions')
 
     describe('Sharing (participants)', () => {
         it('can share a list with other users', async () => {
@@ -75,19 +74,45 @@ describe('List CRUD (e2e)', () => {
             // annie checks if she has access to the list
             await request(app).get(`/list/${createdList.id}`).auth(annie.authToken, typeBearer).expect(200)
         })
-        it('cannot access list without it being shared', async () => {
-            // jonathan creates a list
-            const createdList = await createTasklist(app, authToken, newList)
+        describe('Permissions', () => {
+            it('cannot access a tasklist without permissions', async () => {
+                // jonathan creates a list
+                const createdList = await createTasklist(app, authToken, newList)
 
-            // annie signes up
-            const anniesRes = await signup(app, users.annie).expect(201)
-            const annie = anniesRes.body.user
+                // annie signes up
+                const anniesRes = await signup(app, users.annie).expect(201)
+                const annie = anniesRes.body.user
 
-            // jonathan doesn't share the list with annie
+                // jonathan doesn't share the list with annie
 
-            // annie checks if she has access to the list
-            await request(app).get(`/list/${createdList.id}`).auth(annie.authToken, typeBearer).expect(403)
+                // annie checks if she has access to the list
+                await request(app)
+                    .get(`/list/${createdList.id}`)
+                    .auth(annie.authToken, typeBearer)
+                    .expect(403)
+            })
+
+            it('cannot edit a tasklist without Edit permissions', async () => {
+                // jonathan creates a list
+                const createdList = await createTasklist(app, authToken, newList)
+
+                // annie signes up
+                const annie = (await signup(app, users.annie).expect(201)).body.user
+
+                // jonathan shares the list with annie
+                await request(app)
+                    .post(`/list/${createdList.id}/share/${annie.id}`)
+                    .auth(authToken, typeBearer)
+                    .send({ permission: 'View' })
+                    .expect(201)
+
+                // annie checks if she can edit the list
+                await request(app)
+                    .patch(`/list/${createdList.id}`)
+                    .auth(annie.authToken, typeBearer)
+                    .send({ title: 'New list title' })
+                    .expect(403)
+            })
         })
-        it.todo('test permissions')
     })
 })

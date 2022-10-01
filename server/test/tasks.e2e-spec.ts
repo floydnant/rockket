@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common'
-import { PrismaClient, Task, TaskComment, TaskEvent, Tasklist } from '@prisma/client'
+import { PrismaClient, TaskComment, TaskEvent, Tasklist } from '@prisma/client'
 import { DbHelper } from './db-helper'
 import { newList, users } from './fixtures'
 import { createTask, createTasklist, initApplication, request, signup, typeBearer } from './testing-utils'
