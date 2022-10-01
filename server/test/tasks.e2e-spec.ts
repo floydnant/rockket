@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common'
-import { PrismaClient, Tasklist } from '@prisma/client'
+import { PrismaClient, Task, TaskEvent, Tasklist } from '@prisma/client'
 import { DbHelper } from './db-helper'
 import { newList, users } from './fixtures'
 import { createTask, createTasklist, initApplication, request, signup, typeBearer } from './testing-utils'
@@ -43,11 +43,11 @@ describe('Task CRUD (e2e)', () => {
         const res = await request(app)
             .patch(`/task/${createdTask.id}`)
             .auth(authToken, typeBearer)
-            .send({ description: 'This is a description', status: 'In_Progress' })
+            .send({ description: 'This is a description', title: 'The new, updated title' })
             .expect(200)
 
         expect(res.body.description).toBe('This is a description')
-        expect(res.body.status).toBe('In_Progress')
+        expect(res.body.title).toBe('The new, updated title')
     })
 
     it('can delete a task', async () => {
@@ -81,11 +81,34 @@ describe('Task CRUD (e2e)', () => {
     it.todo('test permissions')
 
     it.todo('test blocking tasks')
+
     describe('TaskEvents', () => {
-        it.todo("can update a task's status -> verify task events")
-        it.todo("can update a task's priority -> verify task events")
-        it.todo("can update a task's dealine -> verify task events")
-        it.todo('can add a blocking task -> verify task events')
+        it.each([
+            ['status', 'In_Progress'],
+            ['priority', 'High'],
+            ['deadline', new Date().toISOString()],
+        ])("can update a task's %s -> verify task event", async (key, value) => {
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList.id,
+            })
+
+            await request(app)
+                .patch(`/task/${createdTask.id}`)
+                .auth(authToken, typeBearer)
+                .send({ [key]: value })
+                .expect(200)
+
+            const res = await request(app)
+                .get(`/task/${createdTask.id}/events`)
+                .auth(authToken, typeBearer)
+                .expect(200)
+            const taskEvents: TaskEvent[] = res.body
+
+            expect(taskEvents.length).toEqual(1)
+            expect(taskEvents[0].updatedField).toBe(key)
+            expect(taskEvents[0].newValue).toBe(value)
+        })
     })
 
     it.todo('test TaskComments')
