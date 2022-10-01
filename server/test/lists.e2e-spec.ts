@@ -57,7 +57,7 @@ describe('List CRUD (e2e)', () => {
     it.todo('test moving lists around the hierarchy')
     it.todo('test permissions')
 
-    describe('Sharing', () => {
+    describe('Sharing (participants)', () => {
         it('can share a list with other users', async () => {
             // jonathan creates a list
             const createdList = await createTasklist(app, authToken, newList)

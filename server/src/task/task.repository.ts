@@ -29,14 +29,14 @@ export class TaskRepository {
         const task = await this.prisma.task.findUnique({ where: { id: taskId } })
         if (!task) throw new NotFoundException('Could not find task')
 
-        // when something relevant changed, fetch the old data first
-        // @TODO: skip creating events when the value did not actually change (was in the payload by mistake or sth.)
-        const eventsToCreate = eventRelatedUpdatedFields.map((key) => ({
-            updatedField: key,
-            prevValue: task[key]?.toString(),
-            newValue: dto[key],
-            userId,
-        }))
+        const eventsToCreate = eventRelatedUpdatedFields
+            .filter((key) => task[key]?.toString() != dto[key]) // skip creating events when the value didn't actually change
+            .map((key) => ({
+                updatedField: key,
+                prevValue: task[key]?.toString(),
+                newValue: dto[key],
+                userId,
+            }))
 
         const updatedTask = this.prisma.task.update({
             where: { id: taskId },
