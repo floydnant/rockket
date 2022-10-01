@@ -216,5 +216,51 @@ describe('Task CRUD (e2e)', () => {
                 .send({ text: 'The new text' })
                 .expect(403)
         })
+
+        it('can delete a comment', async () => {
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList.id,
+            })
+
+            const res = await request(app)
+                .post(`/task/${createdTask.id}/comment`)
+                .auth(authToken, typeBearer)
+                .send({ text: 'This is the comment text' })
+                .expect(201)
+            const comment = res.body as TaskComment
+
+            // jonathan deletes the comment
+            await request(app).delete(`/task/comment/${comment.id}`).auth(authToken, typeBearer).expect(200)
+        })
+
+        it('anyone with Manage permissions can delete a comment', async () => {
+            const annie = (await signup(app, users.annie)).body.user
+
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList.id,
+            })
+
+            // jonathan shares the list with annie (Edit permissions)
+            await request(app)
+                .post(`/list/${createdList.id}/share/${annie.id}`)
+                .auth(authToken, typeBearer)
+                .send({ permission: 'Manage' })
+                .expect(201)
+
+            const res = await request(app)
+                .post(`/task/${createdTask.id}/comment`)
+                .auth(authToken, typeBearer)
+                .send({ text: 'This is the comment text' })
+                .expect(201)
+            const comment = res.body as TaskComment
+
+            // annie deletes the comment
+            await request(app)
+                .delete(`/task/comment/${comment.id}`)
+                .auth(annie.authToken, typeBearer)
+                .expect(200)
+        })
     })
 })
