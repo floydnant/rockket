@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common'
-import { PrismaClient, Task, TaskEvent, Tasklist } from '@prisma/client'
+import { PrismaClient, Task, TaskComment, TaskEvent, Tasklist } from '@prisma/client'
 import { DbHelper } from './db-helper'
 import { newList, users } from './fixtures'
 import { createTask, createTasklist, initApplication, request, signup, typeBearer } from './testing-utils'
@@ -78,7 +78,6 @@ describe('Task CRUD (e2e)', () => {
         expect(res.body.length).toEqual(1)
         expect(res.body[0].id).toEqual(createdSubTask.id)
     })
-    it.todo('test permissions')
 
     it.todo('test blocking tasks')
 
@@ -111,5 +110,111 @@ describe('Task CRUD (e2e)', () => {
         })
     })
 
-    it.todo('test TaskComments')
+    describe('TaskComments', () => {
+        it('can comment on a task', async () => {
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList.id,
+            })
+
+            await request(app)
+                .post(`/task/${createdTask.id}/comment`)
+                .auth(authToken, typeBearer)
+                .send({ text: 'This is the comment text' })
+                .expect(201)
+
+            const res = await request(app)
+                .get(`/task/${createdTask.id}/comments`)
+                .auth(authToken, typeBearer)
+                .expect(200)
+            const comments: TaskComment[] = res.body
+
+            expect(comments.length).toEqual(1)
+            expect(comments[0].text).toEqual('This is the comment text')
+        })
+
+        it('cannot comment on a task without comment permissions', async () => {
+            const annie = (await signup(app, users.annie)).body.user
+
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList.id,
+            })
+
+            // share the list with annie, but only for viewing
+            await request(app)
+                .post(`/list/${createdList.id}/share/${annie.id}`)
+                .auth(authToken, typeBearer)
+                .send({ permission: 'View' })
+                .expect(201)
+
+            // annie tries to comment
+            await request(app)
+                .post(`/task/${createdTask.id}/comment`)
+                .auth(annie.authToken, typeBearer)
+                .send({ text: 'This is the comment text' })
+                .expect(403)
+
+            const res = await request(app)
+                .get(`/task/${createdTask.id}/comments`)
+                .auth(annie.authToken, typeBearer)
+                .expect(200)
+            const comments: TaskComment[] = res.body
+
+            expect(comments.length).toEqual(0)
+        })
+
+        it('can update a comment', async () => {
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList.id,
+            })
+
+            // annie comments
+            const createRes = await request(app)
+                .post(`/task/${createdTask.id}/comment`)
+                .auth(authToken, typeBearer)
+                .send({ text: 'This is the comment text' })
+                .expect(201)
+            const comment = createRes.body as TaskComment
+
+            const updateRes = await request(app)
+                .patch(`/task/comment/${comment.id}`)
+                .auth(authToken, typeBearer)
+                .send({ text: 'The new text' })
+                .expect(200)
+
+            expect(updateRes.body.text).toEqual('The new text')
+        })
+
+        it('can update a comment only as author', async () => {
+            const annie = (await signup(app, users.annie)).body.user
+
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList.id,
+            })
+
+            // jonathan shares the list with annie (Edit permissions)
+            await request(app)
+                .post(`/list/${createdList.id}/share/${annie.id}`)
+                .auth(authToken, typeBearer)
+                .expect(201)
+
+            // annie comments
+            const res = await request(app)
+                .post(`/task/${createdTask.id}/comment`)
+                .auth(annie.authToken, typeBearer)
+                .send({ text: 'This is the comment text' })
+                .expect(201)
+            const comment = res.body as TaskComment
+
+            // jonathan tries to update the comment
+            await request(app)
+                .patch(`/task/comment/${comment.id}`)
+                .auth(authToken, typeBearer)
+                .send({ text: 'The new text' })
+                .expect(403)
+        })
+    })
 })

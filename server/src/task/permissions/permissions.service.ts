@@ -74,7 +74,7 @@ export class PermissionsService {
 
         // if user is the author of the comment
         if (comment.userId == userId) return true
-        if (requiresAuthorship) false
+        if (requiresAuthorship) return false
 
         // if the user is not the author, he must have Managing permissions for the task
         return this.hasPermissionForTask(userId, comment.taskId, ListPermission.Manage)
