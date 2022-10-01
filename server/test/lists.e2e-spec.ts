@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common'
 import { PrismaClient, Tasklist } from '@prisma/client'
-import { UpdateTasklistDto } from 'src/task/list/list.dto'
+import { UpdateTasklistDto } from '../src/task/list/list.dto'
 import { DbHelper } from './db-helper'
 import { newList, users } from './fixtures'
 import { initApplication, signup, createTasklist, typeBearer, request } from './testing-utils'
@@ -55,6 +55,7 @@ describe('List CRUD (e2e)', () => {
     })
 
     it.todo('test moving lists around the hierarchy')
+    it.todo('test permissions')
 
     describe('Sharing', () => {
         it('can share a list with other users', async () => {

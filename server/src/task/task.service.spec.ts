@@ -4,6 +4,7 @@ import { PrismaModule } from '../prisma-abstractions/prisma.module'
 import { ListRepository } from './list/list.repository'
 import { TaskRepository } from './task.repository'
 import { TaskService } from './task.service'
+import { PermissionsService } from './permissions/permissions.service'
 
 describe('TaskService', () => {
     let service: TaskService
@@ -11,7 +12,7 @@ describe('TaskService', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [PrismaModule, UserModule],
-            providers: [TaskService, TaskRepository, ListRepository],
+            providers: [TaskService, TaskRepository, ListRepository, PermissionsService],
         }).compile()
 
         service = module.get<TaskService>(TaskService)

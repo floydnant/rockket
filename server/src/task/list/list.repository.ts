@@ -93,26 +93,4 @@ export class ListRepository {
         })
         return listParticipant
     }
-
-    async hasPermission(userId: string, listId: string, requiredPermission: ListPermission) {
-        const permissonsRankingMap: Record<ListPermission, number> = {
-            [ListPermission.Manage]: 4,
-            [ListPermission.Edit]: 3,
-            [ListPermission.Comment]: 2,
-            [ListPermission.View]: 1,
-        }
-
-        const listParticipant = await this.prisma.listParticipant.findFirst({
-            where: { userId, listId },
-            select: { permission: true },
-        })
-
-        if (
-            !listParticipant ||
-            permissonsRankingMap[requiredPermission] > permissonsRankingMap[listParticipant.permission]
-        )
-            return false
-
-        return true
-    }
 }

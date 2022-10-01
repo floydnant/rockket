@@ -78,6 +78,7 @@ describe('Task CRUD (e2e)', () => {
         expect(res.body.length).toEqual(1)
         expect(res.body[0].id).toEqual(createdSubTask.id)
     })
+    it.todo('test permissions')
 
     it.todo('test blocking tasks')
     describe('TaskEvents', () => {

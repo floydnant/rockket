@@ -5,6 +5,7 @@ import { ListRepository } from './list/list.repository'
 import { TaskController } from './task.controller'
 import { TaskRepository } from './task.repository'
 import { TaskService } from './task.service'
+import { PermissionsService } from './permissions/permissions.service'
 
 describe('TaskController', () => {
     let controller: TaskController
@@ -13,7 +14,7 @@ describe('TaskController', () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [PrismaModule, UserModule],
             controllers: [TaskController],
-            providers: [TaskService, TaskRepository, ListRepository],
+            providers: [TaskService, TaskRepository, ListRepository, PermissionsService],
         }).compile()
 
         controller = module.get<TaskController>(TaskController)

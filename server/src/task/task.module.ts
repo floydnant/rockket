@@ -7,10 +7,11 @@ import { ListRepository } from './list/list.repository'
 import { PrismaModule } from '../prisma-abstractions/prisma.module'
 import { TaskService } from './task.service'
 import { TaskRepository } from './task.repository'
+import { PermissionsService } from './permissions/permissions.service'
 
 @Module({
     imports: [UserModule, PrismaModule],
     controllers: [ListController, TaskController],
-    providers: [ListService, ListRepository, TaskService, TaskRepository],
+    providers: [ListService, ListRepository, TaskService, TaskRepository, PermissionsService],
 })
 export class TaskModule {}
