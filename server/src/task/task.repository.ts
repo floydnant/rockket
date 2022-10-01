@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common'
-import { Task, TaskEventUpdateField } from '@prisma/client'
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { TaskEventUpdateField } from '@prisma/client'
 import { SELECT_user_preview } from '../prisma-abstractions/query-helpers'
 import { PrismaService } from '../prisma-abstractions/prisma.service'
 import { CreateTaskCommentDto, CreateTaskDto, UpdateTaskCommentDto, UpdateTaskDto } from './task.dto'
@@ -22,24 +22,18 @@ export class TaskRepository {
     }
 
     async updateTask(userId: string, taskId: string, dto: UpdateTaskDto) {
-        const fieldMap = {
-            status: TaskEventUpdateField.Status,
-            priority: TaskEventUpdateField.Priority,
-            deadline: TaskEventUpdateField.Deadline,
-            blockedById: TaskEventUpdateField.BlockedBy,
-        }
-
         const eventRelatedUpdatedFields = Object.keys(dto).filter(
-            (key): key is keyof typeof fieldMap => key in fieldMap,
+            (key): key is keyof typeof TaskEventUpdateField => key in TaskEventUpdateField,
         )
+
+        const task = await this.prisma.task.findUnique({ where: { id: taskId } })
+        if (!task) throw new NotFoundException('Could not find task')
 
         // when something relevant changed, fetch the old data first
         // @TODO: skip creating events when the value did not actually change (was in the payload by mistake or sth.)
-        const oldData =
-            eventRelatedUpdatedFields.length && (await this.prisma.task.findUnique({ where: { id: taskId } }))
         const eventsToCreate = eventRelatedUpdatedFields.map((key) => ({
-            updatedField: fieldMap[key],
-            prevValue: (oldData as Task)[key]?.toString(),
+            updatedField: key,
+            prevValue: task[key]?.toString(),
             newValue: dto[key],
             userId,
         }))
