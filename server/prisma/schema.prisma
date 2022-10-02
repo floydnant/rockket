@@ -109,7 +109,7 @@ model Task {
     events       TaskEvent[]
     comments     TaskComment[]
 }
-// @TODO: maybe we should change the values to the actual keys (and then later map those to display names)
+
 enum TaskEventUpdateField {
     status
     priority

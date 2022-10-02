@@ -86,6 +86,7 @@ describe('Task CRUD (e2e)', () => {
             ['status', 'In_Progress'],
             ['priority', 'High'],
             ['deadline', new Date().toISOString()],
+            // blockedById event is tested seperately, because it is too specific and needs special care
         ])("can update a task's %s -> verify task event", async (key, value) => {
             const createdTask = await createTask(app, authToken, {
                 title: 'This is the task title',
