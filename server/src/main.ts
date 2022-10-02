@@ -14,7 +14,7 @@ async function bootstrap(configService: ConfigService) {
     // app.useWebSocketAdapter(new ExtendedIoAdapter(app, corsConfig));
     app.enableCors(corsConfig)
 
-    app.useGlobalPipes(new ValidationPipe())
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
 
     await app.listen(configService.get('PORT') as number)
 }

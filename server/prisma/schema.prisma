@@ -111,16 +111,18 @@ model Task {
 }
 
 enum TaskEventUpdateField {
-    Status
-    Priority
-    Deadline
+    status
+    priority
+    deadline
+    blockedById
+    // ...and labels, once we introduce them
 }
 
 model TaskEvent {
     id           String               @id @default(uuid())
     updatedField TaskEventUpdateField
     timestamp    DateTime             @default(now())
-    prevValue    String
+    prevValue    String?
     newValue     String
 
     // relations
@@ -135,6 +137,7 @@ model TaskComment {
     id          String   @id @default(uuid())
     text        String
     commentedAt DateTime @default(now())
+    wasEdited   Boolean  @default(false)
 
     // relations
     task   Task   @relation(fields: [taskId], references: [id])

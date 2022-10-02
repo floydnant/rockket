@@ -1,6 +1,7 @@
 import { INestApplication } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import { DbHelper } from './db-helper'
+import { users } from './fixtures'
 import { signup, login, request, typeBearer, initApplication } from './testing-utils'
 
 const dbHelper = new DbHelper(new PrismaClient(), { cacheTableNames: true })
@@ -12,12 +13,6 @@ describe('Authentication (e2e)', () => {
         await dbHelper.clearDb()
         app = await initApplication()
     })
-
-    const user1Creds = {
-        password: 'password',
-        username: 'Jonathan Doe',
-        email: 'j.doe@example.com',
-    }
 
     // @TODO: all these tests are just validating the `statusCode`, maybe its a good idea to validate the bodies as well
     // @TODO: we also dont check if the database has actually been updated correctly
@@ -35,49 +30,44 @@ describe('Authentication (e2e)', () => {
 
     describe('Sign up', () => {
         it('can sign up', () => {
-            return signup(app, user1Creds).expect(201)
+            return signup(app, users.jonathan).expect(201)
         })
         it('cannot sign up with same email twice', async () => {
-            await signup(app, user1Creds).expect(201)
-            await signup(app, user1Creds).expect(409)
+            await signup(app, users.jonathan).expect(201)
+            await signup(app, users.jonathan).expect(409)
         })
         it.todo('complains about insecure passwords')
     })
 
     describe('Login', () => {
-        beforeEach(async () => await signup(app, user1Creds).expect(201))
+        beforeEach(async () => await signup(app, users.jonathan).expect(201))
 
         it('can login', async () => {
-            await login(app, user1Creds).expect(201)
+            await login(app, users.jonathan).expect(201)
         })
         it('cannot login with wrong email', async () => {
-            await login(app, { ...user1Creds, email: 'This is wrong' }).expect(401)
+            await login(app, { ...users.jonathan, email: 'This is wrong' }).expect(401)
         })
         it('cannot login with wrong password', async () => {
             // @TODO: this seems to return 500 for some reason when not using spread operator
-            await login(app, { ...user1Creds, password: 'This is wrong' }).expect(401)
+            await login(app, { ...users.jonathan, password: 'This is wrong' }).expect(401)
         })
     })
 
     describe('Renew Login', () => {
         it('can renew authToken', async () => {
-            await signup(app, user1Creds)
-                .expect(201)
-                .then(async (res) => {
-                    const authToken = res.body.user.authToken
-                    await request(app).get('/auth/me').auth(authToken, typeBearer).expect(200)
-                })
+            const res = await signup(app, users.jonathan).expect(201)
+            const authToken = res.body.user.authToken
+
+            await request(app).get('/auth/me').auth(authToken, typeBearer).expect(200)
         })
     })
 
     describe('Managing account data', () => {
         let authToken: string
         beforeEach(async () => {
-            await signup(app, user1Creds)
-                .expect(201)
-                .then(async (res) => {
-                    authToken = res.body.user.authToken
-                })
+            const res = await signup(app, users.jonathan).expect(201)
+            authToken = res.body.user.authToken
         })
 
         describe('Username', () => {
@@ -95,7 +85,7 @@ describe('Authentication (e2e)', () => {
                 await request(app)
                     .patch('/user/email')
                     .auth(authToken, typeBearer)
-                    .send({ password: user1Creds.password, email: 'new-email@example.com' })
+                    .send({ password: users.jonathan.password, email: 'new-email@example.com' })
                     .expect(200)
             })
             it('cannot change email with wrong credentials', async () => {
@@ -113,7 +103,7 @@ describe('Authentication (e2e)', () => {
                 await request(app)
                     .patch('/user/password')
                     .auth(authToken, typeBearer)
-                    .send({ password: user1Creds.password, newPassword: 'My new password' })
+                    .send({ password: users.jonathan.password, newPassword: 'My new password' })
                     .expect(200)
             })
             it('cannot change password with wrong credentials', async () => {
@@ -130,7 +120,7 @@ describe('Authentication (e2e)', () => {
                 await request(app)
                     .delete('/user')
                     .auth(authToken, typeBearer)
-                    .send({ password: user1Creds.password })
+                    .send({ password: users.jonathan.password })
                     .expect(200)
             })
             it('cannot delete account with wrong credentials', async () => {

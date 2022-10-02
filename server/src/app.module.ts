@@ -5,6 +5,7 @@ import { AppService } from './app.service'
 import { configValidationSchema } from './config.schema'
 import { PrismaModule } from './prisma-abstractions/prisma.module'
 import { UserModule } from './user/user.module'
+import { TaskModule } from './task/task.module'
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { UserModule } from './user/user.module'
         }),
         PrismaModule,
         UserModule,
+        TaskModule,
     ],
     controllers: [AppController],
     providers: [AppService],
