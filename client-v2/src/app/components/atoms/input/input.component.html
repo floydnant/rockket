@@ -1,0 +1,47 @@
+<label class="relative mt-7 block" *ngIf="!controlName && !parentControl">
+    <input
+        #input
+        [type]="type"
+        class="input w-full"
+        [class]="{
+            'ring-danger-400': (control.invalid && control.dirty) || extraErrorMessages?.length,
+            pristine: control.pristine && !input.value
+        }"
+        [formControl]="formControl"
+    />
+    <span
+        class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-200 transition-all"
+    >
+        {{ name }}
+    </span>
+</label>
+<label class="relative mt-7 block" *ngIf="controlName && parentControl" [formGroup]="parentControl">
+    <input
+        #input
+        [type]="type"
+        class="input w-full"
+        [class]="{
+            'ring-danger-400': (control.invalid && control.dirty) || extraErrorMessages?.length,
+            pristine: control.pristine && !input.value
+        }"
+        [formControlName]="controlName"
+    />
+    <span
+        class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-200 transition-all"
+    >
+        {{ name }}
+    </span>
+</label>
+
+<div
+    class="errors | mt-1 text-sm text-danger-400"
+    *ngIf="(control.invalid && control.dirty) || extraErrorMessages?.length"
+>
+    <div *ngFor="let err of errors">
+        <span
+            *ngIf="control.errors?.[err] || control.errors?.[err.toLowerCase()]"
+            >{{ getErrorMessage(err, control.errors?.[err] || control.errors?.[err.toLowerCase()]) }}</span
+        >
+    </div>
+    <div *ngFor="let err of extraErrorMessages">{{ err.replace('$name', name) }}</div>
+</div>

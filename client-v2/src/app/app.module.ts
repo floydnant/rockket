@@ -9,9 +9,12 @@ import { StatusIconComponent } from './components/atoms/icons/status-icon/status
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
 import { IconComponent } from './components/atoms/icons/icon/icon.component'
 import { FocusableDirective } from './directives/focusable.directive'
-import { FormsModule } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { DoubleEllipsisIconComponent } from './components/atoms/icons/double-ellipsis-icon/double-ellipsis-icon.component'
 import { PriorityIconComponent } from './components/atoms/icons/priority-icon/priority-icon.component'
+import { InputComponent } from './components/atoms/input/input.component'
+import { FormComponent } from './components/molecules/form/form.component';
+import { LoadingSpinnerComponent } from './components/atoms/icons/loading-spinner/loading-spinner.component'
 
 @NgModule({
     declarations: [
@@ -24,8 +27,11 @@ import { PriorityIconComponent } from './components/atoms/icons/priority-icon/pr
         FocusableDirective,
         DoubleEllipsisIconComponent,
         PriorityIconComponent,
+        InputComponent,
+        FormComponent,
+        LoadingSpinnerComponent,
     ],
-    imports: [BrowserModule, FormsModule, AppRoutingModule],
+    imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule],
     providers: [],
     bootstrap: [AppComponent],
 })

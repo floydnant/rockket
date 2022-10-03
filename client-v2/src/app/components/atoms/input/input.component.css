@@ -1,0 +1,3 @@
+input:is(:focus,:not(.pristine)) ~ .placeholder {
+    @apply -translate-x-3 -translate-y-11 text-sm
+}
