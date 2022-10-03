@@ -25,11 +25,19 @@ body {
 
 @layer components {
     .button {
-        @apply rounded-md py-2 px-5 font-semibold transition-colors;
+        @apply rounded-md bg-tinted-500 py-2 px-5 font-semibold text-tinted-100 transition-colors hover:bg-tinted-600;
     }
+    .button--submit {
+        @apply bg-submit-400 text-tinted-900 hover:bg-submit-500;
+    }
+
     .input {
         @apply rounded bg-tinted-700 py-2 px-3 outline-none ring-primary-400 focus:ring-2;
     }
+    .input::placeholder {
+        @apply text-tinted-300;
+    }
+
     :is(.input, .button)[disabled] {
         @apply brightness-75;
     }

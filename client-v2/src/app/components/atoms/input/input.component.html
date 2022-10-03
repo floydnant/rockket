@@ -11,12 +11,12 @@
         focusable
     />
     <span
-        class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-200 transition-all"
+        class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-300 transition-all"
     >
         {{ name }}
     </span>
 </label>
-<label class="relative mt-7 block" *ngIf="controlName && parentControl" [formGroup]="parentControl">
+<label class="relative mt-5 block" *ngIf="controlName && parentControl" [formGroup]="parentControl">
     <input
         #input
         [type]="type"
@@ -29,7 +29,7 @@
         focusable
     />
     <span
-        class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-200 transition-all"
+        class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-300 transition-all"
     >
         {{ name }}
     </span>

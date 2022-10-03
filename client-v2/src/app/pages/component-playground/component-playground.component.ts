@@ -63,7 +63,8 @@ export class ComponentPlaygroundComponent {
                 min: 'You must be at least $value years old.',
             },
         },
-        password: {
+        newPassword: {
+            name: 'New Password',
             type: 'password',
             control: ['', [Validators.required, Validators.minLength(8)]],
         },

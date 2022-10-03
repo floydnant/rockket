@@ -5,6 +5,13 @@
     (formSubmit)="onSubmit($event)"
     [extraErrorMessages]="{}"
     [isLoading]="isLoading"
+    containerClasses="grid gap-3"
+    gridAreas="
+    'username    username    email           email'
+    'age         age         none            none'
+    'newPassword newPassword confirmPassword confirmPassword'
+    'auto        submit      submit          fill'
+    "
 ></app-form>
 
 <div class="spacer | my-4"></div>

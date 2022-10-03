@@ -39,6 +39,9 @@ export class FormComponent implements OnInit, OnChanges {
     @Input() submitButton?: string
     @Input() extraErrorMessages?: Record<string, string[]>
 
+    @Input() containerClasses?: string
+    @Input() gridAreas?: string
+
     @Input() isLoading?: boolean
     ngOnChanges(changes: SimpleChanges) {
         if ('isLoading' in changes) {

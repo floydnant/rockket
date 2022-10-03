@@ -1,20 +1,24 @@
 <form [formGroup]="formGroup" (ngSubmit)="submit()">
-    <app-input
-        *ngFor="let input of inputs"
-        [name]="input.name"
-        [type]="input.type"
-        [parentControl]="formGroup"
-        [controlName]="input.key"
-        [control]="input.control"
-        [errorMessages]="input.errorMessages"
-        [extraErrorMessages]="extraErrorMessages?.[input.key]"
-    ></app-input>
-    <button
-        *ngIf="submitButton"
-        [disabled]="isLoading"
-        type="submit"
-        class="button mt-5 w-full bg-submit-400 text-tinted-900 hover:bg-submit-500"
-    >
-        <loading-spinner *ngIf="isLoading" class="mr-1"></loading-spinner> {{ submitButton }}
-    </button>
+    <div [class]="containerClasses" [style.grid-template-areas]="gridAreas">
+        <app-input
+            *ngFor="let input of inputs"
+            [name]="input.name"
+            [type]="input.type"
+            [parentControl]="formGroup"
+            [controlName]="input.key"
+            [control]="input.control"
+            [errorMessages]="input.errorMessages"
+            [extraErrorMessages]="extraErrorMessages?.[input.key]"
+            [style.grid-area]="input.key"
+        ></app-input>
+        <button
+            *ngIf="submitButton"
+            [disabled]="isLoading"
+            type="submit"
+            class="button button--submit mt-6 w-full"
+            [style.grid-area]="'submit'"
+        >
+            <loading-spinner *ngIf="isLoading" class="mr-1"></loading-spinner> {{ submitButton }}
+        </button>
+    </div>
 </form>
