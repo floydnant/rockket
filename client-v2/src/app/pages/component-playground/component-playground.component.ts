@@ -80,6 +80,9 @@ export class ComponentPlaygroundComponent {
     onSubmit(value: Record<string, string>) {
         console.log(value)
         this.isLoading = true
+        setTimeout(() => {
+            this.isLoading = false
+        }, 4000)
     }
     isLoading = false
 }
