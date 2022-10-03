@@ -13,7 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { DoubleEllipsisIconComponent } from './components/atoms/icons/double-ellipsis-icon/double-ellipsis-icon.component'
 import { PriorityIconComponent } from './components/atoms/icons/priority-icon/priority-icon.component'
 import { InputComponent } from './components/atoms/input/input.component'
-import { FormComponent } from './components/molecules/form/form.component';
+import { FormComponent } from './components/molecules/form/form.component'
 import { LoadingSpinnerComponent } from './components/atoms/icons/loading-spinner/loading-spinner.component'
 
 @NgModule({
