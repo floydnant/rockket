@@ -38,6 +38,7 @@
 <div
     class="errors | mt-1 text-sm text-danger-400"
     *ngIf="(control.invalid && control.dirty) || extraErrorMessages?.length"
+    data-test-name="validation-errors"
 >
     <div *ngFor="let err of errors">
         <span
