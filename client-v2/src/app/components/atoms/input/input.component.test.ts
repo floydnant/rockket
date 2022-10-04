@@ -1,7 +1,7 @@
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { InputComponent } from './input.component'
 
-describe('DemoComponent', () => {
+describe('InputComponent', () => {
     let control: FormControl
 
     beforeEach(() => {
