@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { FormControlDirective, FormControlName, FormGroupDirective } from '@angular/forms'
-import { InputComponent } from '../../atoms/input/input.component'
+// import { ComponentFixture, TestBed } from '@angular/core/testing'
+// import { FormControlDirective, FormControlName, FormGroupDirective } from '@angular/forms'
+// import { InputComponent } from '../../atoms/input/input.component'
 
-import { FormComponent } from './form.component'
+// import { FormComponent } from './form.component'
 
 // @TODO: fix this not working
 // describe.skip('FormComponent', () => {
