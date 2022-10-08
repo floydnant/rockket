@@ -57,6 +57,8 @@ export class FormComponent implements OnInit, OnChanges {
 
     @Output() formSubmit = new EventEmitter()
     submit() {
+        if (this.isLoading) return
+
         if (this.formGroup.invalid) {
             Object.values(this.formGroup.controls).forEach(control => control.markAsDirty())
             return

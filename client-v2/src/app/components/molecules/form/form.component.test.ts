@@ -3,25 +3,29 @@ import { InputComponent } from '../../atoms/input/input.component'
 import { FormComponent } from './form.component'
 import { FormBuilderOptions } from './types'
 
-const setupComponent = (
-    formOptions: FormBuilderOptions,
-    submitButton: string,
-    extraErrorMessages: Record<string, string[]> = {}
-) => {
+interface SetupComponentOptions {
+    submitButton?: string
+    extraErrorMessages?: Record<string, string[]>
+    isLoading?: boolean
+}
+
+const setupComponent = (formOptions: FormBuilderOptions, options?: SetupComponentOptions) => {
     const submitStub = cy.stub()
 
     cy.mount(
         `<app-form 
                 [formOptions]="formOptions"
                 [extraErrorMessages]="extraErrorMessages"
-                submitButton="${submitButton}"
+                submitButton="${options?.submitButton || ''}"
                 (formSubmit)="onSubmit($event)"
+                [isLoading]="isLoading"
         ></app-form>`,
         {
             componentProperties: {
                 formOptions,
                 onSubmit: submitStub,
-                extraErrorMessages,
+                extraErrorMessages: options?.extraErrorMessages,
+                isLoading: options?.isLoading || false,
             },
             declarations: [FormComponent, InputComponent],
             imports: [ReactiveFormsModule],
@@ -34,18 +38,15 @@ const setupComponent = (
 describe('FormComponent', () => {
     describe('Variants', () => {
         it('renders input fields', () => {
-            setupComponent(
-                {
-                    username: {
-                        control: [''],
-                    },
-                    password: {
-                        control: [''],
-                        name: 'Enter Password',
-                    },
+            setupComponent({
+                username: {
+                    control: [''],
                 },
-                ''
-            )
+                password: {
+                    control: [''],
+                    name: 'Enter Password',
+                },
+            })
 
             cy.get('[data-test-name="input-username"]')
             cy.get('[data-test-name="input-placeholder-username"]').contains('Username')
@@ -65,7 +66,7 @@ describe('FormComponent', () => {
                         control: [''],
                     },
                 },
-                'Submit'
+                { submitButton: 'Submit' }
             )
 
             cy.get('[data-test-name="input-username"]')
@@ -88,7 +89,7 @@ describe('FormComponent', () => {
                         control: ['', Validators.required],
                     },
                 },
-                'Submit'
+                { submitButton: 'Submit' }
             )
 
             // not submitting the form
@@ -105,7 +106,7 @@ describe('FormComponent', () => {
                         control: ['', Validators.required],
                     },
                 },
-                'Submit'
+                { submitButton: 'Submit' }
             )
 
             cy.get('[data-test-name="submit-button"]').click()
@@ -123,7 +124,7 @@ describe('FormComponent', () => {
                     },
                     password: [''],
                 },
-                'Submit'
+                { submitButton: 'Submit' }
             )
 
             cy.get('[data-test-name="submit-button"]').click()
@@ -141,8 +142,12 @@ describe('FormComponent', () => {
                     },
                     password: [''],
                 },
-                'Submit',
-                { username: ['Sorry, this username is already taken.'] }
+                {
+                    submitButton: 'Submit',
+                    extraErrorMessages: {
+                        username: ['Sorry, this username is already taken.'],
+                    },
+                }
             )
 
             cy.get('[data-test-name="validation-errors"]').should('have.length', 1)
@@ -161,7 +166,7 @@ describe('FormComponent', () => {
                         control: ['', Validators.required],
                     },
                 },
-                'Submit'
+                { submitButton: 'Submit' }
             )
 
             cy.get('[data-test-name="input-username"]').type('this is the username')
@@ -184,7 +189,7 @@ describe('FormComponent', () => {
                         control: ['', Validators.required],
                     },
                 },
-                'Submit'
+                { submitButton: 'Submit' }
             )
 
             cy.get('[data-test-name="input-username"]').type('this is the username')
@@ -198,6 +203,25 @@ describe('FormComponent', () => {
                         password: 'this is the password',
                     })
                 })
+        })
+
+        it('prevents submission when form is in loading state', () => {
+            setupComponent(
+                {
+                    username: {
+                        control: ['', Validators.required],
+                    },
+                    password: {
+                        control: ['', Validators.required],
+                    },
+                },
+                { submitButton: 'Submit', isLoading: true }
+            )
+
+            cy.get('[data-test-name="input-username"]').should('be.disabled')
+            cy.get('[data-test-name="input-password"]').should('be.disabled')
+
+            cy.get('[data-test-name="submit-button"]').should('be.disabled')
         })
     })
 })
