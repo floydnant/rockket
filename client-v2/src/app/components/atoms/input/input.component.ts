@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms'
+import { stripNonWordChars } from 'src/app/utils'
 
 export interface FormValidationErrorMessages {
     required: string
@@ -33,7 +34,10 @@ const errorValueKeyMap = {
     templateUrl: './input.component.html',
     styleUrls: ['./input.component.css'],
 })
-export class InputComponent {
+export class InputComponent implements OnInit {
+    ngOnInit() {
+        this.id ||= stripNonWordChars(this.name)
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getErrorMessage(errName: string, errValue: any) {
         const key = errorValueKeyMap[errName as keyof typeof errorValueKeyMap]
@@ -51,6 +55,8 @@ export class InputComponent {
 
     @Input() name!: string
     @Input() type = 'text'
+    @Input() id!: string
+
     @Input() control!: FormControl | AbstractControl
     get formControl() {
         return this.control as FormControl

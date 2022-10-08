@@ -1,6 +1,17 @@
-<label class="relative mt-7 block" *ngIf="!controlName && !parentControl">
+<ng-template #label>
+    <label
+        [for]="id"
+        class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-300 transition-all"
+        [attr.data-test-name]="'input-placeholder-' + (controlName || id)"
+    >
+        {{ name }}
+    </label>
+</ng-template>
+
+<div class="relative mt-7 block" *ngIf="!controlName && !parentControl">
     <input
         #input
+        [id]="id"
         [type]="type"
         class="input w-full"
         [class]="{
@@ -9,16 +20,14 @@
         }"
         [formControl]="formControl"
         focusable
+        [attr.data-test-name]="'input-' + id"
     />
-    <span
-        class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-300 transition-all"
-    >
-        {{ name }}
-    </span>
-</label>
-<label class="relative mt-5 block" *ngIf="controlName && parentControl" [formGroup]="parentControl">
+    <ng-container [ngTemplateOutlet]="label"></ng-container>
+</div>
+<div class="relative mt-5 block" *ngIf="controlName && parentControl" [formGroup]="parentControl">
     <input
         #input
+        [id]="id"
         [type]="type"
         class="input w-full"
         [class]="{
@@ -27,13 +36,10 @@
         }"
         [formControlName]="controlName"
         focusable
+        [attr.data-test-name]="'input-' + controlName"
     />
-    <span
-        class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-300 transition-all"
-    >
-        {{ name }}
-    </span>
-</label>
+    <ng-container [ngTemplateOutlet]="label"></ng-container>
+</div>
 
 <div
     class="errors | mt-1 text-sm text-danger-400"

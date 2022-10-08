@@ -27,7 +27,8 @@ describe('InputComponent', () => {
     })
 
     it('renders properly', () => {
-        cy.contains('Test input')
+        // @TODO: add `cy.getByTestName()` command here
+        cy.get('[data-test-name*="input-placeholder"]').contains('Test input')
         cy.get('input').should('have.value', '')
     })
 
@@ -68,9 +69,6 @@ describe('InputComponent', () => {
         })
 
         // it('should display extra errors', () => {
-        //     setupComponent({ extraErrorMessages: ['test error message'] })
-
-        //     cy.get('[data-test-name="validation-errors"]').contains('test error message')
         // })
     })
 })
