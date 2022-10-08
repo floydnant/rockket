@@ -1,5 +1,5 @@
 import { ValidatorFn, FormControlOptions, AsyncValidatorFn, FormControl } from '@angular/forms'
-import { FormValidationErrorMessages } from '../../atoms/input/input.component'
+import { FormValidationErrorMessages } from '../../atoms/input/error-messages'
 
 export type FormControlParams = [
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
