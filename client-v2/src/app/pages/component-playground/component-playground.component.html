@@ -1,3 +1,31 @@
+<h2>Forms</h2>
+<app-form
+    [formOptions]="formOptions"
+    submitButton="Signup"
+    (formSubmit)="onSubmit($event)"
+    [extraErrorMessages]="{}"
+    [isLoading]="isLoading"
+    containerClasses="grid gap-3"
+    gridAreas="
+    'username username email           email'
+    'age      age      none            none'
+    'password password confirmPassword confirmPassword'
+    'auto        submit      submit          fill'
+    "
+></app-form>
+
+<div class="spacer | my-4"></div>
+<h2>Single Inputs</h2>
+<app-input
+    name="Full name"
+    [id]="'full-name-binded'"
+    [control]="fullnameControl"
+    [errorMessages]="{ required: '$name must not be empty!' }"
+></app-input>
+
+<div class="spacer | my-4"></div>
+<h2>Tasks</h2>
+
 <div class="flex w-full flex-col gap-2">
     <task *ngFor="let task of tasks" [data]="task"></task>
 </div>
