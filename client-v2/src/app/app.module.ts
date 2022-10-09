@@ -16,6 +16,7 @@ import { InputComponent } from './components/atoms/input/input.component'
 import { FormComponent } from './components/molecules/form/form.component'
 import { LoadingSpinnerComponent } from './components/atoms/icons/loading-spinner/loading-spinner.component'
 import { HttpModule } from './http/http.module'
+import { HotToastModule } from '@ngneat/hot-toast'
 import { StoreModule } from '@ngrx/store'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { reducers, metaReducers, effects } from './store'
@@ -43,6 +44,7 @@ import { environment } from 'src/environments/environment'
         ReactiveFormsModule,
         AppRoutingModule,
         HttpModule,
+        HotToastModule.forRoot(),
         StoreModule.forRoot(reducers, {
             metaReducers,
         }),
