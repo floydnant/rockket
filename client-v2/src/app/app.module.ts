@@ -15,6 +15,7 @@ import { PriorityIconComponent } from './components/atoms/icons/priority-icon/pr
 import { InputComponent } from './components/atoms/input/input.component'
 import { FormComponent } from './components/molecules/form/form.component'
 import { LoadingSpinnerComponent } from './components/atoms/icons/loading-spinner/loading-spinner.component'
+import { HttpModule } from './http/http.module'
 import { StoreModule } from '@ngrx/store'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { reducers, metaReducers, effects } from './store'
@@ -41,6 +42,7 @@ import { environment } from 'src/environments/environment'
         FormsModule,
         ReactiveFormsModule,
         AppRoutingModule,
+        HttpModule,
         StoreModule.forRoot(reducers, {
             metaReducers,
         }),
