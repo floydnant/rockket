@@ -15,6 +15,8 @@ import { PriorityIconComponent } from './components/atoms/icons/priority-icon/pr
 import { InputComponent } from './components/atoms/input/input.component'
 import { FormComponent } from './components/molecules/form/form.component'
 import { LoadingSpinnerComponent } from './components/atoms/icons/loading-spinner/loading-spinner.component'
+import { LoginComponent } from './pages/auth/login/login.component'
+import { SignupComponent } from './pages/auth/signup/signup.component'
 import { HttpModule } from './http/http.module'
 import { HotToastModule } from '@ngneat/hot-toast'
 import { StoreModule } from '@ngrx/store'
@@ -37,6 +39,8 @@ import { environment } from 'src/environments/environment'
         InputComponent,
         FormComponent,
         LoadingSpinnerComponent,
+        LoginComponent,
+        SignupComponent,
     ],
     imports: [
         BrowserModule,

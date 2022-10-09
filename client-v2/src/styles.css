@@ -23,12 +23,16 @@ body {
     @apply cursor-not-allowed;
 }
 
+a {
+    @apply text-submit-500 hover:underline hover:text-submit-400
+}
+
 @layer components {
     .button {
         @apply rounded-md bg-tinted-500 py-2 px-5 font-semibold text-tinted-100 transition-colors hover:bg-tinted-600;
     }
     .button--submit {
-        @apply bg-submit-400 text-tinted-900 hover:bg-submit-500;
+        @apply bg-submit-400 text-tinted-900 hover:bg-submit-600;
     }
 
     .input {

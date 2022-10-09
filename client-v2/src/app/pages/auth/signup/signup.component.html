@@ -1,0 +1,17 @@
+<h1>Signup</h1>
+
+<app-form
+    [formOptions]="formOptions"
+    submitButton="Signup"
+    (formSubmit)="onSubmit($event)"
+    [extraErrorMessages]="extraErrorMessages"
+    [isLoading]="(isLoading$ | async) || false"
+    containerClasses="grid gap-3"
+    gridAreas="
+    'username username email           email'
+    'password password confirmPassword confirmPassword'
+    'auto     submit   submit          fill'
+    "
+></app-form>
+
+<p>Already have an account? <a href="/auth/login">Login</a></p>
