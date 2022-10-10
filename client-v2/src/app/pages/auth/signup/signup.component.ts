@@ -1,6 +1,8 @@
 import { Component } from '@angular/core'
 import { Validators } from '@angular/forms'
+import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
+import { map } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator, matchSibling } from 'src/app/components/molecules/form/validators'
 import { AppState } from 'src/app/store'
@@ -13,7 +15,7 @@ import { SignupCredentialsDto } from 'src/app/store/user/user.model'
     styleUrls: ['./signup.component.css'],
 })
 export class SignupComponent {
-    constructor(private store: Store<AppState>) {}
+    constructor(private store: Store<AppState>, private actions$: Actions) {}
 
     formOptions: FormBuilderOptions = {
         username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(35)]],
@@ -36,7 +38,26 @@ export class SignupComponent {
         },
     }
     isLoading$ = this.store.select(state => state.user.isLoading)
-    extraErrorMessages: Record<string, string[]> = {}
+    errorMap$ = this.actions$.pipe(
+        ofType(userActions.loginOrSignupError),
+        map(action => {
+            let messages: string[]
+            if (action.error.message instanceof Array) messages = action.error.message
+            else messages = [action.error.message]
+
+            const fields = Object.keys(this.formOptions)
+
+            // const generalErrors: string[] = []
+            const errorMap: Record<string, string[]> = {}
+            messages.forEach(msg => {
+                const fieldName = fields.find(field => new RegExp(field, 'i').test(msg))
+                if (fieldName) errorMap[fieldName] = [...(errorMap[fieldName] || []), msg.replace(/^\w+:/, '')]
+                // else generalErrors.push(msg)
+            })
+
+            return errorMap
+        })
+    )
 
     onSubmit(event: SignupCredentialsDto) {
         this.store.dispatch(userActions.signup(event))

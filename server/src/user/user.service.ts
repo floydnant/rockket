@@ -109,7 +109,7 @@ export class UserService {
             // conflict: duplicate email
 
             this.logger.verbose(`update user failed => '${newEmail}' already exists`)
-            throw new ConflictException(`There is already an account associated with '${newEmail}'.`)
+            throw new ConflictException(`email:There is already an account associated with '${newEmail}'.`)
         }
     }
 
@@ -172,7 +172,7 @@ export class UserService {
             // conflict: duplicate email
 
             this.logger.verbose(`update user failed => '${email}' already exists`)
-            throw new ConflictException(`There is already an account associated with '${email}'.`)
+            throw new ConflictException(`email:There is already an account associated with '${email}'.`)
         }
     }
 

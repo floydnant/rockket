@@ -4,7 +4,7 @@
     [formOptions]="formOptions"
     submitButton="Signup"
     (formSubmit)="onSubmit($event)"
-    [extraErrorMessages]="extraErrorMessages"
+    [extraErrorMessages]="(errorMap$ | async) || {}"
     [isLoading]="(isLoading$ | async) || false"
     containerClasses="grid gap-3"
     gridAreas="
