@@ -35,6 +35,6 @@ export class LoginComponent {
     extraErrorMessages: Record<string, string[]> = {}
 
     onSubmit(event: LoginCredentialsDto) {
-        this.store.dispatch(userActions.signup(event))
+        this.store.dispatch(userActions.login(event))
     }
 }

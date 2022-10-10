@@ -15,7 +15,8 @@ export class UserEffects {
         return this.actions$.pipe(
             ofType(userActions.login, userActions.signup),
             mergeMap(({ type, ...credentials }) => {
-                const res$: Observable<AuthSuccessResponse> = /login/.test(type)
+                const isLogin = /login/.test(type)
+                const res$: Observable<AuthSuccessResponse> = isLogin
                     ? this.userService.login(credentials)
                     : this.userService.signup(credentials)
 
@@ -32,4 +33,6 @@ export class UserEffects {
             })
         )
     })
+
+    // @TODO: persist authToken and perhabs user preview into localStorage
 }
