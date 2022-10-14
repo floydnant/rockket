@@ -40,7 +40,7 @@ export class UserService {
                 password: true,
             },
         })
-        if (!foundUser) throw new UnauthorizedException('Username or Email is wrong')
+        if (!foundUser) throw new UnauthorizedException("email:Couldn't find that account")
         await this.validatePassword(password, foundUser.password)
 
         return {
@@ -155,8 +155,8 @@ export class UserService {
     private async validatePassword(passwordToValidate: string, password: string) {
         if (await bcrypt.compare(passwordToValidate, password)) return true
         else {
-            this.logger.verbose('auth failed => Username, Email or Password is wrong')
-            throw new UnauthorizedException('Username, Email or Password is wrong')
+            this.logger.verbose('auth failed => Password is wrong')
+            throw new UnauthorizedException('Wrong Password, try again.') // @TODO: we should implement a max retry for password guesses
         }
     }
 

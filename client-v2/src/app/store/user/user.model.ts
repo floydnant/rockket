@@ -20,7 +20,6 @@ export interface SignupCredentialsDto {
     password: string
 }
 export interface LoginCredentialsDto {
-    username: string
     email: string
     password: string
 }

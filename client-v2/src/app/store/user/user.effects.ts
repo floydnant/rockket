@@ -5,7 +5,7 @@ import { catchError, map, mergeMap, Observable, of } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { UserService } from 'src/app/services/user.service'
 import { userActions } from './user.actions'
-import { AuthSuccessResponse } from './user.model'
+import { AuthSuccessResponse, SignupCredentialsDto } from './user.model'
 
 @Injectable()
 export class UserEffects {
@@ -18,7 +18,7 @@ export class UserEffects {
                 const isLogin = /login/.test(type)
                 const res$: Observable<AuthSuccessResponse> = isLogin
                     ? this.userService.login(credentials)
-                    : this.userService.signup(credentials)
+                    : this.userService.signup(credentials as SignupCredentialsDto)
 
                 return res$.pipe(
                     this.toast.observe({
