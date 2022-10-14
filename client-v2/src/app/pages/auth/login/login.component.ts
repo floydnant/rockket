@@ -1,13 +1,13 @@
 import { Component } from '@angular/core'
 import { Validators } from '@angular/forms'
-import { Actions, ofType } from '@ngrx/effects'
+import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { map } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator } from 'src/app/components/molecules/form/validators'
 import { AppState } from 'src/app/store'
 import { userActions } from 'src/app/store/user/user.actions'
 import { LoginCredentialsDto } from 'src/app/store/user/user.model'
+import { getErrorMap } from '../getErrorMap'
 
 @Component({
     selector: 'app-login',
@@ -33,27 +33,9 @@ export class LoginComponent {
             },
         },
     }
+
     isLoading$ = this.store.select(state => state.user.isLoading)
-    errorMap$ = this.actions$.pipe(
-        ofType(userActions.loginOrSignupError),
-        map(action => {
-            let messages: string[]
-            if (action.error.message instanceof Array) messages = action.error.message
-            else messages = [action.error.message]
-
-            const fields = Object.keys(this.formOptions)
-
-            // const generalErrors: string[] = []
-            const errorMap: Record<string, string[]> = {}
-            messages.forEach(msg => {
-                const fieldName = fields.find(field => new RegExp(field, 'i').test(msg))
-                if (fieldName) errorMap[fieldName] = [...(errorMap[fieldName] || []), msg.replace(/^\w+:/, '')]
-                // else generalErrors.push(msg)
-            })
-
-            return errorMap
-        })
-    )
+    errorMap$ = getErrorMap(this.actions$, Object.keys(this.formOptions))
 
     onSubmit(event: LoginCredentialsDto) {
         this.store.dispatch(userActions.login(event))
