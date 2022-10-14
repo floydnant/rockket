@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
-import { catchError, map, mergeMap, Observable, of } from 'rxjs'
+import { catchError, map, mergeMap, Observable, of, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { UserService } from 'src/app/services/user.service'
 import { userActions } from './user.actions'
@@ -34,5 +34,12 @@ export class UserEffects {
         )
     })
 
-    // @TODO: persist authToken and perhabs user preview into localStorage
+    saveAuthToken = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(userActions.loginOrSignupSuccess),
+                tap(({ authToken }) => this.userService.saveToken(authToken))
+            ),
+        { dispatch: false }
+    )
 }

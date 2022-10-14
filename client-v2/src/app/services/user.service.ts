@@ -14,4 +14,14 @@ export class UserService {
     login(credentials: LoginCredentialsDto) {
         return this.http.post<AuthSuccessResponse>('/auth/login', credentials)
     }
+
+    getToken() {
+        return localStorage.getItem('todo-authToken')
+    }
+    saveToken(authToken: string) {
+        localStorage.setItem('todo-authToken', authToken)
+    }
+    deleteToken() {
+        localStorage.removeItem('todo-authToken')
+    }
 }
