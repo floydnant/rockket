@@ -51,7 +51,7 @@ jobs:
             DB_USER: app
             DB_PWD: develop
             DB_NAME: todo-app-testing
-            TESTING_DATABASE_URL: postgresql://${{ env.DB_USER }}:develop@localhost:5432/todo-app-testing?schema=public
+            TESTING_DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app-testing?schema=public
             JWT_SECRET: this is the secret that nobody should know
 
         steps:
