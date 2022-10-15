@@ -4,10 +4,10 @@ import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { catchError, map, mergeMap, Observable, of, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
+import { AuthSuccessResponse, SignupCredentialsDto } from 'src/app/models/auth.model'
 import { UserService } from 'src/app/services/user.service'
 import { appActions } from '../app.actions'
 import { userActions } from './user.actions'
-import { AuthSuccessResponse, SignupCredentialsDto } from './user.model'
 
 @Injectable()
 export class UserEffects {

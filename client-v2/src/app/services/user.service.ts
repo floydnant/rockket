@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { HttpService } from '../http/http.service'
-import { AuthSuccessResponse, LoginCredentialsDto, SignupCredentialsDto } from '../store/user/user.model'
+import { SignupCredentialsDto, AuthSuccessResponse, LoginCredentialsDto } from '../models/auth.model'
 
 @Injectable({
     providedIn: 'root',
