@@ -6,13 +6,6 @@ on:
     pull_request:
         branches: ['main', 'dev/*']
 
-env:
-    DB_USER: app
-    DB_PWD: develop
-    DB_NAME: todo-app-testing
-    TESTING_DATABASE_URL: postgresql://${{ DB_USER }}:${{ DB_PWD }}@localhost:5432/${{ DB_NAME }}?schema=public
-    JWT_SECRET: this is the secret that nobody should know
-
 jobs:
     build-client-and-test:
         runs-on: ubuntu-latest
@@ -54,6 +47,12 @@ jobs:
 
     build-server-and-test:
         runs-on: ubuntu-latest
+        env:
+            DB_USER: app
+            DB_PWD: develop
+            DB_NAME: todo-app-testing
+            TESTING_DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app-testing?schema=public
+            JWT_SECRET: this is the secret that nobody should know
 
         steps:
             - uses: actions/checkout@v3
