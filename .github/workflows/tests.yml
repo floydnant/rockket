@@ -81,9 +81,9 @@ jobs:
               uses: Daniel-Marynicz/postgresql-action@master
               with:
                   postgres_image_tag: 12-alpine
-                  app_user: {{ ${{}}  DB_USER }}
-                  app_user_password: {{ ${{}}  DB_PWD }}
-                  app_db: {{ ${{}}  DB_NAME }}
+                  app_user: ${{ DB_USER }}
+                  app_user_password: ${{ DB_PWD }}
+                  app_db: ${{ DB_NAME }}
 
             - run: npm run e2e:ci
               working-directory: ./server
