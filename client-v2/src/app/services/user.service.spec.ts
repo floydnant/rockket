@@ -10,7 +10,7 @@ describe('UserService', () => {
         TestBed.configureTestingModule({
             providers: [
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
-                { provide: HttpService, useValue: { post() {} } },
+                { provide: HttpService, useValue: { post() {}, get() {} } },
             ],
         })
         service = TestBed.inject(UserService)

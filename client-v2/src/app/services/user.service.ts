@@ -14,6 +14,9 @@ export class UserService {
     login(credentials: LoginCredentialsDto) {
         return this.http.post<AuthSuccessResponse>('/auth/login', credentials)
     }
+    confirmLogin() {
+        return this.http.get<AuthSuccessResponse>('/auth/me')
+    }
 
     getToken() {
         return localStorage.getItem('todo-authToken')

@@ -10,7 +10,6 @@ export const userActions = {
 
     logout: createAction('[User] logout'),
 
-    // load credentials from localStorage
-    loadUser: createAction('[User] load user'),
-    loadUserSuccess: createAction('[User] load user success', props<LoggedInUser>()),
+    loadAuthTokenSuccess: createAction('[User] load authToken success', props<{ authToken: string }>()),
+    confirmLoginError: createAction('[User] confirm login error'),
 }
