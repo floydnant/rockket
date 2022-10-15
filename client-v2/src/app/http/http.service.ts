@@ -116,7 +116,7 @@ export class HttpService {
                         error: {
                             statusCode: 0,
                             message:
-                                'An unkown error occurred. Please refresh and try again. If the problem presists, please report it.',
+                                'An unknown error occurred. Please refresh and try again. If the problem presists, please report it.',
                             error: 'unknown',
                         },
                     }))
