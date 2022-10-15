@@ -15,6 +15,15 @@ import { PriorityIconComponent } from './components/atoms/icons/priority-icon/pr
 import { InputComponent } from './components/atoms/input/input.component'
 import { FormComponent } from './components/molecules/form/form.component'
 import { LoadingSpinnerComponent } from './components/atoms/icons/loading-spinner/loading-spinner.component'
+import { LoginComponent } from './pages/auth/login/login.component'
+import { SignupComponent } from './pages/auth/signup/signup.component'
+import { HttpModule } from './http/http.module'
+import { HotToastModule } from '@ngneat/hot-toast'
+import { StoreModule } from '@ngrx/store'
+import { StoreDevtoolsModule } from '@ngrx/store-devtools'
+import { reducers, metaReducers, effects } from './store'
+import { EffectsModule } from '@ngrx/effects'
+import { environment } from 'src/environments/environment'
 
 @NgModule({
     declarations: [
@@ -30,8 +39,22 @@ import { LoadingSpinnerComponent } from './components/atoms/icons/loading-spinne
         InputComponent,
         FormComponent,
         LoadingSpinnerComponent,
+        LoginComponent,
+        SignupComponent,
     ],
-    imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppRoutingModule,
+        HttpModule,
+        HotToastModule.forRoot(),
+        StoreModule.forRoot(reducers, {
+            metaReducers,
+        }),
+        EffectsModule.forRoot(effects),
+        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    ],
     providers: [],
     bootstrap: [AppComponent],
 })
