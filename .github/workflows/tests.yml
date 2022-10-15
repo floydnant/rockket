@@ -10,7 +10,7 @@ env:
     DB_USER: app
     DB_PWD: develop
     DB_NAME: todo-app-testing
-    TESTING_DATABASE_URL: postgresql://${{ env.DB_USER }}:${{ env.DB_PWD }}@localhost:5432/${{ env.DB_NAME }}?schema=public
+    TESTING_DATABASE_URL: postgresql://$DB_USER:$DB_PWD@localhost:5432/$DB_NAME?schema=public
     JWT_SECRET: this is the secret that nobody should know
 
 jobs:
@@ -81,9 +81,9 @@ jobs:
               uses: Daniel-Marynicz/postgresql-action@master
               with:
                   postgres_image_tag: 12-alpine
-                  app_user: ${{ env.DB_USER }}
-                  app_user_password: ${{ env.DB_PWD }}
-                  app_db: ${{ env.DB_NAME }}
+                  app_user: $DB_USER
+                  app_user_password: $DB_PWD
+                  app_db: $DB_NAME
 
             - run: npm run e2e:ci
               working-directory: ./server
