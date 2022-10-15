@@ -31,7 +31,9 @@ export class UserEffects {
                     this.toast.observe({
                         success: res => res.successMessage,
                         error: (err: HttpServerErrorResponse) =>
-                            err.error.message instanceof Array ? err.error.message[0] : err.error.message,
+                            err.error.message instanceof Array
+                                ? err.error.message[0].replace(/^\w+:/, '')
+                                : err.error.message.replace(/^\w+:/, ''),
                     }),
                     map(res => userActions.loginOrSignupSuccess(res.user)),
                     catchError((err: HttpServerErrorResponse) => of(userActions.loginOrSignupError(err)))
