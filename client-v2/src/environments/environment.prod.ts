@@ -6,7 +6,7 @@ const reviewId = process.env.NG_APP_REVIEW_ID
 const url = {
     prod: 'https://rockket-production.up.railway.app',
     staging: 'https://rockket-staging.up.railway.app',
-    review: `https://server-todo-app-pr-${reviewId}.up.railway.app/`,
+    review: `https://server-todo-app-pr-${reviewId}.up.railway.app`,
 }
 
 export const environment = {
