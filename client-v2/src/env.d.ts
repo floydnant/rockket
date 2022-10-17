@@ -3,7 +3,14 @@ declare var process: {
     env: {
         NG_APP_ENV: string
         NG_APP_PACKAGE_VERSION: string
-        // Replace the line below with your environment variable for better type checking
-        [key: string]: string
+
+        /** DEPLOYMENT ONLY */
+        NG_APP_PULL_REQUEST?: string
+        /** DEPLOYMENT ONLY */
+        NG_APP_REVIEW_ID?: string
+
+        NG_APP_SERVER_BASE_URL?: string
+
+        [key: string]: string | undefined
     }
 }

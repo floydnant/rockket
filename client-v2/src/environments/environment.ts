@@ -5,7 +5,7 @@
 export const environment = {
     production: false,
     PACKAGE_VERSION: process.env.NG_APP_PACKAGE_VERSION,
-    SERVER_BASE_URL: 'http://localhost:3000',
+    SERVER_BASE_URL: process.env.NG_APP_SERVER_BASE_URL || 'http://localhost:3000',
 }
 
 /*

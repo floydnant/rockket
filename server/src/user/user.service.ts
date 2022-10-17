@@ -52,7 +52,7 @@ export class UserService {
     renewAuthToken(user: IUserPreview) {
         return {
             user: this.getValidatedUser(user),
-            successMessage: `Still logged in as '${user.username}'.`,
+            successMessage: `Logged in as '${user.username}'.`,
         }
     }
 
