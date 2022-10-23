@@ -24,6 +24,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { reducers, metaReducers, effects } from './store'
 import { EffectsModule } from '@ngrx/effects'
 import { environment } from 'src/environments/environment'
+import { UserMenuComponent } from './components/organisms/user-menu/user-menu.component'
 
 @NgModule({
     declarations: [
@@ -41,6 +42,7 @@ import { environment } from 'src/environments/environment'
         LoadingSpinnerComponent,
         LoginComponent,
         SignupComponent,
+        UserMenuComponent,
     ],
     imports: [
         BrowserModule,

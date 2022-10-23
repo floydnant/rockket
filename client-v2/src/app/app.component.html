@@ -1,10 +1,57 @@
-<header class="sticky top-0 z-10 w-full bg-tinted-800 py-2 px-3 shadow-2xl drop-shadow-2xl">
-    <p>This is a tasklist</p>
-    <div class="version | sr-only">{{ packageVersion }}</div>
-    <div class="progress | absolute bottom-0 left-0 h-[2px] w-[40%] bg-submit-500"></div>
-</header>
-<div class="flex w-full justify-center p-4" data-test-name="app-container">
-    <div class="w-full max-w-[75ch]">
-        <router-outlet></router-outlet>
+<div
+    class="md:grid"
+    style="
+        grid-template-columns: clamp(5rem, 35vw, 17rem) auto;
+        grid-template-rows: 2.5rem 100%;
+        grid-template-areas:
+            'sidebar-header page-header'
+            'sidebar main';
+    "
+>
+    <!-- style="grid-template-columns: clamp(5rem, 35vw, 21rem) 1fr" -->
+    <user-menu class="username | hidden bg-tinted-800 md:block" style="grid-area: sidebar-header">Username</user-menu>
+    <div class="sidebar | sidebar--mobile sidebar--desktop" style="grid-area: sidebar" [class.hide]="!isMenuOpen">
+        <user-menu class="username | md:hidden">Username</user-menu>
+        <p>Sidebar</p>
+        <ul>
+            <li>Tasklist</li>
+            <li>Tasklist</li>
+            <li>Tasklist</li>
+            <ul>
+                <li>Tasklist</li>
+                <ul>
+                    <li>Tasklist</li>
+                    <li>Tasklist</li>
+                    <li>Tasklist</li>
+                </ul>
+                <li>Tasklist</li>
+                <li>Tasklist</li>
+            </ul>
+            <li>Tasklist</li>
+            <li>Tasklist</li>
+            <li>Tasklist</li>
+        </ul>
+    </div>
+    <header
+        style="grid-area: page-header"
+        class="sticky top-0 z-10 flex w-full justify-between bg-tinted-800 shadow-2xl drop-shadow-2xl"
+    >
+        <p class="py-2 px-3">This is a tasklist</p>
+        <div class="version | sr-only">{{ packageVersion }}</div>
+        <button class="py-2 px-3 md:hidden" (click)="isMenuOpen = !isMenuOpen">
+            <app-icon *ngIf="!isMenuOpen" iconClass="far fa-bars"></app-icon>
+            <app-icon *ngIf="isMenuOpen" iconClass="fas fa-times"></app-icon>
+        </button>
+        <div class="progress | absolute bottom-0 left-0 h-[2px] w-[40%] bg-submit-500"></div>
+    </header>
+    <div style="grid-area: main">
+        <div class="flex w-full">
+            <div class="flex h-full w-full justify-center p-4" data-test-name="app-container">
+                <div class="w-full max-w-[75ch]">
+                    main content right here
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

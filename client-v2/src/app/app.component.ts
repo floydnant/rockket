@@ -8,4 +8,6 @@ import { environment } from 'src/environments/environment'
 })
 export class AppComponent {
     packageVersion = environment.PACKAGE_VERSION
+
+    isMenuOpen = false
 }

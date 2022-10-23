@@ -1,0 +1,25 @@
+.sidebar {
+    /* @apply py-2 px-3; */
+}
+
+@media (max-width: 768px) {
+    .sidebar--mobile {
+        @apply absolute inset-0 top-10 w-full bg-tinted-800 pt-4 transition-transform;
+    }
+    .sidebar--mobile.hide {
+        @apply -translate-x-full;
+    }
+}
+@media (min-width: 768px) {
+    .sidebar--desktop {
+        @apply bg-gradient-to-b from-tinted-800;
+        /* @apply h-full w-[clamp(5rem,35vw,21rem)] resize-x; */
+    }
+}
+
+ul li {
+    @apply text-sm border-b border-transparent py-1 transition-colors last-of-type:border-b-0 /* hover:bg-tinted-600 */;
+}
+ul ul {
+    @apply pl-5 border-l border-tinted-700;
+}
