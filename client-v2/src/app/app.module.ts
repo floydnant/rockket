@@ -26,7 +26,10 @@ import { EffectsModule } from '@ngrx/effects'
 import { environment } from 'src/environments/environment'
 import { UserMenuComponent } from './components/organisms/user-menu/user-menu.component'
 import { SidebarLayoutComponent } from './components/templates/sidebar-layout/sidebar-layout.component'
+import { HomeComponent } from './pages/home/home.component'
 import { CenteredLayoutComponent } from './components/templates/centered-layout/centered-layout.component'
+import { TasksDemoComponent } from './pages/component-playground/tasks-demo/tasks-demo.component'
+import { PageEntityIconComponent } from './components/atoms/icons/page-entity-icon/page-entity-icon.component'
 
 @NgModule({
     declarations: [
@@ -46,7 +49,10 @@ import { CenteredLayoutComponent } from './components/templates/centered-layout/
         SignupComponent,
         UserMenuComponent,
         SidebarLayoutComponent,
+        HomeComponent,
         CenteredLayoutComponent,
+        TasksDemoComponent,
+        PageEntityIconComponent,
     ],
     imports: [
         BrowserModule,

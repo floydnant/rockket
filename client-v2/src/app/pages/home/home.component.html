@@ -1,0 +1,128 @@
+<app-sidebar-layout>
+    <!-- SIDEBAR HEADER -->
+    <ng-container sidebarHeader>
+        <div class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300">
+            <button class="button-naked w-full text-left">
+                <app-icon iconClass="fas fa-search"></app-icon> Search
+            </button>
+            <button class="button-naked w-full text-left">
+                <app-icon iconClass="fas fa-file-import"></app-icon> Import
+            </button>
+            <button class="button-naked w-full text-left">
+                <app-icon iconClass="fas fa-trash"></app-icon> Garbage
+            </button>
+        </div>
+    </ng-container>
+
+    <!-- SIDEBAR CONTENT -->
+    <ng-container sidebarContent>
+        <p class="text-sm text-tinted-400">Tasklists</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+        <p>The content</p>
+    </ng-container>
+
+    <!-- MAIN HEADER -->
+    <ng-container header>
+        <!-- <div class="header-border | absolute bottom-0 h-[1px] w-full bg-tinted-800 transition-opacity" -->
+        <!--     [class.opacity-0]="!isScrolled && !isSecondaryProgressBarVisible"></div> -->
+        <div
+            class="header-progress | absolute bottom-0 left-0 h-[2px] bg-submit-500 transition-opacity"
+            [class.opacity-0]="!isSecondaryProgressBarVisible"
+            [style.width]="progress + '%'"
+        ></div>
+
+        <!-- @TODO: Fix the header width issue (breadcrumbs taking more than allowed) -->
+        <div class="breadcrumbs | flex w-full flex-wrap py-2 px-4 text-tinted-300">
+            <div *ngFor="let breadcrumb of breadcrumbs; let i = index" class="flex max-w-[80%]">
+                <button
+                    class="breadcrumb | button-naked truncate py-0 px-1 hover:bg-tinted-800"
+                    [class.text-tinted-100]="breadcrumbs.length - 1 == i"
+                >
+                    <page-entity-icon *ngIf="breadcrumb.icon" [icon]="breadcrumb.icon"></page-entity-icon>
+                    <span class="truncate">{{ breadcrumb.text }}</span>
+                </button>
+                <span class="seperator | mx-1 text-tinted-500" *ngIf="breadcrumbs.length - 1 != i">/</span>
+            </div>
+        </div>
+
+        <button class="button-icon-naked py-2 px-4">
+            <app-icon iconClass="fas fa-ellipsis-v"></app-icon>
+        </button>
+    </ng-container>
+
+    <!-- MAIN CONTENT -->
+    <div class="mb-4">
+        <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
+        <!--     <button class="button-naked">Add Sublist</button> -->
+        <!--     <button class="button-naked">Add Description</button> -->
+        <!-- </div> -->
+        <!-- dont know 'bout these ones: -->
+        <!-- <button class="button-naked">Add Task</button> -->
+        <!-- <button class="button-naked">Share</button> -->
+
+        <h1 class="heading | mt-4">
+            <page-entity-icon class="mr-4 inline-block -translate-y-1 text-3xl" [icon]="TaskStatus.IN_PROGRESS">
+            </page-entity-icon>
+
+            <span class="title | outline-none" contenteditable>Taskname, which you can edit</span>
+        </h1>
+
+        <div class="description | text-tinted-300 outline-none" contenteditable>
+            <p>And this is the part for the description</p>
+            <p>Where you can</p>
+            <ul>
+                <li>Describe the list/task in further detail</li>
+                <li>Take notes for yourself</li>
+                <li>Quickly write down / sketch out ideas</li>
+            </ul>
+        </div>
+    </div>
+
+    <div
+        class="progress-container | group sticky -top-3 z-30 mb-5 flex items-center gap-2 bg-tinted-900 pt-4 pb-3 shadow-header"
+        title="{{ progress }}% completed - X/XX"
+    >
+        <div
+            #progressBar
+            class="progress | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
+        >
+            <div class="h-full rounded bg-submit-400 transition-shadow" [style.width]="progress + '%'"></div>
+        </div>
+        <span class="text-sm text-tinted-600 transition-colors group-hover:text-submit-400">{{ progress }}%</span>
+    </div>
+
+    <app-tasks-demo></app-tasks-demo>
+</app-sidebar-layout>

@@ -7,7 +7,7 @@ body {
 }
 
 ::selection {
-    @apply bg-primary-200 text-primary-700;
+    @apply bg-primary-200 text-primary-800;
 }
 ::-webkit-scrollbar {
     width: 0.4rem;
@@ -24,13 +24,30 @@ body {
 }
 
 a {
-    @apply text-submit-500 hover:underline hover:text-submit-400
+    @apply text-submit-500 hover:text-submit-400 hover:underline;
 }
 
 @layer components {
     .button {
         @apply rounded-md bg-tinted-500 py-2 px-5 font-semibold text-tinted-100 transition-colors hover:bg-tinted-600;
     }
+
+    .button-naked {
+        @apply rounded py-0.5 px-2 transition-colors hover:bg-tinted-700;
+        /* hover:text-tinted-100 */
+    }
+    .button-naked i {
+        @apply mr-1 w-4 text-center text-sm;
+    }
+
+    .button-icon-naked {
+        /* @TODO: this is just a placeholder for the real button-icon-naked */
+        @apply button-naked;
+    }
+    .button-icon-naked i {
+        @apply m-0 text-base;
+    }
+
     .button--submit {
         @apply bg-submit-400 text-tinted-900 hover:bg-submit-600;
     }
@@ -45,4 +62,50 @@ a {
     :is(.input, .button)[disabled] {
         @apply brightness-75;
     }
+}
+
+ul {
+    @apply pl-6;
+}
+ul li {
+    @apply list-inside list-disc;
+}
+ol li {
+    @apply list-decimal;
+}
+
+/* Lets see how this looks, and perhaps change it again. */
+p {
+    margin-bottom: 0.5rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    margin: 2rem 0 1.38rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+h1 {
+    /* margin-top: 0; */
+    font-size: 3.052rem;
+}
+
+h2 {
+    font-size: 2.441rem;
+}
+
+h3 {
+    font-size: 1.953rem;
+}
+
+h4 {
+    font-size: 1.563rem;
+}
+
+h5 {
+    font-size: 1.25rem;
 }

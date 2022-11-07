@@ -6,7 +6,7 @@ export enum TaskState {
     LOADING = 'Loading',
 }
 
-type TaskDisplayState = TaskStatus | TaskState
+export type TaskDisplayState = TaskStatus | TaskState
 
 const statusIconClassMap: Record<TaskDisplayState, string> = {
     [TaskStatus.OPEN]: 'far fa-circle text-tinted-300',
@@ -26,4 +26,6 @@ const statusIconClassMap: Record<TaskDisplayState, string> = {
 export class StatusIconComponent {
     @Input() status: TaskDisplayState = TaskStatus.OPEN
     statusIconClassMap = statusIconClassMap
+
+    @Input() disableTitle = false
 }
