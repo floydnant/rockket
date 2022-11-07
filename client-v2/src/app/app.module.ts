@@ -25,6 +25,8 @@ import { reducers, metaReducers, effects } from './store'
 import { EffectsModule } from '@ngrx/effects'
 import { environment } from 'src/environments/environment'
 import { UserMenuComponent } from './components/organisms/user-menu/user-menu.component'
+import { SidebarLayoutComponent } from './components/templates/sidebar-layout/sidebar-layout.component'
+import { CenteredLayoutComponent } from './components/templates/centered-layout/centered-layout.component'
 
 @NgModule({
     declarations: [
@@ -43,6 +45,8 @@ import { UserMenuComponent } from './components/organisms/user-menu/user-menu.co
         LoginComponent,
         SignupComponent,
         UserMenuComponent,
+        SidebarLayoutComponent,
+        CenteredLayoutComponent,
     ],
     imports: [
         BrowserModule,

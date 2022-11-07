@@ -1,0 +1,54 @@
+<div class="flex w-full" data-test-name="app-container">
+    <aside
+        class="sidebar | sidebar--mobile | relative flex h-screen flex-col border-tinted-700 bg-tinted-800 md:w-56 md:min-w-[10rem] md:max-w-[25rem] md:border-r md:text-md"
+        [class.hide]="!isMenuOpen"
+    >
+        <div #resizeHandle class="resize-handle | group absolute -right-1 h-full w-2 cursor-col-resize">
+            <div
+                class="relative left-[50%] h-full w-0.5 -translate-x-[50%] transition-colors delay-75 group-hover:bg-tinted-400"
+            ></div>
+        </div>
+
+        <header
+            class="sidebar-header | border-b border-transparent transition-colors"
+            [class.!border-tinted-700]="isSidebarScrolled"
+        >
+            <div class="flex">
+                <user-menu class="block w-full"></user-menu>
+                <button class="py-2 px-4 md:hidden" (click)="isMenuOpen = !isMenuOpen">
+                    <app-icon *ngIf="!isMenuOpen" iconClass="far fa-bars"></app-icon>
+                    <app-icon *ngIf="isMenuOpen" iconClass="fas fa-times"></app-icon>
+                </button>
+            </div>
+
+            <ng-content select="[sidebarHeader]"></ng-content>
+        </header>
+
+        <div class="sidebar-content | overflow-y-scroll overscroll-contain py-2 px-3">
+            <div #sidebarScrollSpy></div>
+            <ng-content select="[sidebarContent]"></ng-content>
+        </div>
+    </aside>
+
+    <div class="main-pane | flex h-screen grow flex-col">
+        <header
+            class="main-header | relative flex border-b border-tinted-700 border-transparent transition-all"
+            [class.!border-tinted-700]="isMainScrolled"
+            [class.-translate-y-full]="isMenuOpen"
+        >
+            <ng-content select="[header]"></ng-content>
+
+            <button class="py-2 px-4 md:hidden" (click)="isMenuOpen = !isMenuOpen">
+                <app-icon *ngIf="!isMenuOpen" iconClass="far fa-bars"></app-icon>
+                <app-icon *ngIf="isMenuOpen" iconClass="fas fa-times"></app-icon>
+            </button>
+        </header>
+        <main class="flex max-h-full flex-col items-center overflow-y-scroll overscroll-contain px-4 pt-2 pb-56">
+            <div class="content" [class]="{ 'w-[min(100%,55rem)]': prose, 'w-full': !prose }">
+                <div #mainScrollSpy></div>
+
+                <ng-content></ng-content>
+            </div>
+        </main>
+    </div>
+</div>
