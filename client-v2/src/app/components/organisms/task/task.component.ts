@@ -10,7 +10,7 @@ import { TaskState } from '../../atoms/icons/status-icon/status-icon.component'
 export class TaskComponent implements OnInit {
     ngOnInit() {
         // dummy loading time
-        if (this.data.notes) setTimeout(() => (this.loading = false), Math.random() * 5000)
+        if (this.data.description) setTimeout(() => (this.loading = false), Math.random() * 5000)
         else this.loading = false
     }
     @Input() data!: ITask
