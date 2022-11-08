@@ -23,15 +23,14 @@ export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
         this.resizeHandle.nativeElement.addEventListener('mousedown', this.onMouseDown)
         document.addEventListener('mouseup', this.onMouseUp)
 
-        this.sidebarScrollSpyObserver.observe(this.sidebarScrollSpy.nativeElement)
-        this.mainScrollSpyObserver.observe(this.mainScrollSpy.nativeElement)
+        this.observer.observe(this.sidebarScrollSpy.nativeElement)
+        this.observer.observe(this.mainScrollSpy.nativeElement)
     }
     ngOnDestroy(): void {
         this.resizeHandle.nativeElement.removeEventListener('mousedown', this.onMouseDown)
         document.removeEventListener('mouseup', this.onMouseUp)
 
-        this.sidebarScrollSpyObserver.disconnect()
-        this.mainScrollSpyObserver.disconnect()
+        this.observer.disconnect()
     }
 
     // in case: https://stackoverflow.com/questions/26233180/resize-a-div-on-border-drag-and-drop-without-adding-extra-markup
@@ -48,18 +47,16 @@ export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
 
     isSidebarScrolled = false
     @ViewChild('sidebarScrollSpy') sidebarScrollSpy!: ElementRef<HTMLDivElement>
-    sidebarScrollSpyObserver = new IntersectionObserver(
-        entries => {
-            this.isSidebarScrolled = !entries[0].isIntersecting
-        },
-        { threshold: [1] }
-    )
 
     isMainScrolled = false
     @ViewChild('mainScrollSpy') mainScrollSpy!: ElementRef<HTMLDivElement>
-    mainScrollSpyObserver = new IntersectionObserver(
+
+    observer = new IntersectionObserver(
         entries => {
-            this.isMainScrolled = !entries[0].isIntersecting
+            entries.forEach(entry => {
+                if (entry.target == this.sidebarScrollSpy.nativeElement) this.isSidebarScrolled = !entry.isIntersecting
+                if (entry.target == this.mainScrollSpy.nativeElement) this.isMainScrolled = !entry.isIntersecting
+            })
         },
         { threshold: [1] }
     )

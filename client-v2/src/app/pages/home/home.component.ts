@@ -10,7 +10,10 @@ import { TaskStatus } from 'src/app/models/task.model'
 export class HomeComponent implements AfterViewInit, OnDestroy {
     TaskStatus = TaskStatus
 
-    progress = 0.4 * 100
+    closedTasks = 16
+    allTasks = 37
+    progress = Math.round((this.closedTasks / this.allTasks) * 100)
+    isShownAsPercentage = true
 
     breadcrumbs: { text: string; icon?: PageEntityIconKey }[] = [
         { text: 'Rootlist', icon: 'tasklist' },

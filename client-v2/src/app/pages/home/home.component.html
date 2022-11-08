@@ -113,7 +113,7 @@
 
     <div
         class="progress-container | group sticky -top-3 z-30 mb-5 flex items-center gap-2 bg-tinted-900 pt-4 pb-3 shadow-header"
-        title="{{ progress }}% completed - X/XX"
+        title="{{ progress }}% completed - {{ closedTasks }}/{{ allTasks }}"
     >
         <div
             #progressBar
@@ -121,7 +121,12 @@
         >
             <div class="h-full rounded bg-submit-400 transition-shadow" [style.width]="progress + '%'"></div>
         </div>
-        <span class="text-sm text-tinted-600 transition-colors group-hover:text-submit-400">{{ progress }}%</span>
+        <button
+            class="text-sm text-tinted-600 transition-colors group-hover:text-submit-400"
+            (click)="isShownAsPercentage = !isShownAsPercentage"
+        >
+            {{ isShownAsPercentage ? progress + '%' : closedTasks + ' / ' + allTasks }}
+        </button>
     </div>
 
     <app-tasks-demo></app-tasks-demo>
