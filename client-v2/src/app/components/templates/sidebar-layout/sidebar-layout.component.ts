@@ -11,12 +11,6 @@ export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
     isMenuOpen = false
 
     // @TODO: Make the prose width adjustable with a drag, or have a couple presets
-    // @TODO: Persist width in localStorage
-    // @TODO: Component (e2e) test the sidebar resizing feature
-    // @TODO: Component (e2e) test the sidebar toggle feature (mobile)
-    // @TODO: Add a sidebar collapsing feature (desktop)
-    // @TODO: Fix the weird fucked up sideoverflow issue when writing long words/text in taskname/listname/description
-
     @ViewChild('resizeHandle') resizeHandle!: ElementRef<HTMLDivElement>
 
     ngAfterViewInit(): void {
