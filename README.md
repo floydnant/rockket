@@ -13,7 +13,7 @@ A small, carefully crafted todo app with a focus on user experience, built with 
 ## Concept
 The app is designed to **reward the user** when he completes a task with satisfying behaivour and little easter eggs to create a **positive feedback loop** and **increase motivation**. It is encouraged to break down a task into multiple _sub_-tasks so that you can cross of tasks more often and stay motivated.
 
-You can share lists with others and collaborate real time.
+You can share lists with others and collaborate in real time[^1].
 
 ## Usage
 Check out [the latest production build](https://floyds-todo.netlify.app) and use it locally on your device (sync between devices coming soon).
@@ -45,3 +45,6 @@ The app will automatically reload if you change any of the source files in the `
 ## Further info 
 - Client [README.md](./client-v2/README.md)
 - Server [README.md](./server/README.md)
+
+--- 
+[^1]: near realtime
