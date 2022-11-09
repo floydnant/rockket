@@ -2,7 +2,8 @@
 <img src="./client/src/assets/todo-app-logo/todo-app-logo.png" height="100px">
 
 # Rockket
-    
+@TODO: update badge to rockket, add CI badge
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9fd8a950-2e65-4669-bb3e-7d98889c1b35/deploy-status)](https://app.netlify.com/sites/floyds-todo/deploys)
     
 A small, carefully crafted todo app with a focus on user experience, built with ❤️ and angular.
@@ -11,24 +12,28 @@ A small, carefully crafted todo app with a focus on user experience, built with 
 </div>
 
 ## Concept
-The app is designed to _reward the user_ when he completes a task with satisfying behaivour and little easter eggs to create a _positive feedback loop_ and _increase motivation_. It is encouraged to break down a task into multiple **sub**-tasks so that you can cross of tasks more often and stay motivated.
+Rockket is designed to _reward the user_ when he completes a task with satisfying behaviour and little easter eggs to create a _positive feedback loop_ and _increase motivation_. It is encouraged to break down a task into multiple **sub**-tasks so that you can cross of tasks more often and stay motivated.
 
-### Core features
+## Core features
 - Nest both tasks and tasklists indefinitely deep
 - Share lists with others and collaborate in real time[^1]
 - Take notes or write descriptions in rich text
 - Link tasks that are related to each other e.g. by blocking them based on another task's state
 
 ## Usage
-Check out the [latest production build](https://floyds-todo.netlify.app) and [install it as a PWA](https://medium.com/progressivewebapps/how-to-install-a-pwa-to-your-device-68a8d37fadc1) on a desktop or mobile device.
+Check out the [latest production build](https://rockket.netlify.app) and [install it as a PWA](https://medium.com/progressivewebapps/how-to-install-a-pwa-to-your-device-68a8d37fadc1) on a desktop or mobile device.
 (native builds on the AppStore and PlayStore are on the roadmap)
 
 ## Contributing
-Clone the repo with `git clone git@github.com:dein-ding/todo-app.git`.
-If you want your [changes](#running-the-app-locally) to be merged into production, [fork this repository and file a Pull-Request](https://www.youtube.com/watch?v=CML6vfKjQss) wenn you're done editing.
+Clone the repo with 
+```sh
+git clone git@github.com:dein-ding/todo-app.git
+```
+If you want your changes to be merged into production, [fork this repository and file a Pull-Request](https://www.youtube.com/watch?v=CML6vfKjQss) when you're done editing.
 
 ## Running the app locally
 ### Requirements
+@TODO: add links again
 - PostgreSQL database server
 - Node.js 14 or higher
 
