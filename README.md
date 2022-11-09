@@ -24,23 +24,84 @@ Clone the repo with `git clone git@github.com:dein-ding/todo-app.git`.
 If you want your [changes](#running-the-app-locally) to be merged into production, [fork this repository and file a Pull-Request](https://www.youtube.com/watch?v=CML6vfKjQss) wenn you're done editing.
 
 ## Running the app locally
-Install the dependencies ([node.js](https://nodejs.org/en/download/) required) with `npm i`
+### Requirements
+- PostgreSQL database server
+- Node.js 14 or higher
+
+### Installation & Preperation
+1. Install the dependencies with `npm i`
+  ```sh
+  cd client
+  npm i
+  cd ../server
+  npm i
+  ```
+2. Create 2 databases with the names `todo-app` and `todo-app-testing` and the default credentials 
+3. Fill in the .env variables in `server/.env`
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app?schema=public"
+TESTING_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app-testing?schema=public"
+
+JWT_SECRET="This is the mysterous the secret"
+```
+4. Run the migrations in `server/`
 ```sh
-cd client
-npm i
-cd ../server
-npm i
+npx prisma migrate deploy
 ```
 
-Run `npm run dev` for a dev server
-- Front-end `cd client && npm run dev`
-    
-    Or run `npm run dev:lan` for testing on your local network (e.g. on a mobile device) and navigate to `<Your local IP>:4200/`.
+### Running the app
+Run `npm run dev` in both client and server for a dev server
+- Front-end
+  ```sh
+  cd client
+  npm run dev
+  ```
+  Or run `npm run dev:lan` for running on your local network (e.g. on a mobile device) and navigate to `<Your local IP>:4200/`.
 
-- Backend-end `cd server && npm run dev`
+- Backend-end
+  ```sh
+  cd server
+  npm run dev
+  ```
 
 then navigate to `localhost:4200/`.
 The app will automatically reload if you change any of the source files in the `src/` directories.
+
+## Running tests
+Append `:ci` to the respective command to run the tests only a single time.
+
+You can run these commands in both the client and server directories.
+
+- Unit tests
+  ```sh
+  npm run unit # watch mode
+  npm run unit:ci # single run
+  ```
+- Component tests
+  ```sh
+  npm run comp # watch mode
+  npm run comp:ci # single run
+  ```
+- E2E tests
+  ```sh
+  npm run e2e # watch mode
+  npm run e2e:ci # single run
+  ```
+
+## Linting and Formatting
+You can run these commands in both the client and server directories.
+
+To check for code quality run
+```sh
+npm run lint
+```
+To check for code quality and fix potential problems and/or format the code run
+```sh
+npm run lint:fix
+```
+
+## Type checks
+For manual type checks without an LSP just run the `dev` or `build` commands    .
 
 ## Further info 
 - Client [README.md](./client-v2/README.md)
