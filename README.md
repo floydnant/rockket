@@ -42,7 +42,7 @@ If you want your [changes](#running-the-app-locally) to be merged into productio
     DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app?schema=public"
     TESTING_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app-testing?schema=public"
 
-    JWT_SECRET="This is the mysterous the secret"
+    JWT_SECRET="This is the mysterious secret"
     ```
 4. Run the migrations in `server/`
     ```sh
