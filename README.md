@@ -37,7 +37,7 @@ If you want your [changes](#running-the-app-locally) to be merged into productio
     npm i
     ```
 2. Create 2 databases with the names `todo-app` and `todo-app-testing` and the default credentials 
-3. Fill in the .env variables in `server/.env`
+3. Fill in the environment variables in `server/.env`
     ```env
     DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app?schema=public"
     TESTING_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app-testing?schema=public"
@@ -46,11 +46,12 @@ If you want your [changes](#running-the-app-locally) to be merged into productio
     ```
 4. Run the migrations in `server/`
     ```sh
+    cd server
     npx prisma migrate deploy
     ```
 
 ### Running the app
-Run `npm run dev` in both client and server for a dev server
+Ensure postgres is up and running, then run `npm run dev` in both client and server for a dev server
 - Front-end
   ```sh
   cd client
@@ -91,11 +92,11 @@ You can run these commands in both the client and server directories.
 ## Linting and Formatting
 You can run these commands in both the client and server directories.
 
-To check for code quality run
+To check for code quality, run
 ```sh
 npm run lint
 ```
-To check for code quality and fix potential problems and/or format the code run
+To fix potential problems and/or format the code, run
 ```sh
 npm run lint:fix
 ```
