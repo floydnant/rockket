@@ -30,24 +30,24 @@ If you want your [changes](#running-the-app-locally) to be merged into productio
 
 ### Installation & Preperation
 1. Install the dependencies with `npm i`
-  ```sh
-  cd client
-  npm i
-  cd ../server
-  npm i
-  ```
+    ```sh
+    cd client
+    npm i
+    cd ../server
+    npm i
+    ```
 2. Create 2 databases with the names `todo-app` and `todo-app-testing` and the default credentials 
 3. Fill in the .env variables in `server/.env`
-```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app?schema=public"
-TESTING_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app-testing?schema=public"
+    ```env
+    DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app?schema=public"
+    TESTING_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app-testing?schema=public"
 
-JWT_SECRET="This is the mysterous the secret"
-```
+    JWT_SECRET="This is the mysterous the secret"
+    ```
 4. Run the migrations in `server/`
-```sh
-npx prisma migrate deploy
-```
+    ```sh
+    npx prisma migrate deploy
+    ```
 
 ### Running the app
 Run `npm run dev` in both client and server for a dev server
