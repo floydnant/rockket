@@ -11,13 +11,17 @@ A small, carefully crafted todo app with a focus on user experience, built with 
 </div>
 
 ## Concept
-The app is designed to **reward the user** when he completes a task with satisfying behaivour and little easter eggs to create a **positive feedback loop** and **increase motivation**. It is encouraged to break down a task into multiple _sub_-tasks so that you can cross of tasks more often and stay motivated.
+The app is designed to _reward the user_ when he completes a task with satisfying behaivour and little easter eggs to create a _positive feedback loop_ and _increase motivation_. It is encouraged to break down a task into multiple **sub**-tasks so that you can cross of tasks more often and stay motivated.
 
-You can share lists with others and collaborate in real time[^1].
+### Core features
+- Nest both tasks and tasklists indefinitely deep
+- Share lists with others and collaborate in real time[^1]
+- Take notes or write descriptions in rich text
+- Link tasks that are related to each other e.g. by blocking them based on another task's state
 
 ## Usage
-Check out [the latest production build](https://floyds-todo.netlify.app) and use it locally on your device (sync between devices coming soon).
-You can also [install the PWA](https://medium.com/progressivewebapps/how-to-install-a-pwa-to-your-device-68a8d37fadc1) on desktop and mobile devices.
+Check out the [latest production build](https://floyds-todo.netlify.app) and [install it as a PWA](https://medium.com/progressivewebapps/how-to-install-a-pwa-to-your-device-68a8d37fadc1) on a desktop or mobile device.
+(native builds on the AppStore and PlayStore are on the roadmap)
 
 ## Contributing
 Clone the repo with `git clone git@github.com:dein-ding/todo-app.git`.
@@ -102,7 +106,7 @@ npm run lint:fix
 ```
 
 ## Type checks
-For manual type checks without an LSP just run the `dev` or `build` commands    .
+For manual type checks without an LSP just run the `dev` or `build` commands.
 
 ## Further info 
 - Client [README.md](./client-v2/README.md)
