@@ -2,9 +2,9 @@
 <img src="./client/src/assets/todo-app-logo/todo-app-logo.png" height="100px">
 
 # Rockket
-@TODO: update badge to rockket, add CI badge
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/9fd8a950-2e65-4669-bb3e-7d98889c1b35/deploy-status)](https://app.netlify.com/sites/floyds-todo/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f010880f-6648-4146-9d82-b7e050e637ce/deploy-status?branch=main)](https://app.netlify.com/sites/rockket/deploys)
+[![Build, Run linter and tests](https://github.com/dein-ding/todo-app/actions/workflows/tests.yml/badge.svg)](https://github.com/dein-ding/todo-app/actions/workflows/tests.yml)
     
 A small, carefully crafted todo app with a focus on user experience, built with ❤️ and angular.
 
@@ -33,7 +33,6 @@ If you want your changes to be merged into production, [fork this repository and
 
 ## Running the app locally
 ### Requirements
-@TODO: add links again
 - [PostgreSQL](https://www.postgresql.org/download/) database server
 - [Node.js](https://nodejs.org/en/download/) 14 or higher
 
