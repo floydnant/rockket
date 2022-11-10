@@ -25,11 +25,7 @@ Check out the [latest production build](https://rockket.netlify.app) and [instal
 (native builds on the AppStore and PlayStore are on the roadmap)
 
 ## Contributing
-Clone the repo with 
-```sh
-git clone git@github.com:dein-ding/todo-app.git
-```
-If you want your changes to be merged into production, [fork this repository and file a Pull-Request](https://www.youtube.com/watch?v=CML6vfKjQss) when you're done editing.
+If you want your changes to be merged, [fork this repository and file a Pull-Request](https://www.youtube.com/watch?v=CML6vfKjQss) when you're done editing.
 
 ## Running the app locally
 ### Requirements
@@ -37,6 +33,11 @@ If you want your changes to be merged into production, [fork this repository and
 - [Node.js](https://nodejs.org/en/download/) 14 or higher
 
 ### Installation & Preperation
+0. Clone the repo with 
+    ```sh
+    git clone git@github.com:dein-ding/todo-app.git
+    ```
+
 1. Install the dependencies
     ```sh
     cd client
@@ -44,7 +45,9 @@ If you want your changes to be merged into production, [fork this repository and
     cd ../server
     npm i
     ```
-2. Create 2 databases with the names `todo-app` and `todo-app-testing` and the default credentials 
+
+2. Create 2 databases with the names `todo-app` and `todo-app-testing` with the default credentials 
+
 3. Fill in the environment variables in `server/.env`
     ```env
     DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app?schema=public"
@@ -52,6 +55,7 @@ If you want your changes to be merged into production, [fork this repository and
 
     JWT_SECRET="This is the mysterious secret"
     ```
+
 4. Run the migrations in `server/`
     ```sh
     cd server
@@ -60,14 +64,14 @@ If you want your changes to be merged into production, [fork this repository and
 
 ### Running the app
 Ensure postgres is up and running, then run `npm run dev` in both client and server for a dev server
-- Front-end
+- Frontend
   ```sh
   cd client
   npm run dev
   ```
   Or run `npm run dev:lan` for running on your local network (e.g. on a mobile device) and navigate to `<Your local IP>:4200/`.
 
-- Backend-end
+- Backend
   ```sh
   cd server
   npm run dev
@@ -77,25 +81,24 @@ then navigate to `localhost:4200/`.
 The app will automatically reload if you change any of the source files in the `src/` directories.
 
 ## Running tests
-Append `:ci` to the respective command to run the tests only a single time.
+Append `:ci` to the respective command to run the tests only a single time, i.e. `npm run comp:ci`.
 
 You can run these commands in both the client and server directories.
 
-- Unit tests
-  ```sh
-  npm run unit # watch mode
-  npm run unit:ci # single run
-  ```
-- Component tests
-  ```sh
-  npm run comp # watch mode
-  npm run comp:ci # single run
-  ```
-- E2E tests
-  ```sh
-  npm run e2e # watch mode
-  npm run e2e:ci # single run
-  ```
+### Unit tests
+```sh
+npm run unit
+```
+
+### Component tests
+```sh
+npm run comp
+```
+
+### End to end tests
+```sh
+npm run e2e
+```
 
 ## Linting and Formatting
 You can run these commands in both the client and server directories.
