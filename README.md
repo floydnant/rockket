@@ -122,5 +122,9 @@ For manual type checks without an LSP just run the `dev` or `build` commands.
 - Backend framework -> [NestJS](https://docs.nestjs.com)
 - ORM -> [Prisma](https://www.prisma.io/docs/)
 
+## Get in touch
+Hi, I'm Floyd Haremsa and you can reach me through floyd.haremsa@berlin-bytes.de,
+I'm happy to answer any questions you might have or just to have a chat.
+
 --- 
 [^1]: near realtime
