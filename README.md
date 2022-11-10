@@ -34,11 +34,11 @@ If you want your changes to be merged into production, [fork this repository and
 ## Running the app locally
 ### Requirements
 @TODO: add links again
-- PostgreSQL database server
-- Node.js 14 or higher
+- [PostgreSQL](https://www.postgresql.org/download/) database server
+- [Node.js](https://nodejs.org/en/download/) 14 or higher
 
 ### Installation & Preperation
-1. Install the dependencies with `npm i`
+1. Install the dependencies
     ```sh
     cd client
     npm i
