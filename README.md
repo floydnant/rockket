@@ -14,7 +14,7 @@ A small, carefully crafted todo app with a focus on user experience, built with 
 ## Concept
 Rockket is designed to _reward the user_ when he completes a task with satisfying behaviour and little easter eggs to create a _positive feedback loop_ and _increase motivation_. It is encouraged to break down a task into multiple **sub**-tasks so that you can cross of tasks more often and stay motivated.
 
-## Core features
+## Core features[^2]
 - Nest both tasks and tasklists indefinitely deep
 - Share lists with others and collaborate in real time[^1]
 - Take notes or write descriptions in rich text
@@ -132,3 +132,4 @@ I'm happy to answer any questions you might have or just to have a chat.
 <br>
 
 [^1]: near realtime
+[^2]: I am currently completely rebuilding the app, so if not yet, those features will arrive shortly.
