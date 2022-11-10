@@ -8,7 +8,7 @@
     
 A small, carefully crafted todo app with a focus on user experience, built with ❤️ and angular.
 
-(App icon update pending)
+(App icon changing soon)
 </div>
 
 ## Concept
@@ -81,9 +81,9 @@ then navigate to `localhost:4200/`.
 The app will automatically reload if you change any of the source files in the `src/` directories.
 
 ## Running tests
-Append `:ci` to the respective command to run the tests only a single time, i.e. `npm run comp:ci`.
-
 You can run these commands in both the client and server directories.
+
+Append `:ci` to the respective command to run the tests only a single time, i.e. `npm run comp:ci`.
 
 ### Unit tests
 ```sh
@@ -129,5 +129,6 @@ For manual type checks without an LSP just run the `dev` or `build` commands.
 Hi, I'm Floyd Haremsa and you can reach me through floyd.haremsa@berlin-bytes.de,
 I'm happy to answer any questions you might have or just to have a chat.
 
---- 
+<br>
+
 [^1]: near realtime
