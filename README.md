@@ -115,6 +115,12 @@ For manual type checks without an LSP just run the `dev` or `build` commands.
 ## Further info 
 - Client [README.md](./client-v2/README.md)
 - Server [README.md](./server/README.md)
+### Relevant documentation
+- Frontend framework -> [Angular](https://angular.io/docs)
+    - State management -> [NgRx](https://ngrx.io/docs)
+- Styling -> [Tailwind](https://tailwindcss.com/docs/editor-setup)
+- Backend framework -> [NestJS](https://docs.nestjs.com)
+- ORM -> [Prisma](https://www.prisma.io/docs/)
 
 --- 
 [^1]: near realtime
