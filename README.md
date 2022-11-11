@@ -14,18 +14,24 @@ A small, carefully crafted todo app with a focus on user experience, built with 
 ## Concept
 Rockket is designed to _reward the user_ when he completes a task with satisfying behaviour and little easter eggs to create a _positive feedback loop_ and _increase motivation_. It is encouraged to break down a task into multiple **sub**-tasks so that you can cross of tasks more often and stay motivated.
 
-## Core features[^2]
+## Core features
 - Nest both tasks and tasklists indefinitely deep
 - Share lists with others and collaborate in real time[^1]
 - Take notes or write descriptions in rich text
-- Link tasks that are related to each other e.g. by blocking them based on another task's state
+- Link tasks that are related to each other e.g. by blocking them based on another task's status
+
+## Note
+I am completely rebuilding the app, so the new project (`client-v2`) is currently only in demo phase and if not yet, those features will arrive shortly.
+The old project (`client`) is still in production, but I stopped maintaining it a while ago.
 
 ## Usage
-Check out the [latest production build](https://rockket.netlify.app) and [install it as a PWA](https://medium.com/progressivewebapps/how-to-install-a-pwa-to-your-device-68a8d37fadc1) on a desktop or mobile device.
+Start using the [stable production version](https://rockket.netlify.app) or the [development branch](https://main--rockket.netlify.app) and [install it as a PWA](https://medium.com/progressivewebapps/how-to-install-a-pwa-to-your-device-68a8d37fadc1) on a desktop or mobile device.
 (native builds on the AppStore and PlayStore are on the roadmap)
 
+Or, if you're curious, check out [what I'm currently working on](https://github.com/dein-ding/todo-app/pulls).
+
 ## Contributing
-If you want your changes to be merged, [fork this repository and file a Pull-Request](https://www.youtube.com/watch?v=CML6vfKjQss) when you're done editing.
+If you want your changes to be merged, [fork this repository and file a Pull-Request](https://www.youtube.com/watch?v=CML6vfKjQss) when you're ready.
 
 ## Running the app locally
 ### Requirements
@@ -132,4 +138,3 @@ I'm happy to answer any questions you might have or just to have a chat.
 <br>
 
 [^1]: near realtime
-[^2]: I am currently completely rebuilding the app, so if not yet, those features will arrive shortly.
