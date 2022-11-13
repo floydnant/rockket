@@ -3,14 +3,15 @@ export enum TaskStatus {
     OPEN = 'Open',
     IN_PROGRESS = 'In Progress',
     COMPLETED = 'Completed',
-    CLOSED = 'Closed',
+    NOT_PLANNED = 'Not Planned',
 }
+
 export const statusSortingMap: Record<TaskStatus, number> = {
     [TaskStatus.IN_PROGRESS]: 0,
     [TaskStatus.OPEN]: 1,
     [TaskStatus.BACKLOG]: 2,
     [TaskStatus.COMPLETED]: 3,
-    [TaskStatus.CLOSED]: 4,
+    [TaskStatus.NOT_PLANNED]: 4,
 }
 
 export enum TaskPriority {
@@ -30,7 +31,7 @@ export const prioritySortingMap: Record<TaskPriority, number> = {
 
 export interface ITask {
     title: string
-    notes?: string
+    description: string
     status: TaskStatus
     priority: TaskPriority
     // more to come: createdAt, openedAt, inProgressSince, closedAt, events, deadline, blockedBy

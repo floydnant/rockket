@@ -32,6 +32,7 @@ describe('TaskComponent', () => {
             title: 'Task title here',
             priority: TaskPriority.NONE,
             status: TaskStatus.OPEN,
+            description: '',
         }
         fixture.detectChanges()
     })

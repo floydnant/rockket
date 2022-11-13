@@ -1,17 +1,19 @@
-<h1>Signup</h1>
+<app-centered-layout>
+    <h1>Signup</h1>
 
-<app-form
-    [formOptions]="formOptions"
-    submitButton="Signup"
-    (formSubmit)="onSubmit($event)"
-    [extraErrorMessages]="(errorMap$ | async) || {}"
-    [isLoading]="(isLoading$ | async) || false"
-    containerClasses="grid gap-3"
-    gridAreas="
+    <app-form
+        [formOptions]="formOptions"
+        submitButton="Signup"
+        (formSubmit)="onSubmit($event)"
+        [extraErrorMessages]="(errorMap$ | async) || {}"
+        [isLoading]="(isLoading$ | async) || false"
+        containerClasses="grid gap-3"
+        gridAreas="
     'username username email           email'
     'password password confirmPassword confirmPassword'
     'auto     submit   submit          fill'
     "
-></app-form>
+    ></app-form>
 
-<p>Already have an account? <a routerLink="/auth/login">Login</a></p>
+    <p class="mt-4 text-center text-tinted-400">Already have an account? <a routerLink="/auth/login">Login</a></p>
+</app-centered-layout>

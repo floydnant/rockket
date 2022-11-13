@@ -24,6 +24,14 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { reducers, metaReducers, effects } from './store'
 import { EffectsModule } from '@ngrx/effects'
 import { environment } from 'src/environments/environment'
+import { UserMenuComponent } from './components/organisms/user-menu/user-menu.component'
+import { SidebarLayoutComponent } from './components/templates/sidebar-layout/sidebar-layout.component'
+import { HomeComponent } from './pages/home/home.component'
+import { CenteredLayoutComponent } from './components/templates/centered-layout/centered-layout.component'
+import { LandingPageComponent } from './pages/landing-page/landing-page.component'
+import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component'
+import { TasksDemoComponent } from './pages/component-playground/tasks-demo/tasks-demo.component'
+import { PageEntityIconComponent } from './components/atoms/icons/page-entity-icon/page-entity-icon.component'
 
 @NgModule({
     declarations: [
@@ -41,6 +49,14 @@ import { environment } from 'src/environments/environment'
         LoadingSpinnerComponent,
         LoginComponent,
         SignupComponent,
+        UserMenuComponent,
+        SidebarLayoutComponent,
+        HomeComponent,
+        CenteredLayoutComponent,
+        LandingPageComponent,
+        NotFoundPageComponent,
+        TasksDemoComponent,
+        PageEntityIconComponent,
     ],
     imports: [
         BrowserModule,

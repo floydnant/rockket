@@ -6,14 +6,14 @@ export enum TaskState {
     LOADING = 'Loading',
 }
 
-type TaskDisplayState = TaskStatus | TaskState
+export type TaskDisplayState = TaskStatus | TaskState
 
 const statusIconClassMap: Record<TaskDisplayState, string> = {
     [TaskStatus.OPEN]: 'far fa-circle text-tinted-300',
     [TaskStatus.IN_PROGRESS]: 'far fa-clock text-secondary-400',
     [TaskStatus.BACKLOG]: 'fas fa-spinner text-tinted-300 rotate-[-45deg]',
     [TaskStatus.COMPLETED]: 'fas fa-check-circle text-submit-400',
-    [TaskStatus.CLOSED]: 'fas fa-times-circle text-danger-400',
+    [TaskStatus.NOT_PLANNED]: 'fas fa-times-circle text-danger-400',
     [TaskState.BLOCKED]: 'far fa-ban text-tinted-300',
     [TaskState.LOADING]: 'far fa-spinner-third animate-spin text-tinted-200',
 }
@@ -26,4 +26,6 @@ const statusIconClassMap: Record<TaskDisplayState, string> = {
 export class StatusIconComponent {
     @Input() status: TaskDisplayState = TaskStatus.OPEN
     statusIconClassMap = statusIconClassMap
+
+    @Input() disableTitle = false
 }

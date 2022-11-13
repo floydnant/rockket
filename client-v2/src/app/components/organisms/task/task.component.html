@@ -18,8 +18,8 @@
                 #titleFocusable="focusable"
                 class="title | outline-none"
                 [class]="{
-                    'line-through': data.status == TaskStatus.CLOSED,
-                    'decoration-danger-400': data.status == TaskStatus.CLOSED
+                    'line-through': data.status == TaskStatus.NOT_PLANNED,
+                    'decoration-danger-400': data.status == TaskStatus.NOT_PLANNED
                 }"
                 contenteditable
             >
@@ -36,7 +36,7 @@
                 <priority-icon
                     *ngIf="
                         data.status != TaskStatus.COMPLETED &&
-                        data.status != TaskStatus.CLOSED &&
+                        data.status != TaskStatus.NOT_PLANNED &&
                         data.priority != TaskPriority.NONE
                     "
                     [priority]="data.priority"
@@ -51,10 +51,10 @@
     <div
         focusable
         #notesFocusable="focusable"
-        [class]="{ hidden: !data.notes && !notesFocusable.isFocused }"
+        [class]="{ hidden: !data.description && !notesFocusable.isFocused }"
         class="notes | mt-1 rounded-lg bg-tinted-900 py-1 px-2 text-tinted-300 outline-none ring-primary-400 transition-colors duration-75 focus:ring-2"
         contenteditable
     >
-        {{ this.loading || data.notes }}
+        {{ this.loading || data.description }}
     </div>
 </li>
