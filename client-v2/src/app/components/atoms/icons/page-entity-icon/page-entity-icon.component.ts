@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core'
-import { TaskStatus } from 'src/app/models/task.model'
 import { TaskDisplayState } from '../status-icon/status-icon.component'
 
 export type PageEntityIconKey = TaskDisplayState | 'tasklist'
@@ -11,6 +10,4 @@ export type PageEntityIconKey = TaskDisplayState | 'tasklist'
 })
 export class PageEntityIconComponent {
     @Input() icon!: PageEntityIconKey
-
-    TaskStatus = TaskStatus
 }
