@@ -8,7 +8,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } fro
 export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
     @Input() prose = true
 
-    isMenuOpen = false
+    isMenuOpen = true
 
     // @TODO: Make the prose width adjustable with a drag, or have a couple presets
     @ViewChild('resizeHandle') resizeHandle!: ElementRef<HTMLDivElement>
