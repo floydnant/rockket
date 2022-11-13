@@ -39,9 +39,9 @@
 
     <div class="main-pane | flex h-screen grow flex-col" data-test-name="main-pane">
         <header
-            class="main-header | relative flex border-b border-tinted-700 border-transparent transition-all"
+            class="main-header | main-header--mobile | relative flex border-b border-tinted-700 border-transparent transition-all"
             [class.!border-tinted-700]="isMainScrolled"
-            [class.-translate-y-full]="isMenuOpen"
+            [class.hide]="isMenuOpen"
             data-test-name="main-header"
         >
             <ng-content select="[header]"></ng-content>
