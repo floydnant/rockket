@@ -62,4 +62,25 @@ describe('SidebarLayoutComponent', () => {
             cy.get(testName('sidebar')).should('not.have.attr', 'hidden')
         })
     })
+
+    describe('Resizing', () => {
+        it('can resize the sidebar', () => {
+            cy.viewport('macbook-13')
+            setupComponent(defaultTemplate)
+
+            cy.get(testName('resize-handle'))
+                .trigger('mousedown')
+                .trigger('mousemove', { clientX: 350, force: true })
+                .trigger('mouseup')
+
+            cy.get(testName('sidebar')).then(e => expect(e.width()).greaterThan(348))
+
+            cy.get(testName('resize-handle'))
+                .trigger('mousedown')
+                .trigger('mousemove', { clientX: 170, force: true })
+                .trigger('mouseup')
+
+            cy.get(testName('sidebar')).then(e => expect(e.width()).lessThan(171))
+        })
+    })
 })

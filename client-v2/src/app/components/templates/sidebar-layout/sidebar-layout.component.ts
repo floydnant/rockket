@@ -34,7 +34,7 @@ export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
 
     onResize = ((e: MouseEvent) => {
         const sidebar = this.resizeHandle.nativeElement.parentElement as HTMLDivElement
-        const currMouseX = e.x
+        const currMouseX = e.clientX
         const newWidth = currMouseX + 'px'
         sidebar.style.width = newWidth
     }).bind(this)
