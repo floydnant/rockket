@@ -41,11 +41,11 @@ a {
     }
 
     .button-icon-naked {
-        /* @TODO: this is just a placeholder for the real button-icon-naked */
-        @apply button-naked;
+        /* @TODO: This would need to be adjusted when touch device specific styles/behaviour are added */
+        @apply py-0;
     }
     .button-icon-naked i {
-        @apply m-0 text-base;
+        @apply m-0 inline-block aspect-square rounded py-0.5 px-2.5 text-base transition-colors hover:bg-tinted-700;
     }
 
     .button--submit {
