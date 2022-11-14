@@ -1,5 +1,5 @@
 import './env.d' // needed for cypress
-import { envMap } from './environment-info'
+import { envMap, serverBaseUrls } from './environment-info'
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
@@ -7,7 +7,7 @@ import { envMap } from './environment-info'
 export const environment = {
     production: false,
     PACKAGE_VERSION: process.env.NG_APP_PACKAGE_VERSION,
-    SERVER_BASE_URL: process.env.NG_APP_SERVER_BASE_URL || 'http://localhost:3000',
+    SERVER_BASE_URL: process.env.NG_APP_SERVER_BASE_URL || serverBaseUrls.dev,
     ENVIRONMENT: envMap.dev,
 }
 
