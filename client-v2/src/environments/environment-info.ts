@@ -1,4 +1,4 @@
-export const envMap: Record<NetlifyContext, AppEnvironment> = {
+export const contextMap: Record<NetlifyContext, AppContext> = {
     production: 'Production',
     'branch-deploy': 'Staging',
     'deploy-preview': 'Review',

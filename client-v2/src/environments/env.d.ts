@@ -1,5 +1,5 @@
 declare type NetlifyContext = 'production' | 'deploy-preview' | 'branch-deploy' | 'dev'
-declare type AppEnvironment = 'Production' | 'Review' | 'Staging' | 'Development'
+declare type AppContext = 'Production' | 'Review' | 'Staging' | 'Development'
 
 // eslint-disable-next-line no-var
 declare var process: {
