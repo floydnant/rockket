@@ -6,7 +6,10 @@ import { environment } from './environments/environment'
 
 if (environment.production) enableProdMode()
 
-console.info('ServerBaseUrl:', environment.SERVER_BASE_URL)
+if (environment.ENVIRONMENT != 'Production') {
+    console.info('Environment:', environment.ENVIRONMENT)
+    console.info('Server base url:', environment.SERVER_BASE_URL)
+}
 
 platformBrowserDynamic()
     .bootstrapModule(AppModule)
