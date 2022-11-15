@@ -40,10 +40,16 @@ export const userReducer = createReducer<UserState>(
         ...state,
         authToken,
     })),
+
+    on(userActions.confirmLogin, state => ({
+        ...state,
+        isLoading: true,
+    })),
     on(userActions.confirmLoginError, state => ({
         ...state,
         authToken: null,
         isLoading: false,
+        isLoggedIn: false,
     })),
 
     // logout

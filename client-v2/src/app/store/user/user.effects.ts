@@ -61,15 +61,23 @@ export class UserEffects {
             })
         )
     })
-    confirmLogin = createEffect(() => {
+
+    forwardToConfirmLogin = createEffect(() => {
         return this.actions$.pipe(
             ofType(userActions.loadAuthTokenSuccess),
+            map(() => userActions.confirmLogin())
+        )
+    })
+    confirmLogin = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(userActions.confirmLogin),
             mergeMap(() => {
                 const res$ = this.userService.confirmLogin()
 
                 return res$.pipe(
                     this.toast.observe({
-                        success: res => res.successMessage,
+                        loading: 'Confirming login...', // @TODO: this is in place of a proper loading screen, for the AuthGuard blocking a route
+                        success: { content: res => res.successMessage, duration: 900 },
                     }),
                     map(res => userActions.loginOrSignupSuccess(res.user)),
                     catchError(() => {

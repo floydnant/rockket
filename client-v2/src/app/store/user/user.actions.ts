@@ -11,5 +11,6 @@ export const userActions = {
     logout: createAction('[User] logout'),
 
     loadAuthTokenSuccess: createAction('[User] load authToken success', props<{ authToken: string }>()),
+    confirmLogin: createAction('[User] confirm login'),
     confirmLoginError: createAction('[User] confirm login error'),
 }
