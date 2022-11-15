@@ -6,6 +6,10 @@ import { ComponentPlaygroundComponent } from './pages/component-playground/compo
 import { HomeComponent } from './pages/home/home.component'
 import { LandingPageComponent } from './pages/landing-page/landing-page.component'
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component'
+import { SettingsAccountComponent } from './pages/settings/account/account.component'
+import { SettingsAppearanceComponent } from './pages/settings/appearance/appearance.component'
+import { SettingsGeneralComponent } from './pages/settings/general/general.component'
+import { SettingsComponent } from './pages/settings/settings.component'
 
 const routes: Routes = [
     {
@@ -29,6 +33,20 @@ const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
+    },
+    {
+        path: 'settings',
+        component: SettingsComponent,
+        children: [
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'general',
+            },
+            { path: 'general', component: SettingsGeneralComponent },
+            { path: 'account', component: SettingsAccountComponent },
+            { path: 'appearance', component: SettingsAppearanceComponent },
+        ],
     },
     {
         path: 'playground',
