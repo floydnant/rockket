@@ -6,6 +6,7 @@
         data-test-name="sidebar"
     >
         <div
+            *ngIf="enableResize"
             #resizeHandle
             class="resize-handle | group absolute -right-1 h-full w-2 cursor-col-resize"
             data-test-name="resize-handle"

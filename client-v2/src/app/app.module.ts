@@ -32,6 +32,10 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component'
 import { TasksDemoComponent } from './pages/component-playground/tasks-demo/tasks-demo.component'
 import { PageEntityIconComponent } from './components/atoms/icons/page-entity-icon/page-entity-icon.component'
+import { SettingsComponent } from './pages/settings/settings.component'
+import { SettingsGeneralComponent } from './pages/settings/general/general.component'
+import { SettingsAppearanceComponent } from './pages/settings/appearance/appearance.component'
+import { SettingsAccountComponent } from './pages/settings/account/account.component'
 
 @NgModule({
     declarations: [
@@ -57,6 +61,10 @@ import { PageEntityIconComponent } from './components/atoms/icons/page-entity-ic
         NotFoundPageComponent,
         TasksDemoComponent,
         PageEntityIconComponent,
+        SettingsComponent,
+        SettingsGeneralComponent,
+        SettingsAppearanceComponent,
+        SettingsAccountComponent,
     ],
     imports: [
         BrowserModule,
