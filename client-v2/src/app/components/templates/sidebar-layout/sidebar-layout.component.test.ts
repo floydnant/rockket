@@ -15,22 +15,21 @@ const setupComponent = (template: string) => {
         declarations: [SidebarLayoutComponent, UserMenuComponent, LoadingSpinnerComponent, IconComponent],
     })
 }
-const defaultTemplate = `
-    <app-sidebar-layout>
-        <ng-container sidebarHeader>sidebar header</ng-container>
-        <ng-container sidebarContent>${Array(30)
-            .fill('')
-            .map(() => '<p>sidebar content</p>')
-            .join('')}</ng-container>
+const defaultContent = `
+    <ng-container sidebarHeader>sidebar header</ng-container>
+    <ng-container sidebarContent>${Array(30)
+        .fill('')
+        .map(() => '<p>sidebar content</p>')
+        .join('')}</ng-container>
 
-        <ng-container header><div class="w-full">Header</div></ng-container>
+    <ng-container header><div class="w-full">Header</div></ng-container>
 
-        ${Array(30)
-            .fill('')
-            .map(() => '<p>main content</p>')
-            .join('')}
-    </app-sidebar-layout>
+    ${Array(30)
+        .fill('')
+        .map(() => '<p>main content</p>')
+        .join('')}
 `
+const defaultTemplate = `<app-sidebar-layout> ${defaultContent} </app-sidebar-layout>`
 
 describe('SidebarLayoutComponent', () => {
     it('renders properly', () => {
@@ -81,6 +80,13 @@ describe('SidebarLayoutComponent', () => {
                 .trigger('mouseup')
 
             cy.get(testName('sidebar')).then(e => expect(e.width()).lessThan(171))
+        })
+
+        it('cannot resize the sidebar when resizing disabled', () => {
+            cy.viewport('macbook-13')
+            setupComponent(`<app-sidebar-layout [enableResize]="false"> ${defaultContent} </app-sidebar-layout>`)
+
+            cy.get(testName('resize-handle')).should('not.exist')
         })
     })
 })

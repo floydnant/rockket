@@ -7,6 +7,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } fro
 })
 export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
     @Input() prose = true
+    @Input() enableResize = true
 
     isMenuOpen = true
 
@@ -14,15 +15,19 @@ export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
     @ViewChild('resizeHandle') resizeHandle!: ElementRef<HTMLDivElement>
 
     ngAfterViewInit(): void {
-        this.resizeHandle.nativeElement.addEventListener('mousedown', this.onMouseDown)
-        document.addEventListener('mouseup', this.onMouseUp)
+        if (this.enableResize) {
+            this.resizeHandle.nativeElement.addEventListener('mousedown', this.onMouseDown)
+            document.addEventListener('mouseup', this.onMouseUp)
+        }
 
         this.observer.observe(this.sidebarScrollSpy.nativeElement)
         this.observer.observe(this.mainScrollSpy.nativeElement)
     }
     ngOnDestroy(): void {
-        this.resizeHandle.nativeElement.removeEventListener('mousedown', this.onMouseDown)
-        document.removeEventListener('mouseup', this.onMouseUp)
+        if (this.enableResize) {
+            this.resizeHandle.nativeElement.removeEventListener('mousedown', this.onMouseDown)
+            document.removeEventListener('mouseup', this.onMouseUp)
+        }
 
         this.observer.disconnect()
     }
