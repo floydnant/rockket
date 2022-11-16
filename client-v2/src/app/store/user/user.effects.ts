@@ -21,7 +21,7 @@ export class UserEffects {
     loginOrSignup = createEffect(() => {
         return this.actions$.pipe(
             ofType(userActions.login, userActions.signup),
-            mergeMap(({ type, ...credentials }) => {
+            mergeMap(({ type, credentials, callbackUrl }) => {
                 const isLogin = /login/.test(type)
                 const res$: Observable<AuthSuccessResponse> = isLogin
                     ? this.userService.login(credentials)
@@ -35,7 +35,11 @@ export class UserEffects {
                                 ? err.error.message[0].replace(/^\w+:/, '')
                                 : err.error.message.replace(/^\w+:/, ''),
                     }),
-                    map(res => userActions.loginOrSignupSuccess(res.user)),
+                    map(res => {
+                        if (callbackUrl) this.router.navigateByUrl(callbackUrl)
+
+                        return userActions.loginOrSignupSuccess(res.user)
+                    }),
                     catchError((err: HttpServerErrorResponse) => of(userActions.loginOrSignupError(err)))
                 )
             })
@@ -78,12 +82,10 @@ export class UserEffects {
                     this.toast.observe({
                         loading: 'Confirming login...', // @TODO: this is in place of a proper loading screen, for the AuthGuard blocking a route
                         success: { content: res => res.successMessage, duration: 900 },
+                        error: 'Unsuccessful login',
                     }),
                     map(res => userActions.loginOrSignupSuccess(res.user)),
-                    catchError(() => {
-                        this.router.navigate(['/auth/login'])
-                        return of(userActions.confirmLoginError())
-                    })
+                    catchError(() => of(userActions.confirmLoginError()))
                 )
             })
         )

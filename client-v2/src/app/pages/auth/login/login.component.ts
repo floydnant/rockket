@@ -37,7 +37,9 @@ export class LoginComponent {
     isLoading$ = this.store.select(state => state.user.isLoading)
     errorMap$ = getErrorMap(this.actions$, Object.keys(this.formOptions))
 
-    onSubmit(event: LoginCredentialsDto) {
-        this.store.dispatch(userActions.login(event))
+    callbackUrl?: string
+
+    onSubmit(credentials: LoginCredentialsDto) {
+        this.store.dispatch(userActions.login({ credentials, callbackUrl: this.callbackUrl }))
     }
 }

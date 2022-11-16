@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { AuthGuard } from './guards/auth.guard'
+import { AuthComponent } from './pages/auth/auth.component'
 import { LoginComponent } from './pages/auth/login/login.component'
 import { SignupComponent } from './pages/auth/signup/signup.component'
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
@@ -19,17 +20,23 @@ const routes: Routes = [
         pathMatch: 'full',
     },
     {
-        path: 'auth/login',
-        component: LoginComponent,
-    },
-    {
-        path: 'auth/signup',
-        component: SignupComponent,
-    },
-    {
         path: 'auth',
-        pathMatch: 'full',
-        redirectTo: 'auth/login',
+        component: AuthComponent,
+        children: [
+            {
+                path: 'login',
+                component: LoginComponent,
+            },
+            {
+                path: 'signup',
+                component: SignupComponent,
+            },
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'login',
+            },
+        ],
     },
     {
         path: 'home',
