@@ -59,20 +59,6 @@ const routes: Routes = [
         ],
     },
     {
-        path: 'settings',
-        component: SettingsComponent,
-        children: [
-            {
-                path: '',
-                pathMatch: 'full',
-                redirectTo: 'general',
-            },
-            { path: 'general', component: SettingsGeneralComponent },
-            { path: 'account', component: SettingsAccountComponent },
-            { path: 'appearance', component: SettingsAppearanceComponent },
-        ],
-    },
-    {
         path: 'playground',
         component: ComponentPlaygroundComponent,
     },
