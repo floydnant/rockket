@@ -80,11 +80,23 @@ export class UserEffects {
 
                 return res$.pipe(
                     this.toast.observe({
-                        loading: 'Confirming login...', // @TODO: this is in place of a proper loading screen, for the AuthGuard blocking a route
                         success: { content: res => res.successMessage, duration: 900 },
-                        error: 'Unsuccessful login',
+                        // @TODO: this is in place of a proper loading screen, for the AuthGuard blocking a route
+                        loading: {
+                            content: 'Confirming login...',
+                            id: 'confirm-login', // Explicitly dismiss this toast from anywhere with `toast.close('confirm-login')`
+                        },
+                        error: {
+                            content: 'Invalid session, please login again.',
+                            id: 'confirm-login',
+                        },
                     }),
-                    map(res => userActions.loginOrSignupSuccess(res.user)),
+                    map(res => {
+                        const isOnAuthPage = this.router.url.includes('auth')
+                        if (isOnAuthPage) this.router.navigateByUrl('/home')
+
+                        return userActions.loginOrSignupSuccess(res.user)
+                    }),
                     catchError(() => of(userActions.confirmLoginError()))
                 )
             })
