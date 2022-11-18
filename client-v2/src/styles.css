@@ -67,7 +67,7 @@ body {
     .bg-dotted {
         background-image: radial-gradient(theme('colors.tinted.800') 8%, transparent 8%);
         background-position: 4px 4px;
-        background-size: clamp(25px, 5vmin, 30px) clamp(25px, 5vmin, 30px);
+        background-size: 27px 27px;
     }
 }
 
