@@ -3,18 +3,23 @@
 // with Intellisense and code completion in your
 // IDE or Text Editor.
 // ***********************************************
-// declare namespace Cypress {
-//   interface Chainable<Subject = any> {
-//     customCommand(param: any): typeof customCommand;
-//   }
-// }
-//
-// function customCommand(param: any): void {
-//   console.warn(param);
-// }
-//
-// NOTE: You can use it like so:
-// Cypress.Commands.add('customCommand', customCommand);
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace Cypress {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    interface Chainable<Subject = any> {
+        setLocalStorage: typeof setLocalStorage
+    }
+}
+
+function setLocalStorage(itemName: string, itemValue: string) {
+    // cy.visit('/')
+    return cy.window().then(() => {
+        window.localStorage.setItem(itemName, itemValue)
+    })
+}
+Cypress.Commands.add('setLocalStorage', setLocalStorage)
+
 //
 // ***********************************************
 // This example commands.js shows you how to
