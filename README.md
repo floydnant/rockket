@@ -28,7 +28,7 @@ The old project (`client`) is still in production, but I stopped maintaining it 
 Start using the [stable production version](https://rockket.netlify.app) or the [development branch](https://main--rockket.netlify.app) and [install it as a PWA](https://medium.com/progressivewebapps/how-to-install-a-pwa-to-your-device-68a8d37fadc1) on a desktop or mobile device.
 (native builds on the AppStore and PlayStore are on the roadmap)
 
-Or, if you're curious, check out [what I'm currently working on](https://github.com/dein-ding/todo-app/pulls).
+Or, if you're curious, check out [what I'm currently working on](https://github.com/dein-ding/todo-app/pulls) or [what I'm planning to work on](https://github.com/dein-ding/todo-app/issues).
 
 ## Contributing
 If you want your changes to be merged, [fork this repository and file a Pull-Request](https://www.youtube.com/watch?v=CML6vfKjQss) when you're ready.
