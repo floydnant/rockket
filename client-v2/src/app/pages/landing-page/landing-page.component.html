@@ -1,8 +1,9 @@
-<app-centered-layout>
+<app-centered-layout data-test-name="landing-page">
     <h1>Rockket</h1>
     <p>
         Alright this is the Landing page. Yes its rediculously empty, but I don't care for now, so why don't you just
-        <a routerLink="/auth/login">Login</a>/<a routerLink="/auth/signup">Signup</a>?
+        <a routerLink="/auth/login" data-test-name="login-link">Login</a> /
+        <a routerLink="/auth/signup" data-test-name="signup-link">Signup</a>?
     </p>
     <p>Or go directly to the <a routerLink="/home">workspace</a>.</p>
     <p>

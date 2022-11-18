@@ -36,6 +36,8 @@ import { SettingsComponent } from './pages/settings/settings.component'
 import { SettingsGeneralComponent } from './pages/settings/general/general.component'
 import { SettingsAppearanceComponent } from './pages/settings/appearance/appearance.component'
 import { SettingsAccountComponent } from './pages/settings/account/account.component'
+import { AuthComponent } from './pages/auth/auth.component'
+import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.component'
 
 @NgModule({
     declarations: [
@@ -65,6 +67,8 @@ import { SettingsAccountComponent } from './pages/settings/account/account.compo
         SettingsGeneralComponent,
         SettingsAppearanceComponent,
         SettingsAccountComponent,
+        AuthComponent,
+        LoginLoadingComponent,
     ],
     imports: [
         BrowserModule,
