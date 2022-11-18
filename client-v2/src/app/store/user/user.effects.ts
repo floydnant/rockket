@@ -81,10 +81,10 @@ export class UserEffects {
                 return res$.pipe(
                     this.toast.observe({
                         success: { content: res => res.successMessage, duration: 900 },
-                        // @TODO: this is in place of a proper loading screen, for the AuthGuard blocking a route
+                        // Explicitly dismiss these toasts from anywhere with `toast.close('confirm-login')`
                         loading: {
                             content: 'Confirming login...',
-                            id: 'confirm-login', // Explicitly dismiss this toast from anywhere with `toast.close('confirm-login')`
+                            id: 'confirm-login',
                         },
                         error: {
                             content: 'Invalid session, please login again.',
