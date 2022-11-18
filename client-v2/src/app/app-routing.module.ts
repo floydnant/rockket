@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { AuthGuard } from './guards/auth.guard'
 import { AuthComponent } from './pages/auth/auth.component'
+import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.component'
 import { LoginComponent } from './pages/auth/login/login.component'
 import { SignupComponent } from './pages/auth/signup/signup.component'
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
@@ -30,6 +31,10 @@ const routes: Routes = [
             {
                 path: 'signup',
                 component: SignupComponent,
+            },
+            {
+                path: 'login-loading',
+                component: LoginLoadingComponent,
             },
             {
                 path: '',

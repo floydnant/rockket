@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
+import { LoginLoadingComponent } from './login-loading/login-loading.component'
 import { LoginComponent } from './login/login.component'
 import { SignupComponent } from './signup/signup.component'
 
@@ -14,7 +15,7 @@ export class AuthComponent {
     }
     callbackUrl: string
 
-    onActivate(component: LoginComponent | SignupComponent) {
+    onActivate(component: LoginComponent | SignupComponent | LoginLoadingComponent) {
         component.callbackUrl = this.callbackUrl
     }
 }

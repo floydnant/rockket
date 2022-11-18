@@ -92,7 +92,8 @@ export class UserEffects {
                         },
                     }),
                     map(res => {
-                        const isOnAuthPage = this.router.url.includes('auth')
+                        const isOnAuthPage =
+                            this.router.url.includes('auth') && !this.router.url.includes('/login-loading')
                         if (isOnAuthPage) this.router.navigateByUrl('/home')
 
                         return userActions.loginOrSignupSuccess(res.user)
