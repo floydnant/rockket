@@ -9,7 +9,7 @@ export class AppService {
         this.dbHelper = new DbHelper(prisma)
     }
     dbHelper: DbHelper
-    logger = new Logger('AppController')
+    logger = new Logger('AppService')
 
     getHello(): string {
         return 'Hello World!'
