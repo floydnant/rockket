@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Needed for toast */
+:root {
+    --submit-400: theme(colors.submit.400);
+
+    --tinted-100: theme(colors.tinted.100);
+    --tinted-400: theme(colors.tinted.400);
+    --tinted-800: theme(colors.tinted.800);
+    --tinted-900: theme(colors.tinted.900);
+
+    --danger-400: theme(colors.danger.400);
+}
+
 body {
     @apply bg-tinted-900 text-tinted-100;
 }
