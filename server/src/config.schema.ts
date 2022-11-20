@@ -4,4 +4,6 @@ export const configValidationSchema = Joi.object({
     PORT: Joi.number().default(3000),
     DATABASE_URL: Joi.string().required(),
     JWT_SECRET: Joi.string().required(),
+
+    TESTING_ENV: Joi.string().default('false'),
 })

@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common'
+import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
@@ -16,6 +16,8 @@ async function bootstrap(configService: ConfigService) {
 
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
 
-    await app.listen(configService.get('PORT') as number)
+    const port = configService.get('PORT') as number
+    const logger = new Logger('Main')
+    await app.listen(port, () => logger.log(`Listening on port ${port}`))
 }
 bootstrap(new ConfigService())
