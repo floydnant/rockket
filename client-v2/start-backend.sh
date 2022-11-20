@@ -1,8 +1,8 @@
 cd ../server
 
-if [ $GITHUB_ACTIONS == 'true' ]
-    then bash ./set-testing-db-url.sh
-    else source ./set-testing-db-url.sh
+if [[ -z $GITHUB_ACTIONS ]];
+    then source ./set-testing-db-url.sh;
+    else bash ./set-testing-db-url.sh;
 fi
 
 npm run db:reset
