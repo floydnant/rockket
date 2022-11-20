@@ -5,5 +5,7 @@ if [[ -z $TESTING_DATABASE_URL ]];
     else db=$TESTING_DATABASE_URL;
 fi;
 
+echo "database url script ran"
+
 export DATABASE_URL="$db"
 echo "DATABASE_URL=$db" >> $GITHUB_ENV
