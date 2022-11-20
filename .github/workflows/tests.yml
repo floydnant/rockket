@@ -70,9 +70,6 @@ jobs:
             - run: npm run lint
               working-directory: ./server
 
-            - run: npm run unit:ci
-              working-directory: ./server
-
             - name: Setup Postgres              
               uses: Daniel-Marynicz/postgresql-action@master
               with:
@@ -80,6 +77,9 @@ jobs:
                   app_user: ${{ env.DB_USER }}
                   app_user_password: ${{ env.DB_PWD }}
                   app_db: ${{ env.DB_NAME }}
+
+            - run: npm run unit:ci
+              working-directory: ./server
 
             - run: npm run e2e:ci
               working-directory: ./server
