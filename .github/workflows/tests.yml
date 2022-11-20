@@ -116,5 +116,8 @@ jobs:
                   app_user_password: ${{ env.DB_PWD }}
                   app_db: ${{ env.DB_NAME }}
 
+            - run: npm ci
+              working-directory: ./server
+
             - run: npm run e2e:ci
               working-directory: ./client-v2
