@@ -1,7 +1,11 @@
-import { authSuccessResponse } from 'cypress/fixtures/auth-responses'
 import { credentials } from 'cypress/fixtures/user-credentials'
+import { signup, login } from 'cypress/support/auth-helpers'
+import { testName } from 'cypress/support/helpers'
 
-const testName = (testName: string) => `[data-test-name="${testName}"]`
+beforeEach(() => {
+    cy.clearDb()
+})
+
 describe('Routing', () => {
     it('can visit the app', () => {
         cy.visit('/')
@@ -31,13 +35,16 @@ describe('Routing', () => {
             cy.url().should('contain', '/signup')
         })
 
-        it('logging in redirects to the workspace', () => {
-            cy.visit('/auth/login')
+        it('signing up redirects to the workspace', () => {
+            signup()
 
-            cy.intercept('http://localhost:3000/auth/login', authSuccessResponse)
-            cy.get(testName('input-email')).type(credentials.jonathan.email)
-            cy.get(testName('input-password')).type(credentials.jonathan.password)
-            cy.get(testName('submit-button')).click()
+            cy.get(testName('workspace-page')).should('exist')
+        })
+        it('logging in redirects to the workspace', () => {
+            signup()
+            cy.visit('about:blank')
+
+            login()
 
             cy.get(testName('workspace-page')).should('exist')
         })
@@ -55,7 +62,7 @@ describe('Routing', () => {
         })
 
         it.skip('show login loading screen when visting with stored token', () => {
-            cy.setLocalStorage('todo-authToken', credentials.jonathan.token)
+            cy.setLocalStorage('todo-authToken', credentials['jonathan'].token)
             cy.visit('/home')
 
             // cy.intercept({ method: 'GET', path: '/auth/me', hostname: 'localhost', port: 3000 }, authSuccessResponse)

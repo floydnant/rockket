@@ -9,6 +9,7 @@ declare namespace Cypress {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     interface Chainable<Subject = any> {
         setLocalStorage: typeof setLocalStorage
+        clearDb: typeof clearDb
     }
 }
 
@@ -19,6 +20,11 @@ function setLocalStorage(itemName: string, itemValue: string) {
     })
 }
 Cypress.Commands.add('setLocalStorage', setLocalStorage)
+
+function clearDb() {
+    cy.request('http://localhost:3001/clear-db')
+}
+Cypress.Commands.add('clearDb', clearDb)
 
 //
 // ***********************************************
