@@ -19,7 +19,7 @@
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
         "lint:fix": "npm run lint -- --fix",
         "unit": "jest --watch",
-        "unit:ci": "jest",
+        "unit:ci": "DATABASE_URL=$(bash ./set-testing-db-url.sh) jest",
         "unit:cov": "jest --coverage",
         "unit:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "e2e": "sh run-e2e.sh '--watch --config ./test/jest-e2e.json'",
