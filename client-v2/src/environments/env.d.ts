@@ -1,5 +1,5 @@
 declare type NetlifyContext = 'production' | 'deploy-preview' | 'branch-deploy' | 'dev'
-declare type AppContext = 'Production' | 'Review' | 'Staging' | 'Development'
+declare type AppContext = 'Production' | 'Review' | 'Staging' | 'Development' | 'Testing'
 
 // eslint-disable-next-line no-var
 declare var process: {
@@ -10,8 +10,9 @@ declare var process: {
         /** DEPLOYMENT ONLY */
         NG_APP_REVIEW_ID?: string
         /** DEPLOYMENT ONLY */
-        NG_APP_CONTEXT?: NetlifyContext
+        NG_APP_NETLIFY_CONTEXT?: NetlifyContext
 
+        NG_APP_TESTING_ENV?: 'true'
         NG_APP_SERVER_BASE_URL?: string
 
         [key: string]: string | undefined
