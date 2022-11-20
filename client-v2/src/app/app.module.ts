@@ -76,7 +76,23 @@ import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.
         ReactiveFormsModule,
         AppRoutingModule,
         HttpModule,
-        HotToastModule.forRoot(),
+        HotToastModule.forRoot({
+            success: {
+                iconTheme: { primary: 'var(--submit-400)', secondary: 'var(--tinted-900)' },
+            },
+            loading: {
+                iconTheme: { primary: 'var(--tinted-400)', secondary: 'transparent' },
+            },
+            error: {
+                iconTheme: { primary: 'var(--danger-400)', secondary: 'var(--tinted-900)' },
+            },
+            style: {
+                background: 'var(--tinted-800)',
+                color: 'var(--tinted-100)',
+                borderRadius: '10px',
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 10px rgba(0, 0, 0, 0.25)',
+            },
+        }),
         StoreModule.forRoot(reducers, {
             metaReducers,
         }),
