@@ -1,12 +1,15 @@
 import { PrismaClient } from '@prisma/client'
+import { PrismaService } from './prisma.service'
 
 export interface DbHelperOptions {
     cacheTableNames: boolean
 }
 
 export class DbHelper {
-    constructor(private prisma: PrismaClient, private options: Partial<DbHelperOptions>) {
+    constructor(private prisma: PrismaClient | PrismaService, private options?: Partial<DbHelperOptions>) {
         prisma.$connect()
+
+        this.options ||= { cacheTableNames: true }
     }
 
     private disconnect = { disconnect: () => this.$disconnect() }

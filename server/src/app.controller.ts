@@ -14,4 +14,9 @@ export class AppController {
     getHealth() {
         return { message: 'running' }
     }
+
+    @Get('/clear-db')
+    clearDb() {
+        return this.appService.clearDb()
+    }
 }

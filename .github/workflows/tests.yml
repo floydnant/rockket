@@ -35,9 +35,6 @@ jobs:
             - run: npm run comp:ci
               working-directory: ./client-v2
 
-            - run: npm run e2e:ci
-              working-directory: ./client-v2
-
             # - name: Upload coverage artifacts
             #   uses: actions/upload-artifact@v3
             #   with:
@@ -73,9 +70,6 @@ jobs:
             - run: npm run lint
               working-directory: ./server
 
-            - run: npm run unit:ci
-              working-directory: ./server
-
             - name: Setup Postgres              
               uses: Daniel-Marynicz/postgresql-action@master
               with:
@@ -83,6 +77,9 @@ jobs:
                   app_user: ${{ env.DB_USER }}
                   app_user_password: ${{ env.DB_PWD }}
                   app_db: ${{ env.DB_NAME }}
+
+            - run: npm run unit:ci
+              working-directory: ./server
 
             - run: npm run e2e:ci
               working-directory: ./server
@@ -94,3 +91,39 @@ jobs:
             #       path: server/coverage
             #       retention-days: 7
 
+    run-full-e2e-tests:
+        runs-on: ubuntu-latest
+        env:
+            DB_USER: app
+            DB_PWD: develop
+            DB_NAME: todo-app-testing
+            TESTING_DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app-testing?schema=public
+            JWT_SECRET: this is the secret that nobody should know
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16.x
+                  cache: 'npm'
+                  cache-dependency-path: client-v2/package-lock.json
+
+            - name: Setup Postgres              
+              uses: Daniel-Marynicz/postgresql-action@master
+              with:
+                  postgres_image_tag: 12-alpine
+                  app_user: ${{ env.DB_USER }}
+                  app_user_password: ${{ env.DB_PWD }}
+                  app_db: ${{ env.DB_NAME }}
+
+            - name: Run npm ci in server
+              run: npm ci
+              working-directory: ./server
+
+            - name: Run npm ci in client
+              run: npm ci
+              working-directory: ./client-v2
+
+            - run: npm run e2e:ci
+              working-directory: ./client-v2

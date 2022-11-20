@@ -1,10 +1,9 @@
-if [[ -z $TESTING_DATABASE_URL ]];
-    then db=$(cat .env | grep 'TESTING' | sed 's/.*="\(.*\)"/\1/');
-       if [[ -z $db ]]; then echo 'TESTING_DATABASE_URL not specified' && exit 1
-       fi
-    else db=$TESTING_DATABASE_URL;
-fi;
+db_url=$(bash ./get-testing-db-url.sh)
 
-DATABASE_URL=$db npm run db:reset
-echo '> Now running e2e tests' && echo "> jest $1" && echo ''
-DATABASE_URL=$db jest $1
+DATABASE_URL=$db_url npm run db:reset
+
+echo ''
+echo '> Now running e2e tests'
+echo "> jest $1"
+echo ''
+DATABASE_URL=$db_url jest $1

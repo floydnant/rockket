@@ -1,14 +1,18 @@
 import './env.d' // needed for cypress
-import { contextMap, serverBaseUrls } from './environment-info'
+import { AppEnvironment, contextMap, serverBaseUrls } from './environment-info'
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
+const isTestingEnv = process.env.NG_APP_TESTING_ENV == 'true'
 
-export const environment = {
+const context = contextMap[isTestingEnv ? 'testing' : 'dev']
+const serverBaseUrl = serverBaseUrls[isTestingEnv ? 'testing' : 'dev']
+
+export const environment: AppEnvironment = {
     production: false,
     PACKAGE_VERSION: process.env.NG_APP_PACKAGE_VERSION,
-    SERVER_BASE_URL: process.env.NG_APP_SERVER_BASE_URL || serverBaseUrls.dev,
-    CONTEXT: contextMap.dev,
+    SERVER_BASE_URL: process.env.NG_APP_SERVER_BASE_URL || serverBaseUrl,
+    CONTEXT: context,
 }
 
 /*

@@ -1,7 +1,15 @@
-import { authSuccessResponse } from 'cypress/fixtures/auth-responses'
-import { credentials } from 'cypress/fixtures/user-credentials'
+import {
+    signup,
+    login,
+    typeLoginCredentialsAndSubmit,
+    typeSignupCredentialsAndSubmit,
+} from 'cypress/support/auth-helpers'
+import { testName } from 'cypress/support/helpers'
 
-const testName = (testName: string) => `[data-test-name="${testName}"]`
+beforeEach(() => {
+    cy.clearDb()
+})
+
 describe('Routing', () => {
     it('can visit the app', () => {
         cy.visit('/')
@@ -31,13 +39,16 @@ describe('Routing', () => {
             cy.url().should('contain', '/signup')
         })
 
-        it('logging in redirects to the workspace', () => {
-            cy.visit('/auth/login')
+        it('signing up redirects to the workspace', () => {
+            signup()
 
-            cy.intercept('http://localhost:3000/auth/login', authSuccessResponse)
-            cy.get(testName('input-email')).type(credentials.jonathan.email)
-            cy.get(testName('input-password')).type(credentials.jonathan.password)
-            cy.get(testName('submit-button')).click()
+            cy.get(testName('workspace-page')).should('exist')
+        })
+        it('logging in redirects to the workspace', () => {
+            signup()
+            cy.visit('about:blank')
+
+            login()
 
             cy.get(testName('workspace-page')).should('exist')
         })
@@ -50,20 +61,34 @@ describe('Routing', () => {
             cy.url().should('contain', '/login')
         })
 
-        it.skip('successful login after redirect, redirects back to /home', () => {
-            // @TODO:
+        it('successful login after redirect, redirects back to /home', () => {
+            signup()
+            cy.clearLocalStorage()
+
+            cy.visit('/home')
+            cy.get(testName('workspace-page')).should('not.exist')
+            cy.get(testName('login-page')).should('exist')
+
+            typeLoginCredentialsAndSubmit()
+
+            cy.get(testName('workspace-page')).should('exist')
+            cy.url().should('contain', '/home')
         })
 
-        it.skip('show login loading screen when visting with stored token', () => {
-            cy.setLocalStorage('todo-authToken', credentials.jonathan.token)
-            cy.visit('/home')
+        it('can visit with stored token', () => {
+            signup()
+            cy.get(testName('workspace-page'))
+            cy.window().then(() => {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const token = window.localStorage.getItem('todo-authToken')!
 
-            // cy.intercept({ method: 'GET', path: '/auth/me', hostname: 'localhost', port: 3000 }, authSuccessResponse)
-            // cy.intercept('http://localhost:3000/auth/me', authSuccessResponse)
-            cy.wait(0)
+                cy.clearLocalStorage()
 
-            cy.get(testName('login-loading-page')).should('exist')
-            cy.get(testName('workspace-page')).should('exist')
+                cy.setLocalStorage('todo-authToken', token)
+                cy.visit('/home')
+
+                cy.get(testName('workspace-page')).should('exist')
+            })
         })
     })
 
@@ -73,9 +98,40 @@ describe('Routing', () => {
             cy.get(testName('settings-page')).should('not.exist')
             cy.url().should('contain', '/login')
         })
+        it('does not redirect when visiting /settings with valid login', () => {
+            signup()
+            cy.get(testName('settings-link')).click()
 
-        it.skip('successful login after redirect, redirects back to /settings', () => {
-            // @TODO:
+            cy.url().should('contain', '/settings')
+            cy.get(testName('settings-page')).should('exist')
+        })
+
+        it('successful signup after redirect, redirects back to /settings', () => {
+            cy.visit('/settings')
+
+            cy.get(testName('settings-page')).should('not.exist')
+            cy.get(testName('login-page')).should('exist')
+            cy.get(testName('signup-link')).click()
+
+            cy.get(testName('signup-page')).should('exist')
+            typeSignupCredentialsAndSubmit()
+
+            cy.get(testName('settings-page')).should('exist')
+            cy.url().should('contain', '/settings')
+        })
+
+        it('successful login after redirect, redirects back to /settings', () => {
+            signup()
+            cy.clearLocalStorage()
+
+            cy.visit('/settings')
+            cy.get(testName('settings-page')).should('not.exist')
+            cy.get(testName('login-page')).should('exist')
+
+            typeLoginCredentialsAndSubmit()
+
+            cy.get(testName('settings-page')).should('exist')
+            cy.url().should('contain', '/settings')
         })
     })
 
