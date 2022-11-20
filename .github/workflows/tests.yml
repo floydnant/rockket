@@ -90,6 +90,7 @@ jobs:
             #       name: coverage-report
             #       path: server/coverage
             #       retention-days: 7
+
     run-full-e2e-tests:
         runs-on: ubuntu-latest
         env:
@@ -116,9 +117,12 @@ jobs:
                   app_user_password: ${{ env.DB_PWD }}
                   app_db: ${{ env.DB_NAME }}
 
-            - run: npm ci
+            - name: Run npm ci in server
+              run: npm ci
               working-directory: ./server
-            - run: npm ci
+
+            - name: Run npm ci in client
+              run: npm ci
               working-directory: ./client-v2
 
             - run: npm run e2e:ci

@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { DbHelper } from './prisma-abstractions/db-helper'
 import { PrismaService } from './prisma-abstractions/prisma.service'
@@ -9,6 +9,7 @@ export class AppService {
         this.dbHelper = new DbHelper(prisma)
     }
     dbHelper: DbHelper
+    logger = new Logger('AppController')
 
     getHello(): string {
         return 'Hello World!'
@@ -18,6 +19,7 @@ export class AppService {
         if (this.configService.get('TESTING_ENV') != 'true') throw new ForbiddenException()
 
         this.dbHelper.clearDb()
+        this.logger.verbose('Cleared database')
         return { message: 'Database cleared.' }
     }
 }

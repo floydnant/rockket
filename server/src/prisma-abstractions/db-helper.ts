@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import { PrismaService } from './prisma.service'
 
@@ -6,7 +5,6 @@ export interface DbHelperOptions {
     cacheTableNames: boolean
 }
 
-@Injectable()
 export class DbHelper {
     constructor(private prisma: PrismaClient | PrismaService, private options?: Partial<DbHelperOptions>) {
         prisma.$connect()
