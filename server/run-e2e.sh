@@ -1,4 +1,4 @@
-if [[ $GITHUB_ACTIONS == 'true' ]]
+if [ $GITHUB_ACTIONS == 'true' ]
     then bash ./set-testing-db-url.sh
     else source ./set-testing-db-url.sh
 fi
