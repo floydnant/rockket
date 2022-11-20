@@ -1,4 +1,4 @@
-<app-sidebar-layout>
+<app-sidebar-layout data-test-name="workspace-page">
     <!-- SIDEBAR HEADER -->
     <ng-container sidebarHeader>
         <div class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300">
@@ -11,7 +11,7 @@
             <button class="button-naked w-full text-left">
                 <app-icon iconClass="fas fa-trash"></app-icon> Garbage
             </button>
-            <a class="button-naked w-full text-left" routerLink="/settings">
+            <a class="button-naked w-full text-left" routerLink="/settings" data-test-name="settings-link">
                 <app-icon iconClass="fas fa-cog"></app-icon> Settings
             </a>
         </div>

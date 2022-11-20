@@ -21,7 +21,7 @@ export class UserEffects {
     loginOrSignup = createEffect(() => {
         return this.actions$.pipe(
             ofType(userActions.login, userActions.signup),
-            mergeMap(({ type, ...credentials }) => {
+            mergeMap(({ type, credentials, callbackUrl }) => {
                 const isLogin = /login/.test(type)
                 const res$: Observable<AuthSuccessResponse> = isLogin
                     ? this.userService.login(credentials)
@@ -35,7 +35,11 @@ export class UserEffects {
                                 ? err.error.message[0].replace(/^\w+:/, '')
                                 : err.error.message.replace(/^\w+:/, ''),
                     }),
-                    map(res => userActions.loginOrSignupSuccess(res.user)),
+                    map(res => {
+                        if (callbackUrl) this.router.navigateByUrl(callbackUrl)
+
+                        return userActions.loginOrSignupSuccess(res.user)
+                    }),
                     catchError((err: HttpServerErrorResponse) => of(userActions.loginOrSignupError(err)))
                 )
             })
@@ -61,21 +65,40 @@ export class UserEffects {
             })
         )
     })
-    confirmLogin = createEffect(() => {
+
+    forwardToConfirmLogin = createEffect(() => {
         return this.actions$.pipe(
             ofType(userActions.loadAuthTokenSuccess),
+            map(() => userActions.confirmLogin())
+        )
+    })
+    confirmLogin = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(userActions.confirmLogin),
             mergeMap(() => {
                 const res$ = this.userService.confirmLogin()
 
                 return res$.pipe(
                     this.toast.observe({
-                        success: res => res.successMessage,
+                        success: { content: res => res.successMessage, duration: 900 },
+                        // Explicitly dismiss these toasts from anywhere with `toast.close('confirm-login')`
+                        loading: {
+                            content: 'Confirming login...',
+                            id: 'confirm-login',
+                        },
+                        error: {
+                            content: 'Invalid session, please login again.',
+                            id: 'confirm-login',
+                        },
                     }),
-                    map(res => userActions.loginOrSignupSuccess(res.user)),
-                    catchError(() => {
-                        this.router.navigate(['/auth/login'])
-                        return of(userActions.confirmLoginError())
-                    })
+                    map(res => {
+                        const isOnAuthPage =
+                            this.router.url.includes('auth') && !this.router.url.includes('/login-loading')
+                        if (isOnAuthPage) this.router.navigateByUrl('/home')
+
+                        return userActions.loginOrSignupSuccess(res.user)
+                    }),
+                    catchError(() => of(userActions.confirmLoginError()))
                 )
             })
         )

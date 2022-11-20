@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import { betterEmailValidator, matchSibling } from 'src/app/components/molecules/form/validators'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
+import { HotToastService } from '@ngneat/hot-toast'
 
 @Component({
     selector: 'component-playground',
@@ -9,6 +10,10 @@ import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
     styleUrls: ['./component-playground.component.css'],
 })
 export class ComponentPlaygroundComponent {
+    constructor(private toast: HotToastService) {
+        this.toast.close('confirm-login')
+    }
+
     fullnameControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(35)])
 
     formOptions: FormBuilderOptions = {

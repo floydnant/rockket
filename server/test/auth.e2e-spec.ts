@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
-import { DbHelper } from './db-helper'
+import { DbHelper } from '../src/prisma-abstractions/db-helper'
 import { users } from './fixtures'
 import { signup, login, request, typeBearer, initApplication } from './testing-utils'
 

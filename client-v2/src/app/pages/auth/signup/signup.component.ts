@@ -41,7 +41,9 @@ export class SignupComponent {
     isLoading$ = this.store.select(state => state.user.isLoading)
     errorMap$ = getErrorMap(this.actions$, Object.keys(this.formOptions))
 
-    onSubmit(event: SignupCredentialsDto) {
-        this.store.dispatch(userActions.signup(event))
+    callbackUrl?: string
+
+    onSubmit(credentials: SignupCredentialsDto) {
+        this.store.dispatch(userActions.signup({ credentials, callbackUrl: this.callbackUrl }))
     }
 }
