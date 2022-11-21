@@ -1,6 +1,7 @@
 <ng-template #label>
     <label
         [for]="id"
+        [class.hidden]="!enableLabel"
         class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-300 transition-all"
         [attr.data-test-name]="'input-placeholder-' + (controlName || id)"
     >
@@ -8,7 +9,7 @@
     </label>
 </ng-template>
 
-<div class="relative mt-7 block" *ngIf="!controlName && !parentControl">
+<div class="relative block" [class.mt-7]="enableLabel" *ngIf="!controlName && !parentControl">
     <input
         #input
         [id]="id"

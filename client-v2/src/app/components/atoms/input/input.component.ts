@@ -38,6 +38,7 @@ export class InputComponent implements OnInit {
     @Input() name!: string
     @Input() type = 'text'
     @Input() id!: string
+    @Input() enableLabel = true
 
     @Input() control!: FormControl | AbstractControl
     get formControl() {
