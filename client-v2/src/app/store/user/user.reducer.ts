@@ -5,6 +5,7 @@ import { UserState } from './user.model'
 const initialState: UserState = {
     me: null,
     authToken: null,
+    email: null,
     isLoggedIn: false,
     isLoading: false,
 }
@@ -22,7 +23,8 @@ export const userReducer = createReducer<UserState>(
     })),
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    on(userActions.loginOrSignupSuccess, (_state, { type, authToken, ...user }) => ({
+    on(userActions.loginOrSignupSuccess, (state, { type, authToken, ...user }) => ({
+        ...state,
         me: user,
         authToken,
         isLoading: false,
@@ -53,5 +55,25 @@ export const userReducer = createReducer<UserState>(
     })),
 
     // logout
-    on(userActions.logout, () => initialState)
+    on(userActions.logout, () => initialState),
+
+    // Update username success
+    on(userActions.updateUsernameSuccess, (state, { username }) => ({
+        ...state,
+        me: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ...state.me!,
+            username,
+        },
+    })),
+
+    on(userActions.updateEmailSuccess, (state, { email }) => ({
+        ...state,
+        email,
+    })),
+
+    on(userActions.loadEmailSuccess, (state, { email }) => ({
+        ...state,
+        email,
+    }))
 )
