@@ -9,3 +9,7 @@ updates:
     directory: "/client-v2" # Location of package manifests
     schedule:
       interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/server"
+    schedule:
+      interval: "weekly"
