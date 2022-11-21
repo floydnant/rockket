@@ -103,4 +103,14 @@ export class UserEffects {
             })
         )
     })
+
+    logout = createEffect(
+        () => {
+            return this.actions$.pipe(
+                ofType(userActions.logout),
+                tap(() => this.router.navigateByUrl('/auth'))
+            )
+        },
+        { dispatch: false }
+    )
 }
