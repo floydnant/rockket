@@ -1,2 +1,86 @@
 <h1>Account</h1>
-<p>account works!</p>
+
+<h2 hidden class="hidden">Profile photo</h2>
+<div class="mb-3 flex flex-col items-center">
+    <div class="avatar"><app-icon iconClass="fas fa-user-circle | text-[100px] text-tinted-600"></app-icon></div>
+    <p><button class="upload-photo | button | mt-4" (click)="onUploadPhoto()">Upload photo</button></p>
+</div>
+
+<h2 class="mb-2 text-xl text-tinted-200">Username</h2>
+<p>
+    <app-input
+        [enableLabel]="false"
+        [name]="'Username'"
+        [control]="usernameControl"
+        (keydown.enter)="onUsernameSubmit()"
+    ></app-input>
+    <button *ngIf="usernameControl.dirty" class="button button--submit | mt-4" (click)="onUsernameSubmit()">
+        Update Username
+    </button>
+</p>
+<p class="text-md text-tinted-500">
+    <app-icon iconClass="far fa-info-circle"></app-icon>
+    Your username will be visibile to other users you collaborate with.
+</p>
+
+<h2 class="mb-2 text-xl text-tinted-200">Email address</h2>
+<p>
+    {{ (userState | async)?.email || 'failed to load email' }}
+    <button *ngIf="activeForm != 'email'" class="button-naked text-primary-200" (click)="setFormActive('email')">
+        Change email address
+    </button>
+</p>
+<p class="text-md text-tinted-500">
+    <app-icon iconClass="far fa-info-circle"></app-icon>
+    Your email address will be visibile to other users you collaborate with.
+</p>
+
+<app-form
+    *ngIf="activeForm == 'email'"
+    [formOptions]="emailFormOptions"
+    submitButton="Update email"
+    (formSubmit)="onEmailSubmit($event)"
+    containerClasses="grid gap-3"
+    gridAreas="
+        'password password email email'
+        'auto submit submit fill'
+    "
+></app-form>
+
+<h2 class="mb-2 text-xl text-tinted-200">Password</h2>
+<p>
+    <button *ngIf="activeForm != 'password'" class="button-naked text-primary-200" (click)="setFormActive('password')">
+        Change password
+    </button>
+    <button *ngIf="activeForm != 'password'" class="button-naked text-primary-200" (click)="onResetPassword()">
+        Reset password
+    </button>
+</p>
+<app-form
+    *ngIf="activeForm == 'password'"
+    [formOptions]="passwordFormOptions"
+    submitButton="Update password"
+    containerClasses="grid gap-3"
+    gridAreas="
+        'password    password    password           password'
+        'newPassword newPassword confirmNewPassword confirmNewPassword'
+        'auto        submit      submit             fill'
+    "
+    (formSubmit)="onPasswordSubmit($event)"
+></app-form>
+
+<h2 class="mb-2 text-xl text-danger-400">Danger zone</h2>
+<div class="danger-zone | flex flex-col gap-2 rounded-lg border border-danger-600 bg-danger-900 p-3">
+    <button
+        (click)="onLogout()"
+        class="button | bg-transparent text-left text-danger-400 hover:bg-danger-400 hover:text-tinted-800"
+    >
+        Logout
+    </button>
+    <button
+        (click)="onDeleteAccount()"
+        class="button | bg-transparent text-left text-danger-400 hover:bg-danger-400 hover:text-tinted-800"
+    >
+        Delete my account
+    </button>
+</div>
