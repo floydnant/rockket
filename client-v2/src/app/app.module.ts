@@ -86,6 +86,10 @@ import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.
             error: {
                 iconTheme: { primary: 'var(--danger-400)', secondary: 'var(--tinted-900)' },
             },
+            warning: {
+                iconTheme: { primary: 'var(--secondary-400)', secondary: 'var(--tinted-900)' },
+            },
+
             style: {
                 background: 'var(--tinted-800)',
                 color: 'var(--tinted-100)',
