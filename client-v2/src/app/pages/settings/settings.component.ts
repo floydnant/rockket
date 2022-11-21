@@ -21,7 +21,7 @@ export class SettingsComponent {
         {
             route: 'account',
             iconClass: 'fas fa-user',
-            title: 'Accunt',
+            title: 'Account',
         },
         {
             route: 'appearance',
