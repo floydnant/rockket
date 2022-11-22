@@ -20,22 +20,19 @@ export const userActions = {
     confirmLoginError: createAction('[User] confirm login error'),
 
     ///////////// Account ///////////////
-    updateUsername: createAction('[User - Account] update username', props<{ username: string }>()),
-    updateUsernameSuccess: createAction('[User - Account] update username success', props<{ username: string }>()),
+    updateUsername: createAction('[User/Account] update username', props<{ username: string }>()),
+    updateUsernameSuccess: createAction('[User/Account] update username success', props<{ username: string }>()),
 
-    updateEmail: createAction('[User - Account] update email', props<{ password: string; email: string }>()),
-    updateEmailSuccess: createAction('[User - Account] update email success', props<{ email: string }>()),
+    updateEmail: createAction('[User/Account] update email', props<{ password: string; email: string }>()),
+    updateEmailSuccess: createAction('[User/Account] update email success', props<{ email: string }>()),
 
-    updatePassword: createAction(
-        '[User - Account] update password',
-        props<{ password: string; newPassword: string }>()
-    ),
-    updatePasswordSuccess: createAction('[User - Account] update password success'),
-    resetPassword: createAction('[User - Account] reset password'),
+    updatePassword: createAction('[User/Account] update password', props<{ password: string; newPassword: string }>()),
+    updatePasswordSuccess: createAction('[User/Account] update password success'),
+    resetPassword: createAction('[User/Account] reset password'),
 
-    deleteAccount: createAction('[User - Account] delete account', props<{ password: string }>()),
-    deleteAccountSuccess: createAction('[User - Account] delete account success'),
+    deleteAccount: createAction('[User/Account] delete account', props<{ password: string }>()),
+    deleteAccountSuccess: createAction('[User/Account] delete account success'),
 
-    loadEmail: createAction('[User - Account] load email', props<{ ignoreCache?: boolean }>()),
-    loadEmailSuccess: createAction('[User - Account] load email success', props<{ email: string }>()),
+    loadEmail: createAction('[User/Account] load email', props<{ ignoreCache?: boolean }>()),
+    loadEmailSuccess: createAction('[User/Account] load email success', props<{ email: string }>()),
 }
