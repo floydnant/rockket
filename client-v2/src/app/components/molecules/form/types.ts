@@ -1,4 +1,4 @@
-import { ValidatorFn, FormControlOptions, AsyncValidatorFn, FormControl } from '@angular/forms'
+import { ValidatorFn, FormControlOptions, AsyncValidatorFn, UntypedFormControl } from '@angular/forms'
 import { FormValidationErrorMessages } from '../../atoms/input/error-messages'
 
 export type FormControlParams = [
@@ -23,6 +23,6 @@ export interface FormInput {
     key: string
     name: string
     type: string
-    control: FormControl
+    control: UntypedFormControl
     errorMessages: Partial<FormValidationErrorMessages>
 }

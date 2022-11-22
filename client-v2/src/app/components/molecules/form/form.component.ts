@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core'
-import { FormControl, FormGroup } from '@angular/forms'
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms'
 import { moveToMacroQueue } from 'src/app/utils'
 import { FormBuilderOptions, FormInput } from './types'
 
@@ -14,12 +14,12 @@ export class FormComponent implements OnInit, OnChanges {
 
         const formControlMap = Object.fromEntries(
             formOptionEntries.map(([inputKey, options]) => {
-                if (options instanceof Array) return [inputKey, new FormControl(...options)]
-                return [inputKey, new FormControl(...options.control)]
+                if (options instanceof Array) return [inputKey, new UntypedFormControl(...options)]
+                return [inputKey, new UntypedFormControl(...options.control)]
             })
         )
 
-        this.formGroup = new FormGroup(formControlMap)
+        this.formGroup = new UntypedFormGroup(formControlMap)
         this.inputs = formOptionEntries.map(([inputKey, options]) => {
             const defaultName = inputKey[0].toUpperCase() + inputKey.substring(1)
             const defaultErrors = {}
@@ -52,7 +52,7 @@ export class FormComponent implements OnInit, OnChanges {
         }
     }
 
-    formGroup!: FormGroup
+    formGroup!: UntypedFormGroup
     inputs!: FormInput[]
 
     @Output() formSubmit = new EventEmitter()
