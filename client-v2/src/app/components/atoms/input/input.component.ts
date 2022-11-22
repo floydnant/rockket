@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms'
+import { AbstractControl, UntypedFormControl, UntypedFormGroup } from '@angular/forms'
 import { stripNonWordChars } from 'src/app/utils'
 import { defaultErrorMessages } from './error-messages'
 import { FormValidationErrorMessages } from './error-messages'
@@ -39,12 +39,12 @@ export class InputComponent implements OnInit {
     @Input() type = 'text'
     @Input() id!: string
 
-    @Input() control!: FormControl | AbstractControl
+    @Input() control!: UntypedFormControl | AbstractControl
     get formControl() {
-        return this.control as FormControl
+        return this.control as UntypedFormControl
     }
     @Input() controlName?: string
-    @Input() parentControl?: FormGroup
+    @Input() parentControl?: UntypedFormGroup
 
     @Input() errorMessages?: Partial<FormValidationErrorMessages>
     @Input() extraErrorMessages?: string[]

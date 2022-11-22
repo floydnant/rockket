@@ -1,4 +1,4 @@
-import { FormControl, ValidatorFn } from '@angular/forms'
+import { UntypedFormControl, ValidatorFn } from '@angular/forms'
 
 /**
  * Validator for comparing to another form control's value in a group
@@ -7,7 +7,7 @@ import { FormControl, ValidatorFn } from '@angular/forms'
 export const matchSibling =
     (otherValueKey: string): ValidatorFn =>
     control => {
-        const otherValue = (control as FormControl).parent?.get(otherValueKey)?.value
+        const otherValue = (control as UntypedFormControl).parent?.get(otherValueKey)?.value
         return control.value === otherValue ? null : { notMatching: true }
     }
 
