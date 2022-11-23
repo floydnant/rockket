@@ -20,7 +20,13 @@ export class SettingsAccountComponent {
 
     userState = this.store
         .select(state => state.user)
-        .pipe(tap(userState => moveToMacroQueue(() => this.usernameControl.patchValue(userState.me?.username))))
+        .pipe(
+            tap(userState =>
+                moveToMacroQueue(() =>
+                    this.usernameControl.patchValue(userState.me?.username || 'Failed to load username')
+                )
+            )
+        )
 
     onUploadPhoto() {
         this.toast.info('Profile photos are not yet implemented.')
@@ -43,7 +49,8 @@ export class SettingsAccountComponent {
     onUsernameSubmit() {
         if (this.usernameControl.invalid) return
 
-        this.store.dispatch(userActions.updateUsername({ username: this.usernameControl.value }))
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.store.dispatch(userActions.updateUsername({ username: this.usernameControl.value! }))
     }
 
     activeForm: null | 'email' | 'password' = null
