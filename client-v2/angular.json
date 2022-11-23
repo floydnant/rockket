@@ -141,6 +141,5 @@
                 }
             }
         }
-    },
-    "defaultProject": "client-v2"
+    }
 }
