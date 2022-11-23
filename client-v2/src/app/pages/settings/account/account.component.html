@@ -25,7 +25,7 @@
 
 <h2 class="mb-2 text-tinted-300">Email address</h2>
 <p>
-    {{ (userState | async)?.email || 'failed to load email' }}
+    <span class="email | mr-2">{{ (userState | async)?.email || 'failed to load email' }}</span>
     <button *ngIf="activeForm != 'email'" class="button-naked text-primary-200" (click)="setFormActive('email')">
         Change email address
     </button>
@@ -70,7 +70,7 @@
 ></app-form>
 
 <h2 class="mb-2 text-xl text-danger-400">Danger zone</h2>
-<div class="danger-zone | flex flex-col gap-2 rounded-lg border border-danger-600 bg-danger-900 p-3">
+<div class="danger-zone | flex flex-col gap-2 rounded-lg border border-danger-600 bg-danger-900 p-2">
     <button
         (click)="onLogout()"
         class="button | bg-transparent text-left text-danger-400 hover:bg-danger-400 hover:text-tinted-800"
