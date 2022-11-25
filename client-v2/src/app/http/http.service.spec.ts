@@ -1,23 +1,18 @@
 import { HttpClient } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
-import { Store } from '@ngrx/store'
+import { storeMock } from '../utils/unit-test.mocks'
 
 import { HttpService } from './http.service'
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const httpClientMock = { provide: HttpClient, useValue: { get() {}, post() {}, patch() {}, delete() {} } }
 
 describe('HttpService', () => {
     let service: HttpService
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                {
-                    provide: HttpClient,
-                    // eslint-disable-next-line @typescript-eslint/no-empty-function
-                    useValue: { get() {}, post() {}, patch() {}, delete() {} },
-                },
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                { provide: Store, useValue: { subscribe() {} } },
-            ],
+            providers: [httpClientMock, storeMock],
         })
         service = TestBed.inject(HttpService)
     })

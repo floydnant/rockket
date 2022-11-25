@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store'
-import { userActions } from './user.actions'
+import { authActions } from './user.actions'
 import { UserState } from './user.model'
 
 const initialState: UserState = {
@@ -12,17 +12,17 @@ const initialState: UserState = {
 export const userReducer = createReducer<UserState>(
     initialState,
 
-    on(userActions.signup, state => ({
+    on(authActions.signup, state => ({
         ...state,
         isLoading: true,
     })),
-    on(userActions.login, state => ({
+    on(authActions.login, state => ({
         ...state,
         isLoading: true,
     })),
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    on(userActions.loginOrSignupSuccess, (_state, { type, authToken, ...user }) => ({
+    on(authActions.loginOrSignupSuccess, (_state, { type, authToken, ...user }) => ({
         me: user,
         authToken,
         isLoading: false,
@@ -30,22 +30,22 @@ export const userReducer = createReducer<UserState>(
     })),
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    on(userActions.loginOrSignupError, state => ({
+    on(authActions.loginOrSignupError, state => ({
         ...state,
         isLoading: false,
         isLoggedIn: false,
     })),
 
-    on(userActions.loadAuthTokenSuccess, (state, { authToken }) => ({
+    on(authActions.loadAuthTokenSuccess, (state, { authToken }) => ({
         ...state,
         authToken,
     })),
 
-    on(userActions.confirmLogin, state => ({
+    on(authActions.confirmLogin, state => ({
         ...state,
         isLoading: true,
     })),
-    on(userActions.confirmLoginError, state => ({
+    on(authActions.confirmLoginError, state => ({
         ...state,
         authToken: null,
         isLoading: false,
@@ -53,5 +53,5 @@ export const userReducer = createReducer<UserState>(
     })),
 
     // logout
-    on(userActions.logout, () => initialState)
+    on(authActions.logout, () => initialState)
 )
