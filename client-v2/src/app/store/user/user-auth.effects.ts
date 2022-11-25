@@ -10,7 +10,7 @@ import { appActions } from '../app.actions'
 import { authActions } from './user.actions'
 
 @Injectable()
-export class UserEffects {
+export class AuthEffects {
     constructor(
         private actions$: Actions,
         private userService: UserService,
@@ -35,11 +35,10 @@ export class UserEffects {
                                 ? err.error.message[0].replace(/^\w+:/, '')
                                 : err.error.message.replace(/^\w+:/, ''),
                     }),
-                    map(res => {
+                    tap(() => {
                         if (callbackUrl) this.router.navigateByUrl(callbackUrl)
-
-                        return authActions.loginOrSignupSuccess(res.user)
                     }),
+                    map(res => authActions.loginOrSignupSuccess(res.user)),
                     catchError((err: HttpServerErrorResponse) => of(authActions.loginOrSignupError(err)))
                 )
             })
@@ -66,7 +65,7 @@ export class UserEffects {
         )
     })
 
-    forwardToConfirmLogin = createEffect(() => {
+    forwardLoadTokenSuccess = createEffect(() => {
         return this.actions$.pipe(
             ofType(authActions.loadAuthTokenSuccess),
             map(() => authActions.confirmLogin())
@@ -91,13 +90,12 @@ export class UserEffects {
                             id: 'confirm-login',
                         },
                     }),
-                    map(res => {
+                    tap(() => {
                         const isOnAuthPage =
                             this.router.url.includes('auth') && !this.router.url.includes('/login-loading')
                         if (isOnAuthPage) this.router.navigateByUrl('/home')
-
-                        return authActions.loginOrSignupSuccess(res.user)
                     }),
+                    map(res => authActions.loginOrSignupSuccess(res.user)),
                     catchError(() => of(authActions.confirmLoginError()))
                 )
             })
