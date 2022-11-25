@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store'
 import { OperatorFunction, catchError, Observable, throwError, mergeMap } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { AppState } from '../store'
+import { userSelectors } from '../store/user/user.selectors'
 import { HttpClientOptions } from './types'
 
 @Injectable({
@@ -11,7 +12,7 @@ import { HttpClientOptions } from './types'
 })
 export class HttpService {
     constructor(public http: HttpClient, private store: Store<AppState>) {
-        this.store.subscribe(state => (this.bearerToken = state.user?.authToken))
+        this.store.select(userSelectors.selectAuthtoken).subscribe(authToken => (this.bearerToken = authToken))
     }
 
     private bearerToken?: string | null
