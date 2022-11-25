@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
-import { Actions, createEffect, ofType } from '@ngrx/effects'
+import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
 import { catchError, map, mergeMap, Observable, of, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { AuthSuccessResponse, SignupCredentialsDto } from 'src/app/models/auth.model'
@@ -57,7 +57,7 @@ export class UserEffects {
 
     loadSavedAuthToken = createEffect(() => {
         return this.actions$.pipe(
-            ofType('@ngrx/effects/init'),
+            ofType(ROOT_EFFECTS_INIT),
             map(() => {
                 const authToken = this.userService.getToken()
                 if (authToken) return userActions.loadAuthTokenSuccess({ authToken })
