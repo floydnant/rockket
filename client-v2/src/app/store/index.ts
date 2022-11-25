@@ -1,7 +1,7 @@
 import { ActionReducerMap, MetaReducer } from '@ngrx/store'
 import { environment } from '../../environments/environment'
 import { AppEffects } from './app.effects'
-import { AuthEffects } from './user/user-auth.effects'
+import { AuthEffects } from './user/auth.effects'
 import { UserState } from './user/user.model'
 import { userReducer } from './user/user.reducer'
 
