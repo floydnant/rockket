@@ -2,11 +2,13 @@ import { Component } from '@angular/core'
 import { Validators } from '@angular/forms'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
+import { map } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator, matchSibling } from 'src/app/components/molecules/form/validators'
 import { SignupCredentialsDto } from 'src/app/models/auth.model'
 import { AppState } from 'src/app/store'
-import { userActions } from 'src/app/store/user/user.actions'
+import { authActions } from 'src/app/store/user/user.actions'
+import { userSelectors } from 'src/app/store/user/user.selectors'
 import { getErrorMap } from '../getErrorMap'
 
 @Component({
@@ -38,12 +40,12 @@ export class SignupComponent {
         },
     }
 
-    isLoading$ = this.store.select(state => state.user.isLoading)
+    isLoading$ = this.store.select(userSelectors.selectLoginState).pipe(map(({ isLoading }) => isLoading))
     errorMap$ = getErrorMap(this.actions$, Object.keys(this.formOptions))
 
     callbackUrl?: string
 
     onSubmit(credentials: SignupCredentialsDto) {
-        this.store.dispatch(userActions.signup({ credentials, callbackUrl: this.callbackUrl }))
+        this.store.dispatch(authActions.signup({ credentials, callbackUrl: this.callbackUrl }))
     }
 }

@@ -1,8 +1,8 @@
 import { ActionReducerMap, MetaReducer } from '@ngrx/store'
 import { environment } from '../../environments/environment'
 import { AppEffects } from './app.effects'
+import { AuthEffects } from './user/auth.effects'
 import { UserAccountEffects } from './user/user-account.effects'
-import { UserEffects } from './user/user.effects'
 import { UserState } from './user/user.model'
 import { userReducer } from './user/user.reducer'
 
@@ -13,7 +13,7 @@ export const reducers: ActionReducerMap<AppState> = {
     user: userReducer,
 }
 
-export const effects = [AppEffects, UserEffects, UserAccountEffects]
+export const effects = [AppEffects, AuthEffects, UserAccountEffects]
 
 const actionLogger: MetaReducer<AppState> = reducer => (state, action) => {
     console.info('%caction: %c' + action.type, 'color: hsl(130, 0%, 50%);', 'color: hsl(155, 100%, 50%);')

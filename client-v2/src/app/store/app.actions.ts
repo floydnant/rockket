@@ -1,7 +1,9 @@
-import { createAction, props } from '@ngrx/store'
-import { HttpServerErrorResponse } from '../http/types'
+import { createActionGroup, emptyProps } from '@ngrx/store'
 
-export const appActions = {
-    nothing: createAction('[App] nothing'),
-    error: createAction('[App] error', props<HttpServerErrorResponse>()),
-}
+export const appActions = createActionGroup({
+    source: 'App',
+    events: {
+        nothing: emptyProps(),
+        // error: props<HttpServerErrorResponse>(),
+    },
+})

@@ -1,14 +1,14 @@
 import { Actions, ofType } from '@ngrx/effects'
 import { map, merge } from 'rxjs'
-import { userActions } from 'src/app/store/user/user.actions'
+import { authActions } from 'src/app/store/user/user.actions'
 
 export const getErrorMap = (actions$: Actions, fields: string[]) => {
     const successActions = actions$.pipe(
-        ofType(userActions.loginOrSignupSuccess),
+        ofType(authActions.loginOrSignupSuccess),
         map(() => ({}))
     )
     const errorActions = actions$.pipe(
-        ofType(userActions.loginOrSignupError),
+        ofType(authActions.loginOrSignupError),
         map(action => {
             let messages: string[]
             if (action.error.message instanceof Array) messages = action.error.message
