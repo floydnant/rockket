@@ -7,7 +7,7 @@ import { HttpServerErrorResponse } from 'src/app/http/types'
 import { AuthSuccessResponse, SignupCredentialsDto } from 'src/app/models/auth.model'
 import { UserService } from 'src/app/services/user.service'
 import { appActions } from '../app.actions'
-import { userActions } from './user.actions'
+import { authActions } from './user.actions'
 
 @Injectable()
 export class UserEffects {
@@ -20,7 +20,7 @@ export class UserEffects {
 
     loginOrSignup = createEffect(() => {
         return this.actions$.pipe(
-            ofType(userActions.login, userActions.signup),
+            ofType(authActions.login, authActions.signup),
             mergeMap(({ type, credentials, callbackUrl }) => {
                 const isLogin = /login/.test(type)
                 const res$: Observable<AuthSuccessResponse> = isLogin
@@ -38,9 +38,9 @@ export class UserEffects {
                     map(res => {
                         if (callbackUrl) this.router.navigateByUrl(callbackUrl)
 
-                        return userActions.loginOrSignupSuccess(res.user)
+                        return authActions.loginOrSignupSuccess(res.user)
                     }),
-                    catchError((err: HttpServerErrorResponse) => of(userActions.loginOrSignupError(err)))
+                    catchError((err: HttpServerErrorResponse) => of(authActions.loginOrSignupError(err)))
                 )
             })
         )
@@ -49,7 +49,7 @@ export class UserEffects {
     saveAuthToken = createEffect(
         () =>
             this.actions$.pipe(
-                ofType(userActions.loginOrSignupSuccess),
+                ofType(authActions.loginOrSignupSuccess),
                 tap(({ authToken }) => this.userService.saveToken(authToken))
             ),
         { dispatch: false }
@@ -60,7 +60,7 @@ export class UserEffects {
             ofType(ROOT_EFFECTS_INIT),
             map(() => {
                 const authToken = this.userService.getToken()
-                if (authToken) return userActions.loadAuthTokenSuccess({ authToken })
+                if (authToken) return authActions.loadAuthTokenSuccess({ authToken })
                 else return appActions.nothing()
             })
         )
@@ -68,13 +68,13 @@ export class UserEffects {
 
     forwardToConfirmLogin = createEffect(() => {
         return this.actions$.pipe(
-            ofType(userActions.loadAuthTokenSuccess),
-            map(() => userActions.confirmLogin())
+            ofType(authActions.loadAuthTokenSuccess),
+            map(() => authActions.confirmLogin())
         )
     })
     confirmLogin = createEffect(() => {
         return this.actions$.pipe(
-            ofType(userActions.confirmLogin),
+            ofType(authActions.confirmLogin),
             mergeMap(() => {
                 const res$ = this.userService.confirmLogin()
 
@@ -96,9 +96,9 @@ export class UserEffects {
                             this.router.url.includes('auth') && !this.router.url.includes('/login-loading')
                         if (isOnAuthPage) this.router.navigateByUrl('/home')
 
-                        return userActions.loginOrSignupSuccess(res.user)
+                        return authActions.loginOrSignupSuccess(res.user)
                     }),
-                    catchError(() => of(userActions.confirmLoginError()))
+                    catchError(() => of(authActions.confirmLoginError()))
                 )
             })
         )

@@ -5,7 +5,7 @@ import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { Subscription, take } from 'rxjs'
 import { AppState } from 'src/app/store'
-import { userActions } from 'src/app/store/user/user.actions'
+import { authActions } from 'src/app/store/user/user.actions'
 import { userSelectors } from 'src/app/store/user/user.selectors'
 
 @Component({
@@ -35,7 +35,7 @@ export class LoginLoadingComponent implements OnDestroy {
             })
 
         this.actionsSubscription = this.actions$
-            .pipe(ofType(userActions.confirmLoginError, userActions.loginOrSignupSuccess), take(1))
+            .pipe(ofType(authActions.confirmLoginError, authActions.loginOrSignupSuccess), take(1))
             .subscribe(({ type }) => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 if (/success/.test(type)) this.router.navigateByUrl(this.callbackUrl!)

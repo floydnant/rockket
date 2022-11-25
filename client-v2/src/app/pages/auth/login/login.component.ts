@@ -7,7 +7,7 @@ import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator } from 'src/app/components/molecules/form/validators'
 import { LoginCredentialsDto } from 'src/app/models/auth.model'
 import { AppState } from 'src/app/store'
-import { userActions } from 'src/app/store/user/user.actions'
+import { authActions } from 'src/app/store/user/user.actions'
 import { userSelectors } from 'src/app/store/user/user.selectors'
 import { getErrorMap } from '../getErrorMap'
 
@@ -42,6 +42,6 @@ export class LoginComponent {
     callbackUrl?: string
 
     onSubmit(credentials: LoginCredentialsDto) {
-        this.store.dispatch(userActions.login({ credentials, callbackUrl: this.callbackUrl }))
+        this.store.dispatch(authActions.login({ credentials, callbackUrl: this.callbackUrl }))
     }
 }
