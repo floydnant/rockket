@@ -25,7 +25,7 @@
 
 <h2 class="mb-2 text-tinted-300">Email address</h2>
 <p>
-    <span class="email | mr-2">{{ (userState | async)?.email || 'failed to load email' }}</span>
+    <span class="email | mr-2">{{ (userState | async)?.me?.email || 'failed to load email' }}</span>
     <button *ngIf="activeForm != 'email'" class="button-naked text-primary-200" (click)="setFormActive('email')">
         Change email address
     </button>

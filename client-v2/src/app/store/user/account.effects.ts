@@ -6,7 +6,7 @@ import { map, mergeMap, of } from 'rxjs'
 import { UserService } from 'src/app/services/user.service'
 import { AppState } from '..'
 import { appActions } from '../app.actions'
-import { userActions } from './user.actions'
+import { accountActions, authActions } from './user.actions'
 import { UserState } from './user.model'
 
 @Injectable()
@@ -24,7 +24,7 @@ export class UserAccountEffects {
 
     updateUsername = createEffect(() => {
         return this.actions$.pipe(
-            ofType(userActions.updateUsername),
+            ofType(accountActions.updateUsername),
             mergeMap(dto => {
                 const res$ = this.userService.updateUsername(dto)
 
@@ -34,7 +34,7 @@ export class UserAccountEffects {
                         success: res => res.successMessage,
                         error: err => err.error.message,
                     }),
-                    map(() => userActions.updateUsernameSuccess(dto))
+                    map(() => accountActions.updateUsernameSuccess(dto))
                 )
             })
         )
@@ -42,7 +42,7 @@ export class UserAccountEffects {
 
     updateEmail = createEffect(() => {
         return this.actions$.pipe(
-            ofType(userActions.updateEmail),
+            ofType(accountActions.updateEmail),
             mergeMap(dto => {
                 const res$ = this.userService.updateEmail(dto)
 
@@ -52,7 +52,7 @@ export class UserAccountEffects {
                         success: res => res.successMessage,
                         error: err => err.error.message,
                     }),
-                    map(() => userActions.updateEmailSuccess({ email: dto.email }))
+                    map(() => accountActions.updateEmailSuccess({ email: dto.email }))
                 )
             })
         )
@@ -60,7 +60,7 @@ export class UserAccountEffects {
 
     updatePassword = createEffect(() => {
         return this.actions$.pipe(
-            ofType(userActions.updatePassword),
+            ofType(accountActions.updatePassword),
             mergeMap(dto => {
                 const res$ = this.userService.updatePassword(dto)
 
@@ -70,7 +70,7 @@ export class UserAccountEffects {
                         success: res => res.successMessage,
                         error: err => err.error.message,
                     }),
-                    map(() => userActions.updatePasswordSuccess())
+                    map(() => accountActions.updatePasswordSuccess())
                 )
             })
         )
@@ -78,7 +78,7 @@ export class UserAccountEffects {
 
     resetPassword = createEffect(() => {
         return this.actions$.pipe(
-            ofType(userActions.resetPassword),
+            ofType(accountActions.resetPassword),
             mergeMap(() => {
                 this.toast.info('Resetting passwords is not yet supported.')
                 return of(appActions.nothing())
@@ -98,7 +98,7 @@ export class UserAccountEffects {
 
     deleteAccount = createEffect(() => {
         return this.actions$.pipe(
-            ofType(userActions.deleteAccount),
+            ofType(accountActions.deleteAccount),
             mergeMap(({ password }) => {
                 const res$ = this.userService.deleteAccount({ password })
 
@@ -108,28 +108,28 @@ export class UserAccountEffects {
                         success: res => res.successMessage,
                         error: err => err.error.message,
                     }),
-                    map(() => userActions.deleteAccountSuccess())
+                    map(() => accountActions.deleteAccountSuccess())
                 )
             })
         )
     })
-    forwardLogout = createEffect(() =>
+    forwardDeleteAccount = createEffect(() =>
         this.actions$.pipe(
-            ofType(userActions.deleteAccountSuccess),
-            map(() => userActions.logout())
+            ofType(accountActions.deleteAccountSuccess),
+            map(() => authActions.logout())
         )
     )
 
     loadEmail = createEffect(() => {
         return this.actions$.pipe(
-            ofType(userActions.loadEmail),
+            ofType(accountActions.loadEmail),
             mergeMap(({ ignoreCache }) => {
-                if (this.userState?.email) {
+                if (this.userState?.me?.email) {
                     if (!ignoreCache) return of(appActions.nothing())
                 }
                 const res$ = this.userService.loadEmail()
 
-                return res$.pipe(map(({ email }) => userActions.loadEmailSuccess({ email })))
+                return res$.pipe(map(({ email }) => accountActions.loadEmailSuccess({ email })))
             })
         )
     })

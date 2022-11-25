@@ -6,7 +6,7 @@ import { tap } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator, matchSibling } from 'src/app/components/molecules/form/validators'
 import { AppState } from 'src/app/store'
-import { userActions } from 'src/app/store/user/user.actions'
+import { accountActions, authActions } from 'src/app/store/user/user.actions'
 import { moveToMacroQueue } from 'src/app/utils'
 
 @Component({
@@ -15,7 +15,7 @@ import { moveToMacroQueue } from 'src/app/utils'
 })
 export class SettingsAccountComponent {
     constructor(private store: Store<AppState>, private toast: HotToastService) {
-        this.store.dispatch(userActions.loadEmail({}))
+        this.store.dispatch(accountActions.loadEmail({}))
     }
 
     userState = this.store
@@ -39,10 +39,10 @@ export class SettingsAccountComponent {
         const password = prompt('Type in your password.')
         if (!password) return
 
-        this.store.dispatch(userActions.deleteAccount({ password }))
+        this.store.dispatch(accountActions.deleteAccount({ password }))
     }
     onLogout() {
-        if (confirm('Do you want to logout?')) this.store.dispatch(userActions.logout())
+        if (confirm('Do you want to logout?')) this.store.dispatch(authActions.logout())
     }
 
     usernameControl = new FormControl('', [Validators.required, Validators.minLength(8)])
@@ -50,7 +50,7 @@ export class SettingsAccountComponent {
         if (this.usernameControl.invalid) return
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        this.store.dispatch(userActions.updateUsername({ username: this.usernameControl.value! }))
+        this.store.dispatch(accountActions.updateUsername({ username: this.usernameControl.value! }))
     }
 
     activeForm: null | 'email' | 'password' = null
@@ -71,7 +71,7 @@ export class SettingsAccountComponent {
         },
     }
     onEmailSubmit(dto: { email: string; password: string }) {
-        this.store.dispatch(userActions.updateEmail(dto))
+        this.store.dispatch(accountActions.updateEmail(dto))
     }
 
     // @TODO: integrate error messages
@@ -96,9 +96,9 @@ export class SettingsAccountComponent {
         },
     }
     onPasswordSubmit(dto: { password: string; newPassword: string }) {
-        this.store.dispatch(userActions.updatePassword(dto))
+        this.store.dispatch(accountActions.updatePassword(dto))
     }
     onResetPassword() {
-        this.store.dispatch(userActions.resetPassword())
+        this.store.dispatch(accountActions.resetPassword())
     }
 }

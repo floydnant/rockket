@@ -5,7 +5,6 @@ import { UserState } from './user.model'
 const initialState: UserState = {
     me: null,
     authToken: null,
-    email: null,
     isLoggedIn: false,
     isLoading: false,
 }
@@ -69,11 +68,19 @@ export const userReducer = createReducer<UserState>(
 
     on(accountActions.updateEmailSuccess, (state, { email }) => ({
         ...state,
-        email,
+        me: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ...state.me!,
+            email,
+        },
     })),
 
     on(accountActions.loadEmailSuccess, (state, { email }) => ({
         ...state,
-        email,
+        me: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ...state.me!,
+            email,
+        },
     }))
 )

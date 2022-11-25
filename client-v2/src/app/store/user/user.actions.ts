@@ -25,6 +25,8 @@ export const accountActions = createActionGroup({
         'update username': props<{ username: string }>(),
         'update username success': props<{ username: string }>(),
 
+        'load email': props<{ ignoreCache?: boolean }>(),
+        'load email success': props<{ email: string }>(),
         'update email': props<{ password: string; email: string }>(),
         'update email success': props<{ email: string }>(),
 
@@ -34,10 +36,5 @@ export const accountActions = createActionGroup({
 
         'delete account': props<{ password: string }>(),
         'delete account success': emptyProps(),
-
-        'load email': props<{ ignoreCache?: boolean }>(),
-        'load email success': props<{ email: string }>(),
     },
 })
-
-export const userActions = { ...authActions, ...accountActions }
