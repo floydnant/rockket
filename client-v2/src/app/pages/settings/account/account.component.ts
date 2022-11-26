@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import { HotToastService } from '@ngneat/hot-toast'
+import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { tap } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
@@ -8,13 +9,14 @@ import { betterEmailValidator, matchSibling } from 'src/app/components/molecules
 import { AppState } from 'src/app/store'
 import { accountActions, authActions } from 'src/app/store/user/user.actions'
 import { moveToMacroQueue } from 'src/app/utils'
+import { getErrorMapUpdates } from '../../auth/getErrorMap'
 
 @Component({
     templateUrl: './account.component.html',
     styles: [],
 })
 export class SettingsAccountComponent {
-    constructor(private store: Store<AppState>, private toast: HotToastService) {
+    constructor(private store: Store<AppState>, private toast: HotToastService, private actions$: Actions) {
         this.store.dispatch(accountActions.loadEmail({}))
     }
 
@@ -73,6 +75,12 @@ export class SettingsAccountComponent {
     onEmailSubmit(dto: { email: string; password: string }) {
         this.store.dispatch(accountActions.updateEmail(dto))
     }
+    emailFormErrors$ = getErrorMapUpdates({
+        actions$: this.actions$,
+        fields: Object.keys(this.emailFormOptions),
+        successAction: accountActions.updateEmailSuccess,
+        errorAction: accountActions.updateEmailError,
+    })
 
     // @TODO: integrate error messages
     passwordFormOptions: FormBuilderOptions = {
@@ -98,6 +106,13 @@ export class SettingsAccountComponent {
     onPasswordSubmit(dto: { password: string; newPassword: string }) {
         this.store.dispatch(accountActions.updatePassword(dto))
     }
+    passwordFormErrors$ = getErrorMapUpdates({
+        actions$: this.actions$,
+        fields: Object.keys(this.passwordFormOptions),
+        successAction: accountActions.updatePasswordSuccess,
+        errorAction: accountActions.updatePasswordError,
+    })
+
     onResetPassword() {
         this.store.dispatch(accountActions.resetPassword())
     }

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { map, mergeMap, of } from 'rxjs'
+import { catchError, map, mergeMap, of } from 'rxjs'
+import { HttpServerErrorResponse } from 'src/app/http/types'
 import { UserService } from 'src/app/services/user.service'
 import { AppState } from '..'
 import { appActions } from '../app.actions'
@@ -52,7 +53,8 @@ export class UserAccountEffects {
                         success: res => res.successMessage,
                         error: err => err.error.message,
                     }),
-                    map(() => accountActions.updateEmailSuccess({ email: dto.email }))
+                    map(() => accountActions.updateEmailSuccess({ email: dto.email })),
+                    catchError((err: HttpServerErrorResponse) => of(accountActions.updateEmailError(err)))
                 )
             })
         )
@@ -70,7 +72,8 @@ export class UserAccountEffects {
                         success: res => res.successMessage,
                         error: err => err.error.message,
                     }),
-                    map(() => accountActions.updatePasswordSuccess())
+                    map(() => accountActions.updatePasswordSuccess()),
+                    catchError((err: HttpServerErrorResponse) => of(accountActions.updatePasswordError(err)))
                 )
             })
         )
@@ -108,7 +111,8 @@ export class UserAccountEffects {
                         success: res => res.successMessage,
                         error: err => err.error.message,
                     }),
-                    map(() => accountActions.deleteAccountSuccess())
+                    map(() => accountActions.deleteAccountSuccess()),
+                    catchError((err: HttpServerErrorResponse) => of(accountActions.deleteAccountError(err)))
                 )
             })
         )

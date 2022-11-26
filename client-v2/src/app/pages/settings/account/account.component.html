@@ -41,6 +41,7 @@
     submitButton="Update email"
     (formSubmit)="onEmailSubmit($event)"
     containerClasses="grid gap-3"
+    [extraErrorMessages]="(emailFormErrors$ | async) || {}"
     gridAreas="
         'password password email email'
         'auto submit submit fill'
@@ -61,6 +62,7 @@
     [formOptions]="passwordFormOptions"
     submitButton="Update password"
     containerClasses="grid gap-3"
+    [extraErrorMessages]="(passwordFormErrors$ | async) || {}"
     gridAreas="
         'password    password    password           password'
         'newPassword newPassword confirmNewPassword confirmNewPassword'

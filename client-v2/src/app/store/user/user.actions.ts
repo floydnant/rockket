@@ -27,14 +27,19 @@ export const accountActions = createActionGroup({
 
         'load email': props<{ ignoreCache?: boolean }>(),
         'load email success': props<{ email: string }>(),
+
         'update email': props<{ password: string; email: string }>(),
         'update email success': props<{ email: string }>(),
+        'update email error': props<HttpServerErrorResponse>(),
 
         'update password': props<{ password: string; newPassword: string }>(),
         'update password success': emptyProps(),
+        'update password error': props<HttpServerErrorResponse>(),
+
         'reset password': emptyProps(),
 
         'delete account': props<{ password: string }>(),
         'delete account success': emptyProps(),
+        'delete account error': props<HttpServerErrorResponse>(),
     },
 })

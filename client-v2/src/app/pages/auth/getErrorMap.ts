@@ -1,14 +1,42 @@
 import { Actions, ofType } from '@ngrx/effects'
+import { ActionCreator, Creator } from '@ngrx/store'
 import { map, merge } from 'rxjs'
-import { authActions } from 'src/app/store/user/user.actions'
 
-export const getErrorMap = (actions$: Actions, fields: string[]) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SuccessAction = ActionCreator<string, Creator<any[], Record<string, any>>>
+type ErrorAction = ActionCreator<
+    string,
+    Creator<
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        any[],
+        {
+            error: {
+                message: string | string[]
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                [key: string]: any
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            [key: string]: any
+        }
+    >
+>
+export const getErrorMapUpdates = ({
+    actions$,
+    fields,
+    successAction,
+    errorAction,
+}: {
+    actions$: Actions
+    fields: string[]
+    successAction: SuccessAction
+    errorAction: ErrorAction
+}) => {
     const successActions = actions$.pipe(
-        ofType(authActions.loginOrSignupSuccess),
+        ofType(successAction),
         map(() => ({}))
     )
     const errorActions = actions$.pipe(
-        ofType(authActions.loginOrSignupError),
+        ofType(errorAction),
         map(action => {
             let messages: string[]
             if (action.error.message instanceof Array) messages = action.error.message
