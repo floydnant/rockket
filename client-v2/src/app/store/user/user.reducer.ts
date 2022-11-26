@@ -22,8 +22,7 @@ export const userReducer = createReducer<UserState>(
     })),
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    on(authActions.loginOrSignupSuccess, (state, { type, authToken, ...user }) => ({
-        ...state,
+    on(authActions.loginOrSignupSuccess, (_state, { type, authToken, ...user }) => ({
         me: user,
         authToken,
         isLoading: false,
