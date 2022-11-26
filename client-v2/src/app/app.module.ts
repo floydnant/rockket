@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 
 import { AppRoutingModule } from './app-routing.module'
-import { AppComponent } from './app.component'
+import { AppComponent } from './pages/app.component'
 import { DemoComponent } from './components/demo/demo.component'
 import { TaskComponent } from './components/organisms/task/task.component'
 import { StatusIconComponent } from './components/atoms/icons/status-icon/status-icon.component'
