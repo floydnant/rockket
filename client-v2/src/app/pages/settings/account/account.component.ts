@@ -73,7 +73,12 @@ export class SettingsAccountComponent implements OnDestroy {
         accountActions.updateUsername,
         accountActions.updateUsernameSuccess,
         accountActions.updateUsernameError,
-    ])
+    ]).pipe(
+        tap(isLoading => {
+            if (isLoading) this.usernameControl.disable()
+            else this.usernameControl.enable()
+        })
+    )
     usernameSuccessActionSubscription = this.actions$
         .pipe(ofType(accountActions.updateUsernameSuccess))
         .subscribe(() => this.resetUsername())
