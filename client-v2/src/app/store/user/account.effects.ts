@@ -12,7 +12,7 @@ import { accountActions, authActions } from './user.actions'
 import { UserState } from './user.model'
 
 @Injectable()
-export class UserAccountEffects {
+export class AccountEffects {
     constructor(
         private actions$: Actions,
         private userService: UserService,
