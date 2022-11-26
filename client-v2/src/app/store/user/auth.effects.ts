@@ -6,7 +6,7 @@ import { catchError, map, mergeMap, Observable, of, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { AuthSuccessResponse, SignupCredentialsDto } from 'src/app/models/auth.model'
 import { UserService } from 'src/app/services/user.service'
-import { getMessageFromHttpError } from 'src/app/utils/store-helpers'
+import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { appActions } from '../app.actions'
 import { authActions } from './user.actions'
 
