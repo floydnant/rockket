@@ -1,7 +1,7 @@
-import { Component } from '@angular/core'
+import { Component, OnDestroy } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import { HotToastService } from '@ngneat/hot-toast'
-import { Actions } from '@ngrx/effects'
+import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { tap } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
@@ -15,18 +15,22 @@ import { getErrorMapUpdates } from '../../../utils/store-helpers'
     templateUrl: './account.component.html',
     styles: [],
 })
-export class SettingsAccountComponent {
+export class SettingsAccountComponent implements OnDestroy {
     constructor(private store: Store<AppState>, private toast: HotToastService, private actions$: Actions) {
         this.store.dispatch(accountActions.loadEmail({}))
+    }
+    ngOnDestroy(): void {
+        this.usernameSuccessActionSubscription.unsubscribe()
     }
 
     userState = this.store
         .select(state => state.user)
         .pipe(
             tap(userState =>
-                moveToMacroQueue(() =>
-                    this.usernameControl.patchValue(userState.me?.username || 'Failed to load username')
-                )
+                moveToMacroQueue(() => {
+                    this.usernameFromStore = userState.me?.username || 'Failed to load username'
+                    this.usernameControl.patchValue(this.usernameFromStore)
+                })
             )
         )
 
@@ -47,20 +51,27 @@ export class SettingsAccountComponent {
         if (confirm('Do you want to logout?')) this.store.dispatch(authActions.logout())
     }
 
-    usernameControl = new FormControl('', [Validators.required, Validators.minLength(8)])
+    usernameControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(35)])
+    usernameFromStore!: string
     onUsernameSubmit() {
         if (this.usernameControl.invalid) return
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.store.dispatch(accountActions.updateUsername({ username: this.usernameControl.value! }))
     }
+    resetUsername() {
+        this.usernameControl.reset()
+        this.usernameControl.patchValue(this.usernameFromStore)
+    }
+    usernameSuccessActionSubscription = this.actions$
+        .pipe(ofType(accountActions.updateUsernameSuccess))
+        .subscribe(() => this.resetUsername())
 
     activeForm: null | 'email' | 'password' = null
     setFormActive(form: typeof this.activeForm) {
         this.activeForm = form
     }
 
-    // @TODO: integrate error messages
     emailFormOptions: FormBuilderOptions = {
         password: {
             type: 'password',
@@ -82,7 +93,6 @@ export class SettingsAccountComponent {
         errorAction: accountActions.updateEmailError,
     })
 
-    // @TODO: integrate error messages
     passwordFormOptions: FormBuilderOptions = {
         password: {
             name: 'Old password',

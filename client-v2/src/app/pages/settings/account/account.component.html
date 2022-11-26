@@ -14,10 +14,12 @@
         [control]="usernameControl"
         (keydown.enter)="onUsernameSubmit()"
     ></app-input>
-    <button *ngIf="usernameControl.dirty" class="button button--submit | mt-4" (click)="onUsernameSubmit()">
-        Update Username
-    </button>
 </p>
+<p class="mt-4" *ngIf="usernameControl.dirty">
+    <button class="button button--submit | mr-2" (click)="onUsernameSubmit()">Update Username</button>
+    <button class="button-naked" (click)="resetUsername()">Cancel</button>
+</p>
+
 <p class="text-md text-tinted-500">
     <app-icon iconClass="far fa-info-circle"></app-icon>
     Your username will be visibile to other users you collaborate with.
