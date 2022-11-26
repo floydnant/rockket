@@ -44,7 +44,7 @@ export class SignupComponent {
     errorMap$ = getErrorMapUpdates({
         actions$: this.actions$,
         fields: Object.keys(this.formOptions),
-        successAction: authActions.loginOrSignupSuccess,
+        resetAction: authActions.loginOrSignupSuccess,
         errorAction: authActions.loginOrSignupError,
     })
 

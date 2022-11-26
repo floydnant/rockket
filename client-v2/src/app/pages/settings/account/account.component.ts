@@ -106,7 +106,7 @@ export class SettingsAccountComponent implements OnDestroy {
     emailFormErrors$ = getErrorMapUpdates({
         actions$: this.actions$,
         fields: Object.keys(this.emailFormOptions),
-        successAction: accountActions.updateEmailSuccess,
+        resetAction: accountActions.updateEmailSuccess,
         errorAction: accountActions.updateEmailError,
     })
 
@@ -142,7 +142,7 @@ export class SettingsAccountComponent implements OnDestroy {
     passwordFormErrors$ = getErrorMapUpdates({
         actions$: this.actions$,
         fields: Object.keys(this.passwordFormOptions),
-        successAction: accountActions.updatePasswordSuccess,
+        resetAction: accountActions.updatePasswordSuccess,
         errorAction: accountActions.updatePasswordError,
     })
 

@@ -26,19 +26,21 @@ export type ErrorActionCreator = ActionCreator<
         }
     >
 >
-export const getErrorMapUpdates = ({
-    actions$,
-    fields,
-    successAction,
-    errorAction,
-}: {
+
+interface GetErrorMapUpdatesOptions {
     actions$: Actions
+    /** Keywords to organize the error map by */
     fields: string[]
-    successAction: AnyActionCreator
+    /** This action will reset the error map */
+    resetAction: AnyActionCreator
+    /** The errors will come from this action */
     errorAction: ErrorActionCreator
-}) => {
-    const successActions = actions$.pipe(
-        ofType(successAction),
+}
+
+/** Returns an observable of error messages, mapped by their matching `field` */
+export const getErrorMapUpdates = ({ actions$, fields, resetAction, errorAction }: GetErrorMapUpdatesOptions) => {
+    const resetActions = actions$.pipe(
+        ofType(resetAction),
         map(() => ({}))
     )
     const errorActions = actions$.pipe(
@@ -48,21 +50,27 @@ export const getErrorMapUpdates = ({
             if (action.error.message instanceof Array) messages = action.error.message
             else messages = [action.error.message]
 
-            // const generalErrors: string[] = []
             const errorMap: Record<string, string[]> = {}
             messages.forEach(msg => {
                 const fieldName = fields.find(field => new RegExp(field, 'i').test(msg))
                 if (fieldName) errorMap[fieldName] = [...(errorMap[fieldName] || []), msg.replace(/^\w+:/, '')]
-                // else generalErrors.push(msg)
             })
 
             return errorMap
         })
     )
 
-    return merge(successActions, errorActions)
+    return merge(resetActions, errorActions)
 }
 
+/** Returns an observable of the loading state, specified by `actionsToListenFor` i.e.:
+
+ * | action type matching | loading state |
+ * | ---------------------|---------------|
+ * | `/error/i`           | `false`       |
+ * | `/success/i`         | `false`       |
+ * | all other cases      | `true`       |
+ */
 export const getLoadingUpdates = (actions$: Actions, actionsToListenFor: AnyActionCreator[]) =>
     merge(
         of(false),
