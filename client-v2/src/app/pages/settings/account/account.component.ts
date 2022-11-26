@@ -81,7 +81,7 @@ export class SettingsAccountComponent implements OnDestroy {
     )
     usernameSuccessActionSubscription = this.actions$
         .pipe(ofType(accountActions.updateUsernameSuccess))
-        .subscribe(() => this.resetUsername())
+        .subscribe(() => this.usernameControl.markAsPristine())
 
     /////////////////// Email Form ///////////////////
     emailFormOptions: FormBuilderOptions = {
