@@ -16,7 +16,9 @@
     ></app-input>
 </p>
 <p class="mt-4" *ngIf="usernameControl.dirty">
-    <button class="button button--submit | mr-2" (click)="onUsernameSubmit()">Update Username</button>
+    <button class="button button--submit | mr-2" (click)="onUsernameSubmit()">
+        <loading-spinner *ngIf="usernameFormLoading$ | async"></loading-spinner> Update Username
+    </button>
     <button class="button-naked" (click)="resetUsername()">Cancel</button>
 </p>
 
@@ -41,9 +43,10 @@
     *ngIf="activeForm == 'email'"
     [formOptions]="emailFormOptions"
     submitButton="Update email"
-    (formSubmit)="onEmailSubmit($event)"
+    (formSubmit)="onEmailFormSubmit($event)"
     containerClasses="grid gap-3"
     [extraErrorMessages]="(emailFormErrors$ | async) || {}"
+    [isLoading]="emailFormLoading$ | async"
     gridAreas="
         'password password email email'
         'auto submit submit fill'
@@ -65,12 +68,13 @@
     submitButton="Update password"
     containerClasses="grid gap-3"
     [extraErrorMessages]="(passwordFormErrors$ | async) || {}"
+    [isLoading]="passwordFormLoading$ | async"
     gridAreas="
         'password    password    password           password'
         'newPassword newPassword confirmNewPassword confirmNewPassword'
         'auto        submit      submit             fill'
     "
-    (formSubmit)="onPasswordSubmit($event)"
+    (formSubmit)="onPasswordFormSubmit($event)"
 ></app-form>
 
 <h2 class="mb-2 text-xl text-danger-400">Danger zone</h2>

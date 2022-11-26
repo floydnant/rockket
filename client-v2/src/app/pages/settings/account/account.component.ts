@@ -3,13 +3,13 @@ import { FormControl, Validators } from '@angular/forms'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { tap } from 'rxjs'
+import { Observable, tap } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator, matchSibling } from 'src/app/components/molecules/form/validators'
 import { AppState } from 'src/app/store'
 import { accountActions, authActions } from 'src/app/store/user/user.actions'
 import { moveToMacroQueue } from 'src/app/utils'
-import { getErrorMapUpdates } from '../../../utils/store-helpers'
+import { getErrorMapUpdates, getLoadingUpdates } from '../../../utils/store-helpers'
 
 @Component({
     templateUrl: './account.component.html',
@@ -51,6 +51,12 @@ export class SettingsAccountComponent implements OnDestroy {
         if (confirm('Do you want to logout?')) this.store.dispatch(authActions.logout())
     }
 
+    activeForm: null | 'email' | 'password' = null
+    setFormActive(form: typeof this.activeForm) {
+        this.activeForm = form
+    }
+
+    /////////////////// Username Form ///////////////////
     usernameControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(35)])
     usernameFromStore!: string
     onUsernameSubmit() {
@@ -63,15 +69,16 @@ export class SettingsAccountComponent implements OnDestroy {
         this.usernameControl.reset()
         this.usernameControl.patchValue(this.usernameFromStore)
     }
+    usernameFormLoading$ = getLoadingUpdates(this.actions$, [
+        accountActions.updateUsername,
+        accountActions.updateUsernameSuccess,
+        accountActions.updateUsernameError,
+    ])
     usernameSuccessActionSubscription = this.actions$
         .pipe(ofType(accountActions.updateUsernameSuccess))
         .subscribe(() => this.resetUsername())
 
-    activeForm: null | 'email' | 'password' = null
-    setFormActive(form: typeof this.activeForm) {
-        this.activeForm = form
-    }
-
+    /////////////////// Email Form ///////////////////
     emailFormOptions: FormBuilderOptions = {
         password: {
             type: 'password',
@@ -83,9 +90,14 @@ export class SettingsAccountComponent implements OnDestroy {
             control: ['', [Validators.required, betterEmailValidator]],
         },
     }
-    onEmailSubmit(dto: { email: string; password: string }) {
+    onEmailFormSubmit(dto: { email: string; password: string }) {
         this.store.dispatch(accountActions.updateEmail(dto))
     }
+    emailFormLoading$: NonNullable<Observable<boolean>> = getLoadingUpdates(this.actions$, [
+        accountActions.updateEmail,
+        accountActions.updateEmailSuccess,
+        accountActions.updateEmailError,
+    ])
     emailFormErrors$ = getErrorMapUpdates({
         actions$: this.actions$,
         fields: Object.keys(this.emailFormOptions),
@@ -93,6 +105,7 @@ export class SettingsAccountComponent implements OnDestroy {
         errorAction: accountActions.updateEmailError,
     })
 
+    /////////////////// Password Form ///////////////////
     passwordFormOptions: FormBuilderOptions = {
         password: {
             name: 'Old password',
@@ -113,9 +126,14 @@ export class SettingsAccountComponent implements OnDestroy {
             },
         },
     }
-    onPasswordSubmit(dto: { password: string; newPassword: string }) {
+    onPasswordFormSubmit(dto: { password: string; newPassword: string }) {
         this.store.dispatch(accountActions.updatePassword(dto))
     }
+    passwordFormLoading$ = getLoadingUpdates(this.actions$, [
+        accountActions.updatePassword,
+        accountActions.updatePasswordSuccess,
+        accountActions.updatePasswordError,
+    ])
     passwordFormErrors$ = getErrorMapUpdates({
         actions$: this.actions$,
         fields: Object.keys(this.passwordFormOptions),

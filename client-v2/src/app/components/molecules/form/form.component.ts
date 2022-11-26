@@ -42,7 +42,7 @@ export class FormComponent implements OnInit, OnChanges {
     @Input() containerClasses?: string
     @Input() gridAreas?: string
 
-    @Input() isLoading?: boolean
+    @Input() isLoading?: boolean | null
     ngOnChanges(changes: SimpleChanges) {
         if ('isLoading' in changes) {
             moveToMacroQueue(() => {

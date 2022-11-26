@@ -1,6 +1,6 @@
 import { Actions, ofType } from '@ngrx/effects'
-import { ActionCreator, Creator } from '@ngrx/store'
-import { map, merge } from 'rxjs'
+import { Action, ActionCreator, Creator } from '@ngrx/store'
+import { map, merge, of } from 'rxjs'
 import { HttpServerErrorResponse } from '../http/types'
 
 export const getMessageFromHttpError = (err: HttpServerErrorResponse) =>
@@ -9,13 +9,13 @@ export const getMessageFromHttpError = (err: HttpServerErrorResponse) =>
         : err.error.message.replace(/^\w+:/, '')
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SuccessAction = ActionCreator<string, Creator<any[], Record<string, any>>>
-type ErrorAction = ActionCreator<
+export type AnyActionCreator = ActionCreator<string, Creator<any[], Action & Record<string, any>>>
+export type ErrorActionCreator = ActionCreator<
     string,
     Creator<
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         any[],
-        {
+        Action & {
             error: {
                 message: string | string[]
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,8 +34,8 @@ export const getErrorMapUpdates = ({
 }: {
     actions$: Actions
     fields: string[]
-    successAction: SuccessAction
-    errorAction: ErrorAction
+    successAction: AnyActionCreator
+    errorAction: ErrorActionCreator
 }) => {
     const successActions = actions$.pipe(
         ofType(successAction),
@@ -62,3 +62,15 @@ export const getErrorMapUpdates = ({
 
     return merge(successActions, errorActions)
 }
+
+export const getLoadingUpdates = (actions$: Actions, actionsToListenFor: AnyActionCreator[]) =>
+    merge(
+        of(false),
+        actions$.pipe(
+            ofType(...actionsToListenFor),
+            map(({ type }) => {
+                if (/success|error/i.test(type)) return false
+                else return true
+            })
+        )
+    )

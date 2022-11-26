@@ -24,6 +24,7 @@ export const accountActions = createActionGroup({
     events: {
         'update username': props<{ username: string }>(),
         'update username success': props<{ username: string }>(),
+        'update username error': props<HttpServerErrorResponse>(),
 
         'load email': props<{ ignoreCache?: boolean }>(),
         'load email success': props<{ email: string }>(),

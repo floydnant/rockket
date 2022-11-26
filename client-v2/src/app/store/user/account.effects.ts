@@ -36,7 +36,8 @@ export class UserAccountEffects {
                         success: res => res.successMessage,
                         error: getMessageFromHttpError,
                     }),
-                    map(() => accountActions.updateUsernameSuccess(dto))
+                    map(() => accountActions.updateUsernameSuccess(dto)),
+                    catchError((err: HttpServerErrorResponse) => of(accountActions.updateUsernameError(err)))
                 )
             })
         )
