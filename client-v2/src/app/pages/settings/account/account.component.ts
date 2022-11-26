@@ -8,8 +8,9 @@ import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator, matchSibling } from 'src/app/components/molecules/form/validators'
 import { AppState } from 'src/app/store'
 import { accountActions, authActions } from 'src/app/store/user/user.actions'
+import { userFeature } from 'src/app/store/user/user.selectors'
 import { moveToMacroQueue } from 'src/app/utils'
-import { getErrorMapUpdates, getLoadingUpdates } from '../../../utils/store-helpers'
+import { getErrorMapUpdates, getLoadingUpdates } from '../../../utils/store.helpers'
 
 @Component({
     templateUrl: './account.component.html',
@@ -23,16 +24,14 @@ export class SettingsAccountComponent implements OnDestroy {
         this.usernameSuccessActionSubscription.unsubscribe()
     }
 
-    userState = this.store
-        .select(state => state.user)
-        .pipe(
-            tap(userState =>
-                moveToMacroQueue(() => {
-                    this.usernameFromStore = userState.me?.username || 'Failed to load username'
-                    this.usernameControl.patchValue(this.usernameFromStore)
-                })
-            )
+    userState = this.store.select(userFeature).pipe(
+        tap(userState =>
+            moveToMacroQueue(() => {
+                this.usernameFromStore = userState.me?.username || 'Failed to load username'
+                this.usernameControl.patchValue(this.usernameFromStore)
+            })
         )
+    )
 
     onUploadPhoto() {
         // @TODO: implement this
