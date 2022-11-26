@@ -35,6 +35,7 @@ export class SettingsAccountComponent implements OnDestroy {
         )
 
     onUploadPhoto() {
+        // @TODO: implement this
         this.toast.info('Profile photos are not yet implemented.')
     }
     onDeleteAccount() {
