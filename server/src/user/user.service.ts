@@ -95,6 +95,11 @@ export class UserService {
         try {
             await this.validatePassword(password, user.password)
 
+            const userWithAlreadyExistingEmail = await this.prisma.user.findFirst({
+                where: { email: newEmail },
+            })
+            if (userWithAlreadyExistingEmail) throw { code: 'P2002' }
+
             const updatedUser = await this.prisma.user.update({
                 where: { id: user.id },
                 data: { email: newEmail },

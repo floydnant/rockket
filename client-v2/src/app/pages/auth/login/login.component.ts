@@ -9,7 +9,7 @@ import { LoginCredentialsDto } from 'src/app/models/auth.model'
 import { AppState } from 'src/app/store'
 import { authActions } from 'src/app/store/user/user.actions'
 import { userSelectors } from 'src/app/store/user/user.selectors'
-import { getErrorMap } from '../getErrorMap'
+import { getErrorMapUpdates } from '../../../utils/store-helpers'
 
 @Component({
     selector: 'app-login',
@@ -37,7 +37,12 @@ export class LoginComponent {
     }
 
     isLoading$ = this.store.select(userSelectors.selectLoginState).pipe(map(({ isLoading }) => isLoading))
-    errorMap$ = getErrorMap(this.actions$, Object.keys(this.formOptions))
+    errorMap$ = getErrorMapUpdates({
+        actions$: this.actions$,
+        fields: Object.keys(this.formOptions),
+        resetAction: authActions.loginOrSignupSuccess,
+        errorAction: authActions.loginOrSignupError,
+    })
 
     callbackUrl?: string
 

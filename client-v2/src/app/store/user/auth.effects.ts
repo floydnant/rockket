@@ -6,6 +6,7 @@ import { catchError, map, mergeMap, Observable, of, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { AuthSuccessResponse, SignupCredentialsDto } from 'src/app/models/auth.model'
 import { UserService } from 'src/app/services/user.service'
+import { getMessageFromHttpError } from 'src/app/utils/store-helpers'
 import { appActions } from '../app.actions'
 import { authActions } from './user.actions'
 
@@ -30,10 +31,7 @@ export class AuthEffects {
                 return res$.pipe(
                     this.toast.observe({
                         success: res => res.successMessage,
-                        error: (err: HttpServerErrorResponse) =>
-                            err.error.message instanceof Array
-                                ? err.error.message[0].replace(/^\w+:/, '')
-                                : err.error.message.replace(/^\w+:/, ''),
+                        error: getMessageFromHttpError,
                     }),
                     tap(() => {
                         if (callbackUrl) this.router.navigateByUrl(callbackUrl)
@@ -101,4 +99,14 @@ export class AuthEffects {
             })
         )
     })
+
+    logout = createEffect(
+        () => {
+            return this.actions$.pipe(
+                ofType(authActions.logout),
+                tap(() => this.router.navigateByUrl('/auth'))
+            )
+        },
+        { dispatch: false }
+    )
 }

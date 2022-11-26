@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store'
-import { authActions } from './user.actions'
+import { accountActions, authActions } from './user.actions'
 import { UserState } from './user.model'
 
 const initialState: UserState = {
@@ -53,5 +53,33 @@ export const userReducer = createReducer<UserState>(
     })),
 
     // logout
-    on(authActions.logout, () => initialState)
+    on(authActions.logout, () => initialState),
+
+    // Update username success
+    on(accountActions.updateUsernameSuccess, (state, { username }) => ({
+        ...state,
+        me: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ...state.me!,
+            username,
+        },
+    })),
+
+    on(accountActions.updateEmailSuccess, (state, { email }) => ({
+        ...state,
+        me: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ...state.me!,
+            email,
+        },
+    })),
+
+    on(accountActions.loadEmailSuccess, (state, { email }) => ({
+        ...state,
+        me: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ...state.me!,
+            email,
+        },
+    }))
 )
