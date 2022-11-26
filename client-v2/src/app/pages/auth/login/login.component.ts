@@ -9,7 +9,7 @@ import { LoginCredentialsDto } from 'src/app/models/auth.model'
 import { AppState } from 'src/app/store'
 import { authActions } from 'src/app/store/user/user.actions'
 import { userSelectors } from 'src/app/store/user/user.selectors'
-import { getErrorMapUpdates } from '../getErrorMap'
+import { getErrorMapUpdates } from '../../../utils/store-helpers'
 
 @Component({
     selector: 'app-login',

@@ -9,7 +9,7 @@ import { betterEmailValidator, matchSibling } from 'src/app/components/molecules
 import { AppState } from 'src/app/store'
 import { accountActions, authActions } from 'src/app/store/user/user.actions'
 import { moveToMacroQueue } from 'src/app/utils'
-import { getErrorMapUpdates } from '../../auth/getErrorMap'
+import { getErrorMapUpdates } from '../../../utils/store-helpers'
 
 @Component({
     templateUrl: './account.component.html',

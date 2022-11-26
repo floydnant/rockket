@@ -1,6 +1,12 @@
 import { Actions, ofType } from '@ngrx/effects'
 import { ActionCreator, Creator } from '@ngrx/store'
 import { map, merge } from 'rxjs'
+import { HttpServerErrorResponse } from '../http/types'
+
+export const getMessageFromHttpError = (err: HttpServerErrorResponse) =>
+    err.error.message instanceof Array
+        ? err.error.message[0].replace(/^\w+:/, '')
+        : err.error.message.replace(/^\w+:/, '')
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SuccessAction = ActionCreator<string, Creator<any[], Record<string, any>>>

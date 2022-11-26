@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store'
 import { catchError, map, mergeMap, of } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { UserService } from 'src/app/services/user.service'
+import { getMessageFromHttpError } from 'src/app/utils/store-helpers'
 import { AppState } from '..'
 import { appActions } from '../app.actions'
 import { accountActions, authActions } from './user.actions'
@@ -33,7 +34,7 @@ export class UserAccountEffects {
                     this.toast.observe({
                         loading: 'Updating username...',
                         success: res => res.successMessage,
-                        error: err => err.error.message,
+                        error: getMessageFromHttpError,
                     }),
                     map(() => accountActions.updateUsernameSuccess(dto))
                 )
@@ -51,7 +52,7 @@ export class UserAccountEffects {
                     this.toast.observe({
                         loading: 'Updating email...',
                         success: res => res.successMessage,
-                        error: err => err.error.message,
+                        error: getMessageFromHttpError,
                     }),
                     map(() => accountActions.updateEmailSuccess({ email: dto.email })),
                     catchError((err: HttpServerErrorResponse) => of(accountActions.updateEmailError(err)))
@@ -70,7 +71,7 @@ export class UserAccountEffects {
                     this.toast.observe({
                         loading: 'Updating password...',
                         success: res => res.successMessage,
-                        error: err => err.error.message,
+                        error: getMessageFromHttpError,
                     }),
                     map(() => accountActions.updatePasswordSuccess()),
                     catchError((err: HttpServerErrorResponse) => of(accountActions.updatePasswordError(err)))
@@ -109,7 +110,7 @@ export class UserAccountEffects {
                     this.toast.observe({
                         loading: 'Deleting your account...',
                         success: res => res.successMessage,
-                        error: err => err.error.message,
+                        error: getMessageFromHttpError,
                     }),
                     map(() => accountActions.deleteAccountSuccess()),
                     catchError((err: HttpServerErrorResponse) => of(accountActions.deleteAccountError(err)))
