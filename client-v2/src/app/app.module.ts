@@ -38,6 +38,7 @@ import { SettingsAppearanceComponent } from './pages/settings/appearance/appeara
 import { SettingsAccountComponent } from './pages/settings/account/account.component'
 import { AuthComponent } from './pages/auth/auth.component'
 import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.component'
+import { CdkMenuModule } from '@angular/cdk/menu'
 
 @NgModule({
     declarations: [
@@ -102,6 +103,7 @@ import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.
         }),
         EffectsModule.forRoot(effects),
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+        CdkMenuModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
