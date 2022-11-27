@@ -30,52 +30,63 @@
 <h2 class="mb-2 text-tinted-300">Email address</h2>
 <p>
     <span class="email | mr-2">{{ (userState | async)?.me?.email || 'failed to load email' }}</span>
-    <button *ngIf="activeForm != 'email'" class="button-naked text-primary-200" (click)="setFormActive('email')">
-        Change email address
-    </button>
+    <button class="button-naked text-primary-200" (click)="openFormModal('email')">Change email address</button>
 </p>
 <p class="text-md text-tinted-500">
     <app-icon iconClass="far fa-info-circle"></app-icon>
     Your email address will be visibile to other users you collaborate with.
 </p>
+<ng-template #emailForm>
+    <app-modal [enableFooter]="false" [enableHeader]="true" (close)="closeFormModal()">
+        <ng-container header>
+            <h2 class="m-0">Change email address</h2>
+        </ng-container>
 
-<app-form
-    *ngIf="activeForm == 'email'"
-    [formOptions]="emailFormOptions"
-    submitButton="Update email"
-    (formSubmit)="onEmailFormSubmit($event)"
-    containerClasses="grid gap-3"
-    [extraErrorMessages]="(emailFormErrors$ | async) || {}"
-    [isLoading]="emailFormLoading$ | async"
-    gridAreas="
+        <p>
+            <span class="text-tinted-400">Current: </span>
+            <span class="email">{{ (userState | async)?.me?.email || 'failed to load email' }}</span>
+        </p>
+
+        <app-form
+            [formOptions]="emailFormOptions"
+            submitButton="Update email"
+            (formSubmit)="onEmailFormSubmit($event)"
+            containerClasses="grid gap-3"
+            [extraErrorMessages]="(emailFormErrors$ | async) || {}"
+            [isLoading]="emailFormLoading$ | async"
+            gridAreas="
         'password password email email'
-        'auto submit submit fill'
-    "
-></app-form>
+            'auto submit submit fill'
+            "
+        ></app-form>
+    </app-modal>
+</ng-template>
 
 <h2 class="mb-2 text-tinted-300">Password</h2>
 <p>
-    <button *ngIf="activeForm != 'password'" class="button-naked text-primary-200" (click)="setFormActive('password')">
-        Change password
-    </button>
-    <button *ngIf="activeForm != 'password'" class="button-naked text-primary-200" (click)="onResetPassword()">
-        Reset password
-    </button>
+    <button class="button-naked text-primary-200" (click)="openFormModal('password')">Change password</button>
+    <button class="button-naked text-primary-200" (click)="onResetPassword()">Reset password</button>
 </p>
-<app-form
-    *ngIf="activeForm == 'password'"
-    [formOptions]="passwordFormOptions"
-    submitButton="Update password"
-    containerClasses="grid gap-3"
-    [extraErrorMessages]="(passwordFormErrors$ | async) || {}"
-    [isLoading]="passwordFormLoading$ | async"
-    gridAreas="
-        'password    password    password           password'
-        'newPassword newPassword confirmNewPassword confirmNewPassword'
-        'auto        submit      submit             fill'
-    "
-    (formSubmit)="onPasswordFormSubmit($event)"
-></app-form>
+<ng-template #passwordForm>
+    <app-modal [enableFooter]="false" [enableHeader]="true" (close)="closeFormModal()">
+        <ng-container header>
+            <h2 class="m-0">Change password</h2>
+        </ng-container>
+        <app-form
+            [formOptions]="passwordFormOptions"
+            submitButton="Update password"
+            containerClasses="grid gap-3"
+            [extraErrorMessages]="(passwordFormErrors$ | async) || {}"
+            [isLoading]="passwordFormLoading$ | async"
+            gridAreas="
+            'password    password    password           password'
+            'newPassword newPassword confirmNewPassword confirmNewPassword'
+            'auto        submit      submit             fill'
+        "
+            (formSubmit)="onPasswordFormSubmit($event)"
+        ></app-form>
+    </app-modal>
+</ng-template>
 
 <h2 class="mb-2 text-xl text-danger-400">Danger zone</h2>
 <div class="danger-zone | flex flex-col gap-2 rounded-lg border border-danger-600 bg-danger-900 p-2">

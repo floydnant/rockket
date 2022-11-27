@@ -39,4 +39,6 @@ export class DialogService {
             ...(config || {}),
         })
     }
+
+    open = this.dialog.open.bind(this.dialog)
 }
