@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { AppState } from 'src/app/store'
 import { userFeature } from 'src/app/store/user/user.selectors'
+import { MenuItem } from '../../molecules/drop-down/drop-down.component'
 
 @Component({
     selector: 'user-menu',
@@ -12,4 +13,22 @@ export class UserMenuComponent {
     constructor(private store: Store<AppState>) {}
 
     userState = this.store.select(userFeature)
+
+    menuItems: MenuItem[] = [
+        {
+            title: 'Workspace',
+            route: '/home',
+        },
+        {
+            title: 'Settings',
+            route: '/settings',
+            children: [
+                { title: 'General', route: '/settings/general', children: [{ title: 'Change password' }] },
+                { title: 'Account', route: '/settings/account', children: [{ title: 'Change password' }] },
+                { title: 'Appearance', route: '/settings/appearance' },
+            ],
+        },
+        { isSeperator: true },
+        { title: 'Logout' },
+    ]
 }

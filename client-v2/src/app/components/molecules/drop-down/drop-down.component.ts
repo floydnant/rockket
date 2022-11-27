@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, Input } from '@angular/core'
 import { PageEntityIconKey } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 
 export interface MenuItem {
@@ -15,9 +15,6 @@ export interface MenuItem {
     templateUrl: './drop-down.component.html',
     styleUrls: ['./drop-down.component.css'],
 })
-export class DropDownComponent implements OnInit {
-    constructor() {}
-    ngOnInit(): void {}
-
+export class DropDownComponent {
     @Input() items!: MenuItem[]
 }
