@@ -5,16 +5,11 @@ import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './pages/app.component'
 import { DemoComponent } from './components/demo/demo.component'
 import { TaskComponent } from './components/organisms/task/task.component'
-import { StatusIconComponent } from './components/atoms/icons/status-icon/status-icon.component'
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
-import { IconComponent } from './components/atoms/icons/icon/icon.component'
 import { FocusableDirective } from './directives/focusable.directive'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { DoubleEllipsisIconComponent } from './components/atoms/icons/double-ellipsis-icon/double-ellipsis-icon.component'
-import { PriorityIconComponent } from './components/atoms/icons/priority-icon/priority-icon.component'
 import { InputComponent } from './components/atoms/input/input.component'
 import { FormComponent } from './components/molecules/form/form.component'
-import { LoadingSpinnerComponent } from './components/atoms/icons/loading-spinner/loading-spinner.component'
 import { LoginComponent } from './pages/auth/login/login.component'
 import { SignupComponent } from './pages/auth/signup/signup.component'
 import { HttpModule } from './http/http.module'
@@ -31,7 +26,6 @@ import { CenteredLayoutComponent } from './components/templates/centered-layout/
 import { LandingPageComponent } from './pages/landing-page/landing-page.component'
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component'
 import { TasksDemoComponent } from './pages/component-playground/tasks-demo/tasks-demo.component'
-import { PageEntityIconComponent } from './components/atoms/icons/page-entity-icon/page-entity-icon.component'
 import { SettingsComponent } from './pages/settings/settings.component'
 import { SettingsGeneralComponent } from './pages/settings/general/general.component'
 import { SettingsAppearanceComponent } from './pages/settings/appearance/appearance.component'
@@ -40,6 +34,7 @@ import { AuthComponent } from './pages/auth/auth.component'
 import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.component'
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { DropDownComponent } from './components/molecules/drop-down/drop-down.component'
+import { ModalModule } from './modal/modal.module'
 import { IconsModule } from './components/atoms/icons/icons.module'
 
 @NgModule({
@@ -102,6 +97,7 @@ import { IconsModule } from './components/atoms/icons/icons.module'
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         CdkMenuModule,
         IconsModule,
+        ModalModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
