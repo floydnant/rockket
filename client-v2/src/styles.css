@@ -71,7 +71,7 @@ body {
         @apply bg-submit-400 text-tinted-900 hover:bg-submit-600;
     }
     .button--danger {
-        @apply bg-danger-400 text-tinted-900 hover:bg-danger-600;
+        @apply bg-danger-400 hover:bg-danger-600;
     }
 
     .input {
