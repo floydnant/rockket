@@ -40,21 +40,17 @@ import { AuthComponent } from './pages/auth/auth.component'
 import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.component'
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { DropDownComponent } from './components/molecules/drop-down/drop-down.component'
+import { IconsModule } from './components/atoms/icons/icons.module'
 
 @NgModule({
     declarations: [
         AppComponent,
         DemoComponent,
         TaskComponent,
-        StatusIconComponent,
         ComponentPlaygroundComponent,
-        IconComponent,
         FocusableDirective,
-        DoubleEllipsisIconComponent,
-        PriorityIconComponent,
         InputComponent,
         FormComponent,
-        LoadingSpinnerComponent,
         LoginComponent,
         SignupComponent,
         UserMenuComponent,
@@ -64,7 +60,6 @@ import { DropDownComponent } from './components/molecules/drop-down/drop-down.co
         LandingPageComponent,
         NotFoundPageComponent,
         TasksDemoComponent,
-        PageEntityIconComponent,
         SettingsComponent,
         SettingsGeneralComponent,
         SettingsAppearanceComponent,
@@ -106,6 +101,7 @@ import { DropDownComponent } from './components/molecules/drop-down/drop-down.co
         EffectsModule.forRoot(effects),
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         CdkMenuModule,
+        IconsModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
