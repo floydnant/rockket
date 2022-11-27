@@ -39,6 +39,7 @@ import { SettingsAccountComponent } from './pages/settings/account/account.compo
 import { AuthComponent } from './pages/auth/auth.component'
 import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.component'
 import { CdkMenuModule } from '@angular/cdk/menu'
+import { DropDownComponent } from './components/molecules/drop-down/drop-down.component'
 
 @NgModule({
     declarations: [
@@ -70,6 +71,7 @@ import { CdkMenuModule } from '@angular/cdk/menu'
         SettingsAccountComponent,
         AuthComponent,
         LoginLoadingComponent,
+        DropDownComponent,
     ],
     imports: [
         BrowserModule,

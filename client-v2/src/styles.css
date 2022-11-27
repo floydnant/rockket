@@ -1,4 +1,5 @@
 @import '~@angular/cdk/overlay-prebuilt.css';
+@import './css/cdk-styles.css';
 
 @tailwind base;
 @tailwind components;
@@ -41,7 +42,7 @@ body {
 }
 
 @layer components {
-    a:not([class|='button']),
+    a:not([class|='button'], .skip-default-a-styles),
     .link {
         @apply text-submit-500 hover:text-submit-400 hover:underline;
     }

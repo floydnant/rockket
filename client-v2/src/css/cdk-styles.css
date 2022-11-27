@@ -1,0 +1,44 @@
+[cdkMenu] {
+    min-width: 180px;
+    max-width: 280px;
+    @apply flex flex-col gap-0.5 mx-2 rounded-lg border border-tinted-800 bg-tinted-900 p-2 shadow-lg;
+}
+
+.menu-item,
+.standalone-trigger {
+    /* background-color: transparent; */
+    /* cursor: pointer;
+    border: none; */
+
+    /* user-select: none; */
+    /* min-width: 64px; */
+    /* line-height: 36px; */
+    /* padding: 0 16px; */
+
+    /* display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex: 1; */
+}
+
+[cdkMenuItem] {
+    @apply button-naked text-left;
+}
+
+[cdkMenuItem]:is(:hover, :active, :focus-visible) {
+    @apply bg-tinted-700 outline-none;
+}
+
+/* .menu-item:active {
+    background-color: rgb(170, 170, 170);
+  } */
+
+.standalone-item {
+    background-color: rgb(239, 239, 239);
+}
+.standalone-item:hover {
+    background-color: rgb(208, 208, 208);
+}
+.standalone-item[aria-expanded='true'] {
+    background-color: rgb(208, 208, 208);
+}
