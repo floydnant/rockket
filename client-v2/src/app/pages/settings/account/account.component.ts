@@ -29,6 +29,7 @@ export class SettingsAccountComponent implements OnDestroy {
     }
     ngOnDestroy(): void {
         this.usernameSuccessActionSubscription.unsubscribe()
+        this.emailOrPasswordSuccessActionSubscription.unsubscribe()
     }
 
     userState = this.store.select(userFeature).pipe(

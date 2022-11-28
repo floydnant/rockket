@@ -42,3 +42,8 @@
 .standalone-item[aria-expanded='true'] {
     background-color: rgb(208, 208, 208);
 }
+
+
+.cdk-overlay-backdrop {
+    @apply bg-tinted-900/50 backdrop-blur-md;
+}
