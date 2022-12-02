@@ -114,13 +114,25 @@ export class AuthEffects {
 
                 return dialogRef.closed.pipe(
                     map(res => {
-                        if (res != 'Logout') return authActions.logoutAbort()
+                        if (res == 'Logout') return authActions.logoutProceed()
 
-                        this.router.navigateByUrl('/auth')
-                        return authActions.logoutProceed()
+                        return authActions.logoutAbort()
                     })
                 )
             })
         )
     })
+
+    logoutProceed = createEffect(
+        () => {
+            return this.actions$.pipe(
+                ofType(authActions.logoutProceed),
+                tap(() => {
+                    this.userService.deleteToken()
+                    this.router.navigateByUrl('/auth')
+                })
+            )
+        },
+        { dispatch: false }
+    )
 }
