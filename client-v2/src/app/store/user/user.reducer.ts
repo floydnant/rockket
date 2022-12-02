@@ -53,7 +53,7 @@ export const userReducer = createReducer<UserState>(
     })),
 
     // logout
-    on(authActions.logout, () => initialState),
+    on(authActions.logoutProceed, () => initialState),
 
     // Update username success
     on(accountActions.updateUsernameSuccess, (state, { username }) => ({

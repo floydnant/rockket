@@ -72,14 +72,7 @@ export class SettingsAccountComponent implements OnDestroy {
         })
     }
     onLogout() {
-        const dialogRef = this.dialogService.confirm({
-            title: 'Logout',
-            text: 'Are you sure you want to log out?',
-            buttons: [{ text: 'Cancel' }, { text: 'Logout', className: 'button--danger' }],
-        })
-        dialogRef.closed.subscribe(res => {
-            if (res == 'Logout') this.store.dispatch(authActions.logout())
-        })
+        this.store.dispatch(authActions.logout())
     }
 
     @ViewChild('emailForm') emailForm!: TemplateRef<HTMLElement>

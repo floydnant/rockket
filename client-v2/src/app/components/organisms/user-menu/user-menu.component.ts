@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { AppState } from 'src/app/store'
+import { authActions } from 'src/app/store/user/user.actions'
 import { userFeature } from 'src/app/store/user/user.selectors'
 import { MenuItem } from '../../molecules/drop-down/drop-down.component'
 
@@ -29,6 +30,6 @@ export class UserMenuComponent {
             ],
         },
         { isSeperator: true },
-        { title: 'Logout' },
+        { title: 'Logout', action: () => this.store.dispatch(authActions.logout()) },
     ]
 }

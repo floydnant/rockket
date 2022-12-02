@@ -12,6 +12,8 @@ export const authActions = createActionGroup({
         'login or signup error': props<HttpServerErrorResponse>(),
 
         logout: emptyProps(),
+        'logout proceed': emptyProps(),
+        'logout abort': emptyProps(),
 
         'load auth token success': props<{ authToken: string }>(),
         'confirm login': emptyProps(),

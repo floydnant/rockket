@@ -123,7 +123,7 @@ export class AccountEffects {
     forwardDeleteAccount = createEffect(() =>
         this.actions$.pipe(
             ofType(accountActions.deleteAccountSuccess),
-            map(() => authActions.logout())
+            map(() => authActions.logoutProceed())
         )
     )
 
