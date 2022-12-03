@@ -1,5 +1,6 @@
 import { CdkMenuTrigger } from '@angular/cdk/menu'
 import { Component, Input } from '@angular/core'
+import { moveToMacroQueue } from 'src/app/utils'
 import { PageEntityIconKey } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 
 export interface MenuItem {
@@ -19,4 +20,9 @@ export interface MenuItem {
 export class DropDownComponent {
     @Input() items!: MenuItem[]
     @Input() rootTrigger?: CdkMenuTrigger
+
+    triggerAction(action: MenuItem['action']) {
+        // this ensures that the keydown event doesn't get picked up by another component
+        moveToMacroQueue(() => action?.())
+    }
 }

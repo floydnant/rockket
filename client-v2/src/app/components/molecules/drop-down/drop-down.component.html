@@ -36,7 +36,7 @@
             *ngIf="!menuItem.isSeperator && !menuItem.route && !menuItem.children?.length"
             class="menu-item"
             cdkMenuItem
-            (cdkMenuItemTriggered)="menuItem.action?.(); rootTrigger?.close?.()"
+            (cdkMenuItemTriggered)="triggerAction(menuItem.action); rootTrigger?.close?.()"
         >
             <span class="title">{{ menuItem.title }}</span>
         </button>
@@ -45,7 +45,7 @@
             *ngIf="!menuItem.isSeperator && !menuItem.route && menuItem.children?.length"
             class="menu-item | inline-flex justify-between"
             cdkMenuItem
-            (cdkMenuItemTriggered)="menuItem.action?.(); rootTrigger?.close?.()"
+            (cdkMenuItemTriggered)="triggerAction(menuItem.action); rootTrigger?.close?.()"
             [cdkMenuTriggerFor]="subMenu"
         >
             <span class="title">{{ menuItem.title }}</span>
