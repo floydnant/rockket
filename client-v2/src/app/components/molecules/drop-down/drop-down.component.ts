@@ -1,3 +1,4 @@
+import { CdkMenuTrigger } from '@angular/cdk/menu'
 import { Component, Input } from '@angular/core'
 import { PageEntityIconKey } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 
@@ -17,4 +18,5 @@ export interface MenuItem {
 })
 export class DropDownComponent {
     @Input() items!: MenuItem[]
+    @Input() rootTrigger?: CdkMenuTrigger
 }
