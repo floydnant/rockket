@@ -24,8 +24,8 @@ export class UserMenuComponent {
             title: 'Settings',
             route: '/settings',
             children: [
-                { title: 'General', route: '/settings/general', children: [{ title: 'Change password' }] },
-                { title: 'Account', route: '/settings/account', children: [{ title: 'Change password' }] },
+                { title: 'General', route: '/settings/general' },
+                { title: 'Account', route: '/settings/account' },
                 { title: 'Appearance', route: '/settings/appearance' },
             ],
         },
