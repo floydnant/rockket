@@ -9,20 +9,24 @@
 
         <a
             *ngIf="!menuItem.isSeperator && menuItem.route && !menuItem.children?.length"
+            #link
             [routerLink]="menuItem.route"
             routerLinkActive="route-active"
             class="skip-default-a-styles menu-item"
             cdkMenuItem
+            (cdkMenuItemTriggered)="link.click()"
         >
             <span class="title">{{ menuItem.title }}</span>
         </a>
         <a
             *ngIf="!menuItem.isSeperator && menuItem.route && menuItem.children?.length"
             [routerLink]="menuItem.route"
+            #link
             routerLinkActive="route-active"
             class="skip-default-a-styles menu-item | inline-flex justify-between"
             cdkMenuItem
             [cdkMenuTriggerFor]="subMenu"
+            (cdkMenuItemTriggered)="link.click()"
         >
             <span class="title">{{ menuItem.title }}</span>
             <ng-container *ngTemplateOutlet="chevron"></ng-container>
