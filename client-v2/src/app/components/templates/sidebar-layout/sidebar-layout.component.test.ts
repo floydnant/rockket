@@ -1,3 +1,5 @@
+import { CdkMenuTrigger } from '@angular/cdk/menu'
+import { OverlayModule } from '@angular/cdk/overlay'
 import { Store } from '@ngrx/store'
 import { IconComponent } from '../../atoms/icons/icon/icon.component'
 import { LoadingSpinnerComponent } from '../../atoms/icons/loading-spinner/loading-spinner.component'
@@ -12,7 +14,14 @@ const setupComponent = (template: string) => {
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             { provide: Store, useValue: { subscribe() {}, select() {} } },
         ],
-        declarations: [SidebarLayoutComponent, UserMenuComponent, LoadingSpinnerComponent, IconComponent],
+        imports: [OverlayModule],
+        declarations: [
+            SidebarLayoutComponent,
+            UserMenuComponent,
+            LoadingSpinnerComponent,
+            IconComponent,
+            CdkMenuTrigger,
+        ],
     })
 }
 const defaultContent = `
