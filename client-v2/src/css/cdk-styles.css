@@ -1,4 +1,4 @@
-[cdkMenu] {
+.dropdown-menu {
     min-width: 180px;
     max-width: 280px;
     @apply flex flex-col gap-0.5 mx-2 rounded-lg border border-tinted-800 bg-tinted-900 p-2 shadow-lg;

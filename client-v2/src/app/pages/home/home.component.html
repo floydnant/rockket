@@ -1,25 +1,33 @@
 <app-sidebar-layout data-test-name="workspace-page">
     <!-- SIDEBAR HEADER -->
     <ng-container sidebarHeader>
-        <div class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300">
-            <button class="button-naked w-full text-left">
+        <div class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300" cdkMenu>
+            <button
+                cdkMenuItem
+                class="button-naked w-full text-left"
+                appTooltip="Search for tasks and lists"
+                [tooltipOptions]="{ preferredPosition: 'right' }"
+            >
                 <app-icon iconClass="fas fa-search"></app-icon> Search
             </button>
             <button
+                cdkMenuItem
                 class="button-naked w-full text-left"
-                appTooltip="Import a todo list"
+                appTooltip="Import one or more lists"
                 [tooltipOptions]="{ preferredPosition: 'right' }"
             >
                 <app-icon iconClass="fas fa-file-import"></app-icon> Import
             </button>
             <button
+                cdkMenuItem
                 class="button-naked w-full text-left"
-                appTooltip="Place for all deleted content"
+                appTooltip="Deleted content stays here for 30 days"
                 [tooltipOptions]="{ preferredPosition: 'right' }"
             >
                 <app-icon iconClass="fas fa-trash"></app-icon> Garbage
             </button>
             <button
+                cdkMenuItem
                 class="button-naked w-full text-left"
                 routerLink="/settings"
                 appTooltip="The app settings"
@@ -82,12 +90,13 @@
         ></div>
 
         <!-- @TODO: Fix the header width issue (breadcrumbs taking more than allowed) -->
-        <div class="breadcrumbs | flex w-full flex-wrap py-2 px-4 text-tinted-300">
+        <div class="breadcrumbs | flex w-full flex-wrap py-2 px-4 text-tinted-300" cdkMenuBar>
             <div *ngFor="let breadcrumb of breadcrumbs; let i = index" class="flex max-w-[80%]">
                 <button
                     class="breadcrumb | button-naked truncate py-0 px-1 hover:bg-tinted-800"
                     [class.text-tinted-100]="breadcrumbs.length - 1 == i"
                     appTooltip="Here will be more information"
+                    cdkMenuItem
                 >
                     <page-entity-icon *ngIf="breadcrumb.icon" [icon]="breadcrumb.icon"></page-entity-icon>
                     <span class="truncate">{{ breadcrumb.text }}</span>
