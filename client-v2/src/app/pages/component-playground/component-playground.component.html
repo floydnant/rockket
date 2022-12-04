@@ -1,4 +1,4 @@
-<app-centered-layout>
+<app-centered-layout [cdkContextMenuTriggerFor]="contextMenu">
     <h2>Forms</h2>
     <app-form
         [formOptions]="formOptions"
@@ -48,3 +48,7 @@
 
     <app-tasks-demo></app-tasks-demo>
 </app-centered-layout>
+
+<ng-template #contextMenu>
+    <app-drop-down [items]="contextMenuOptions"></app-drop-down>
+</ng-template>

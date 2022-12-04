@@ -4,6 +4,7 @@ import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
 import { catchError, map, mergeMap, Observable, of, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
+import { DialogService } from 'src/app/modal/dialog.service'
 import { AuthSuccessResponse, SignupCredentialsDto } from 'src/app/models/auth.model'
 import { UserService } from 'src/app/services/user.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
@@ -16,7 +17,8 @@ export class AuthEffects {
         private actions$: Actions,
         private userService: UserService,
         private toast: HotToastService,
-        private router: Router
+        private router: Router,
+        private dialogService: DialogService
     ) {}
 
     loginOrSignup = createEffect(() => {
@@ -100,11 +102,35 @@ export class AuthEffects {
         )
     })
 
-    logout = createEffect(
+    logout = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(authActions.logout),
+            mergeMap(() => {
+                const dialogRef = this.dialogService.confirm({
+                    title: 'Logout',
+                    text: 'Are you sure you want to log out?',
+                    buttons: [{ text: 'Cancel' }, { text: 'Logout', className: 'button--danger' }],
+                })
+
+                return dialogRef.closed.pipe(
+                    map(res => {
+                        if (res == 'Logout') return authActions.logoutProceed()
+
+                        return authActions.logoutAbort()
+                    })
+                )
+            })
+        )
+    })
+
+    logoutProceed = createEffect(
         () => {
             return this.actions$.pipe(
-                ofType(authActions.logout),
-                tap(() => this.router.navigateByUrl('/auth'))
+                ofType(authActions.logoutProceed),
+                tap(() => {
+                    this.userService.deleteToken()
+                    this.router.navigateByUrl('/auth')
+                })
             )
         },
         { dispatch: false }

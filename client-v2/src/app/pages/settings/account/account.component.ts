@@ -1,4 +1,5 @@
-import { Component, OnDestroy } from '@angular/core'
+import { DialogRef } from '@angular/cdk/dialog'
+import { Component, OnDestroy, TemplateRef, ViewChild } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, ofType } from '@ngrx/effects'
@@ -6,6 +7,7 @@ import { Store } from '@ngrx/store'
 import { Observable, tap } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator, matchSibling } from 'src/app/components/molecules/form/validators'
+import { DialogService } from 'src/app/modal/dialog.service'
 import { AppState } from 'src/app/store'
 import { accountActions, authActions } from 'src/app/store/user/user.actions'
 import { userFeature } from 'src/app/store/user/user.selectors'
@@ -17,11 +19,17 @@ import { getErrorMapUpdates, getLoadingUpdates } from '../../../utils/store.help
     styles: [],
 })
 export class SettingsAccountComponent implements OnDestroy {
-    constructor(private store: Store<AppState>, private toast: HotToastService, private actions$: Actions) {
+    constructor(
+        private store: Store<AppState>,
+        private toast: HotToastService,
+        private actions$: Actions,
+        private dialogService: DialogService
+    ) {
         this.store.dispatch(accountActions.loadEmail({}))
     }
     ngOnDestroy(): void {
         this.usernameSuccessActionSubscription.unsubscribe()
+        this.emailOrPasswordSuccessActionSubscription.unsubscribe()
     }
 
     userState = this.store.select(userFeature).pipe(
@@ -38,23 +46,54 @@ export class SettingsAccountComponent implements OnDestroy {
         this.toast.info('Profile photos are not yet implemented.')
     }
     onDeleteAccount() {
-        const message =
-            'Do you really want to delete your account? Everything will be deleted. This action is irreversable!'
-        if (!confirm(message)) return
+        // @TODO: implement this with cdk stepper
+        const dialogRef = this.dialogService.confirm({
+            title: 'Delete account',
+            text: `Are you sure you want to delete your account? All data associated with your account will be lost. This action cannot be undone.`,
+            buttons: [
+                { text: 'Cancel' },
+                {
+                    text: 'I understand, delete',
+                    resCode: 'Delete',
+                    className: 'button--danger',
+                },
+            ],
+        })
 
-        const password = prompt('Type in your password.')
-        if (!password) return
+        dialogRef.closed.subscribe(res => {
+            if (res != 'Delete') return
 
-        this.store.dispatch(accountActions.deleteAccount({ password }))
+            moveToMacroQueue(() => {
+                const password = prompt('Type in your password.')
+                if (!password) return
+
+                this.store.dispatch(accountActions.deleteAccount({ password }))
+            })
+        })
     }
     onLogout() {
-        if (confirm('Do you want to logout?')) this.store.dispatch(authActions.logout())
+        this.store.dispatch(authActions.logout())
     }
 
-    activeForm: null | 'email' | 'password' = null
-    setFormActive(form: typeof this.activeForm) {
-        this.activeForm = form
+    @ViewChild('emailForm') emailForm!: TemplateRef<HTMLElement>
+    @ViewChild('passwordForm') passwordForm!: TemplateRef<HTMLElement>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    modalRef: null | DialogRef<any, any> = null
+    openFormModal(form: 'email' | 'password') {
+        const formRefMap = {
+            email: this.emailForm,
+            password: this.passwordForm,
+        }
+
+        this.modalRef = this.dialogService.open(formRefMap[form], {})
+        this.modalRef.closed.subscribe(() => (this.modalRef = null))
     }
+    closeFormModal() {
+        this.modalRef?.close()
+    }
+    emailOrPasswordSuccessActionSubscription = this.actions$
+        .pipe(ofType(accountActions.updateEmailSuccess, accountActions.updatePasswordSuccess))
+        .subscribe(() => this.closeFormModal())
 
     /////////////////// Username Form ///////////////////
     usernameControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(35)])

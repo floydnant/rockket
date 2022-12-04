@@ -1,3 +1,7 @@
+@import '~@angular/cdk/overlay-prebuilt.css';
+@import './cdk-styles.css';
+@import './components.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -38,51 +42,7 @@ body {
     @apply cursor-not-allowed;
 }
 
-@layer components {
-    a:not([class|='button']),
-    .link {
-        @apply text-submit-500 hover:text-submit-400 hover:underline;
-    }
-
-    .button {
-        @apply rounded-md bg-tinted-500 py-2 px-5 font-semibold text-tinted-100 transition-colors hover:bg-tinted-600;
-    }
-
-    .button-naked {
-        @apply rounded py-0.5 px-2 transition-colors hover:bg-tinted-700;
-        /* hover:text-tinted-100 */
-    }
-    .button-naked i {
-        @apply mr-1 w-4 text-center text-sm;
-    }
-
-    .button-icon-naked {
-        /* @TODO: This would need to be adjusted when touch device specific styles/behaviour are added */
-        @apply py-0;
-    }
-    .button-icon-naked i {
-        @apply m-0 inline-block aspect-square rounded py-0.5 px-2.5 text-base transition-colors hover:bg-tinted-700;
-    }
-
-    .button--submit {
-        @apply bg-submit-400 text-tinted-900 hover:bg-submit-600;
-    }
-    .button--danger {
-        @apply bg-danger-400 text-tinted-900 hover:bg-danger-600;
-    }
-
-    .input {
-        @apply rounded bg-tinted-700 py-2 px-3 outline-none ring-primary-400 focus:ring-2;
-    }
-    .input::placeholder {
-        @apply text-tinted-300;
-    }
-
-    :is(.input, .button)[disabled] {
-        @apply brightness-75;
-    }
-}
-
+/*/////////////////////////////// TYPOGRAPHY //////////////////////////////////*/
 ul,
 ol {
     @apply pl-4;
