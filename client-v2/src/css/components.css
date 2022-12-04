@@ -41,4 +41,10 @@
     :is(.input, .button)[disabled] {
         @apply brightness-75;
     }
+
+    .bg-dotted {
+        background-image: radial-gradient(theme('colors.tinted.800') 8%, transparent 8%);
+        background-position: 4px 4px;
+        background-size: 27px 27px;
+    }
 }
