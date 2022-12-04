@@ -12,7 +12,7 @@
             #link
             [routerLink]="menuItem.route"
             routerLinkActive="route-active"
-            class="skip-default-a-styles menu-item"
+            class="skip-default-a-styles menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }}"
             cdkMenuItem
             (cdkMenuItemTriggered)="link.click(); rootTrigger?.close?.()"
         >
@@ -23,7 +23,9 @@
             [routerLink]="menuItem.route"
             #link
             routerLinkActive="route-active"
-            class="skip-default-a-styles menu-item | inline-flex justify-between"
+            class="skip-default-a-styles menu-item {{
+                menuItem.variant || MenuItemVariant.DEFAULT
+            }} | inline-flex justify-between"
             cdkMenuItem
             [cdkMenuTriggerFor]="subMenu"
             (cdkMenuItemTriggered)="link.click(); rootTrigger?.close?.()"
@@ -34,7 +36,7 @@
 
         <button
             *ngIf="!menuItem.isSeperator && !menuItem.route && !menuItem.children?.length"
-            class="menu-item"
+            class="menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }}"
             cdkMenuItem
             (cdkMenuItemTriggered)="triggerAction(menuItem.action); rootTrigger?.close?.()"
         >
@@ -43,7 +45,7 @@
 
         <button
             *ngIf="!menuItem.isSeperator && !menuItem.route && menuItem.children?.length"
-            class="menu-item | inline-flex justify-between"
+            class="menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }} | inline-flex justify-between"
             cdkMenuItem
             (cdkMenuItemTriggered)="triggerAction(menuItem.action); rootTrigger?.close?.()"
             [cdkMenuTriggerFor]="subMenu"

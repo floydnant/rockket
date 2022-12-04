@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store'
 import { AppState } from 'src/app/store'
 import { authActions } from 'src/app/store/user/user.actions'
 import { userFeature } from 'src/app/store/user/user.selectors'
-import { MenuItem } from '../../molecules/drop-down/drop-down.component'
+import { MenuItem, MenuItemVariant } from '../../molecules/drop-down/drop-down.component'
 
 @Component({
     selector: 'user-menu',
@@ -30,6 +30,6 @@ export class UserMenuComponent {
             ],
         },
         { isSeperator: true },
-        { title: 'Logout', action: () => this.store.dispatch(authActions.logout()) },
+        { title: 'Logout', action: () => this.store.dispatch(authActions.logout()), variant: MenuItemVariant.DANGER },
     ]
 }

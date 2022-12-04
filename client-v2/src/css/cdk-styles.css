@@ -1,7 +1,7 @@
 .dropdown-menu {
     min-width: 180px;
     max-width: 280px;
-    @apply flex flex-col gap-0.5 mx-2 rounded-lg border border-tinted-800 bg-tinted-900 p-2 shadow-lg;
+    @apply mx-2 flex flex-col gap-0.5 rounded-lg border border-tinted-800 bg-tinted-900 p-2 shadow-lg;
 }
 
 .menu-item,
@@ -25,8 +25,22 @@
     @apply button-naked text-left;
 }
 
-[cdkMenuItem]:is(:hover, :active, :focus-visible) {
+[cdkMenuItem]:is(:hover, :active, :focus-visible):is(.menu-item--default, :not([class*='menu-item--'])) {
     @apply bg-tinted-700 outline-none;
+}
+
+[cdkmenuitem].menu-item--danger {
+    @apply text-danger-400 outline-none;
+}
+[cdkMenuItem].menu-item--danger:is(:hover, :active, :focus-visible) {
+    @apply bg-danger-400 text-danger-900;
+}
+
+[cdkMenuItem].menu-item--submit {
+    @apply text-submit-500 outline-none;
+}
+[cdkMenuItem].menu-item--submit:is(:hover, :active, :focus-visible) {
+    @apply bg-submit-400 text-submit-900;
 }
 
 /* .menu-item:active {
@@ -42,7 +56,6 @@
 .standalone-item[aria-expanded='true'] {
     background-color: rgb(208, 208, 208);
 }
-
 
 .cdk-overlay-backdrop {
     @apply bg-tinted-900/50 backdrop-blur-md;

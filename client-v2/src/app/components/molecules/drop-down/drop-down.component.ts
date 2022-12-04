@@ -10,6 +10,13 @@ export interface MenuItem {
     action?: () => void
     children?: MenuItem[]
     isSeperator?: boolean
+    variant?: MenuItemVariant
+}
+
+export enum MenuItemVariant {
+    DEFAULT = 'menu-item--default',
+    DANGER = 'menu-item--danger',
+    SUBMIT = 'menu-item--submit',
 }
 
 @Component({
@@ -25,4 +32,6 @@ export class DropDownComponent {
         // this ensures that the keydown event doesn't get picked up by another component
         moveToMacroQueue(() => action?.())
     }
+
+    MenuItemVariant = MenuItemVariant
 }
