@@ -105,12 +105,15 @@
             </div>
         </div>
 
-        <button
-            class="button-icon-naked py-2 px-4"
-            appTooltip="Here will be some options for the current open document"
-        >
-            <app-icon iconClass="fas fa-ellipsis-v"></app-icon>
-        </button>
+        <div cdkMenuBar>
+            <button
+                cdkMenuItem
+                class="button-icon-naked py-2 px-4"
+                appTooltip="Here will be some options for the current open document"
+            >
+                <app-icon iconClass="fas fa-ellipsis-v"></app-icon>
+            </button>
+        </div>
     </ng-container>
 
     <!-- MAIN CONTENT -->
