@@ -13,6 +13,7 @@
                 class="button px-7 {{ button.className }}"
                 [class.button--submit]="last && !button.className && data.type != DialogType.ALERT"
                 (click)="dialogRef.close(button.resCode || button.text)"
+                data-test-name="dialog-button"
             >
                 {{ button.text }}
             </button>
