@@ -54,6 +54,7 @@ export class TooltipDirective {
     @Input() tooltipOptions?: {
         preferredPosition?: keyof typeof positions
         closeOnHostClick?: boolean
+        avoidPositions?: (keyof typeof positions)[]
     }
 
     @HostListener('mouseenter')
@@ -105,7 +106,9 @@ export class TooltipDirective {
             .flexibleConnectedTo(this.element)
             .withPositions([
                 ...(this.tooltipOptions?.preferredPosition ? [positions[this.tooltipOptions.preferredPosition]] : []),
-                ...Object.values(positions),
+                ...Object.entries(positions)
+                    .filter(([name]) => !this.tooltipOptions?.avoidPositions?.includes(name as keyof typeof positions))
+                    .map(([, position]) => position),
             ])
             .withTransformOriginOn('app-tooltip')
             .withViewportMargin(15)

@@ -10,7 +10,11 @@
 >
     <div class="mb-1 box-border flex max-w-full items-center justify-between gap-2 px-2">
         <div class="max-w-[calc(100%-1.7rem)]">
-            <span class="status | mr-2 text-lg" [appTooltip]="blocked || data.status">
+            <span
+                class="status | mr-2 text-lg"
+                [appTooltip]="blocked || data.status"
+                [tooltipOptions]="{ avoidPositions: ['right'] }"
+            >
                 <status-icon [status]="loading || blocked || data.status"></status-icon>
             </span>
             <span
@@ -41,6 +45,7 @@
                     "
                     [priority]="data.priority"
                     [appTooltip]="data.priority"
+                    [tooltipOptions]="{ avoidPositions: ['left'] }"
                 ></priority-icon>
             </div>
             <double-ellipsis-icon

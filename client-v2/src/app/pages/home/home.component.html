@@ -147,7 +147,7 @@
         <div
             #progressBar
             class="progress | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
-            appTooltip="{{ progress }}% completed - {{ closedTasks }}/{{ allTasks }}"
+            appTooltip="{{ progress }}% closed - {{ closedTasks }}/{{ allTasks }}"
             [tooltipOptions]="{ closeOnHostClick: false }"
         >
             <div class="h-full rounded bg-submit-400 transition-shadow" [style.width]="progress + '%'"></div>
