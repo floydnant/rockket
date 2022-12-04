@@ -37,9 +37,6 @@ const positions = {
 @Directive({
     selector: '[appTooltip]',
     exportAs: 'appTooltip',
-    host: {
-        '(click)': 'onHostClick()',
-    },
 })
 export class TooltipDirective {
     constructor(
@@ -71,6 +68,7 @@ export class TooltipDirective {
         if (this.overlayRef?.hasAttached()) this.overlayRef?.detach()
     }
 
+    @HostListener('click')
     onHostClick() {
         if (this.tooltipOptions?.closeOnHostClick === undefined || this.tooltipOptions?.closeOnHostClick === true)
             this.hideTooltip()

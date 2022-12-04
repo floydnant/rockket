@@ -55,8 +55,8 @@
             [extraErrorMessages]="(emailFormErrors$ | async) || {}"
             [isLoading]="emailFormLoading$ | async"
             gridAreas="
-        'password password email email'
-            'auto submit submit fill'
+                'password password email email'
+                'auto submit submit fill'
             "
         ></app-form>
     </app-modal>
@@ -79,10 +79,10 @@
             [extraErrorMessages]="(passwordFormErrors$ | async) || {}"
             [isLoading]="passwordFormLoading$ | async"
             gridAreas="
-            'password    password    password           password'
-            'newPassword newPassword confirmNewPassword confirmNewPassword'
-            'auto        submit      submit             fill'
-        "
+                'password    password    password           password'
+                'newPassword newPassword confirmNewPassword confirmNewPassword'
+                'auto        submit      submit             fill'
+            "
             (formSubmit)="onPasswordFormSubmit($event)"
         ></app-form>
     </app-modal>

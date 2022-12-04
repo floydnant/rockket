@@ -79,16 +79,14 @@ export class SettingsAccountComponent implements OnDestroy {
     @ViewChild('passwordForm') passwordForm!: TemplateRef<HTMLElement>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     modalRef: null | DialogRef<any, any> = null
-    openFormModal(form: null | 'email' | 'password') {
-        if (!form) return
-
+    openFormModal(form: 'email' | 'password') {
         const formRefMap = {
             email: this.emailForm,
             password: this.passwordForm,
         }
 
         this.modalRef = this.dialogService.open(formRefMap[form], {})
-        this.modalRef.closed.subscribe(() => this.openFormModal(null))
+        this.modalRef.closed.subscribe(() => (this.modalRef = null))
     }
     closeFormModal() {
         this.modalRef?.close()
