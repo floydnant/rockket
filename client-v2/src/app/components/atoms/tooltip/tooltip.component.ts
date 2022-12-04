@@ -9,6 +9,9 @@ export const TOOLTIP_DATA = new InjectionToken<TooltipData>('tooltip.data')
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-test-name': 'tooltip',
+    },
 })
 export class TooltipComponent {
     get asString(): string | false {
