@@ -36,6 +36,9 @@ import { CdkMenuModule } from '@angular/cdk/menu'
 import { DropDownComponent } from './components/molecules/drop-down/drop-down.component'
 import { ModalModule } from './modal/modal.module'
 import { IconsModule } from './components/atoms/icons/icons.module'
+import { OverlayModule } from '@angular/cdk/overlay'
+import { TooltipDirective } from './directives/tooltip.directive'
+import { TooltipComponent } from './components/atoms/tooltip/tooltip.component'
 
 @NgModule({
     declarations: [
@@ -62,6 +65,8 @@ import { IconsModule } from './components/atoms/icons/icons.module'
         AuthComponent,
         LoginLoadingComponent,
         DropDownComponent,
+        TooltipDirective,
+        TooltipComponent,
     ],
     imports: [
         BrowserModule,
@@ -98,6 +103,7 @@ import { IconsModule } from './components/atoms/icons/icons.module'
         CdkMenuModule,
         IconsModule,
         ModalModule,
+        OverlayModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
