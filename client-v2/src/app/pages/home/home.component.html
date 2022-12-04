@@ -5,15 +5,29 @@
             <button class="button-naked w-full text-left">
                 <app-icon iconClass="fas fa-search"></app-icon> Search
             </button>
-            <button class="button-naked w-full text-left">
+            <button
+                class="button-naked w-full text-left"
+                appTooltip="Import a todo list"
+                [tooltipOptions]="{ preferredPosition: 'right' }"
+            >
                 <app-icon iconClass="fas fa-file-import"></app-icon> Import
             </button>
-            <button class="button-naked w-full text-left">
+            <button
+                class="button-naked w-full text-left"
+                appTooltip="Place for all deleted content"
+                [tooltipOptions]="{ preferredPosition: 'right' }"
+            >
                 <app-icon iconClass="fas fa-trash"></app-icon> Garbage
             </button>
-            <a class="button-naked w-full text-left" routerLink="/settings" data-test-name="settings-link">
+            <button
+                class="button-naked w-full text-left"
+                routerLink="/settings"
+                appTooltip="The app settings"
+                [tooltipOptions]="{ preferredPosition: 'right' }"
+                data-test-name="settings-link"
+            >
                 <app-icon iconClass="fas fa-cog"></app-icon> Settings
-            </a>
+            </button>
         </div>
     </ng-container>
 
@@ -73,6 +87,7 @@
                 <button
                     class="breadcrumb | button-naked truncate py-0 px-1 hover:bg-tinted-800"
                     [class.text-tinted-100]="breadcrumbs.length - 1 == i"
+                    appTooltip="Here will be more information"
                 >
                     <page-entity-icon *ngIf="breadcrumb.icon" [icon]="breadcrumb.icon"></page-entity-icon>
                     <span class="truncate">{{ breadcrumb.text }}</span>
@@ -81,7 +96,10 @@
             </div>
         </div>
 
-        <button class="button-icon-naked py-2 px-4">
+        <button
+            class="button-icon-naked py-2 px-4"
+            appTooltip="Here will be some options for the current open document"
+        >
             <app-icon iconClass="fas fa-ellipsis-v"></app-icon>
         </button>
     </ng-container>
@@ -116,11 +134,12 @@
 
     <div
         class="progress-container | group sticky -top-3 z-30 mb-5 flex items-center gap-2 bg-tinted-900 pt-4 pb-3 shadow-header"
-        title="{{ progress }}% completed - {{ closedTasks }}/{{ allTasks }}"
     >
         <div
             #progressBar
             class="progress | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
+            appTooltip="{{ progress }}% completed - {{ closedTasks }}/{{ allTasks }}"
+            [tooltipOptions]="{ closeOnHostClick: false }"
         >
             <div class="h-full rounded bg-submit-400 transition-shadow" [style.width]="progress + '%'"></div>
         </div>
