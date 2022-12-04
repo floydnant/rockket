@@ -1,12 +1,12 @@
 import { CdkMenuTrigger } from '@angular/cdk/menu'
 import { OverlayModule } from '@angular/cdk/overlay'
 import { Store } from '@ngrx/store'
+import { testName } from 'cypress/support/helpers'
 import { IconComponent } from '../../atoms/icons/icon/icon.component'
 import { LoadingSpinnerComponent } from '../../atoms/icons/loading-spinner/loading-spinner.component'
 import { UserMenuComponent } from '../../organisms/user-menu/user-menu.component'
 import { SidebarLayoutComponent } from './sidebar-layout.component'
 
-const testName = (name: string) => `[data-test-name="${name}"]`
 const setupComponent = (template: string) => {
     cy.mount(template, {
         componentProperties: {},

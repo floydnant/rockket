@@ -1,8 +1,7 @@
 import { OverlayModule } from '@angular/cdk/overlay'
+import { testName } from 'cypress/support/helpers'
 import { TooltipComponent } from '../components/atoms/tooltip/tooltip.component'
 import { TooltipDirective } from './tooltip.directive'
-
-const testName = (name: string) => `[data-test-name="${name}"]`
 
 const tooltipString = "And this is it's tooltip"
 const defaultTemplate = `<button appTooltip="${tooltipString}">This is a button</button>`

@@ -1,8 +1,7 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { OverlayModule } from '@angular/cdk/overlay'
+import { testName } from 'cypress/support/helpers'
 import { DropDownComponent, MenuItem, MenuItemVariant } from './drop-down.component'
-
-const testName = (name: string) => `[data-test-name="${name}"]`
 
 const getMenuItems = (logoutAction: MenuItem['action'] = () => ''): MenuItem[] => [
     {
