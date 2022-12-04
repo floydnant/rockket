@@ -4,7 +4,7 @@
             <button
                 cdkMenuItem
                 *ngFor="let page of settingsPages"
-                class="button-naked w-full text-left"
+                class="menu-item | w-full text-left"
                 routerLink="/settings/{{ page.route }}"
                 routerLinkActive="text-primary-300"
             >

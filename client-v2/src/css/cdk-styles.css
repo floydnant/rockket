@@ -1,60 +1,41 @@
-.dropdown-menu {
-    min-width: 180px;
-    max-width: 280px;
-    @apply mx-2 flex flex-col gap-0.5 rounded-lg border border-tinted-800 bg-tinted-900 p-2 shadow-lg;
-}
+@layer components {
+    .dropdown-menu {
+        min-width: 180px;
+        max-width: 280px;
+        @apply mx-2 flex flex-col gap-0.5 rounded-lg border border-tinted-800 bg-tinted-900 p-2 shadow-lg;
+    }
 
-.menu-item,
-.standalone-trigger {
-    /* background-color: transparent; */
-    /* cursor: pointer;
-    border: none; */
+    .menu-item {
+        @apply button-naked text-left;
+    }
 
-    /* user-select: none; */
-    /* min-width: 64px; */
-    /* line-height: 36px; */
-    /* padding: 0 16px; */
+    .menu-item:is(:hover, :active, :focus-visible):is(.menu-item--default, :not([class*='menu-item--'])) {
+        @apply bg-tinted-700 outline-none;
+    }
 
-    /* display: flex;
-    align-items: center;
-    flex-direction: row;
-    flex: 1; */
-}
+    .menu-item.menu-item--danger {
+        @apply text-danger-400 outline-none;
+    }
+    .menu-item.menu-item--danger:is(:hover, :active, :focus-visible) {
+        @apply bg-danger-400 text-danger-900;
+    }
 
-[cdkMenuItem] {
-    @apply button-naked text-left;
-}
+    .menu-item.menu-item--submit {
+        @apply text-submit-500 outline-none;
+    }
+    .menu-item.menu-item--submit:is(:hover, :active, :focus-visible) {
+        @apply bg-submit-400 text-submit-900;
+    }
 
-[cdkMenuItem]:is(:hover, :active, :focus-visible):is(.menu-item--default, :not([class*='menu-item--'])) {
-    @apply bg-tinted-700 outline-none;
-}
-
-[cdkmenuitem].menu-item--danger {
-    @apply text-danger-400 outline-none;
-}
-[cdkMenuItem].menu-item--danger:is(:hover, :active, :focus-visible) {
-    @apply bg-danger-400 text-danger-900;
-}
-
-[cdkMenuItem].menu-item--submit {
-    @apply text-submit-500 outline-none;
-}
-[cdkMenuItem].menu-item--submit:is(:hover, :active, :focus-visible) {
-    @apply bg-submit-400 text-submit-900;
-}
-
-/* .menu-item:active {
-    background-color: rgb(170, 170, 170);
-  } */
-
-.standalone-item {
-    background-color: rgb(239, 239, 239);
-}
-.standalone-item:hover {
-    background-color: rgb(208, 208, 208);
-}
-.standalone-item[aria-expanded='true'] {
-    background-color: rgb(208, 208, 208);
+    /* .standalone-item {
+        background-color: rgb(239, 239, 239);
+    }
+    .standalone-item:hover {
+        background-color: rgb(208, 208, 208);
+    }
+    .standalone-item[aria-expanded='true'] {
+        background-color: rgb(208, 208, 208);
+    } */
 }
 
 .cdk-overlay-backdrop {
