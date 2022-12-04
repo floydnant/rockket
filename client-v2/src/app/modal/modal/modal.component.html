@@ -2,7 +2,7 @@
     <div class="header-content | grow">
         <ng-content select="[header]"></ng-content>
     </div>
-    <button *ngIf="enableCloseButton" class="button-icon-naked" (click)="close.emit()">
+    <button *ngIf="enableCloseButton" class="button-icon-naked" (click)="close.emit()" data-test-name="modal-close-btn">
         <app-icon iconClass="fas fa-times" class="text-tinted-300"></app-icon>
     </button>
 </header>

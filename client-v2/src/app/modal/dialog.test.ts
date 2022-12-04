@@ -36,7 +36,7 @@ const setupComponent = (template = getTemplate(), onRes: (res?: string) => void 
     })
 }
 
-describe('Dialog API and Component', () => {
+describe('Dialog API and DialogComponent', () => {
     it('can open the dialog', () => {
         setupComponent()
 
