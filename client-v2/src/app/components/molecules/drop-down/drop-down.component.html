@@ -1,4 +1,4 @@
-<div class="menu | dropdown-menu" cdkMenu>
+<div class="menu | dropdown-menu" cdkMenu data-test-name="drop-down-menu">
     <ng-container *ngFor="let menuItem of items">
         <ng-template #chevron>
             <app-icon class="chevron | translate-x-2 text-tinted-500" iconClass="fas fa-chevron-right"></app-icon>
@@ -15,6 +15,7 @@
             class="skip-default-a-styles menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }}"
             cdkMenuItem
             (cdkMenuItemTriggered)="link.click(); rootTrigger?.close?.()"
+            data-test-name="menu-item"
         >
             <span class="title">{{ menuItem.title }}</span>
         </a>
@@ -29,6 +30,7 @@
             cdkMenuItem
             [cdkMenuTriggerFor]="subMenu"
             (cdkMenuItemTriggered)="link.click(); rootTrigger?.close?.()"
+            data-test-name="menu-item"
         >
             <span class="title">{{ menuItem.title }}</span>
             <ng-container *ngTemplateOutlet="chevron"></ng-container>
@@ -39,6 +41,7 @@
             class="menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }}"
             cdkMenuItem
             (cdkMenuItemTriggered)="triggerAction(menuItem.action); rootTrigger?.close?.()"
+            data-test-name="menu-item"
         >
             <span class="title">{{ menuItem.title }}</span>
         </button>
@@ -49,6 +52,7 @@
             cdkMenuItem
             (cdkMenuItemTriggered)="triggerAction(menuItem.action); rootTrigger?.close?.()"
             [cdkMenuTriggerFor]="subMenu"
+            data-test-name="menu-item"
         >
             <span class="title">{{ menuItem.title }}</span>
             <ng-container *ngTemplateOutlet="chevron"></ng-container>
