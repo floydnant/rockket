@@ -1,19 +1,41 @@
 <app-sidebar-layout data-test-name="workspace-page">
     <!-- SIDEBAR HEADER -->
     <ng-container sidebarHeader>
-        <div class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300">
-            <button class="button-naked w-full text-left">
+        <div class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300" cdkMenu>
+            <button
+                cdkMenuItem
+                class="menu-item | w-full text-left"
+                appTooltip="Search for tasks and lists"
+                [tooltipOptions]="{ preferredPosition: 'right' }"
+            >
                 <app-icon iconClass="fas fa-search"></app-icon> Search
             </button>
-            <button class="button-naked w-full text-left">
+            <button
+                cdkMenuItem
+                class="menu-item | w-full text-left"
+                appTooltip="Import one or more lists"
+                [tooltipOptions]="{ preferredPosition: 'right' }"
+            >
                 <app-icon iconClass="fas fa-file-import"></app-icon> Import
             </button>
-            <button class="button-naked w-full text-left">
+            <button
+                cdkMenuItem
+                class="menu-item | w-full text-left"
+                appTooltip="Deleted content stays here for 30 days"
+                [tooltipOptions]="{ preferredPosition: 'right' }"
+            >
                 <app-icon iconClass="fas fa-trash"></app-icon> Garbage
             </button>
-            <a class="button-naked w-full text-left" routerLink="/settings" data-test-name="settings-link">
+            <button
+                cdkMenuItem
+                class="menu-item | w-full text-left"
+                routerLink="/settings"
+                appTooltip="The app settings"
+                [tooltipOptions]="{ preferredPosition: 'right' }"
+                data-test-name="settings-link"
+            >
                 <app-icon iconClass="fas fa-cog"></app-icon> Settings
-            </a>
+            </button>
         </div>
     </ng-container>
 
@@ -68,22 +90,30 @@
         ></div>
 
         <!-- @TODO: Fix the header width issue (breadcrumbs taking more than allowed) -->
-        <div class="breadcrumbs | flex w-full flex-wrap py-2 px-4 text-tinted-300">
-            <div *ngFor="let breadcrumb of breadcrumbs; let i = index" class="flex max-w-[80%]">
+        <div class="breadcrumbs | flex w-full flex-wrap py-2 px-4 text-tinted-300" cdkMenuBar>
+            <div *ngFor="let breadcrumb of breadcrumbs; let isLast = last" class="flex max-w-[80%]">
                 <button
-                    class="breadcrumb | button-naked truncate py-0 px-1 hover:bg-tinted-800"
-                    [class.text-tinted-100]="breadcrumbs.length - 1 == i"
+                    class="breadcrumb | menu-item | truncate py-0 px-1 hover:bg-tinted-800"
+                    [class.text-tinted-100]="isLast"
+                    appTooltip="Here will be more information"
+                    cdkMenuItem
                 >
                     <page-entity-icon *ngIf="breadcrumb.icon" [icon]="breadcrumb.icon"></page-entity-icon>
                     <span class="truncate">{{ breadcrumb.text }}</span>
                 </button>
-                <span class="seperator | mx-1 text-tinted-500" *ngIf="breadcrumbs.length - 1 != i">/</span>
+                <span class="seperator | mx-1 text-tinted-500" *ngIf="!isLast">/</span>
             </div>
         </div>
 
-        <button class="button-icon-naked py-2 px-4">
-            <app-icon iconClass="fas fa-ellipsis-v"></app-icon>
-        </button>
+        <div cdkMenuBar>
+            <button
+                cdkMenuItem
+                class="button-icon-naked menu-item | py-2 px-4"
+                appTooltip="Here will be some options for the current open document"
+            >
+                <app-icon iconClass="fas fa-ellipsis-v"></app-icon>
+            </button>
+        </div>
     </ng-container>
 
     <!-- MAIN CONTENT -->
@@ -97,7 +127,7 @@
         <!-- <button class="button-naked">Share</button> -->
 
         <h1 class="heading | mt-4">
-            <page-entity-icon class="mr-4 inline-block -translate-y-1 text-3xl" [icon]="TaskStatus.IN_PROGRESS">
+            <page-entity-icon class="mr-2.5 inline-block -translate-y-0.5 text-2xl" [icon]="TaskStatus.IN_PROGRESS">
             </page-entity-icon>
 
             <span class="title | outline-none" contenteditable>Taskname, which you can edit</span>
@@ -116,11 +146,12 @@
 
     <div
         class="progress-container | group sticky -top-3 z-30 mb-5 flex items-center gap-2 bg-tinted-900 pt-4 pb-3 shadow-header"
-        title="{{ progress }}% completed - {{ closedTasks }}/{{ allTasks }}"
     >
         <div
             #progressBar
             class="progress | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
+            appTooltip="{{ progress }}% closed - {{ closedTasks }}/{{ allTasks }}"
+            [tooltipOptions]="{ closeOnHostClick: false }"
         >
             <div class="h-full rounded bg-submit-400 transition-shadow" [style.width]="progress + '%'"></div>
         </div>

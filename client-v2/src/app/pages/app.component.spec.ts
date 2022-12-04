@@ -15,11 +15,4 @@ describe('AppComponent', () => {
         const app = fixture.componentInstance
         expect(app).toBeTruthy()
     })
-
-    it('should display the app version', () => {
-        const fixture = TestBed.createComponent(AppComponent)
-        fixture.detectChanges()
-        const app = fixture.componentInstance
-        expect(app.packageVersion).toEqual('2.0.0')
-    })
 })

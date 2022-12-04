@@ -1,30 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-body {
-    @apply bg-tinted-900 text-tinted-100;
-}
-
-::selection {
-    @apply bg-primary-200 text-primary-800;
-}
-::-webkit-scrollbar {
-    width: 0.4rem;
-    height: 0.4rem;
-}
-::-webkit-scrollbar-track {
-    @apply bg-transparent;
-}
-::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-tinted-700 hover:bg-tinted-600;
-}
-[disabled] {
-    @apply cursor-not-allowed;
-}
-
 @layer components {
-    a:not([class|='button']),
+    a:not([class|='button'], .skip-default-a-styles),
     .link {
         @apply text-submit-500 hover:text-submit-400 hover:underline;
     }
@@ -52,6 +27,9 @@ body {
     .button--submit {
         @apply bg-submit-400 text-tinted-900 hover:bg-submit-600;
     }
+    .button--danger {
+        @apply bg-danger-400 hover:bg-danger-600;
+    }
 
     .input {
         @apply rounded bg-tinted-700 py-2 px-3 outline-none ring-primary-400 focus:ring-2;
@@ -69,50 +47,4 @@ body {
         background-position: 4px 4px;
         background-size: 27px 27px;
     }
-}
-
-ul {
-    @apply pl-6;
-}
-ul li {
-    @apply list-inside list-disc;
-}
-ol li {
-    @apply list-decimal;
-}
-
-/* Lets see how this looks, and perhaps change it again. */
-p {
-    margin-bottom: 0.5rem;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5 {
-    margin: 2rem 0 1.38rem;
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-h1 {
-    /* margin-top: 0; */
-    font-size: 3.052rem;
-}
-
-h2 {
-    font-size: 2.441rem;
-}
-
-h3 {
-    font-size: 1.953rem;
-}
-
-h4 {
-    font-size: 1.563rem;
-}
-
-h5 {
-    font-size: 1.25rem;
 }

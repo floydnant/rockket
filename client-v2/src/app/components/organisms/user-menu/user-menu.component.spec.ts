@@ -1,3 +1,5 @@
+import { CdkMenuTrigger } from '@angular/cdk/menu'
+import { OverlayModule } from '@angular/cdk/overlay'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { Store } from '@ngrx/store'
 
@@ -9,7 +11,8 @@ describe('UserMenuComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [UserMenuComponent],
+            declarations: [UserMenuComponent, CdkMenuTrigger],
+            imports: [OverlayModule],
             providers: [
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 { provide: Store, useValue: { subscribe() {}, select() {} } },

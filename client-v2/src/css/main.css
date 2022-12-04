@@ -1,0 +1,94 @@
+@import '~@angular/cdk/overlay-prebuilt.css';
+@import './cdk-styles.css';
+@import './components.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Needed for toast */
+:root {
+    --submit-400: theme(colors.submit.400);
+
+    --tinted-100: theme(colors.tinted.100);
+    --tinted-400: theme(colors.tinted.400);
+    --tinted-800: theme(colors.tinted.800);
+    --tinted-900: theme(colors.tinted.900);
+
+    --danger-400: theme(colors.danger.400);
+
+    --primary-400: theme(colors.primary.400);
+    --secondary-400: theme(colors.secondary.400);
+}
+
+body {
+    @apply bg-tinted-900 text-tinted-100;
+}
+
+::selection {
+    @apply bg-primary-200 text-primary-800;
+}
+::-webkit-scrollbar {
+    width: 0.4rem;
+    height: 0.4rem;
+}
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-tinted-700 hover:bg-tinted-600;
+}
+[disabled] {
+    @apply cursor-not-allowed;
+}
+
+/*/////////////////////////////// TYPOGRAPHY //////////////////////////////////*/
+ul,
+ol {
+    @apply pl-4;
+}
+ul > li {
+    @apply list-inside list-disc pl-1 before:-ml-1.5;
+}
+
+ol > li {
+    @apply list-inside list-decimal;
+}
+
+hr {
+    @apply border-tinted-600;
+}
+
+p {
+    margin-bottom: 0.5rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    margin: 1.4rem 0 1.38rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+}
+
+h3 {
+    font-size: 1.3rem;
+}
+
+h4 {
+    font-size: 1.2rem;
+}
+
+h5 {
+    font-size: 1.1rem;
+}

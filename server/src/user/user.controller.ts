@@ -34,6 +34,11 @@ export class UsersController {
         return this.usersService.deleteUser(user, password)
     }
 
+    @Get('/email')
+    getEmail(@GetUser() user: User) {
+        return { email: user.email }
+    }
+
     @Get('/search')
     searchUsers(@GetUser() user: User, @Query('q') queryString: string) {
         this.logger.verbose(`'${user.username}' searches uses for ${queryString}`)

@@ -5,7 +5,8 @@ import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { Subscription, take } from 'rxjs'
 import { AppState } from 'src/app/store'
-import { userActions } from 'src/app/store/user/user.actions'
+import { authActions } from 'src/app/store/user/user.actions'
+import { userSelectors } from 'src/app/store/user/user.selectors'
 
 @Component({
     templateUrl: './login-loading.component.html',
@@ -20,18 +21,21 @@ export class LoginLoadingComponent implements OnDestroy {
     ) {
         this.toast.close('confirm-login')
 
-        this.storeSubscription = this.store.pipe(take(1)).subscribe(state => {
-            if (state.user.isLoading) return
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            if (state.user.isLoggedIn) this.router.navigateByUrl(this.callbackUrl!)
-            else {
-                // this.toast.error('Invalid session, please login again.')
-                this.router.navigateByUrl('/auth')
-            }
-        })
+        this.storeSubscription = this.store
+            .select(userSelectors.selectLoginState)
+            .pipe(take(1))
+            .subscribe(({ isLoading, isLoggedIn }) => {
+                if (isLoading) return
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                if (isLoggedIn) this.router.navigateByUrl(this.callbackUrl!)
+                else {
+                    // this.toast.error('Invalid session, please login again.')
+                    this.router.navigateByUrl('/auth')
+                }
+            })
 
         this.actionsSubscription = this.actions$
-            .pipe(ofType(userActions.confirmLoginError, userActions.loginOrSignupSuccess), take(1))
+            .pipe(ofType(authActions.confirmLoginError, authActions.loginOrSignupSuccess), take(1))
             .subscribe(({ type }) => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 if (/success/.test(type)) this.router.navigateByUrl(this.callbackUrl!)

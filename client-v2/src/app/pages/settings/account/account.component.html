@@ -1,1 +1,105 @@
-<p>account works!</p>
+<h1>Account</h1>
+
+<h2 hidden class="hidden">Profile photo</h2>
+<div class="mb-3 flex flex-col items-center">
+    <div class="avatar"><app-icon iconClass="fas fa-user-circle | text-[100px] text-tinted-600"></app-icon></div>
+    <p><button class="upload-photo | button | mt-4" (click)="onUploadPhoto()">Upload photo</button></p>
+</div>
+
+<h2 class="mb-2 text-tinted-300">Username</h2>
+<p>
+    <app-input
+        [enableLabel]="false"
+        [name]="'Username'"
+        [control]="usernameControl"
+        (keydown.enter)="onUsernameSubmit()"
+    ></app-input>
+</p>
+<p class="mt-4" *ngIf="usernameControl.dirty">
+    <button class="button button--submit | mr-2" (click)="onUsernameSubmit()" [disabled]="usernameFormLoading$ | async">
+        <loading-spinner *ngIf="usernameFormLoading$ | async"></loading-spinner> Update Username
+    </button>
+    <button class="button-naked" (click)="resetUsername()">Cancel</button>
+</p>
+
+<p class="text-md text-tinted-500">
+    <app-icon iconClass="far fa-info-circle"></app-icon>
+    Your username will be visibile to other users you collaborate with.
+</p>
+
+<h2 class="mb-2 text-tinted-300">Email address</h2>
+<p>
+    <span class="email | mr-2">{{ (userState | async)?.me?.email || 'failed to load email' }}</span>
+    <button class="button-naked text-primary-200" (click)="openFormModal('email')">Change email address</button>
+</p>
+<p class="text-md text-tinted-500">
+    <app-icon iconClass="far fa-info-circle"></app-icon>
+    Your email address will be visibile to other users you collaborate with.
+</p>
+<ng-template #emailForm>
+    <app-modal [enableFooter]="false" [enableHeader]="true" (close)="closeFormModal()">
+        <ng-container header>
+            <h2 class="m-0">Change email address</h2>
+        </ng-container>
+
+        <p>
+            <span class="text-tinted-400">Current: </span>
+            <span class="email">{{ (userState | async)?.me?.email || 'failed to load email' }}</span>
+        </p>
+
+        <app-form
+            [formOptions]="emailFormOptions"
+            submitButton="Update email"
+            (formSubmit)="onEmailFormSubmit($event)"
+            containerClasses="grid gap-3"
+            [extraErrorMessages]="(emailFormErrors$ | async) || {}"
+            [isLoading]="emailFormLoading$ | async"
+            gridAreas="
+                'password password email email'
+                'auto submit submit fill'
+            "
+        ></app-form>
+    </app-modal>
+</ng-template>
+
+<h2 class="mb-2 text-tinted-300">Password</h2>
+<p>
+    <button class="button-naked text-primary-200" (click)="openFormModal('password')">Change password</button>
+    <button class="button-naked text-primary-200" (click)="onResetPassword()">Reset password</button>
+</p>
+<ng-template #passwordForm>
+    <app-modal [enableFooter]="false" [enableHeader]="true" (close)="closeFormModal()">
+        <ng-container header>
+            <h2 class="m-0">Change password</h2>
+        </ng-container>
+        <app-form
+            [formOptions]="passwordFormOptions"
+            submitButton="Update password"
+            containerClasses="grid gap-3"
+            [extraErrorMessages]="(passwordFormErrors$ | async) || {}"
+            [isLoading]="passwordFormLoading$ | async"
+            gridAreas="
+                'password    password    password           password'
+                'newPassword newPassword confirmNewPassword confirmNewPassword'
+                'auto        submit      submit             fill'
+            "
+            (formSubmit)="onPasswordFormSubmit($event)"
+        ></app-form>
+    </app-modal>
+</ng-template>
+
+<h2 class="mb-2 text-xl text-danger-400">Danger zone</h2>
+<div class="danger-zone | flex flex-col gap-2 rounded-lg border border-danger-600 bg-danger-900 p-2">
+    <button
+        (click)="onLogout()"
+        class="button | bg-transparent text-left text-danger-400 hover:bg-danger-400 hover:text-tinted-800"
+    >
+        Logout
+    </button>
+    <button
+        (click)="onDeleteAccount()"
+        class="button | bg-transparent text-left text-danger-400 hover:bg-danger-400 hover:text-tinted-800"
+    >
+        Delete my account
+    </button>
+</div>

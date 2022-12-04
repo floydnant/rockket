@@ -1,0 +1,19 @@
+<app-modal (close)="dialogRef.close()">
+    <h1 class="mt-0">{{ data.title }}</h1>
+
+    <p>{{ data.text }}</p>
+
+    <ng-container footer>
+        <div class="flex justify-center gap-4 px-12">
+            <button
+                *ngFor="let button of data.buttons; let last = last"
+                class="button px-7 {{ button.className }}"
+                [class.button--submit]="last && !button.className && data.type != DialogType.ALERT"
+                (click)="dialogRef.close(button.resCode || button.text)"
+                data-test-name="dialog-button"
+            >
+                {{ button.text }}
+            </button>
+        </div>
+    </ng-container>
+</app-modal>

@@ -26,6 +26,4 @@ const statusIconClassMap: Record<TaskDisplayState, string> = {
 export class StatusIconComponent {
     @Input() status: TaskDisplayState = TaskStatus.OPEN
     statusIconClassMap = statusIconClassMap
-
-    @Input() disableTitle = false
 }
