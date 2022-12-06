@@ -39,6 +39,8 @@ import { IconsModule } from './components/atoms/icons/icons.module'
 import { OverlayModule } from '@angular/cdk/overlay'
 import { TooltipDirective } from './directives/tooltip.directive'
 import { TooltipComponent } from './components/atoms/tooltip/tooltip.component'
+import { CdkTreeModule } from '@angular/cdk/tree'
+import { EntityPageLabelComponent } from './components/atoms/entity-page-label/entity-page-label.component'
 
 @NgModule({
     declarations: [
@@ -67,6 +69,7 @@ import { TooltipComponent } from './components/atoms/tooltip/tooltip.component'
         DropDownComponent,
         TooltipDirective,
         TooltipComponent,
+        EntityPageLabelComponent,
     ],
     imports: [
         BrowserModule,
@@ -104,6 +107,7 @@ import { TooltipComponent } from './components/atoms/tooltip/tooltip.component'
         IconsModule,
         ModalModule,
         OverlayModule,
+        CdkTreeModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

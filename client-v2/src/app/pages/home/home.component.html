@@ -41,42 +41,45 @@
 
     <!-- SIDEBAR CONTENT -->
     <ng-container sidebarContent>
-        <p class="text-sm text-tinted-400">Tasklists</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
-        <p>The content</p>
+        <p class="px-3 text-sm text-tinted-400">Tasklists</p>
+
+        <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree-container | flex flex-col px-2">
+            <cdk-tree-node *cdkTreeNodeDef="let node" [class.hidden]="!shouldRender(node)">
+                <button class="tree-node" [class.nested]="node.level > 0" (click)="log(node.name)">
+                    <div class="indent-line" *ngFor="let line of range(node.level)">&nbsp;</div>
+
+                    <div class="content">
+                        <button
+                            class="node-toggle"
+                            cdkTreeNodeToggle
+                            [attr.aria-label]="'Toggle ' + node.name"
+                            (click)="node.isExpanded = !node.isExpanded"
+                            [class.invisible]="!node.expandable"
+                        >
+                            <app-icon
+                                iconClass="fas fa-chevron-right"
+                                class="block transition-transform"
+                                [class.rotate-90]="node.isExpanded"
+                            ></app-icon>
+                        </button>
+
+                        <app-entity-page-label
+                            [title]="node.name"
+                            [pageIcon]="node.entityType || EntityType.TASKLIST"
+                        ></app-entity-page-label>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="" (click)="log('add stuff'); $event.stopPropagation()">
+                            <app-icon iconClass="far fa-plus"></app-icon>
+                        </button>
+                        <button class="" (click)="log('ellipsieren'); $event.stopPropagation()">
+                            <double-ellipsis-icon></double-ellipsis-icon>
+                        </button>
+                    </div>
+                </button>
+            </cdk-tree-node>
+        </cdk-tree>
     </ng-container>
 
     <!-- MAIN HEADER -->
@@ -98,8 +101,15 @@
                     appTooltip="Here will be more information"
                     cdkMenuItem
                 >
-                    <page-entity-icon *ngIf="breadcrumb.icon" [icon]="breadcrumb.icon"></page-entity-icon>
-                    <span class="truncate">{{ breadcrumb.text }}</span>
+                    <app-entity-page-label
+                        *ngIf="breadcrumb.icon; else noIcon"
+                        [title]="breadcrumb.text"
+                        [pageIcon]="breadcrumb.icon"
+                    ></app-entity-page-label>
+
+                    <ng-template #noIcon>
+                        <span class="truncate">{{ breadcrumb.text }}</span>
+                    </ng-template>
                 </button>
                 <span class="seperator | mx-1 text-tinted-500" *ngIf="!isLast">/</span>
             </div>
