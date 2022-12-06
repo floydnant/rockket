@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core'
 import { ITask, TaskPriority, TaskStatus } from '../../../models/task.model'
-import { TaskState } from '../../atoms/icons/status-icon/status-icon.component'
+import { PageEntityState, TaskState } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 
 @Component({
     selector: 'task',
@@ -18,6 +18,6 @@ export class TaskComponent implements OnInit {
     TaskPriority = TaskPriority
 
     isOverdue = false
-    loading: false | TaskState.LOADING = TaskState.LOADING
+    loading: false | PageEntityState.LOADING = PageEntityState.LOADING
     blocked: false | TaskState.BLOCKED = false // disabled for now
 }
