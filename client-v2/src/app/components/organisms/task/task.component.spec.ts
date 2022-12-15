@@ -33,6 +33,16 @@ describe('TaskComponent', () => {
             priority: TaskPriority.NONE,
             status: TaskStatus.OPEN,
             description: '',
+            listId: '',
+            ownerId: '',
+            closedAt: '',
+            deadline: '',
+            openedAt: '',
+            createdAt: '',
+            subtaskIds: [],
+            blockedById: '',
+            parentTaskId: '',
+            inProgressSince: '',
         }
         fixture.detectChanges()
     })

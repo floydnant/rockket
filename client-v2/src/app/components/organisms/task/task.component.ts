@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { ITask, TaskPriority, TaskStatus } from '../../../models/task.model'
+import { Task, TaskPriority, TaskStatus } from '../../../models/task.model'
 import { PageEntityState, TaskState } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 
 @Component({
@@ -13,7 +13,7 @@ export class TaskComponent implements OnInit {
         if (this.data.description) setTimeout(() => (this.loading = false), Math.random() * 5000)
         else this.loading = false
     }
-    @Input() data!: ITask
+    @Input() data!: Task
     TaskStatus = TaskStatus
     TaskPriority = TaskPriority
 
