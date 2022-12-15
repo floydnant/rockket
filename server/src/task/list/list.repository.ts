@@ -78,6 +78,25 @@ export class ListRepository {
         }))
     }
 
+    async getAllTasklists(userId: string) {
+        const lists = await this.prisma.tasklist.findMany({
+            where: {
+                participants: { some: { userId } },
+            },
+            select: {
+                id: true,
+                parentListId: true,
+                name: true,
+                childLists: { select: { id: true } },
+            },
+        })
+
+        return lists.map(({ childLists, ...list }) => ({
+            ...list,
+            childLists: childLists.map((l) => l.id),
+        }))
+    }
+
     async getChildTasklists(listId: string) {
         return await this.prisma.tasklist.findMany({
             where: { parentListId: listId },

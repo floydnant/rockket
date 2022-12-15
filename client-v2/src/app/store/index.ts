@@ -5,15 +5,20 @@ import { AuthEffects } from './user/auth.effects'
 import { AccountEffects } from './user/account.effects'
 import { UserState } from './user/user.model'
 import { userReducer } from './user/user.reducer'
+import { taskReducer } from './task/task.reducer'
+import { TaskState } from './task/task.model'
+import { TaskEffects } from './task/task.effects'
 
 export interface AppState {
     user: UserState
+    task: TaskState
 }
 export const reducers: ActionReducerMap<AppState> = {
     user: userReducer,
+    task: taskReducer,
 }
 
-export const effects = [AppEffects, AuthEffects, AccountEffects]
+export const effects = [AppEffects, AuthEffects, AccountEffects, TaskEffects]
 
 const actionLogger: MetaReducer<AppState> = reducer => (state, action) => {
     console.info('%caction: %c' + action.type, 'color: hsl(130, 0%, 50%);', 'color: hsl(155, 100%, 50%);')

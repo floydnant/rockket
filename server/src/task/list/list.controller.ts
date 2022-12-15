@@ -33,6 +33,11 @@ export class ListController {
     getRootLevelTasklists(@GetUser() user: User) {
         return this.listService.getRootLevelTasklists(user.id)
     }
+    @Get('all-lists')
+    getAllTasklists(@GetUser() user: User) {
+        return this.listService.getAllTasklists(user.id)
+    }
+
     // nested child list previews
     @Get('list/:listId/child-lists')
     getChildTasklists(@GetUser() user: User, @Param('listId') listId: string) {

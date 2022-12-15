@@ -45,6 +45,10 @@ export class ListService {
     async getRootLevelTasklists(userId: string) {
         return this.listRepository.getRootLevelTasklists(userId)
     }
+    async getAllTasklists(userId: string) {
+        return this.listRepository.getAllTasklists(userId)
+    }
+
     async getChildTasklists(userId: string, listId: string) {
         const hasPermissions = await this.permissions.hasPermissionForList(
             userId,
