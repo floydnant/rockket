@@ -79,7 +79,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="" (click)="log('add stuff'); $event.stopPropagation()">
+                        <button class="" (click)="createNewList(node.id); $event.stopPropagation()">
                             <app-icon iconClass="far fa-plus"></app-icon>
                         </button>
                         <button class="" (click)="log('ellipsieren'); $event.stopPropagation()">
@@ -144,6 +144,7 @@
         <!-- dont know 'bout these ones: -->
         <!-- <button class="button-naked">Add Task</button> -->
         <!-- <button class="button-naked">Share</button> -->
+        <!-- <pre>{{ listPreviewsTransformed$ | async | json }}</pre> -->
 
         <h1 class="heading | mt-4">
             <page-entity-icon class="mr-2.5 inline-block -translate-y-0.5 text-2xl" [icon]="TaskStatus.IN_PROGRESS">

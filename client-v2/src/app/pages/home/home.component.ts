@@ -91,6 +91,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         node => node.expandable
     )
 
+    createNewList(parentListId?: string) {
+        const name = prompt('New Tasklist name')?.trim()
+        if (!name) return
+
+        this.store.dispatch(listActions.createTaskList({ name, parentListId }))
+    }
+
     /////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////
 
