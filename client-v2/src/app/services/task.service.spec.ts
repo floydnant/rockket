@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing'
-import { HttpService } from '../http/http.service'
+import { httpServiceMock } from '../utils/unit-test.mocks'
 
 import { TaskService } from './task.service'
 
