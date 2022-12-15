@@ -45,8 +45,14 @@
 
         <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree-container | flex flex-col px-2">
             <cdk-tree-node *cdkTreeNodeDef="let node" [class.hidden]="!shouldRender(node)">
-                <button class="tree-node" [class.nested]="node.level > 0" (click)="log(node.name)">
-                    <div class="indent-line" *ngFor="let line of range(node.level)">&nbsp;</div>
+                <button
+                    class="tree-node"
+                    [class.nested]="node.path.length > 0"
+                    (click)="log(node.name)"
+                    [appTooltip]="label"
+                    [tooltipOptions]="{ preferredPosition: 'right' }"
+                >
+                    <div class="indent-line" *ngFor="let line of range(node.path.length)">&nbsp;</div>
 
                     <div class="content">
                         <button
@@ -63,10 +69,13 @@
                             ></app-icon>
                         </button>
 
-                        <app-entity-page-label
-                            [title]="node.name"
-                            [pageIcon]="node.entityType || EntityType.TASKLIST"
-                        ></app-entity-page-label>
+                        <ng-template #label>
+                            <app-entity-page-label
+                                [title]="node.name"
+                                [pageIcon]="node.entityType || EntityType.TASKLIST"
+                            ></app-entity-page-label>
+                        </ng-template>
+                        <ng-container *ngTemplateOutlet="label"></ng-container>
                     </div>
 
                     <div class="btn-group">

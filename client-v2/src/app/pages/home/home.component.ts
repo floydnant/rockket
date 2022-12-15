@@ -1,233 +1,37 @@
 import { ArrayDataSource } from '@angular/cdk/collections'
 import { FlatTreeControl } from '@angular/cdk/tree'
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core'
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { Store } from '@ngrx/store'
+import { map, tap } from 'rxjs'
 import {
     EntityType,
     PageEntityIconKey,
 } from 'src/app/components/atoms/icons/page-entity-icon/page-entity-icon.component'
 import { TaskStatus } from 'src/app/models/task.model'
+import { AppState } from 'src/app/store'
+import { listActions } from 'src/app/store/task/task.actions'
+import { flattenListTree, TasklistFlattend } from 'src/app/store/task/utils'
 
-const TREE_DATA: ExampleFlatNode[] = [
-    {
-        name: 'Fruit',
-        expandable: false,
-        level: 0,
-    },
-    {
-        name: 'Fruit',
-        expandable: true,
-        level: 0,
-    },
-    {
-        name: 'Apple',
-        expandable: false,
-        level: 1,
-    },
-    {
-        name: 'Banana',
-        expandable: false,
-        level: 1,
-    },
-    {
-        name: 'Fruit loops',
-        expandable: false,
-        level: 1,
-    },
-    {
-        name: 'Vegetables',
-        expandable: true,
-        isExpanded: true,
-        level: 0,
-    },
-    {
-        name: 'Yellow',
-        expandable: false,
-        entityType: EntityType.DOCUMENT,
-        level: 1,
-    },
-    {
-        name: 'Green',
-        expandable: true,
-        isExpanded: true,
-        level: 1,
-    },
-    {
-        name: 'Broccoli',
-        expandable: false,
-        entityType: EntityType.DOCUMENT,
-        level: 2,
-    },
-    {
-        name: 'Brussels sprouts',
-        expandable: false,
-        level: 2,
-    },
-    {
-        name: 'Other',
-        expandable: true,
-        isExpanded: true,
-        entityType: EntityType.VIEW,
-        level: 2,
-    },
-    {
-        name: 'Other',
-        expandable: false,
-        entityType: EntityType.VIEW,
-        level: 3,
-    },
-    {
-        name: 'Other',
-        expandable: false,
-        entityType: EntityType.VIEW,
-        level: 3,
-    },
-    {
-        name: 'Orange',
-        expandable: true,
-        isExpanded: true,
-        level: 1,
-    },
-    {
-        name: 'Pumpkins',
-        expandable: false,
-        level: 2,
-    },
-    {
-        name: 'Carrots',
-        expandable: false,
-        level: 2,
-    },
-    {
-        name: 'Vegetables',
-        expandable: true,
-        isExpanded: true,
-        level: 0,
-    },
-    {
-        name: 'Yellow',
-        expandable: false,
-        level: 1,
-    },
-    {
-        name: 'Green',
-        expandable: true,
-        isExpanded: true,
-        level: 1,
-    },
-    {
-        name: 'Broccoli',
-        entityType: EntityType.DOCUMENT,
-        expandable: false,
-        level: 2,
-    },
-    {
-        name: 'Brussels sprouts',
-        expandable: false,
-        entityType: EntityType.DOCUMENT,
-        level: 2,
-    },
-    {
-        name: 'Other',
-        expandable: true,
-        isExpanded: true,
-        level: 2,
-    },
-    {
-        name: 'Other',
-        expandable: false,
-        level: 3,
-    },
-    {
-        name: 'Other',
-        expandable: false,
-        level: 3,
-    },
-    {
-        name: 'Orange',
-        expandable: true,
-        isExpanded: true,
-        level: 1,
-    },
-    {
-        name: 'Pumpkins',
-        expandable: false,
-        level: 2,
-    },
-    {
-        name: 'Carrots',
-        expandable: false,
-        entityType: EntityType.DOCUMENT,
-        level: 2,
-    },
-    {
-        name: 'Vegetables',
-        expandable: true,
-        isExpanded: true,
-        level: 0,
-    },
-    {
-        name: 'Yellow',
-        expandable: false,
-        level: 1,
-    },
-    {
-        name: 'Green',
-        expandable: true,
-        isExpanded: true,
-        level: 1,
-    },
-    {
-        name: 'Broccoli',
-        expandable: false,
-        level: 2,
-    },
-    {
-        name: 'Brussels sprouts',
-        expandable: false,
-        level: 2,
-    },
-    {
-        name: 'Other',
-        expandable: true,
-        isExpanded: true,
-        level: 2,
-    },
-    {
-        name: 'Other',
-        expandable: false,
-        level: 3,
-    },
-    {
-        name: 'Other',
-        expandable: false,
-        level: 3,
-        entityType: EntityType.DOCUMENT,
-    },
-    {
-        name: 'Orange',
-        expandable: true,
-        isExpanded: true,
-        level: 1,
-    },
-    {
-        name: 'Pumpkins',
-        expandable: false,
-        level: 2,
-    },
-    {
-        name: 'Carrots',
-        expandable: false,
-        level: 2,
-    },
-]
-
-/** Flat node with expandable and level information */
-interface ExampleFlatNode {
-    expandable: boolean
+export interface EntityTreeNode {
+    id: string
     name: string
-    level: number
+    path: string[] // <-- level: path.length
+    expandable: boolean
+
     isExpanded?: boolean
     entityType?: EntityType
+}
+
+export const convertToEntityTreeNode = (list: TasklistFlattend): EntityTreeNode => {
+    const { childrenCount, ...rest } = list
+    const node: EntityTreeNode = {
+        ...rest,
+        expandable: childrenCount > 0,
+
+        isExpanded: Math.random() > 0.5,
+        entityType: EntityType.TASKLIST,
+    }
+    return node
 }
 
 @Component({
@@ -235,29 +39,22 @@ interface ExampleFlatNode {
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements AfterViewInit, OnDestroy {
-    treeControl = new FlatTreeControl<ExampleFlatNode>(
-        node => node.level,
-        node => node.expandable
-    )
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+    constructor(private store: Store<AppState>) {}
 
-    dataSource = new ArrayDataSource(TREE_DATA)
-
-    hasChild = (_: number, node: ExampleFlatNode) => node.expandable
-
-    getParentNode(node: ExampleFlatNode) {
-        const nodeIndex = TREE_DATA.indexOf(node)
+    getParentNode(node: EntityTreeNode) {
+        const nodeIndex = this.listPreviewsTransformed.indexOf(node)
 
         for (let i = nodeIndex - 1; i >= 0; i--) {
-            if (TREE_DATA[i].level === node.level - 1) {
-                return TREE_DATA[i]
+            if (this.listPreviewsTransformed[i].path.length === node.path.length - 1) {
+                return this.listPreviewsTransformed[i]
             }
         }
 
         return null
     }
 
-    shouldRender(node: ExampleFlatNode) {
+    shouldRender(node: EntityTreeNode) {
         let parent = this.getParentNode(node)
         while (parent) {
             if (!parent.isExpanded) {
@@ -275,6 +72,24 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     log(str: string) {
         console.log(str)
     }
+
+    listPreviewsTransformed: EntityTreeNode[] = []
+    listPreviewsTransformed$ = this.store
+        .select(state => state.task.listPreviews)
+        .pipe(
+            map(listTree => {
+                if (!listTree) return []
+
+                return flattenListTree(listTree).map(convertToEntityTreeNode)
+            }),
+            tap(transformed => (this.listPreviewsTransformed = transformed))
+        )
+
+    dataSource = new ArrayDataSource(this.listPreviewsTransformed$)
+    treeControl = new FlatTreeControl<EntityTreeNode>(
+        node => node.path.length,
+        node => node.expandable
+    )
 
     /////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////
@@ -305,6 +120,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         { threshold: [0.5] }
     )
 
+    ngOnInit(): void {
+        this.store.dispatch(listActions.loadListPreviews())
+    }
     ngAfterViewInit(): void {
         this.progressBarObserver.observe(this.progressBar.nativeElement)
     }
