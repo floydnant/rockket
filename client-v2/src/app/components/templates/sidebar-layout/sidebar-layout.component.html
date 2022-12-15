@@ -36,7 +36,7 @@
             <ng-content select="[sidebarHeader]"></ng-content>
         </header>
 
-        <div class="sidebar-content | overflow-y-scroll overscroll-contain py-2 px-3" data-test-name="sidebar-content">
+        <div class="sidebar-content | overflow-y-auto overscroll-contain py-2" data-test-name="sidebar-content">
             <div #sidebarScrollSpy></div>
             <ng-content select="[sidebarContent]"></ng-content>
         </div>
