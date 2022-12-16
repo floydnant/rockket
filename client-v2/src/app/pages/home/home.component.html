@@ -41,6 +41,16 @@
 
     <!-- SIDEBAR CONTENT -->
     <ng-container sidebarContent>
+        <p class="flex items-center justify-between px-3 text-sm text-tinted-400">
+            Tasklists
+            <button
+                class="rounded px-1.5 py-0.5 transition-colors duration-75 hover:bg-tinted-700"
+                appTooltip="Create new list"
+                (click)="createNewList()"
+            >
+                <app-icon iconClass="fas fa-plus"></app-icon>
+            </button>
+        </p>
 
         <div class="pt-10 text-center" *ngIf="isTreeLoading$ | async; else tree">
             <loading-spinner class="text-xl"></loading-spinner>
