@@ -34,15 +34,25 @@ export const flattenListTree = (lists: TaskListPreviewRecursive[], path: string[
     })
 }
 
-export const getTaskListById = (taskLists: TaskListPreviewRecursive[], id: string): TaskListPreviewRecursive | void => {
-    for (let index = 0; index < taskLists.length; index++) {
-        const tasklist = taskLists[index]
+export const getParentListByChildId = (
+    list: TaskListPreviewRecursive[],
+    id: string
+): { list: TaskListPreviewRecursive[]; index: number } | void => {
+    for (let index = 0; index < list.length; index++) {
+        const tasklist = list[index]
 
-        if (tasklist.id == id) return tasklist
+        if (tasklist.id == id) return { list, index }
 
         if (tasklist.childLists.length) {
-            const taskList = getTaskListById(tasklist.childLists, id)
-            if (taskList) return taskList
+            const result = getParentListByChildId(tasklist.childLists, id)
+            if (result) return result
         }
     }
+}
+
+export const getTaskListById = (taskLists: TaskListPreviewRecursive[], id: string): TaskListPreviewRecursive | void => {
+    const res = getParentListByChildId(taskLists, id)
+    if (!res) return
+
+    return res.list[res.index]
 }

@@ -12,5 +12,19 @@ export const listActions = createActionGroup({
         'create task list': props<CreateTasklistDto>(),
         'create task list success': props<{ createdList: TaskList }>(),
         'create task list error': props<HttpServerErrorResponse>(),
+
+        'rename list': props<{ id: string; newName: string }>(),
+        'rename list success': props<{ id: string; newName: string }>(),
+        'rename list error': props<HttpServerErrorResponse>(),
+
+        'delete list': props<{ id: string }>(),
+        'delete list abort': emptyProps(),
+        'delete list proceed': props<{ id: string }>(),
+        'delete list success': props<{ id: string }>(),
+        'delete list error': props<HttpServerErrorResponse>(),
+
+        'duplicate list': props<{ id: string }>(),
+        'duplicate list success': props<{ id: string }>(),
+        'duplicate list error': props<{ id: string }>(),
     },
 })

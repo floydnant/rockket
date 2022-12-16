@@ -39,7 +39,9 @@ export class ListService {
         )
         if (!hasPermissions) throw new ForbiddenException("You don't have permission to delete this tasklist")
 
-        return this.listRepository.deleteTasklist(listId)
+        await this.listRepository.deleteTasklist(listId)
+
+        return { successMessage: 'List deleted successfully' }
     }
 
     async getRootLevelTasklists(userId: string) {

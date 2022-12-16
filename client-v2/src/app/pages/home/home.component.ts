@@ -32,7 +32,7 @@ export const convertToEntityTreeNode = (list: TasklistFlattend): EntityTreeNode 
         ...rest,
         expandable: childrenCount > 0,
 
-        isExpanded: Math.random() > 0.5,
+        isExpanded: true,
         entityType: EntityType.TASKLIST,
     }
     return node
@@ -107,20 +107,38 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.store.dispatch(listActions.createTaskList({ name, parentListId }))
     }
+    renameList(id: string) {
+        const prevName = ''
+        const newName = prompt('Rename the list', prevName)?.trim()
+        if (!newName) return
+
+        this.store.dispatch(listActions.renameList({ id, newName }))
+    }
+    duplicateList(id: string) {
+        this.store.dispatch(listActions.duplicateList({ id }))
+    }
+    deleteList(id: string) {
+        this.store.dispatch(listActions.deleteList({ id }))
+    }
+
     nodeMenuItems: MenuItem[] = [
         {
             title: 'Rename',
+            action: (id: string) => this.renameList(id),
         },
         {
             title: 'Create new list inside',
+            action: (id: string) => this.createNewList(id),
         },
         {
             title: 'Duplicate',
+            action: (id: string) => this.duplicateList(id),
         },
         { isSeperator: true },
         {
             title: 'Delete',
             variant: MenuItemVariant.DANGER,
+            action: (id: string) => this.deleteList(id),
         },
     ]
 

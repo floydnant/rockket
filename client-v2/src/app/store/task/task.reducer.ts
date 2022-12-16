@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store'
 import { listActions } from './task.actions'
 import { TaskState } from './task.model'
-import { getTaskListById, getTasklistTree } from './utils'
+import { getParentListByChildId, getTaskListById, getTasklistTree } from './utils'
 
 const initialState: TaskState = {
     listPreviews: null,
@@ -39,5 +39,28 @@ export const taskReducer = createReducer(
             ...state,
             listPreviews: listPreviewsCopy,
         }
+    }),
+
+    on(listActions.renameListSuccess, (state, { id, newName }) => {
+        const listPreviewsCopy = structuredClone(state.listPreviews)
+        const list = getTaskListById(listPreviewsCopy, id)
+        if (!list) return state
+
+        list.name = newName
+
+        return {
+            ...state,
+            listPreviews: listPreviewsCopy,
+        }
+    }),
+
+    on(listActions.deleteListSuccess, (state, { id }) => {
+        const listPreviewsCopy = structuredClone(state.listPreviews)
+        const result = getParentListByChildId(listPreviewsCopy, id)
+        if (!result) return state
+
+        result.list.splice(result.index, 1)
+
+        return { ...state, listPreviews: listPreviewsCopy }
     })
 )
