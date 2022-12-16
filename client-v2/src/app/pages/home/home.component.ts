@@ -1,6 +1,7 @@
 import { ArrayDataSource } from '@angular/cdk/collections'
 import { FlatTreeControl } from '@angular/cdk/tree'
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { map, tap } from 'rxjs'
 import {
@@ -11,6 +12,8 @@ import { TaskStatus } from 'src/app/models/task.model'
 import { AppState } from 'src/app/store'
 import { listActions } from 'src/app/store/task/task.actions'
 import { flattenListTree, TasklistFlattend } from 'src/app/store/task/utils'
+import { moveToMacroQueue } from 'src/app/utils'
+import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 
 export interface EntityTreeNode {
     id: string
@@ -40,7 +43,7 @@ export const convertToEntityTreeNode = (list: TasklistFlattend): EntityTreeNode 
     styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-    constructor(private store: Store<AppState>) {}
+    constructor(private store: Store<AppState>, private actions$: Actions) {}
 
     getParentNode(node: EntityTreeNode) {
         const nodeIndex = this.listPreviewsTransformed.indexOf(node)
@@ -85,6 +88,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             tap(transformed => (this.listPreviewsTransformed = transformed))
         )
 
+    isTreeLoading$ = getLoadingUpdates(this.actions$, [
+        listActions.loadListPreviews,
+        listActions.loadListPreviewsSuccess,
+        listActions.loadListPreviewsError,
+    ])
+
     dataSource = new ArrayDataSource(this.listPreviewsTransformed$)
     treeControl = new FlatTreeControl<EntityTreeNode>(
         node => node.path.length,
@@ -128,7 +137,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     )
 
     ngOnInit(): void {
-        this.store.dispatch(listActions.loadListPreviews())
+        moveToMacroQueue(() => this.store.dispatch(listActions.loadListPreviews()))
     }
     ngAfterViewInit(): void {
         this.progressBarObserver.observe(this.progressBar.nativeElement)

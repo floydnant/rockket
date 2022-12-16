@@ -41,7 +41,15 @@
 
     <!-- SIDEBAR CONTENT -->
     <ng-container sidebarContent>
-        <p class="px-3 text-sm text-tinted-400">Tasklists</p>
+
+        <div class="pt-10 text-center" *ngIf="isTreeLoading$ | async; else tree">
+            <loading-spinner class="text-xl"></loading-spinner>
+        </div>
+
+        <ng-template #tree>
+            <p *ngIf="(listPreviewsTransformed$ | async)?.length == 0" class="text-center text-tinted-400">
+                No lists so far...
+            </p>
 
         <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree-container | flex flex-col px-2">
             <cdk-tree-node *cdkTreeNodeDef="let node" [class.hidden]="!shouldRender(node)">
@@ -97,6 +105,7 @@
                 </button>
             </cdk-tree-node>
         </cdk-tree>
+        </ng-template>
     </ng-container>
 
     <!-- MAIN HEADER -->
