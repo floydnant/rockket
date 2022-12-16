@@ -8,6 +8,7 @@ import {
     EntityType,
     PageEntityIconKey,
 } from 'src/app/components/atoms/icons/page-entity-icon/page-entity-icon.component'
+import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { TaskStatus } from 'src/app/models/task.model'
 import { AppState } from 'src/app/store'
 import { listActions } from 'src/app/store/task/task.actions'
@@ -106,6 +107,22 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.store.dispatch(listActions.createTaskList({ name, parentListId }))
     }
+    nodeMenuItems: MenuItem[] = [
+        {
+            title: 'Rename',
+        },
+        {
+            title: 'Create new list inside',
+        },
+        {
+            title: 'Duplicate',
+        },
+        { isSeperator: true },
+        {
+            title: 'Delete',
+            variant: MenuItemVariant.DANGER,
+        },
+    ]
 
     /////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////

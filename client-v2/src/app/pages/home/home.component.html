@@ -61,60 +61,67 @@
                 No lists so far...
             </p>
 
-        <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree-container | flex flex-col px-2">
-            <cdk-tree-node *cdkTreeNodeDef="let node" [class.hidden]="!shouldRender(node)">
-                <button
-                    class="tree-node"
-                    [class.nested]="node.path.length > 0"
-                    (click)="log(node.name)"
-                    [appTooltip]="label"
-                    [tooltipOptions]="{ preferredPosition: 'right' }"
-                >
-                    <div class="indent-line" *ngFor="let line of range(node.path.length)">&nbsp;</div>
+            <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree-container | flex flex-col px-2">
+                <cdk-tree-node *cdkTreeNodeDef="let node" [class.hidden]="!shouldRender(node)">
+                    <button
+                        class="tree-node"
+                        [class.nested]="node.path.length > 0"
+                        (click)="log(node.name)"
+                        [appTooltip]="label"
+                        [tooltipOptions]="{ preferredPosition: 'right' }"
+                        #nodeTooltip="appTooltip"
+                    >
+                        <div class="indent-line" *ngFor="let line of range(node.path.length)">&nbsp;</div>
 
-                    <div class="content">
-                        <button
-                            *ngIf="node.expandable; else noToggleIcon"
-                            class="node-toggle"
-                            cdkTreeNodeToggle
-                            [attr.aria-label]="'Toggle ' + node.name"
-                            (click)="node.isExpanded = !node.isExpanded"
-                        >
-                            <app-icon
-                                iconClass="fas fa-chevron-right"
-                                class="block transition-transform"
-                                [class.rotate-90]="node.isExpanded"
-                            ></app-icon>
-                        </button>
-                        <ng-template #noToggleIcon>
-                            <div class="node-toggle">
+                        <div class="content">
+                            <button
+                                *ngIf="node.expandable; else noToggleIcon"
+                                class="node-toggle"
+                                cdkTreeNodeToggle
+                                [attr.aria-label]="'Toggle ' + node.name"
+                                (click)="node.isExpanded = !node.isExpanded"
+                            >
                                 <app-icon
-                                    iconClass="fas fa-genderless text-tinted-700 translate-y-0.5 translate-x-[0.5px]"
-                                    class="pr-px"
+                                    iconClass="fas fa-chevron-right"
+                                    class="block transition-transform"
+                                    [class.rotate-90]="node.isExpanded"
                                 ></app-icon>
-                            </div>
-                        </ng-template>
+                            </button>
+                            <ng-template #noToggleIcon>
+                                <div class="node-toggle">
+                                    <app-icon
+                                        iconClass="fas fa-genderless text-tinted-700 translate-y-0.5 translate-x-[0.5px]"
+                                        class="pr-px"
+                                    ></app-icon>
+                                </div>
+                            </ng-template>
 
-                        <ng-template #label>
-                            <app-entity-page-label
-                                [title]="node.name"
-                                [pageIcon]="node.entityType || EntityType.TASKLIST"
-                            ></app-entity-page-label>
-                        </ng-template>
-                        <ng-container *ngTemplateOutlet="label"></ng-container>
-                    </div>
+                            <ng-template #label>
+                                <app-entity-page-label
+                                    [title]="node.name"
+                                    [pageIcon]="node.entityType || EntityType.TASKLIST"
+                                ></app-entity-page-label>
+                            </ng-template>
+                            <ng-container *ngTemplateOutlet="label"></ng-container>
+                        </div>
 
-                    <div class="btn-group">
-                        <button class="" (click)="createNewList(node.id); $event.stopPropagation()">
-                            <app-icon iconClass="far fa-plus"></app-icon>
-                        </button>
-                        <button class="" (click)="log('ellipsieren'); $event.stopPropagation()">
-                            <double-ellipsis-icon></double-ellipsis-icon>
-                        </button>
-                    </div>
-                </button>
-            </cdk-tree-node>
-        </cdk-tree>
+                        <div class="btn-group">
+                            <button class="" (click)="createNewList(node.id); $event.stopPropagation()">
+                                <app-icon iconClass="far fa-plus"></app-icon>
+                            </button>
+                            <button
+                                (click)="$event.stopPropagation(); nodeTooltip.hideTooltip()"
+                                [cdkMenuTriggerFor]="nodeDropDown"
+                            >
+                                <double-ellipsis-icon></double-ellipsis-icon>
+                            </button>
+                        </div>
+                        <ng-template #nodeDropDown>
+                            <app-drop-down [items]="nodeMenuItems" [data]="node.id"></app-drop-down>
+                        </ng-template>
+                    </button>
+                </cdk-tree-node>
+            </cdk-tree>
         </ng-template>
     </ng-container>
 

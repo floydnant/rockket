@@ -7,7 +7,8 @@ export interface MenuItem {
     title?: string
     icon?: PageEntityIconKey
     route?: string
-    action?: () => void
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    action?: (data?: any) => void
     children?: MenuItem[]
     isSeperator?: boolean
     variant?: MenuItemVariant
@@ -27,10 +28,11 @@ export enum MenuItemVariant {
 export class DropDownComponent {
     @Input() items!: MenuItem[]
     @Input() rootTrigger?: CdkMenuTrigger
+    @Input() data?: unknown
 
     triggerAction(action: MenuItem['action']) {
         // this ensures that the keydown event doesn't get picked up by another component
-        moveToMacroQueue(() => action?.())
+        moveToMacroQueue(() => action?.(this.data))
     }
 
     MenuItemVariant = MenuItemVariant
