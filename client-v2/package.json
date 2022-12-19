@@ -43,7 +43,7 @@
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "^14.2.10",
-        "@angular/cli": "^14.2.10",
+        "@angular/cli": "^15.0.4",
         "@angular/compiler-cli": "^14.2.12",
         "@cypress/schematic": "^2.3.0",
         "@html-eslint/parser": "^0.15.0",
