@@ -3,7 +3,7 @@
     "version": "2.0.0",
     "scripts": {
         "dev": "ng serve",
-        "dev:lan": "ng serve --host 0.0.0.0",
+        "dev:lan": "echo \"Listening on http://$(ipconfig getifaddr en0):4200\" && NG_APP_SERVER_BASE_URL=http://$(ipconfig getifaddr en0):3000 ng serve --host 0.0.0.0",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
         "update-colors": "ts-node ./tools/update-colors.cts",

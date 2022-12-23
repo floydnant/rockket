@@ -1,5 +1,5 @@
 .route-active .title {
-    text-shadow: 0 0 10px theme(colors.primary.400);
+    text-shadow: 0 0 10px theme('colors.primary.400');
 }
 :where(.route-active) {
     @apply text-primary-300;

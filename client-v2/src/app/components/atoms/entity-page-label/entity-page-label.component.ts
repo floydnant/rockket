@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { PageEntityIconKey } from '../icons/page-entity-icon/page-entity-icon.component'
 
 @Component({
@@ -16,6 +16,7 @@ import { PageEntityIconKey } from '../icons/page-entity-icon/page-entity-icon.co
             }
         `,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityPageLabelComponent {
     @Input() title!: string
