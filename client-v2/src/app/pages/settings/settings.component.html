@@ -15,11 +15,13 @@
 
     <app-main-pane>
         <ng-container header>
+            <app-breadcrumbs [breadcrumbs]="(breadcrumbs$ | async) || []"></app-breadcrumbs>
+
             <app-menu-toggle></app-menu-toggle>
         </ng-container>
 
         <ng-container main>
-    <router-outlet></router-outlet>
+            <router-outlet></router-outlet>
         </ng-container>
     </app-main-pane>
 </app-sidebar-layout>

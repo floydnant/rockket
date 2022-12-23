@@ -64,6 +64,15 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
             )
         })
     )
+    breadcrumbs$ = this.activeListAndTrace$.pipe(
+        map(derived =>
+            derived?.trace.map<Breadcrumb>(list => ({
+                title: list.name,
+                icon: EntityType.TASKLIST,
+                route: `/home/${list.id}`,
+            }))
+        )
+    )
 
     TaskStatus = TaskStatus
     EntityType = EntityType

@@ -9,6 +9,8 @@
             [style.width]="progress + '%'"
         ></div>
 
+        <app-breadcrumbs [breadcrumbs]="(breadcrumbs$ | async) || []"></app-breadcrumbs>
+
         <div cdkMenuBar>
             <button
                 cdkMenuItem

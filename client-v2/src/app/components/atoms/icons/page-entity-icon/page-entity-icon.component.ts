@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { TaskStatus } from 'src/app/models/task.model'
 
 /** This will come from the db */
@@ -48,10 +48,17 @@ export const entityIconClassMap: Record<PageEntityIconKey, string> = {
     [PageEntityState.LOADING]: 'far fa-spinner-third animate-spin text-tinted-200',
     ...taskStatusIconClassMap,
 }
+
+export const isPageEntityIcon = (iconClass: string): iconClass is PageEntityIconKey => {
+    console.log(iconClass)
+    return iconClass in entityIconClassMap
+}
+
 @Component({
     selector: 'page-entity-icon',
     templateUrl: './page-entity-icon.component.html',
     styleUrls: ['./page-entity-icon.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageEntityIconComponent {
     @Input() icon!: PageEntityIconKey
