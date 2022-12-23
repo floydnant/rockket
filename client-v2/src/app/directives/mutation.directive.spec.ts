@@ -1,8 +1,8 @@
-import { MutationDirective } from './mutation.directive'
+// import { MutationDirective } from './mutation.directive'
 
-describe('MutationDirective', () => {
-    it('should create an instance', () => {
-        const directive = new MutationDirective()
-        expect(directive).toBeTruthy()
-    })
-})
+// describe('MutationDirective', () => {
+//     it('should create an instance', () => {
+//         const directive = new MutationDirective()
+//         expect(directive).toBeTruthy()
+//     })
+// })

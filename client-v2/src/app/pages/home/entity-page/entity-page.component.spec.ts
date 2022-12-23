@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { activatedRouteMock, storeMock } from 'src/app/utils/unit-test.mocks'
 
 import { EntityPageComponent } from './entity-page.component'
 
@@ -9,6 +10,7 @@ describe('EntityPageComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [EntityPageComponent],
+            providers: [storeMock, activatedRouteMock],
         }).compileComponents()
 
         fixture = TestBed.createComponent(EntityPageComponent)

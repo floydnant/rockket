@@ -14,7 +14,7 @@ interface SettingsPageItem {
     styleUrls: [],
 })
 export class SettingsComponent {
-    constructor(private route: ActivatedRoute, private router: Router) {}
+    constructor(private route: ActivatedRoute) {}
 
     settingsPages: SettingsPageItem[] = [
         {
