@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core'
+import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { catchError, concatMap, map, mergeMap, of, switchMap } from 'rxjs'
+import { catchError, concatMap, map, mergeMap, of, switchMap, tap } from 'rxjs'
 import { DialogService } from 'src/app/modal/dialog.service'
 import { TaskService } from 'src/app/services/task.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
@@ -18,9 +19,9 @@ export class TaskEffects {
         private taskService: TaskService,
         private toast: HotToastService,
         private store: Store<AppState>,
-        private dialogService: DialogService
+        private dialogService: DialogService,
+        private router: Router
     ) {}
-
     loadListPreviews = createEffect(() => {
         return this.actions$.pipe(
             ofType(listActions.loadListPreviews),
@@ -42,15 +43,17 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(listActions.createTaskList),
             mergeMap(dto => {
-                const res$ = this.taskService.createTaskList(dto)
+                const name = dto.name || 'Untitled tasklist'
+                const res$ = this.taskService.createTaskList({ ...dto, name })
 
                 return res$.pipe(
                     this.toast.observe({
                         loading: 'Creating tasklist...',
-                        success: `Created tasklist '${dto.name}'`,
+                        success: `Created tasklist '${name}'`,
                         error: getMessageFromHttpError,
                     }),
                     map(tasklist => listActions.createTaskListSuccess({ createdList: tasklist })),
+                    tap(({ createdList }) => this.router.navigate(['/home', createdList.id])),
                     catchError(err => of(listActions.createTaskListError(err)))
                 )
             })

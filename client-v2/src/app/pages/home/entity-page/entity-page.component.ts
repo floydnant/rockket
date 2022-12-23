@@ -28,11 +28,11 @@ import { traceTaskList } from 'src/app/store/task/utils'
 export class EntityPageComponent implements AfterViewInit, OnDestroy {
     constructor(private store: Store<AppState>, private route: ActivatedRoute) {}
 
-    activeListAndTrace$ = this.route.paramMap.pipe(
-        switchMap(paramMap => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const activeId = paramMap.get('id')!
+    activeTasklistId$ = this.route.paramMap.pipe(map(paramMap => paramMap.get('id')!))
 
+    activeListAndTrace$ = this.activeTasklistId$.pipe(
+        switchMap(activeId => {
             return this.store
                 .select(state => state.task.listPreviews)
                 .pipe(
@@ -81,6 +81,12 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
     allTasks = 37
     progress = Math.round((this.closedTasks / this.allTasks) * 100)
     isShownAsPercentage = true
+
+    createNewSublist() {
+        this.activeTasklistId$.pipe(first()).subscribe(activeId => {
+            this.store.dispatch(listActions.createTaskList({ parentListId: activeId }))
+        })
+    }
 
     isSecondaryProgressBarVisible = false
     @ViewChild('progressBar') progressBar!: ElementRef<HTMLDivElement>

@@ -9,7 +9,7 @@ export const listActions = createActionGroup({
         'load list previews success': props<{ previews: TasklistPreview[] }>(),
         'load list previews error': props<HttpServerErrorResponse>(),
 
-        'create task list': props<CreateTasklistDto>(),
+        'create task list': props<Partial<CreateTasklistDto>>(),
         'create task list success': props<{ createdList: TaskList }>(),
         'create task list error': props<HttpServerErrorResponse>(),
 

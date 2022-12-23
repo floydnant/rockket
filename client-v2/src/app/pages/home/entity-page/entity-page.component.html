@@ -50,6 +50,39 @@
                     <li>Quickly write down / sketch out ideas</li>
                 </ul>
             </div>
+
+            <div class="children | mt-5 flex items-center gap-3" cdkMenuBar>
+                <button
+                    class="button-naked text-tinted-300 hover:text-tinted-100"
+                    appTooltip="Create a new list inside this one"
+                    (click)="createNewSublist()"
+                    cdkMenuItem
+                >
+                    <app-icon iconClass="fas fa-plus" class="mr-1"></app-icon>
+                    New sublist
+                </button>
+
+                <div class="flex gap-2" *ngIf="activeTaskList.childLists.length; else noChildren">
+                    <button
+                        class="child | button-m text-tinted-200"
+                        *ngFor="let child of activeTaskList.childLists"
+                        routerLink="/home/{{ child.id }}"
+                        cdkMenuItem
+                    >
+                        <app-entity-page-label
+                            [title]="child.name"
+                            [pageIcon]="EntityType.TASKLIST"
+                        ></app-entity-page-label>
+                    </button>
+                </div>
+
+                <ng-template #noChildren>
+                    <p class="m-0 text-tinted-500">
+                        <app-icon iconClass="fas fa-genderless" class="mr-1 inline-block translate-y-px"></app-icon> No
+                        lists inside
+                    </p>
+                </ng-template>
+            </div>
         </div>
 
         <div
