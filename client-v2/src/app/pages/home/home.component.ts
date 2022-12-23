@@ -8,7 +8,7 @@ import { EntityType } from 'src/app/components/atoms/icons/page-entity-icon/page
 import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { AppState } from 'src/app/store'
 import { listActions } from 'src/app/store/task/task.actions'
-import { flattenListTree, TasklistFlattend } from 'src/app/store/task/utils'
+import { flattenListTree, getTaskListById, TasklistFlattend } from 'src/app/store/task/utils'
 import { moveToMacroQueue } from 'src/app/utils'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 
@@ -73,10 +73,6 @@ export class HomeComponent implements OnInit {
         return new Array(number)
     }
 
-    log(str: string) {
-        console.log(str)
-    }
-
     listPreviewsTransformed: EntityTreeNode[] = []
     listPreviewsTransformed$ = this.store
         .select(state => state.task.listPreviews)
@@ -102,17 +98,21 @@ export class HomeComponent implements OnInit {
     )
 
     createNewList(parentListId?: string) {
-        const name = prompt('New Tasklist name')?.trim()
-        if (!name) return
-
-        this.store.dispatch(listActions.createTaskList({ name, parentListId }))
+        this.store.dispatch(listActions.createTaskList({ parentListId }))
     }
     renameList(id: string) {
-        const prevName = ''
-        const newName = prompt('Rename the list', prevName)?.trim()
-        if (!newName) return
+        this.store
+            .select(state => getTaskListById(state.task.listPreviews || [], id))
+            .pipe(first())
+            .subscribe(list => {
+                if (!list) return
 
-        this.store.dispatch(listActions.renameList({ id, newName }))
+                const prevName = list.name
+                const newName = prompt('Rename the list', prevName)?.trim()
+                if (!newName) return
+
+                this.store.dispatch(listActions.renameList({ id, newName }))
+            })
     }
     duplicateList(id: string) {
         this.store.dispatch(listActions.duplicateList({ id }))
