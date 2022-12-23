@@ -34,6 +34,7 @@
         "@angular/router": "^14.2.12",
         "@ngneat/hot-toast": "^4.1.0",
         "@ngneat/overview": "^3.0.0",
+        "@ngneat/until-destroy": "^9.2.2",
         "@ngrx/effects": "^14.3.2",
         "@ngrx/store": "^14.3.2",
         "@ngrx/store-devtools": "^14.3.2",
