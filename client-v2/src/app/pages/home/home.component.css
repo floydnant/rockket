@@ -16,6 +16,13 @@
     @apply pl-2.5;
 }
 
+.tree-node.active {
+    @apply bg-tinted-700;
+}
+.tree-node.active .content {
+    @apply text-primary-300;
+}
+
 .indent-line {
     @apply ml-3.5
         inline-block
@@ -44,6 +51,13 @@
         text-tinted-600
         transition-colors
         hover:text-tinted-400;
+}
+
+.no-toggle-icon  app-icon {
+    @apply text-tinted-700 transition-colors duration-75;
+}
+.tree-node:is(:hover, :active, :focus-visible, :focus-within) .no-toggle-icon app-icon {
+    @apply text-tinted-600;
 }
 
 .tree-node:not(:hover, :active, :focus-visible, :focus-within) .btn-group {
