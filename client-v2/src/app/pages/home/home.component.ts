@@ -1,15 +1,11 @@
 import { ArrayDataSource } from '@angular/cdk/collections'
 import { FlatTreeControl } from '@angular/cdk/tree'
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { map, tap } from 'rxjs'
-import {
-    EntityType,
-    PageEntityIconKey,
-} from 'src/app/components/atoms/icons/page-entity-icon/page-entity-icon.component'
+import { first, map, tap } from 'rxjs'
+import { EntityType } from 'src/app/components/atoms/icons/page-entity-icon/page-entity-icon.component'
 import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
-import { TaskStatus } from 'src/app/models/task.model'
 import { AppState } from 'src/app/store'
 import { listActions } from 'src/app/store/task/task.actions'
 import { flattenListTree, TasklistFlattend } from 'src/app/store/task/utils'
@@ -43,8 +39,12 @@ export const convertToEntityTreeNode = (list: TasklistFlattend): EntityTreeNode 
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class HomeComponent implements OnInit {
     constructor(private store: Store<AppState>, private actions$: Actions) {}
+
+    ngOnInit(): void {
+        moveToMacroQueue(() => this.store.dispatch(listActions.loadListPreviews()))
+    }
 
     getParentNode(node: EntityTreeNode) {
         const nodeIndex = this.listPreviewsTransformed.indexOf(node)
@@ -142,42 +142,5 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         },
     ]
 
-    /////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////
-
-    TaskStatus = TaskStatus
     EntityType = EntityType
-
-    closedTasks = 16
-    allTasks = 37
-    progress = Math.round((this.closedTasks / this.allTasks) * 100)
-    isShownAsPercentage = true
-
-    breadcrumbs: { text: string; icon?: PageEntityIconKey }[] = [
-        { text: 'Rootlist', icon: EntityType.TASKLIST },
-        { text: 'Listname', icon: EntityType.TASKLIST },
-        { text: 'Task', icon: TaskStatus.OPEN },
-        { text: 'Taskname, which you can edit', icon: TaskStatus.IN_PROGRESS },
-        // { text: 'Taskname, which you can edit. what if we get bungos though?', icon: TaskStatus.IN_PROGRESS },
-    ]
-
-    isSecondaryProgressBarVisible = false
-    @ViewChild('progressBar') progressBar!: ElementRef<HTMLDivElement>
-    progressBarObserver = new IntersectionObserver(
-        entries => {
-            if (entries[0].isIntersecting) this.isSecondaryProgressBarVisible = false
-            else this.isSecondaryProgressBarVisible = true
-        },
-        { threshold: [0.5] }
-    )
-
-    ngOnInit(): void {
-        moveToMacroQueue(() => this.store.dispatch(listActions.loadListPreviews()))
-    }
-    ngAfterViewInit(): void {
-        this.progressBarObserver.observe(this.progressBar.nativeElement)
-    }
-    ngOnDestroy(): void {
-        this.progressBarObserver.disconnect()
-    }
 }

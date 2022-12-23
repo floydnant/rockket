@@ -41,6 +41,9 @@ import { TooltipDirective } from './directives/tooltip.directive'
 import { TooltipComponent } from './components/atoms/tooltip/tooltip.component'
 import { CdkTreeModule } from '@angular/cdk/tree'
 import { EntityPageLabelComponent } from './components/atoms/entity-page-label/entity-page-label.component'
+import { EntityPageComponent } from './pages/home/entity-page/entity-page.component'
+import { MainPaneComponent } from './components/templates/main-pane/main-pane.component'
+import { MenuToggleComponent } from './components/templates/sidebar-layout/menu-toggle/menu-toggle.component'
 
 @NgModule({
     declarations: [
@@ -70,6 +73,9 @@ import { EntityPageLabelComponent } from './components/atoms/entity-page-label/e
         TooltipDirective,
         TooltipComponent,
         EntityPageLabelComponent,
+        EntityPageComponent,
+        MainPaneComponent,
+        MenuToggleComponent,
     ],
     imports: [
         BrowserModule,

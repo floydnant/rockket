@@ -34,6 +34,25 @@ export const flattenListTree = (lists: TaskListPreviewRecursive[], path: string[
     })
 }
 
+export const traceTaskList = (
+    lists: TaskListPreviewRecursive[],
+    id: string,
+    trace: TaskListPreviewRecursive[] = []
+): TaskListPreviewRecursive[] => {
+    return lists.flatMap(list => {
+        if (list.id == id) return [list]
+
+        if (list.childLists.length) {
+            const subtrace = traceTaskList(list.childLists, id, [...trace, list])
+            if (subtrace.length) return [list, ...subtrace]
+
+            return []
+        }
+
+        return []
+    })
+}
+
 export const getParentListByChildId = (
     list: TaskListPreviewRecursive[],
     id: string

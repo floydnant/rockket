@@ -6,12 +6,3 @@
         @apply -translate-x-full;
     }
 }
-
-.main-header {
-    @apply z-30 shadow-header;
-}
-@media (max-width: 768px) {
-    .main-header--mobile.hide {
-        @apply -translate-y-full;
-    }
-}

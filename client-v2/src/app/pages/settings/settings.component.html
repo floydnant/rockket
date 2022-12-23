@@ -13,7 +13,13 @@
         </div>
     </ng-container>
 
-    <ng-container header><div class="py-2 px-3">Settings / Breadcrumbs</div></ng-container>
+    <app-main-pane>
+        <ng-container header>
+            <app-menu-toggle></app-menu-toggle>
+        </ng-container>
 
+        <ng-container main>
     <router-outlet></router-outlet>
+        </ng-container>
+    </app-main-pane>
 </app-sidebar-layout>
