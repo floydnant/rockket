@@ -44,6 +44,7 @@ import { EntityPageLabelComponent } from './components/atoms/entity-page-label/e
 import { EntityPageComponent } from './pages/home/entity-page/entity-page.component'
 import { BreadcrumbsComponent } from './components/molecules/breadcrumbs/breadcrumbs.component'
 import { MainPaneComponent } from './components/templates/main-pane/main-pane.component'
+import { MutationDirective } from './directives/mutation.directive'
 import { MenuToggleComponent } from './components/templates/sidebar-layout/menu-toggle/menu-toggle.component'
 
 @NgModule({
@@ -77,6 +78,7 @@ import { MenuToggleComponent } from './components/templates/sidebar-layout/menu-
         EntityPageComponent,
         BreadcrumbsComponent,
         MainPaneComponent,
+        MutationDirective,
         MenuToggleComponent,
     ],
     imports: [

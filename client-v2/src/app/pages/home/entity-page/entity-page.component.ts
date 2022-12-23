@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import {
     BehaviorSubject,
@@ -20,6 +21,7 @@ import { AppState } from 'src/app/store'
 import { listActions } from 'src/app/store/task/task.actions'
 import { traceTaskList } from 'src/app/store/task/utils'
 
+@UntilDestroy()
 @Component({
     selector: 'app-entity-page',
     templateUrl: './entity-page.component.html',
@@ -28,7 +30,7 @@ import { traceTaskList } from 'src/app/store/task/utils'
 export class EntityPageComponent implements AfterViewInit, OnDestroy {
     constructor(private store: Store<AppState>, private route: ActivatedRoute) {}
 
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     activeTasklistId$ = this.route.paramMap.pipe(map(paramMap => paramMap.get('id')!))
 
     activeListAndTrace$ = this.activeTasklistId$.pipe(
@@ -87,6 +89,43 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
             this.store.dispatch(listActions.createTaskList({ parentListId: activeId }))
         })
     }
+
+    keydownEvents$ = new BehaviorSubject<KeyboardEvent | null>(null)
+    blurEvents$ = new BehaviorSubject<FocusEvent | null>(null)
+    listnameChanges$ = new BehaviorSubject('')
+
+    listNameUpdatesSubscription = merge(
+        this.keydownEvents$.pipe(
+            filter(event => {
+                if (event?.code == 'Enter') {
+                    event.preventDefault()
+                    return true
+                }
+                return false
+            }),
+            switchMap(() => this.listnameChanges$.pipe(first()))
+        ),
+        this.blurEvents$.pipe(
+            filter(e => !!e),
+            switchMap(() => this.listnameChanges$.pipe(first()))
+        ),
+        this.listnameChanges$.pipe(debounceTime(600))
+    )
+        .pipe(
+            distinctUntilChanged(),
+            switchMap(newName => {
+                return this.activeTaskList$.pipe(
+                    first(),
+                    tap(activeTaskList => {
+                        if (!activeTaskList || !newName) return EMPTY
+
+                        return this.store.dispatch(listActions.renameList({ id: activeTaskList.id, newName }))
+                    })
+                )
+            }),
+            untilDestroyed(this)
+        )
+        .subscribe()
 
     isSecondaryProgressBarVisible = false
     @ViewChild('progressBar') progressBar!: ElementRef<HTMLDivElement>

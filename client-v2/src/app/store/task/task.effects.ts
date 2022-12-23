@@ -67,13 +67,11 @@ export class TaskEffects {
                 const res$ = this.taskService.updateTaskList(id, { name: newName })
 
                 return res$.pipe(
-                    this.toast.observe({
-                        loading: 'Renaming tasklist...',
-                        success: `Renamed tasklist to '${newName}'`,
-                        error: getMessageFromHttpError,
-                    }),
                     map(() => listActions.renameListSuccess({ id, newName })),
-                    catchError(err => of(listActions.renameListError(err)))
+                    catchError(err => {
+                        this.toast.error(getMessageFromHttpError(err))
+                        return of(listActions.renameListError(err))
+                    })
                 )
             })
         )

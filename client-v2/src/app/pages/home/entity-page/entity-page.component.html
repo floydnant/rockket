@@ -38,7 +38,19 @@
                 <page-entity-icon class="mr-2.5 inline-block -translate-y-0.5 text-2xl" [icon]="EntityType.TASKLIST">
                 </page-entity-icon>
 
-                <span class="title">{{ activeListName$ | async }}</span>
+                <span
+                    class="title | outline-none"
+                    #listname
+                    contenteditable
+                    focusable
+                    #listnameFocusable="focusable"
+                    [spellcheck]="listnameFocusable.isFocused"
+                    (textChanges)="listnameChanges$.next($event)"
+                    [mutationOptions]="{ plainOnly: true, observe: listnameFocusable.isFocused }"
+                    (keydown)="keydownEvents$.next($event)"
+                    (blur)="blurEvents$.next($event)"
+                    >{{ activeListName$ | async }}</span
+                >
             </h1>
 
             <div class="description | text-tinted-300 outline-none" contenteditable>
