@@ -3,14 +3,14 @@ import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { catchError, concatMap, map, mergeMap, of, switchMap, tap } from 'rxjs'
+import { catchError, concatMap, filter, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
 import { DialogService } from 'src/app/modal/dialog.service'
 import { TaskService } from 'src/app/services/task.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
 import { appActions } from '../app.actions'
 import { listActions } from './task.actions'
-import { getTaskListById } from './utils'
+import { getTaskListById, traceTaskList } from './utils'
 
 @Injectable()
 export class TaskEffects {
@@ -22,6 +22,7 @@ export class TaskEffects {
         private dialogService: DialogService,
         private router: Router
     ) {}
+
     loadListPreviews = createEffect(() => {
         return this.actions$.pipe(
             ofType(listActions.loadListPreviews),
@@ -129,10 +130,40 @@ export class TaskEffects {
                         success: res => res.successMessage,
                         error: getMessageFromHttpError,
                     }),
-                    map(() => listActions.deleteListSuccess({ id })),
+                    switchMap(() => {
+                        return this.activeTaskListTrace$.pipe(
+                            first(),
+                            tap(trace => {
+                                if (!trace) return
+
+                                const activeTaskList = trace[trace.length - 1]
+                                if (activeTaskList.id != id) return
+
+                                const parentList = trace[trace.length - 2]
+                                if (!parentList) return
+
+                                this.router.navigate(['/home', parentList.id])
+                            }),
+                            map(() => listActions.deleteListSuccess({ id }))
+                        )
+                    }),
                     catchError(err => of(listActions.deleteListError(err)))
                 )
             })
         )
     })
+
+    activeTaskListTrace$ = this.store
+        .select(state => state.task.listPreviews)
+        .pipe(
+            map(listPreviews => {
+                // @TODO: come up with a better solution for this
+                const segments = location.pathname.split('/')
+                const activeId = segments[segments.length - 1]
+
+                if (!listPreviews || !activeId) return null
+
+                return traceTaskList(listPreviews, activeId)
+            })
+        )
 }
