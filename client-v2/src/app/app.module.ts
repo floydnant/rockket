@@ -46,6 +46,7 @@ import { BreadcrumbsComponent } from './components/molecules/breadcrumbs/breadcr
 import { MainPaneComponent } from './components/templates/main-pane/main-pane.component'
 import { MutationDirective } from './directives/mutation.directive'
 import { MenuToggleComponent } from './components/templates/sidebar-layout/menu-toggle/menu-toggle.component'
+import { DashboardComponent } from './pages/home/entity-page-placeholder/dashboard.component'
 
 @NgModule({
     declarations: [
@@ -80,6 +81,7 @@ import { MenuToggleComponent } from './components/templates/sidebar-layout/menu-
         MainPaneComponent,
         MutationDirective,
         MenuToggleComponent,
+        DashboardComponent,
     ],
     imports: [
         BrowserModule,

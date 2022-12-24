@@ -6,6 +6,7 @@ import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.
 import { LoginComponent } from './pages/auth/login/login.component'
 import { SignupComponent } from './pages/auth/signup/signup.component'
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
+import { DashboardComponent } from './pages/home/entity-page-placeholder/dashboard.component'
 import { EntityPageComponent } from './pages/home/entity-page/entity-page.component'
 import { HomeComponent } from './pages/home/home.component'
 import { LandingPageComponent } from './pages/landing-page/landing-page.component'
@@ -48,7 +49,10 @@ const routes: Routes = [
         path: 'home',
         component: HomeComponent,
         canActivate: [AuthGuard],
-        children: [{ path: ':id', component: EntityPageComponent }],
+        children: [
+            { path: ':id', component: EntityPageComponent },
+            { path: '', component: DashboardComponent },
+        ],
     },
     {
         path: 'settings',
