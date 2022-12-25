@@ -6,19 +6,19 @@ import {
     BehaviorSubject,
     debounceTime,
     distinctUntilChanged,
-    EMPTY,
     filter,
     first,
     map,
     merge,
     of,
+    shareReplay,
     switchMap,
     tap,
 } from 'rxjs'
 import { EntityType } from 'src/app/components/atoms/icons/page-entity-icon/page-entity-icon.component'
 import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs.component'
 import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
-import { TaskStatus } from 'src/app/models/task.model'
+import { DEFAULT_TASKLIST_NAME, TaskStatus } from 'src/app/models/task.model'
 import { AppState } from 'src/app/store'
 import { listActions } from 'src/app/store/task/task.actions'
 import { traceTaskList } from 'src/app/store/task/utils'
@@ -34,6 +34,9 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
 
     TaskStatus = TaskStatus
     EntityType = EntityType
+    DEFAULT_TASKLIST_NAME = DEFAULT_TASKLIST_NAME
+
+    @ViewChild('listname') editableListName!: ElementRef<HTMLSpanElement>
 
     isPrimaryProgressBarHidden = false
     @ViewChild('progressBar') progressBar!: ElementRef<HTMLDivElement>
@@ -89,10 +92,11 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
                         return traceTaskList(listPreviews, activeId)
                     })
                 )
-        })
+        }),
+        shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    activeTaskList$ = this.activeTasklistTrace$.pipe(map(trace => trace?.[trace?.length - 1]))
+    activeTaskList$ = this.activeTasklistTrace$.pipe(map(trace => trace?.[trace.length - 1]))
     activeListName$ = this.activeTaskList$.pipe(
         map(list => list?.name),
         distinctUntilChanged(),
@@ -104,9 +108,25 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
 
                     return listName != newListname
                 }),
-                map(() => listName)
+                map(() => {
+                    if (listName == DEFAULT_TASKLIST_NAME) return ''
+
+                    return listName
+                })
             )
-        })
+        }),
+        tap(listName => {
+            /*  This is necessary in case of updating the listname from empty to also empty.
+                Because apparently, angular does not do the update, which is bad when the listname was edited before,
+                meaning, the edited listname won't be overwritten. So we have to do that manually.
+                
+                We could narrow this down even further with comparing to the previous listname (`pairwise()` operator),
+                and only update if both are empty, but this should suffice for now. */
+            if (listName === '' && this.editableListName?.nativeElement) {
+                this.editableListName.nativeElement.innerText = ''
+            }
+        }),
+        shareReplay({ bufferSize: 1, refCount: true })
     )
 
     breadcrumbs$ = this.activeTasklistTrace$.pipe(
@@ -121,7 +141,16 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
 
     keydownEvents$ = new BehaviorSubject<KeyboardEvent | null>(null)
     blurEvents$ = new BehaviorSubject<FocusEvent | null>(null)
-    listnameChanges$ = new BehaviorSubject('')
+    listnameChanges$ = new BehaviorSubject<string | null>(null)
+
+    listnameDomState$ = merge(
+        this.listnameChanges$,
+        this.activeListName$.pipe(
+            tap(() => {
+                if (this.listnameChanges$.value !== null) this.listnameChanges$.next(null)
+            })
+        )
+    ).pipe(shareReplay({ bufferSize: 1, refCount: true }))
 
     listNameUpdateEvents$ = merge(
         this.keydownEvents$.pipe(
@@ -139,6 +168,13 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
             switchMap(() => this.listnameChanges$.pipe(first()))
         ),
         this.listnameChanges$.pipe(debounceTime(600))
+    ).pipe(
+        map(newName => {
+            if (newName === null) return null
+
+            return newName || DEFAULT_TASKLIST_NAME
+        }),
+        shareReplay({ bufferSize: 1, refCount: true })
     )
 
     listNameUpdatesSubscription = this.listNameUpdateEvents$
@@ -148,7 +184,7 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
                 return this.activeTaskList$.pipe(
                     first(),
                     tap(activeTaskList => {
-                        if (!activeTaskList || !newName) return EMPTY
+                        if (!activeTaskList || !newName) return
 
                         return this.store.dispatch(listActions.renameList({ id: activeTaskList.id, newName }))
                     })

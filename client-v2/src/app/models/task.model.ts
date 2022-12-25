@@ -81,6 +81,8 @@ export interface TaskList {
     // participants: string[] // maybe this one as well
 }
 
+export const DEFAULT_TASKLIST_NAME = 'Untitled tasklist'
+
 export type TasklistPreview = Pick<TaskList, 'id' | 'name' | 'childLists' | 'parentListId'>
 
 export interface CreateTasklistDto {

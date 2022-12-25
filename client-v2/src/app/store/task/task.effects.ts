@@ -5,6 +5,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { catchError, concatMap, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
 import { DialogService } from 'src/app/modal/dialog.service'
+import { DEFAULT_TASKLIST_NAME } from 'src/app/models/task.model'
 import { TaskService } from 'src/app/services/task.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
@@ -44,7 +45,7 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(listActions.createTaskList),
             mergeMap(dto => {
-                const name = dto.name || 'Untitled tasklist'
+                const name = dto.name || DEFAULT_TASKLIST_NAME
                 const res$ = this.taskService.createTaskList({ ...dto, name })
 
                 return res$.pipe(

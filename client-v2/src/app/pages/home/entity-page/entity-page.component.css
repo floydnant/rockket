@@ -8,3 +8,8 @@
 .progress-container.glow span {
     @apply text-submit-400;
 }
+
+.show-placeholder::before {
+    content: attr(data-placeholder);
+    @apply text-tinted-400;
+}

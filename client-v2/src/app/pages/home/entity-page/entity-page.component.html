@@ -48,7 +48,10 @@
                 </page-entity-icon>
 
                 <span
-                    class="title | outline-none"
+                    class="title | inline-block min-w-[2rem] cursor-text outline-none"
+                    [innerText]="activeListName$ | async"
+                    [class.show-placeholder]="!(listnameDomState$ | async)"
+                    [attr.data-placeholder]="DEFAULT_TASKLIST_NAME"
                     #listname
                     contenteditable
                     focusable
@@ -58,8 +61,7 @@
                     [mutationOptions]="{ plainOnly: true, observe: listnameFocusable.isFocused }"
                     (keydown)="keydownEvents$.next($event)"
                     (blur)="blurEvents$.next($event)"
-                    >{{ activeListName$ | async }}</span
-                >
+                ></span>
             </h1>
 
             <div class="description | text-tinted-300 outline-none" contenteditable>
@@ -83,7 +85,7 @@
                     New sublist
                 </button>
 
-                <div class="flex gap-2" *ngIf="activeTaskList.childLists.length; else noChildren">
+                <div class="flex flex-wrap gap-2" *ngIf="activeTaskList.childLists.length; else noChildren">
                     <button
                         class="child | button-m text-tinted-200"
                         *ngFor="let child of activeTaskList.childLists"
