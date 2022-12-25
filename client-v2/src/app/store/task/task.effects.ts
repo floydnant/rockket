@@ -3,7 +3,7 @@ import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { catchError, concatMap, filter, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
+import { catchError, concatMap, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
 import { DialogService } from 'src/app/modal/dialog.service'
 import { TaskService } from 'src/app/services/task.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
@@ -61,6 +61,30 @@ export class TaskEffects {
         )
     })
 
+    showRenameListDialog = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(listActions.renameListDialog),
+            switchMap(({ id }) => {
+                return this.store
+                    .select(state => state.task.listPreviews)
+                    .pipe(
+                        first(),
+                        map(listPreviews => {
+                            if (!listPreviews) return listActions.renameListDialogAbort()
+
+                            const taskList = getTaskListById(listPreviews, id)
+                            if (!taskList) return listActions.renameListDialogAbort()
+
+                            const newName = prompt('Rename the list', taskList.name)?.trim()
+                            if (!newName) return listActions.renameListDialogAbort()
+
+                            return listActions.renameList({ id, newName })
+                        })
+                    )
+            })
+        )
+    })
+    //
     renameTaskList = createEffect(() => {
         return this.actions$.pipe(
             ofType(listActions.renameList),
@@ -90,16 +114,17 @@ export class TaskEffects {
 
     showDeleteListDialog = createEffect(() => {
         return this.actions$.pipe(
-            ofType(listActions.deleteList),
+            ofType(listActions.deleteListDialog),
             switchMap(({ id }) => {
                 return this.store
                     .select(state => state.task.listPreviews)
                     .pipe(
+                        first(),
                         concatMap(listPreviews => {
-                            if (!listPreviews) return of(listActions.deleteListAbort())
+                            if (!listPreviews) return of(listActions.deleteListDialogAbort())
 
                             const taskList = getTaskListById(listPreviews, id)
-                            if (!taskList) return of(listActions.deleteListAbort())
+                            if (!taskList) return of(listActions.deleteListDialogAbort())
 
                             const closed$ = this.dialogService.confirm({
                                 title: 'Delete this tasklist?',
@@ -109,8 +134,8 @@ export class TaskEffects {
 
                             return closed$.pipe(
                                 map(response => {
-                                    if (response == 'Delete') return listActions.deleteListProceed({ id })
-                                    return listActions.deleteListAbort()
+                                    if (response == 'Delete') return listActions.deleteList({ id })
+                                    return listActions.deleteListDialogAbort()
                                 })
                             )
                         })
@@ -118,9 +143,10 @@ export class TaskEffects {
             })
         )
     })
+    //
     deleteList = createEffect(() => {
         return this.actions$.pipe(
-            ofType(listActions.deleteListProceed),
+            ofType(listActions.deleteList),
             mergeMap(({ id }) => {
                 const res$ = this.taskService.deleteTaskList(id)
 

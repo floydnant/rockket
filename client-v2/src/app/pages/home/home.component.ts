@@ -101,24 +101,13 @@ export class HomeComponent implements OnInit {
         this.store.dispatch(listActions.createTaskList({ parentListId }))
     }
     renameList(id: string) {
-        this.store
-            .select(state => getTaskListById(state.task.listPreviews || [], id))
-            .pipe(first())
-            .subscribe(list => {
-                if (!list) return
-
-                const prevName = list.name
-                const newName = prompt('Rename the list', prevName)?.trim()
-                if (!newName) return
-
-                this.store.dispatch(listActions.renameList({ id, newName }))
-            })
+        this.store.dispatch(listActions.renameListDialog({ id }))
     }
     duplicateList(id: string) {
         this.store.dispatch(listActions.duplicateList({ id }))
     }
     deleteList(id: string) {
-        this.store.dispatch(listActions.deleteList({ id }))
+        this.store.dispatch(listActions.deleteListDialog({ id }))
     }
 
     nodeMenuItems: MenuItem[] = [
