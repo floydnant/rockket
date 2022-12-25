@@ -5,7 +5,7 @@
 
         <div
             class="header-progress | absolute bottom-0 left-0 h-[2px] bg-submit-500 transition-opacity"
-            [class.opacity-0]="!isSecondaryProgressBarVisible"
+            [class.opacity-0]="!isPrimaryProgressBarHidden"
             [style.width]="progress + '%'"
         ></div>
 
@@ -15,10 +15,19 @@
             <button
                 cdkMenuItem
                 class="button-icon-naked menu-item | py-2 px-4"
-                appTooltip="Here will be some options for the current open document"
+                [cdkMenuTriggerFor]="options"
+                #trigger="cdkMenuTriggerFor"
             >
                 <app-icon iconClass="fas fa-ellipsis-v"></app-icon>
             </button>
+
+            <ng-template #options>
+                <app-drop-down
+                    [items]="(tasklistOptionsItems$ | async) || []"
+                    [rootTrigger]="trigger"
+                    [data]="(activeTaskList$ | async)?.id"
+                ></app-drop-down>
+            </ng-template>
         </div>
 
         <app-menu-toggle></app-menu-toggle>
@@ -80,11 +89,21 @@
                         *ngFor="let child of activeTaskList.childLists"
                         routerLink="/home/{{ child.id }}"
                         cdkMenuItem
+                        [cdkContextMenuTriggerFor]="options"
+                        #trigger="cdkContextMenuTriggerFor"
                     >
                         <app-entity-page-label
                             [title]="child.name"
                             [pageIcon]="EntityType.TASKLIST"
                         ></app-entity-page-label>
+
+                        <ng-template #options>
+                            <app-drop-down
+                                [items]="(tasklistOptionsItems$ | async) || []"
+                                [rootTrigger]="trigger"
+                                [data]="child.id"
+                            ></app-drop-down>
+                        </ng-template>
                     </button>
                 </div>
 

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import {
@@ -11,11 +11,13 @@ import {
     first,
     map,
     merge,
+    of,
     switchMap,
     tap,
 } from 'rxjs'
 import { EntityType } from 'src/app/components/atoms/icons/page-entity-icon/page-entity-icon.component'
 import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs.component'
+import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { TaskStatus } from 'src/app/models/task.model'
 import { AppState } from 'src/app/store'
 import { listActions } from 'src/app/store/task/task.actions'
@@ -28,12 +30,55 @@ import { traceTaskList } from 'src/app/store/task/utils'
     styleUrls: ['./entity-page.component.css'],
 })
 export class EntityPageComponent implements AfterViewInit, OnDestroy {
-    constructor(private store: Store<AppState>, private route: ActivatedRoute) {}
+    constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router) {}
+
+    TaskStatus = TaskStatus
+    EntityType = EntityType
+
+    isPrimaryProgressBarHidden = false
+    @ViewChild('progressBar') progressBar!: ElementRef<HTMLDivElement>
+    progressBarObserver = new IntersectionObserver(
+        entries => {
+            if (entries[0].isIntersecting) this.isPrimaryProgressBarHidden = false
+            else this.isPrimaryProgressBarHidden = true
+        },
+        { threshold: [0.5] }
+    )
+
+    ngAfterViewInit(): void {
+        this.progressBarObserver.observe(this.progressBar.nativeElement)
+    }
+    ngOnDestroy(): void {
+        this.progressBarObserver.disconnect()
+    }
+
+    closedTasks = 16
+    allTasks = 37
+    progress = Math.round((this.closedTasks / this.allTasks) * 100)
+    isShownAsPercentage = true
+
+    tasklistOptionsItems: MenuItem[] = [
+        {
+            title: `Rename`,
+            action: (id: string) => this.store.dispatch(listActions.renameListDialog({ id })),
+        },
+        {
+            title: `Export`,
+            action: (id: string) => this.store.dispatch(listActions.exportList({ id })),
+        },
+        { isSeperator: true },
+        {
+            title: `Delete`,
+            variant: MenuItemVariant.DANGER,
+            action: (id: string) => this.store.dispatch(listActions.deleteListDialog({ id })),
+        },
+    ]
+    tasklistOptionsItems$ = of(this.tasklistOptionsItems)
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     activeTasklistId$ = this.route.paramMap.pipe(map(paramMap => paramMap.get('id')!))
 
-    activeListAndTrace$ = this.activeTasklistId$.pipe(
+    activeTasklistTrace$ = this.activeTasklistId$.pipe(
         switchMap(activeId => {
             return this.store
                 .select(state => state.task.listPreviews)
@@ -41,16 +86,13 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
                     map(listPreviews => {
                         if (!listPreviews) return null
 
-                        const trace = traceTaskList(listPreviews, activeId)
-                        const activeTaskList = trace[trace.length - 1]
-
-                        return { activeTaskList, trace }
+                        return traceTaskList(listPreviews, activeId)
                     })
                 )
         })
     )
 
-    activeTaskList$ = this.activeListAndTrace$.pipe(map(derived => derived?.activeTaskList))
+    activeTaskList$ = this.activeTasklistTrace$.pipe(map(trace => trace?.[trace?.length - 1]))
     activeListName$ = this.activeTaskList$.pipe(
         map(list => list?.name),
         distinctUntilChanged(),
@@ -66,9 +108,10 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
             )
         })
     )
-    breadcrumbs$ = this.activeListAndTrace$.pipe(
-        map(derived =>
-            derived?.trace.map<Breadcrumb>(list => ({
+
+    breadcrumbs$ = this.activeTasklistTrace$.pipe(
+        map(trace =>
+            trace?.map<Breadcrumb>(list => ({
                 title: list.name,
                 icon: EntityType.TASKLIST,
                 route: `/home/${list.id}`,
@@ -76,25 +119,11 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
         )
     )
 
-    TaskStatus = TaskStatus
-    EntityType = EntityType
-
-    closedTasks = 16
-    allTasks = 37
-    progress = Math.round((this.closedTasks / this.allTasks) * 100)
-    isShownAsPercentage = true
-
-    createNewSublist() {
-        this.activeTasklistId$.pipe(first()).subscribe(activeId => {
-            this.store.dispatch(listActions.createTaskList({ parentListId: activeId }))
-        })
-    }
-
     keydownEvents$ = new BehaviorSubject<KeyboardEvent | null>(null)
     blurEvents$ = new BehaviorSubject<FocusEvent | null>(null)
     listnameChanges$ = new BehaviorSubject('')
 
-    listNameUpdatesSubscription = merge(
+    listNameUpdateEvents$ = merge(
         this.keydownEvents$.pipe(
             filter(event => {
                 if (event?.code == 'Enter') {
@@ -111,6 +140,8 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
         ),
         this.listnameChanges$.pipe(debounceTime(600))
     )
+
+    listNameUpdatesSubscription = this.listNameUpdateEvents$
         .pipe(
             distinctUntilChanged(),
             switchMap(newName => {
@@ -127,20 +158,9 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
         )
         .subscribe()
 
-    isSecondaryProgressBarVisible = false
-    @ViewChild('progressBar') progressBar!: ElementRef<HTMLDivElement>
-    progressBarObserver = new IntersectionObserver(
-        entries => {
-            if (entries[0].isIntersecting) this.isSecondaryProgressBarVisible = false
-            else this.isSecondaryProgressBarVisible = true
-        },
-        { threshold: [0.5] }
-    )
-
-    ngAfterViewInit(): void {
-        this.progressBarObserver.observe(this.progressBar.nativeElement)
-    }
-    ngOnDestroy(): void {
-        this.progressBarObserver.disconnect()
+    createNewSublist() {
+        this.activeTasklistId$.pipe(first()).subscribe(activeId => {
+            this.store.dispatch(listActions.createTaskList({ parentListId: activeId }))
+        })
     }
 }

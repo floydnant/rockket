@@ -30,5 +30,7 @@ export const listActions = createActionGroup({
         'duplicate list': props<{ id: string }>(),
         'duplicate list success': props<{ id: string }>(),
         'duplicate list error': props<{ id: string }>(),
+
+        'export list': props<{ id: string }>(),
     },
 })

@@ -112,6 +112,16 @@ export class TaskEffects {
         )
     })
 
+    exportList = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(listActions.exportList),
+            mergeMap(() => {
+                this.toast.info('Exporting lists is not supported yet.')
+                return of(appActions.nothing())
+            })
+        )
+    })
+
     showDeleteListDialog = createEffect(() => {
         return this.actions$.pipe(
             ofType(listActions.deleteListDialog),

@@ -1,4 +1,4 @@
-import { CdkMenuTrigger } from '@angular/cdk/menu'
+import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu'
 import { Component, Input } from '@angular/core'
 import { moveToMacroQueue } from 'src/app/utils'
 import { PageEntityIconKey } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
@@ -27,7 +27,7 @@ export enum MenuItemVariant {
 })
 export class DropDownComponent {
     @Input() items!: MenuItem[]
-    @Input() rootTrigger?: CdkMenuTrigger
+    @Input() rootTrigger?: CdkMenuTrigger | CdkContextMenuTrigger
     @Input() data?: unknown
 
     triggerAction(action: MenuItem['action']) {
