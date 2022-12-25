@@ -56,7 +56,7 @@
 .no-toggle-icon  app-icon {
     @apply text-tinted-700 transition-colors duration-75;
 }
-.tree-node:is(:hover, :active, :focus-visible, :focus-within) .no-toggle-icon app-icon {
+.tree-node:is(:hover, :active, :focus-visible, :focus-within, .active) .no-toggle-icon app-icon {
     @apply text-tinted-600;
 }
 

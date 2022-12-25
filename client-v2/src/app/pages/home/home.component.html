@@ -71,6 +71,7 @@
                         routerLink="/home/{{ node.id }}"
                         routerLinkActive="active"
                         #nodeTooltip="appTooltip"
+                        [cdkContextMenuTriggerFor]="nodeDropDown"
                     >
                         <div class="indent-line" *ngFor="let line of range(node.path.length)">&nbsp;</div>
 

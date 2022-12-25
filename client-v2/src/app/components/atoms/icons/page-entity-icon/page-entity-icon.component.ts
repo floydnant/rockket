@@ -50,7 +50,6 @@ export const entityIconClassMap: Record<PageEntityIconKey, string> = {
 }
 
 export const isPageEntityIcon = (iconClass: string): iconClass is PageEntityIconKey => {
-    console.log(iconClass)
     return iconClass in entityIconClassMap
 }
 
