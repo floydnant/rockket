@@ -1,3 +1,4 @@
+import { CdkMenuModule } from '@angular/cdk/menu'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { activatedRouteMock, storeMock } from 'src/app/utils/unit-test.mocks'
 
@@ -9,6 +10,7 @@ describe('EntityPageComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            imports: [CdkMenuModule],
             declarations: [EntityPageComponent],
             providers: [storeMock, activatedRouteMock],
         }).compileComponents()
