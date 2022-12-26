@@ -23,9 +23,9 @@
 
             <ng-template #options>
                 <app-drop-down
-                    [items]="(tasklistOptionsItems$ | async) || []"
+                    [items]="(entityOptionsItems$ | async) || []"
                     [rootTrigger]="trigger"
-                    [data]="(activeTaskList$ | async)?.id"
+                    [data]="(activeEntity$ | async)?.id"
                 ></app-drop-down>
             </ng-template>
         </div>
@@ -34,7 +34,7 @@
     </ng-container>
 
     <ng-container main>
-        <div class="mb-4" *ngIf="activeTaskList$ | async as activeTaskList">
+        <div class="mb-4" *ngIf="activeEntity$ | async as activeEntity">
             <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
             <!--     <button class="button-naked">Add Sublist</button> -->
             <!--     <button class="button-naked">Add Description</button> -->
@@ -49,16 +49,16 @@
 
                 <span
                     class="title | inline-block min-w-[2rem] cursor-text outline-none"
-                    [innerText]="activeListName$ | async"
-                    [class.show-placeholder]="!(listnameDomState$ | async)"
+                    [innerText]="activeEntityName$ | async"
+                    [class.show-placeholder]="!(entityNameDomState$ | async)"
                     [attr.data-placeholder]="DEFAULT_TASKLIST_NAME"
-                    #listname
+                    #editableEntityName
                     contenteditable
                     focusable
-                    #listnameFocusable="focusable"
-                    [spellcheck]="listnameFocusable.isFocused"
-                    (textChanges)="listnameChanges$.next($event)"
-                    [mutationOptions]="{ plainOnly: true, observe: listnameFocusable.isFocused }"
+                    #entityNameFocusable="focusable"
+                    [spellcheck]="entityNameFocusable.isFocused"
+                    (textChanges)="entityNameChanges$.next($event)"
+                    [mutationOptions]="{ plainOnly: true, observe: entityNameFocusable.isFocused }"
                     (keydown)="keydownEvents$.next($event)"
                     (blur)="blurEvents$.next($event)"
                 ></span>
@@ -85,10 +85,10 @@
                     New sublist
                 </button>
 
-                <div class="flex flex-wrap gap-2" *ngIf="activeTaskList.childLists.length; else noChildren">
+                <div class="flex flex-wrap gap-2" *ngIf="activeEntity.children.length; else noChildren">
                     <button
                         class="child | button-m text-tinted-200"
-                        *ngFor="let child of activeTaskList.childLists"
+                        *ngFor="let child of activeEntity.children"
                         routerLink="/home/{{ child.id }}"
                         cdkMenuItem
                         [cdkContextMenuTriggerFor]="options"
@@ -101,7 +101,7 @@
 
                         <ng-template #options>
                             <app-drop-down
-                                [items]="(tasklistOptionsItems$ | async) || []"
+                                [items]="(entityOptionsItems$ | async) || []"
                                 [rootTrigger]="trigger"
                                 [data]="child.id"
                             ></app-drop-down>

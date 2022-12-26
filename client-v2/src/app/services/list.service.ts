@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core'
 import { HttpService } from '../http/http.service'
 import { HttpSuccessResponse } from '../http/types'
-import { CreateTasklistDto, TaskList, TasklistPreview, UpdateTasklistDto } from '../models/task.model'
+import { CreateTasklistDto, TaskList, UpdateTasklistDto } from '../models/task.model'
 
 @Injectable({
     providedIn: 'root',
 })
-export class TaskService {
+export class ListService {
     constructor(private http: HttpService) {}
-
-    getListPreviews() {
-        return this.http.get<TasklistPreview[]>('/all-lists')
-    }
 
     createTaskList(dto: CreateTasklistDto) {
         return this.http.post<TaskList>('/list', dto)

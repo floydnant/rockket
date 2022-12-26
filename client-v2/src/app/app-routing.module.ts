@@ -8,7 +8,7 @@ import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.
 import { LoginComponent } from './pages/auth/login/login.component'
 import { SignupComponent } from './pages/auth/signup/signup.component'
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
-import { DashboardComponent } from './pages/home/entity-page-placeholder/dashboard.component'
+import { DashboardComponent } from './pages/home/dashboard/dashboard.component'
 import { EntityPageComponent } from './pages/home/entity-page/entity-page.component'
 import { HomeComponent } from './pages/home/home.component'
 import { LandingPageComponent } from './pages/landing-page/landing-page.component'
@@ -18,7 +18,7 @@ import { SettingsAppearanceComponent } from './pages/settings/appearance/appeara
 import { SettingsGeneralComponent } from './pages/settings/general/general.component'
 import { SettingsComponent } from './pages/settings/settings.component'
 import { AppState } from './store'
-import { getEntityById } from './store/task/utils'
+import { getEntityById } from './store/entities/utils'
 
 const ENVIRONMENT_HINT = `[${environment.REVIEW_ID ? environment.REVIEW_ID + '-' : ''}${environment.CONTEXT}]`
 const APP_TITLE = `Rockket ${environment.CONTEXT == 'Production' ? '' : ENVIRONMENT_HINT}`

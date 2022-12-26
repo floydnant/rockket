@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing'
 import { httpServiceMock } from '../utils/unit-test.mocks'
 
-import { TaskService } from './task.service'
+import { ListService } from './list.service'
 
-describe('TaskService', () => {
-    let service: TaskService
+describe('ListService', () => {
+    let service: ListService
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             providers: [httpServiceMock],
         })
-        service = TestBed.inject(TaskService)
+        service = TestBed.inject(ListService)
     })
 
     it('should be created', () => {

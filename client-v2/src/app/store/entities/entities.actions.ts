@@ -2,12 +2,35 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { CreateTasklistDto, TaskList, TasklistPreview } from 'src/app/models/task.model'
 
-export const listActions = createActionGroup({
-    source: 'Task/Lists',
+export const entitiesActions = createActionGroup({
+    source: 'Entities',
     events: {
-        'load list previews': emptyProps(),
-        'load list previews success': props<{ previews: TasklistPreview[] }>(),
-        'load list previews error': props<HttpServerErrorResponse>(),
+        'load previews': emptyProps(),
+        'load previews success': props<{ previews: TasklistPreview[] }>(),
+        'load previews error': props<HttpServerErrorResponse>(),
+
+        // 'open rename dialog': props<{ id: string }>(),
+        // 'abort rename dialog': emptyProps(),
+        // //
+        // rename: props<{ id: string; newName: string }>(),
+        // 'rename success': props<{ id: string; newName: string }>(),
+        // 'rename error': props<HttpServerErrorResponse>(),
+
+        // 'open delete dialog': props<{ id: string }>(),
+        // 'abort delete dialog': emptyProps(),
+        // //
+        // delete: props<{ id: string }>(),
+        // 'delete success': props<{ id: string }>(),
+        // 'delete error': props<HttpServerErrorResponse>(),
+    },
+})
+
+export const listActions = createActionGroup({
+    source: 'Entity/Lists',
+    events: {
+        // 'load previews': emptyProps(),
+        // 'load previews success': props<{ previews: TasklistPreview[] }>(),
+        // 'load previews error': props<HttpServerErrorResponse>(),
 
         'create task list': props<Partial<CreateTasklistDto>>(),
         'create task list success': props<{ createdList: TaskList }>(),

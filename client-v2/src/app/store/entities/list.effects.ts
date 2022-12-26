@@ -6,47 +6,30 @@ import { Store } from '@ngrx/store'
 import { catchError, concatMap, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
 import { DialogService } from 'src/app/modal/dialog.service'
 import { DEFAULT_TASKLIST_NAME } from 'src/app/models/task.model'
-import { TaskService } from 'src/app/services/task.service'
+import { ListService } from 'src/app/services/list.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
 import { appActions } from '../app.actions'
-import { listActions } from './task.actions'
-import { getTaskListById, traceTaskList } from './utils'
+import { listActions } from './entities.actions'
+import { getEntityById, traceEntity } from './utils'
 
 @Injectable()
-export class TaskEffects {
+export class ListEffects {
     constructor(
         private actions$: Actions,
-        private taskService: TaskService,
+        private listService: ListService,
         private toast: HotToastService,
         private store: Store<AppState>,
         private dialogService: DialogService,
         private router: Router
     ) {}
 
-    loadListPreviews = createEffect(() => {
-        return this.actions$.pipe(
-            ofType(listActions.loadListPreviews),
-            mergeMap(() => {
-                const res$ = this.taskService.getListPreviews()
-
-                return res$.pipe(
-                    map(listPreviews => listActions.loadListPreviewsSuccess({ previews: listPreviews })),
-                    catchError(err => {
-                        console.error(err)
-                        return of(listActions.loadListPreviewsError(err))
-                    })
-                )
-            })
-        )
-    })
-
     createTaskList = createEffect(() => {
         return this.actions$.pipe(
             ofType(listActions.createTaskList),
             mergeMap(dto => {
                 const name = dto.name || DEFAULT_TASKLIST_NAME
-                const res$ = this.taskService.createTaskList({ ...dto, name })
+                const res$ = this.listService.createTaskList({ ...dto, name })
 
                 return res$.pipe(
                     this.toast.observe({
@@ -67,13 +50,13 @@ export class TaskEffects {
             ofType(listActions.renameListDialog),
             switchMap(({ id }) => {
                 return this.store
-                    .select(state => state.task.listPreviews)
+                    .select(state => state.entities.entityTree)
                     .pipe(
                         first(),
                         map(listPreviews => {
                             if (!listPreviews) return listActions.renameListDialogAbort()
 
-                            const taskList = getTaskListById(listPreviews, id)
+                            const taskList = getEntityById(listPreviews, id)
                             if (!taskList) return listActions.renameListDialogAbort()
 
                             const newName = prompt('Rename the list', taskList.name)?.trim()
@@ -90,7 +73,7 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(listActions.renameList),
             mergeMap(({ id, newName }) => {
-                const res$ = this.taskService.updateTaskList(id, { name: newName })
+                const res$ = this.listService.updateTaskList(id, { name: newName })
 
                 return res$.pipe(
                     map(() => listActions.renameListSuccess({ id, newName })),
@@ -128,13 +111,13 @@ export class TaskEffects {
             ofType(listActions.deleteListDialog),
             switchMap(({ id }) => {
                 return this.store
-                    .select(state => state.task.listPreviews)
+                    .select(state => state.entities.entityTree)
                     .pipe(
                         first(),
                         concatMap(listPreviews => {
                             if (!listPreviews) return of(listActions.deleteListDialogAbort())
 
-                            const taskList = getTaskListById(listPreviews, id)
+                            const taskList = getEntityById(listPreviews, id)
                             if (!taskList) return of(listActions.deleteListDialogAbort())
 
                             const closed$ = this.dialogService.confirm({
@@ -159,7 +142,7 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(listActions.deleteList),
             mergeMap(({ id }) => {
-                const res$ = this.taskService.deleteTaskList(id)
+                const res$ = this.listService.deleteTaskList(id)
 
                 return res$.pipe(
                     this.toast.observe({
@@ -168,17 +151,17 @@ export class TaskEffects {
                         error: getMessageFromHttpError,
                     }),
                     switchMap(() => {
-                        return this.activeTaskListTrace$.pipe(
+                        return this.activeEntityTrace$.pipe(
                             first(),
                             tap(trace => {
                                 if (!trace) return
 
-                                const activeTaskList = trace[trace.length - 1]
-                                if (activeTaskList.id != id) return
+                                const activeEntity = trace[trace.length - 1]
+                                if (activeEntity.id != id) return
 
-                                const parentList = trace[trace.length - 2]
+                                const parentEntity = trace[trace.length - 2]
 
-                                this.router.navigateByUrl(parentList ? `/home/${parentList.id}` : '/home')
+                                this.router.navigateByUrl(parentEntity ? `/home/${parentEntity.id}` : '/home')
                             }),
                             map(() => listActions.deleteListSuccess({ id }))
                         )
@@ -189,18 +172,18 @@ export class TaskEffects {
         )
     })
 
-    activeTaskListTrace$ = this.store
-        .select(state => state.task.listPreviews)
+    activeEntityTrace$ = this.store
+        .select(state => state.entities.entityTree)
         .pipe(
-            map(listPreviews => {
+            map(entityTree => {
                 // @TODO: come up with a better solution for this
                 // NOTE: using `ActivatedRoute` doesn't work in effects
                 const segments = location.pathname.split('/')
                 const activeId = segments[segments.length - 1]
 
-                if (!listPreviews || !activeId) return null
+                if (!entityTree || !activeId) return null
 
-                return traceTaskList(listPreviews, activeId)
+                return traceEntity(entityTree, activeId)
             })
         )
 }

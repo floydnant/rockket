@@ -20,8 +20,8 @@ import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs
 import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { DEFAULT_TASKLIST_NAME, TaskStatus } from 'src/app/models/task.model'
 import { AppState } from 'src/app/store'
-import { listActions } from 'src/app/store/task/task.actions'
-import { traceTaskList } from 'src/app/store/task/utils'
+import { listActions } from 'src/app/store/entities/entities.actions'
+import { traceEntity } from 'src/app/store/entities/utils'
 
 @UntilDestroy()
 @Component({
@@ -36,7 +36,7 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
     EntityType = EntityType
     DEFAULT_TASKLIST_NAME = DEFAULT_TASKLIST_NAME
 
-    @ViewChild('listname') editableListName!: ElementRef<HTMLSpanElement>
+    @ViewChild('editableEntityName') editableEntityName!: ElementRef<HTMLSpanElement>
 
     isPrimaryProgressBarHidden = false
     @ViewChild('progressBar') progressBar!: ElementRef<HTMLDivElement>
@@ -60,7 +60,7 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
     progress = Math.round((this.closedTasks / this.allTasks) * 100)
     isShownAsPercentage = true
 
-    tasklistOptionsItems: MenuItem[] = [
+    entityOptionsItems: MenuItem[] = [
         {
             title: `Rename`,
             action: (id: string) => this.store.dispatch(listActions.renameListDialog({ id })),
@@ -76,69 +76,69 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
             action: (id: string) => this.store.dispatch(listActions.deleteListDialog({ id })),
         },
     ]
-    tasklistOptionsItems$ = of(this.tasklistOptionsItems)
+    entityOptionsItems$ = of(this.entityOptionsItems)
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    activeTasklistId$ = this.route.paramMap.pipe(map(paramMap => paramMap.get('id')!))
+    activeEntityId$ = this.route.paramMap.pipe(map(paramMap => paramMap.get('id')!))
 
-    activeTasklistTrace$ = this.activeTasklistId$.pipe(
+    activeEntityTrace$ = this.activeEntityId$.pipe(
         switchMap(activeId => {
             return this.store
-                .select(state => state.task.listPreviews)
+                .select(state => state.entities.entityTree)
                 .pipe(
-                    map(listPreviews => {
-                        if (!listPreviews) return null
+                    map(entityTree => {
+                        if (!entityTree) return null
 
-                        return traceTaskList(listPreviews, activeId)
+                        return traceEntity(entityTree, activeId)
                     })
                 )
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    activeTaskList$ = this.activeTasklistTrace$.pipe(map(trace => trace?.[trace.length - 1]))
-    activeListName$ = this.activeTaskList$.pipe(
-        map(list => list?.name),
+    activeEntity$ = this.activeEntityTrace$.pipe(map(trace => trace?.[trace.length - 1]))
+    activeEntityName$ = this.activeEntity$.pipe(
+        map(entity => entity?.name),
         distinctUntilChanged(),
-        switchMap(listName => {
-            return this.listnameChanges$.pipe(
+        switchMap(entityName => {
+            return this.entityNameChanges$.pipe(
                 first(),
-                filter(newListname => {
-                    if (!newListname) return true
+                filter(newEntityName => {
+                    if (!newEntityName) return true
 
-                    return listName != newListname
+                    return entityName != newEntityName
                 }),
                 map(() => {
-                    if (listName == DEFAULT_TASKLIST_NAME) return ''
+                    if (entityName == DEFAULT_TASKLIST_NAME) return ''
 
-                    return listName
+                    return entityName
                 })
             )
         }),
-        tap(listName => {
-            /*  This is necessary in case of updating the listname from empty to also empty.
-                Because apparently, angular does not do the update, which is bad when the listname was edited before,
-                meaning, the edited listname won't be overwritten. So we have to do that manually.
+        tap(entityName => {
+            /*  This is necessary in case of updating the entityname from empty to also empty.
+                Because apparently, angular does not do the update, which is bad when the entityname was edited before,
+                meaning, the edited entityname won't be overwritten. So we have to do that manually.
                 
-                We could narrow this down even further with comparing to the previous listname (`pairwise()` operator),
+                We could narrow this down even further with comparing to the previous entityname (`pairwise()` operator),
                 and only update if both are empty, but this should suffice for now. */
-            if (listName === '' && this.editableListName?.nativeElement) {
-                this.editableListName.nativeElement.innerText = ''
+            if (entityName === '' && this.editableEntityName?.nativeElement) {
+                this.editableEntityName.nativeElement.innerText = ''
             }
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    breadcrumbs$ = this.activeTasklistTrace$.pipe(
+    breadcrumbs$ = this.activeEntityTrace$.pipe(
         map(trace =>
-            trace?.map<Breadcrumb>(list => ({
-                title: list.name,
+            trace?.map<Breadcrumb>(entity => ({
+                title: entity.name,
                 icon: EntityType.TASKLIST,
-                route: `/home/${list.id}`,
-                contextMenuItems: this.tasklistOptionsItems.map(({ action, ...item }) => {
+                route: `/home/${entity.id}`,
+                contextMenuItems: this.entityOptionsItems.map(({ action, ...item }) => {
                     return {
                         ...item,
-                        action: action ? () => action(list.id) : undefined,
+                        action: action ? () => action(entity.id) : undefined,
                     }
                 }),
             }))
@@ -147,18 +147,18 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
 
     keydownEvents$ = new BehaviorSubject<KeyboardEvent | null>(null)
     blurEvents$ = new BehaviorSubject<FocusEvent | null>(null)
-    listnameChanges$ = new BehaviorSubject<string | null>(null)
+    entityNameChanges$ = new BehaviorSubject<string | null>(null)
 
-    listnameDomState$ = merge(
-        this.listnameChanges$,
-        this.activeListName$.pipe(
+    entityNameDomState$ = merge(
+        this.entityNameChanges$,
+        this.activeEntityName$.pipe(
             tap(() => {
-                if (this.listnameChanges$.value !== null) this.listnameChanges$.next(null)
+                if (this.entityNameChanges$.value !== null) this.entityNameChanges$.next(null)
             })
         )
     ).pipe(shareReplay({ bufferSize: 1, refCount: true }))
 
-    listNameUpdateEvents$ = merge(
+    entityNameUpdateEvents$ = merge(
         this.keydownEvents$.pipe(
             filter(event => {
                 if (event?.code == 'Enter') {
@@ -167,32 +167,32 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
                 }
                 return false
             }),
-            switchMap(() => this.listnameChanges$.pipe(first()))
+            switchMap(() => this.entityNameChanges$.pipe(first()))
         ),
         this.blurEvents$.pipe(
             filter(e => !!e),
-            switchMap(() => this.listnameChanges$.pipe(first()))
+            switchMap(() => this.entityNameChanges$.pipe(first()))
         ),
-        this.listnameChanges$.pipe(debounceTime(600))
+        this.entityNameChanges$.pipe(debounceTime(600))
     ).pipe(
-        map(newName => {
-            if (newName === null) return null
+        map(newEntityName => {
+            if (newEntityName === null) return null
 
-            return newName || DEFAULT_TASKLIST_NAME
+            return newEntityName || DEFAULT_TASKLIST_NAME
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    listNameUpdatesSubscription = this.listNameUpdateEvents$
+    entityNameUpdatesSubscription = this.entityNameUpdateEvents$
         .pipe(
             distinctUntilChanged(),
             switchMap(newName => {
-                return this.activeTaskList$.pipe(
+                return this.activeEntity$.pipe(
                     first(),
-                    tap(activeTaskList => {
-                        if (!activeTaskList || !newName) return
+                    tap(activeEntity => {
+                        if (!activeEntity || !newName) return
 
-                        return this.store.dispatch(listActions.renameList({ id: activeTaskList.id, newName }))
+                        return this.store.dispatch(listActions.renameList({ id: activeEntity.id, newName }))
                     })
                 )
             }),
@@ -201,7 +201,7 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
         .subscribe()
 
     createNewSublist() {
-        this.activeTasklistId$.pipe(first()).subscribe(activeId => {
+        this.activeEntityId$.pipe(first()).subscribe(activeId => {
             this.store.dispatch(listActions.createTaskList({ parentListId: activeId }))
         })
     }

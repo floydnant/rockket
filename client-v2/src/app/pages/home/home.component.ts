@@ -8,8 +8,8 @@ import { map, startWith, switchMap, tap } from 'rxjs'
 import { EntityType } from 'src/app/components/atoms/icons/page-entity-icon/page-entity-icon.component'
 import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { AppState } from 'src/app/store'
-import { listActions } from 'src/app/store/task/task.actions'
-import { flattenListTree, TasklistFlattend, traceTaskList } from 'src/app/store/task/utils'
+import { entitiesActions, listActions } from 'src/app/store/entities/entities.actions'
+import { flattenEntityTree, EntityPreviewFlattend, traceEntity } from 'src/app/store/entities/utils'
 import { moveToMacroQueue } from 'src/app/utils'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 
@@ -23,7 +23,7 @@ export interface EntityTreeNode {
     entityType?: EntityType
 }
 
-export const convertToEntityTreeNode = (list: TasklistFlattend): EntityTreeNode => {
+export const convertToEntityTreeNode = (list: EntityPreviewFlattend): EntityTreeNode => {
     const { childrenCount, ...rest } = list
     const node: EntityTreeNode = {
         ...rest,
@@ -43,16 +43,18 @@ export const convertToEntityTreeNode = (list: TasklistFlattend): EntityTreeNode 
 export class HomeComponent implements OnInit {
     constructor(private store: Store<AppState>, private actions$: Actions, private route: ActivatedRoute) {}
 
+    EntityType = EntityType
+
     ngOnInit(): void {
-        moveToMacroQueue(() => this.store.dispatch(listActions.loadListPreviews()))
+        moveToMacroQueue(() => this.store.dispatch(entitiesActions.loadPreviews()))
     }
 
     getParentNode(node: EntityTreeNode) {
-        const nodeIndex = this.listPreviewsTransformed.indexOf(node)
+        const nodeIndex = this.entityPreviewsTransformed.indexOf(node)
 
         for (let i = nodeIndex - 1; i >= 0; i--) {
-            if (this.listPreviewsTransformed[i].path.length === node.path.length - 1) {
-                return this.listPreviewsTransformed[i]
+            if (this.entityPreviewsTransformed[i].path.length === node.path.length - 1) {
+                return this.entityPreviewsTransformed[i]
             }
         }
 
@@ -74,9 +76,9 @@ export class HomeComponent implements OnInit {
         return new Array(number)
     }
 
-    listPreviewsTransformed: EntityTreeNode[] = []
-    listPreviewsTransformed$ = this.store
-        .select(state => state.task.listPreviews)
+    entityPreviewsTransformed: EntityTreeNode[] = []
+    entityPreviewsTransformed$ = this.store
+        .select(state => state.entities.entityTree)
         .pipe(
             switchMap(tree => {
                 return this.route.url.pipe(
@@ -92,8 +94,8 @@ export class HomeComponent implements OnInit {
 
                 if (!entityTree) return []
 
-                const treeNodes = flattenListTree(entityTree).map(convertToEntityTreeNode)
-                const [, ...entityTraceWithoutActive] = traceTaskList(entityTree, activeId).reverse()
+                const treeNodes = flattenEntityTree(entityTree).map(convertToEntityTreeNode)
+                const [, ...entityTraceWithoutActive] = traceEntity(entityTree, activeId).reverse()
 
                 return treeNodes.map(node => {
                     const isContainedInTrace = entityTraceWithoutActive.some(entity => entity.id == node.id)
@@ -103,16 +105,16 @@ export class HomeComponent implements OnInit {
                     }
                 })
             }),
-            tap(transformed => (this.listPreviewsTransformed = transformed))
+            tap(transformed => (this.entityPreviewsTransformed = transformed))
         )
 
     isTreeLoading$ = getLoadingUpdates(this.actions$, [
-        listActions.loadListPreviews,
-        listActions.loadListPreviewsSuccess,
-        listActions.loadListPreviewsError,
+        entitiesActions.loadPreviews,
+        entitiesActions.loadPreviewsSuccess,
+        entitiesActions.loadPreviewsError,
     ])
 
-    dataSource = new ArrayDataSource(this.listPreviewsTransformed$)
+    dataSource = new ArrayDataSource(this.entityPreviewsTransformed$)
     treeControl = new FlatTreeControl<EntityTreeNode>(
         node => node.path.length,
         node => node.expandable
@@ -151,6 +153,4 @@ export class HomeComponent implements OnInit {
             action: (id: string) => this.deleteList(id),
         },
     ]
-
-    EntityType = EntityType
 }
