@@ -177,9 +177,8 @@ export class TaskEffects {
                                 if (activeTaskList.id != id) return
 
                                 const parentList = trace[trace.length - 2]
-                                if (!parentList) return
 
-                                this.router.navigate(['/home', parentList.id])
+                                this.router.navigateByUrl(parentList ? `/home/${parentList.id}` : '/home')
                             }),
                             map(() => listActions.deleteListSuccess({ id }))
                         )
@@ -195,6 +194,7 @@ export class TaskEffects {
         .pipe(
             map(listPreviews => {
                 // @TODO: come up with a better solution for this
+                // NOTE: using `ActivatedRoute` doesn't work in effects
                 const segments = location.pathname.split('/')
                 const activeId = segments[segments.length - 1]
 

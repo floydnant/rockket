@@ -1,14 +1,15 @@
 import { ArrayDataSource } from '@angular/cdk/collections'
 import { FlatTreeControl } from '@angular/cdk/tree'
 import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute } from '@angular/router'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { first, map, tap } from 'rxjs'
+import { map, startWith, switchMap, tap } from 'rxjs'
 import { EntityType } from 'src/app/components/atoms/icons/page-entity-icon/page-entity-icon.component'
 import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { AppState } from 'src/app/store'
 import { listActions } from 'src/app/store/task/task.actions'
-import { flattenListTree, getTaskListById, TasklistFlattend } from 'src/app/store/task/utils'
+import { flattenListTree, TasklistFlattend, traceTaskList } from 'src/app/store/task/utils'
 import { moveToMacroQueue } from 'src/app/utils'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 
@@ -28,7 +29,7 @@ export const convertToEntityTreeNode = (list: TasklistFlattend): EntityTreeNode 
         ...rest,
         expandable: childrenCount > 0,
 
-        isExpanded: true,
+        isExpanded: rest.path.length < 2,
         entityType: EntityType.TASKLIST,
     }
     return node
@@ -40,7 +41,7 @@ export const convertToEntityTreeNode = (list: TasklistFlattend): EntityTreeNode 
     styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-    constructor(private store: Store<AppState>, private actions$: Actions) {}
+    constructor(private store: Store<AppState>, private actions$: Actions, private route: ActivatedRoute) {}
 
     ngOnInit(): void {
         moveToMacroQueue(() => this.store.dispatch(listActions.loadListPreviews()))
@@ -77,10 +78,30 @@ export class HomeComponent implements OnInit {
     listPreviewsTransformed$ = this.store
         .select(state => state.task.listPreviews)
         .pipe(
-            map(listTree => {
-                if (!listTree) return []
+            switchMap(tree => {
+                return this.route.url.pipe(
+                    startWith(),
+                    map(() => tree)
+                )
+            }),
+            map(entityTree => {
+                // @TODO: come up with a better solution for this
+                // NOTE: using `ActivatedRoute` doesn't work in here either
+                const segments = location.pathname.split('/')
+                const activeId = segments[segments.length - 1]
 
-                return flattenListTree(listTree).map(convertToEntityTreeNode)
+                if (!entityTree) return []
+
+                const treeNodes = flattenListTree(entityTree).map(convertToEntityTreeNode)
+                const [, ...entityTraceWithoutActive] = traceTaskList(entityTree, activeId).reverse()
+
+                return treeNodes.map(node => {
+                    const isContainedInTrace = entityTraceWithoutActive.some(entity => entity.id == node.id)
+                    return {
+                        ...node,
+                        isExpanded: node.isExpanded || isContainedInTrace,
+                    }
+                })
             }),
             tap(transformed => (this.listPreviewsTransformed = transformed))
         )
