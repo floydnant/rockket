@@ -22,12 +22,10 @@ export const contextMap: Record<NetlifyContext | 'testing', AppContext> = {
     testing: 'Testing',
 }
 
-export const reviewId = env.NG_APP_REVIEW_ID
-
 export const serverBaseUrls: Record<NetlifyContext | 'testing', string> = {
     production: 'https://rockket-production.up.railway.app',
     'branch-deploy': 'https://rockket-staging.up.railway.app', // Staging
-    'deploy-preview': `https://server-todo-app-pr-${reviewId}.up.railway.app`, // Review env (Pull Requests)
+    'deploy-preview': `https://server-todo-app-pr-${env.NG_APP_REVIEW_ID}.up.railway.app`, // Review env (Pull Requests)
     dev: 'http://localhost:3000',
     testing: 'http://localhost:3001',
 }
@@ -37,4 +35,6 @@ export interface AppEnvironment {
     PACKAGE_VERSION: string
     SERVER_BASE_URL: string
     CONTEXT: AppContext
+    /** DEPLOYMENT ONLY */
+    REVIEW_ID: string | undefined
 }
