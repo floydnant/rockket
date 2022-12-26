@@ -135,6 +135,12 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
                 title: list.name,
                 icon: EntityType.TASKLIST,
                 route: `/home/${list.id}`,
+                contextMenuItems: this.tasklistOptionsItems.map(({ action, ...item }) => {
+                    return {
+                        ...item,
+                        action: action ? () => action(list.id) : undefined,
+                    }
+                }),
             }))
         )
     )

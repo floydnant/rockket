@@ -4,10 +4,20 @@
         <button
             class="breadcrumb | menu-item | truncate py-0 px-1.5"
             [class.text-tinted-100]="isLast"
-            appTooltip="Here will be more information"
             cdkMenuItem
+            [cdkContextMenuTriggerFor]="menu"
             [routerLink]="breadcrumb.route"
+            #trigger="cdkContextMenuTriggerFor"
         >
+            <!-- appTooltip="Here will be more information" -->
+            <ng-template #menu>
+                <app-drop-down
+                    *ngIf="breadcrumb.contextMenuItems?.length"
+                    [items]="breadcrumb.contextMenuItems!"
+                    [rootTrigger]="trigger"
+                ></app-drop-down>
+            </ng-template>
+
             <app-entity-page-label
                 *ngIf="isPageEntityIcon(breadcrumb.icon); else genericIcon"
                 [title]="breadcrumb.title"
