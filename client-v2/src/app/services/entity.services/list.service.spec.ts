@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing'
-import { httpServiceMock } from '../utils/unit-test.mocks'
+import { httpServiceMock } from '../../utils/unit-test.mocks'
 
 import { ListService } from './list.service'
 

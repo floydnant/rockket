@@ -1,6 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { HttpServerErrorResponse } from 'src/app/http/types'
-import { CreateTasklistDto, TaskList, TasklistPreview } from 'src/app/models/task.model'
+import { TasklistPreview, CreateTasklistDto, TaskList } from 'src/app/models/list.model'
 
 export const entitiesActions = createActionGroup({
     source: 'Entities',
@@ -9,19 +9,19 @@ export const entitiesActions = createActionGroup({
         'load previews success': props<{ previews: TasklistPreview[] }>(),
         'load previews error': props<HttpServerErrorResponse>(),
 
-        // 'open rename dialog': props<{ id: string }>(),
-        // 'abort rename dialog': emptyProps(),
-        // //
-        // rename: props<{ id: string; newName: string }>(),
-        // 'rename success': props<{ id: string; newName: string }>(),
-        // 'rename error': props<HttpServerErrorResponse>(),
+        'open rename dialog': props<{ id: string }>(),
+        'abort rename dialog': emptyProps(),
+        //
+        rename: props<{ id: string; newName: string }>(),
+        'rename success': props<{ id: string; newName: string }>(),
+        'rename error': props<HttpServerErrorResponse>(),
 
-        // 'open delete dialog': props<{ id: string }>(),
-        // 'abort delete dialog': emptyProps(),
-        // //
-        // delete: props<{ id: string }>(),
-        // 'delete success': props<{ id: string }>(),
-        // 'delete error': props<HttpServerErrorResponse>(),
+        'open delete dialog': props<{ id: string }>(),
+        'abort delete dialog': emptyProps(),
+        //
+        delete: props<{ id: string }>(),
+        'delete success': props<{ id: string }>(),
+        'delete error': props<HttpServerErrorResponse>(),
     },
 })
 
@@ -36,19 +36,19 @@ export const listActions = createActionGroup({
         'create task list success': props<{ createdList: TaskList }>(),
         'create task list error': props<HttpServerErrorResponse>(),
 
-        'rename list dialog': props<{ id: string }>(),
-        'rename list dialog abort': emptyProps(),
-        //
-        'rename list': props<{ id: string; newName: string }>(),
-        'rename list success': props<{ id: string; newName: string }>(),
-        'rename list error': props<HttpServerErrorResponse>(),
+        // 'rename list dialog': props<{ id: string }>(),
+        // 'rename list dialog abort': emptyProps(),
+        // //
+        // 'rename list': props<{ id: string; newName: string }>(),
+        // 'rename list success': props<{ id: string; newName: string }>(),
+        // 'rename list error': props<HttpServerErrorResponse>(),
 
-        'delete list dialog': props<{ id: string }>(),
-        'delete list dialog abort': emptyProps(),
-        //
-        'delete list': props<{ id: string }>(),
-        'delete list success': props<{ id: string }>(),
-        'delete list error': props<HttpServerErrorResponse>(),
+        // 'delete list dialog': props<{ id: string }>(),
+        // 'delete list dialog abort': emptyProps(),
+        // //
+        // 'delete list': props<{ id: string }>(),
+        // 'delete list success': props<{ id: string }>(),
+        // 'delete list error': props<HttpServerErrorResponse>(),
 
         'duplicate list': props<{ id: string }>(),
         'duplicate list success': props<{ id: string }>(),

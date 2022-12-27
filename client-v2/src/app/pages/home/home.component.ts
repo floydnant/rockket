@@ -5,11 +5,11 @@ import { ActivatedRoute } from '@angular/router'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { map, startWith, switchMap, tap } from 'rxjs'
-import { EntityType } from 'src/app/components/atoms/icons/page-entity-icon/page-entity-icon.component'
 import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
+import { EntityType, EntityPreviewFlattend } from 'src/app/models/entities.model'
 import { AppState } from 'src/app/store'
 import { entitiesActions, listActions } from 'src/app/store/entities/entities.actions'
-import { flattenEntityTree, EntityPreviewFlattend, traceEntity } from 'src/app/store/entities/utils'
+import { flattenEntityTree, traceEntity } from 'src/app/store/entities/utils'
 import { moveToMacroQueue } from 'src/app/utils'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 
@@ -123,20 +123,20 @@ export class HomeComponent implements OnInit {
     createNewList(parentListId?: string) {
         this.store.dispatch(listActions.createTaskList({ parentListId }))
     }
-    renameList(id: string) {
-        this.store.dispatch(listActions.renameListDialog({ id }))
-    }
     duplicateList(id: string) {
         this.store.dispatch(listActions.duplicateList({ id }))
     }
-    deleteList(id: string) {
-        this.store.dispatch(listActions.deleteListDialog({ id }))
+    renameEntity(id: string) {
+        this.store.dispatch(entitiesActions.openRenameDialog({ id }))
+    }
+    deleteEntity(id: string) {
+        this.store.dispatch(entitiesActions.openDeleteDialog({ id }))
     }
 
     nodeMenuItems: MenuItem[] = [
         {
             title: 'Rename',
-            action: (id: string) => this.renameList(id),
+            action: (id: string) => this.renameEntity(id),
         },
         {
             title: 'Create new list inside',
@@ -150,7 +150,7 @@ export class HomeComponent implements OnInit {
         {
             title: 'Delete',
             variant: MenuItemVariant.DANGER,
-            action: (id: string) => this.deleteList(id),
+            action: (id: string) => this.deleteEntity(id),
         },
     ]
 }

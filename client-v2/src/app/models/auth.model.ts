@@ -1,4 +1,4 @@
-import { UserPreview } from '.'
+import { UserPreview } from './user.model'
 import { HttpSuccessResponse } from '../http/types'
 
 export interface SignupCredentialsDto {

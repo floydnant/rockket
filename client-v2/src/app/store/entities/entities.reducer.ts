@@ -24,43 +24,43 @@ export const entitiesReducer = createReducer(
                 entityTree: [...(state.entityTree || []), { ...createdList, children: [] }],
             }
 
-        const listPreviewsCopy = structuredClone(state.entityTree)
-        const parentTaskList = getEntityById(listPreviewsCopy, createdList.parentListId)
+        const entityTreeCopy = structuredClone(state.entityTree)
+        const parentList = getEntityById(entityTreeCopy, createdList.parentListId)
 
-        if (!parentTaskList)
+        if (!parentList)
             return {
                 ...state,
                 entityTree: [...(state.entityTree || []), { ...createdList, children: [] }],
             }
 
-        parentTaskList.children.push({ ...createdList, children: [] })
+        parentList.children.push({ ...createdList, children: [] })
 
         return {
             ...state,
-            entityTree: listPreviewsCopy,
+            entityTree: entityTreeCopy,
         }
     }),
 
-    on(listActions.renameListSuccess, (state, { id, newName }) => {
-        const listPreviewsCopy = structuredClone(state.entityTree)
-        const list = getEntityById(listPreviewsCopy, id)
-        if (!list) return state
+    on(entitiesActions.renameSuccess, (state, { id, newName }) => {
+        const entityTreeCopy = structuredClone(state.entityTree)
+        const entity = getEntityById(entityTreeCopy, id)
+        if (!entity) return state
 
-        list.name = newName
+        entity.name = newName
 
         return {
             ...state,
-            entityTree: listPreviewsCopy,
+            entityTree: entityTreeCopy,
         }
     }),
 
-    on(listActions.deleteListSuccess, (state, { id }) => {
-        const listPreviewsCopy = structuredClone(state.entityTree)
-        const result = getParentByChildId(listPreviewsCopy, id)
+    on(entitiesActions.deleteSuccess, (state, { id }) => {
+        const entityTreeCopy = structuredClone(state.entityTree)
+        const result = getParentByChildId(entityTreeCopy, id)
         if (!result) return state
 
         result.subTree.splice(result.index, 1)
 
-        return { ...state, entityTree: listPreviewsCopy }
+        return { ...state, entityTree: entityTreeCopy }
     })
 )

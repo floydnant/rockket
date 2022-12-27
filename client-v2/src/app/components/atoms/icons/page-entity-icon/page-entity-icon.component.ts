@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { EntityType } from 'src/app/models/entities.model'
 import { TaskStatus } from 'src/app/models/task.model'
 
 /** This will come from the db */
@@ -8,11 +9,7 @@ import { TaskStatus } from 'src/app/models/task.model'
 //     DOCUMENT = 'Document',
 //     VIEW = 'View',
 // }
-export enum EntityType {
-    TASKLIST = 'Tasklist',
-    DOCUMENT = 'Document',
-    VIEW = 'View',
-}
+
 export enum PageEntityState {
     LOADING = 'Loading',
 }
@@ -43,8 +40,8 @@ export const taskStatusIconClassMap: Record<TaskIconKey, string> = {
 
 export const entityIconClassMap: Record<PageEntityIconKey, string> = {
     [EntityType.TASKLIST]: 'far fa-tasks text-tinted-400',
-    [EntityType.DOCUMENT]: 'far fa-file-alt text-tinted-400',
-    [EntityType.VIEW]: 'far fa-binoculars text-tinted-400',
+    // [EntityType.DOCUMENT]: 'far fa-file-alt text-tinted-400',
+    // [EntityType.VIEW]: 'far fa-binoculars text-tinted-400',
     [PageEntityState.LOADING]: 'far fa-spinner-third animate-spin text-tinted-200',
     ...taskStatusIconClassMap,
 }

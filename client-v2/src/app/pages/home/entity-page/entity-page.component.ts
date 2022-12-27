@@ -15,12 +15,13 @@ import {
     switchMap,
     tap,
 } from 'rxjs'
-import { EntityType } from 'src/app/components/atoms/icons/page-entity-icon/page-entity-icon.component'
 import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs.component'
 import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
-import { DEFAULT_TASKLIST_NAME, TaskStatus } from 'src/app/models/task.model'
+import { DEFAULT_TASKLIST_NAME, ENTITY_NAME_DEFAULTS } from 'src/app/models/defaults'
+import { EntityType } from 'src/app/models/entities.model'
+import { TaskStatus } from 'src/app/models/task.model'
 import { AppState } from 'src/app/store'
-import { listActions } from 'src/app/store/entities/entities.actions'
+import { entitiesActions, listActions } from 'src/app/store/entities/entities.actions'
 import { traceEntity } from 'src/app/store/entities/utils'
 
 @UntilDestroy()
@@ -63,7 +64,7 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
     entityOptionsItems: MenuItem[] = [
         {
             title: `Rename`,
-            action: (id: string) => this.store.dispatch(listActions.renameListDialog({ id })),
+            action: (id: string) => this.store.dispatch(entitiesActions.openRenameDialog({ id })),
         },
         {
             title: `Export`,
@@ -73,7 +74,7 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
         {
             title: `Delete`,
             variant: MenuItemVariant.DANGER,
-            action: (id: string) => this.store.dispatch(listActions.deleteListDialog({ id })),
+            action: (id: string) => this.store.dispatch(entitiesActions.openDeleteDialog({ id })),
         },
     ]
     entityOptionsItems$ = of(this.entityOptionsItems)
@@ -109,7 +110,8 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
                     return entityName != newEntityName
                 }),
                 map(() => {
-                    if (entityName == DEFAULT_TASKLIST_NAME) return ''
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    if (Object.values(ENTITY_NAME_DEFAULTS).includes(entityName!)) return ''
 
                     return entityName
                 })
@@ -192,7 +194,7 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
                     tap(activeEntity => {
                         if (!activeEntity || !newName) return
 
-                        return this.store.dispatch(listActions.renameList({ id: activeEntity.id, newName }))
+                        return this.store.dispatch(entitiesActions.rename({ id: activeEntity.id, newName }))
                     })
                 )
             }),

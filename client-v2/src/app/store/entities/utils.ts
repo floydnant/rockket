@@ -1,5 +1,5 @@
-import { TasklistPreview } from 'src/app/models/task.model'
-import { EntityPreviewRecursive } from './entities.model'
+import { EntityPreviewFlattend, EntityPreviewRecursive } from 'src/app/models/entities.model'
+import { TasklistPreview } from 'src/app/models/list.model'
 
 export const getEntityTree = (allEntities: TasklistPreview[]) => {
     const getChildren = (childIds: string[]): EntityPreviewRecursive[] => {
@@ -15,11 +15,6 @@ export const getEntityTree = (allEntities: TasklistPreview[]) => {
         .filter(entity => !entity.parentListId)
         .map<EntityPreviewRecursive>(entity => ({ ...entity, children: getChildren(entity.childLists) }))
     return entityTree
-}
-
-export type EntityPreviewFlattend = Omit<EntityPreviewRecursive, 'children'> & {
-    path: string[]
-    childrenCount: number
 }
 
 export const flattenEntityTree = (lists: EntityPreviewRecursive[], path: string[] = []): EntityPreviewFlattend[] => {
