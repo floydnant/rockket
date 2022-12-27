@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store'
 import { entitiesActions, listActions } from './entities.actions'
-import { EntitiesState } from './entities.model'
+import { EntitiesState } from './entities.state'
 import { getParentByChildId, getEntityById, getEntityTree } from './utils'
 
 const initialState: EntitiesState = {

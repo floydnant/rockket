@@ -4,18 +4,18 @@ import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { catchError, map, mergeMap, of } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
-import { UserService } from 'src/app/services/user.service'
+import { AccountService } from 'src/app/services/account.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
 import { appActions } from '../app.actions'
 import { accountActions, authActions } from './user.actions'
-import { UserState } from './user.model'
+import { UserState } from './user.state'
 
 @Injectable()
 export class AccountEffects {
     constructor(
         private actions$: Actions,
-        private userService: UserService,
+        private accountService: AccountService,
         private toast: HotToastService,
         private store: Store<AppState>
     ) {
@@ -28,7 +28,7 @@ export class AccountEffects {
         return this.actions$.pipe(
             ofType(accountActions.updateUsername),
             mergeMap(dto => {
-                const res$ = this.userService.updateUsername(dto)
+                const res$ = this.accountService.updateUsername(dto)
 
                 return res$.pipe(
                     this.toast.observe({
@@ -47,7 +47,7 @@ export class AccountEffects {
         return this.actions$.pipe(
             ofType(accountActions.updateEmail),
             mergeMap(dto => {
-                const res$ = this.userService.updateEmail(dto)
+                const res$ = this.accountService.updateEmail(dto)
 
                 return res$.pipe(
                     this.toast.observe({
@@ -66,7 +66,7 @@ export class AccountEffects {
         return this.actions$.pipe(
             ofType(accountActions.updatePassword),
             mergeMap(dto => {
-                const res$ = this.userService.updatePassword(dto)
+                const res$ = this.accountService.updatePassword(dto)
 
                 return res$.pipe(
                     this.toast.observe({
@@ -106,7 +106,7 @@ export class AccountEffects {
         return this.actions$.pipe(
             ofType(accountActions.deleteAccount),
             mergeMap(({ password }) => {
-                const res$ = this.userService.deleteAccount({ password })
+                const res$ = this.accountService.deleteAccount({ password })
 
                 return res$.pipe(
                     this.toast.observe({
@@ -134,7 +134,7 @@ export class AccountEffects {
                 if (this.userState?.me?.email) {
                     if (!ignoreCache) return of(appActions.nothing())
                 }
-                const res$ = this.userService.loadEmail()
+                const res$ = this.accountService.loadEmail()
 
                 return res$.pipe(map(({ email }) => accountActions.loadEmailSuccess({ email })))
             })
