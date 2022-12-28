@@ -38,6 +38,7 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
     DEFAULT_TASKLIST_NAME = DEFAULT_TASKLIST_NAME
 
     @ViewChild('editableEntityName') editableEntityName!: ElementRef<HTMLSpanElement>
+    @ViewChild('top') topElement!: ElementRef<HTMLDivElement>
 
     isPrimaryProgressBarHidden = false
     @ViewChild('progressBar') progressBar!: ElementRef<HTMLDivElement>
@@ -79,8 +80,12 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
     ]
     entityOptionsItems$ = of(this.entityOptionsItems)
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    activeEntityId$ = this.route.paramMap.pipe(map(paramMap => paramMap.get('id')!))
+    activeEntityId$ = this.route.paramMap.pipe(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        map(paramMap => paramMap.get('id')!),
+        tap(() => this.topElement?.nativeElement?.scrollIntoView({ behavior: 'smooth' })), // lets see how the 'smooth' behaviour feels after a while
+        shareReplay({ bufferSize: 1, refCount: true })
+    )
 
     activeEntityTrace$ = this.activeEntityId$.pipe(
         switchMap(activeId => {
