@@ -22,7 +22,7 @@ export enum EntityType {
 //     childrenCount: number
 // }
 
-// @TODO: convert to real Entity-interfaces above
+// @TODO: migrate to real Entity-interfaces above
 export type EntityPreviewRecursive = Omit<TasklistPreview, 'childLists'> & {
     children: EntityPreviewRecursive[]
 }

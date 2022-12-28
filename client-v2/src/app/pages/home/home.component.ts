@@ -30,7 +30,7 @@ export const convertToEntityTreeNode = (list: EntityPreviewFlattend): EntityTree
         expandable: childrenCount > 0,
 
         isExpanded: rest.path.length < 2,
-        entityType: EntityType.TASKLIST,
+        entityType: EntityType.TASKLIST, // @TODO: Remove hardcoded value
     }
     return node
 }

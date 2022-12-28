@@ -45,6 +45,7 @@
             <!-- <button class="button-naked">Share</button> -->
 
             <h1 class="heading | mt-4">
+                <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
                 <page-entity-icon class="mr-2.5 inline-block -translate-y-0.5 text-2xl" [icon]="EntityType.TASKLIST">
                 </page-entity-icon>
 
@@ -95,6 +96,7 @@
                         [cdkContextMenuTriggerFor]="options"
                         #trigger="cdkContextMenuTriggerFor"
                     >
+                        <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
                         <app-entity-page-label
                             [title]="child.name"
                             [pageIcon]="EntityType.TASKLIST"

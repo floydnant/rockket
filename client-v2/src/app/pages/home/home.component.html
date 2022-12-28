@@ -99,6 +99,7 @@
                             </ng-template>
 
                             <ng-template #label>
+                                <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
                                 <app-entity-page-label
                                     [title]="node.name"
                                     [pageIcon]="node.entityType || EntityType.TASKLIST"

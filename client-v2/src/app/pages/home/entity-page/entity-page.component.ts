@@ -140,7 +140,7 @@ export class EntityPageComponent implements AfterViewInit, OnDestroy {
         map(trace =>
             trace?.map<Breadcrumb>(entity => ({
                 title: entity.name,
-                icon: EntityType.TASKLIST,
+                icon: EntityType.TASKLIST, // @TODO: Remove hardcoded value
                 route: `/home/${entity.id}`,
                 contextMenuItems: this.entityOptionsItems.map(({ action, ...item }) => {
                     return {

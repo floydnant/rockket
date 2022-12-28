@@ -115,7 +115,7 @@ export class EntitiesEffects {
                             const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
                             const closed$ = this.dialogService.confirm({
                                 title: `Delete this ${entityType}?`,
-                                text: `Are you sure you want to delete '${entity.name}'?`,
+                                text: `Are you sure you want to delete the ${entityType} '${entity.name}'?`,
                                 buttons: [{ text: 'Cancel' }, { text: 'Delete', className: 'button--danger' }],
                             }).closed
 
