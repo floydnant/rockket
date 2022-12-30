@@ -46,6 +46,7 @@ export class EditableEntityNameComponent {
 
     entityName$ = this.entity$.pipe(
         filter(entity => entity?.name != this.lastSentStoreUpdate),
+        tap(() => (this.lastSentStoreUpdate = null)),
         map(entity => {
             if (entity?.name == ENTITY_NAME_DEFAULTS[EntityType.TASKLIST]) return '' // @TODO: Remove hardcoded value
 
