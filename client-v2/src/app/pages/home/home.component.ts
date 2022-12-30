@@ -5,8 +5,8 @@ import { ActivatedRoute } from '@angular/router'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { map, startWith, switchMap, tap } from 'rxjs'
-import { MenuItem, MenuItemVariant } from 'src/app/components/molecules/drop-down/drop-down.component'
-import { EntityType, EntityPreviewFlattend } from 'src/app/models/entities.model'
+import { EntityPreviewFlattend, EntityType } from 'src/app/models/entities.model'
+import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions, listActions } from 'src/app/store/entities/entities.actions'
 import { flattenEntityTree, traceEntity } from 'src/app/store/entities/utils'
@@ -123,34 +123,7 @@ export class HomeComponent implements OnInit {
     createNewList(parentListId?: string) {
         this.store.dispatch(listActions.createTaskList({ parentListId }))
     }
-    duplicateList(id: string) {
-        this.store.dispatch(listActions.duplicateList({ id }))
-    }
-    renameEntity(id: string) {
-        this.store.dispatch(entitiesActions.openRenameDialog({ id }))
-    }
-    deleteEntity(id: string) {
-        this.store.dispatch(entitiesActions.openDeleteDialog({ id }))
-    }
 
-    nodeMenuItems: MenuItem[] = [
-        {
-            title: 'Rename',
-            action: (id: string) => this.renameEntity(id),
-        },
-        {
-            title: 'Create new list inside',
-            action: (id: string) => this.createNewList(id),
-        },
-        {
-            title: 'Duplicate',
-            action: (id: string) => this.duplicateList(id),
-        },
-        { isSeperator: true },
-        {
-            title: 'Delete',
-            variant: MenuItemVariant.DANGER,
-            action: (id: string) => this.deleteEntity(id),
-        },
-    ]
+    // @TODO: Remove hardcoded value
+    nodeMenuItems = getEntityMenuItemsMap(this.store)[EntityType.TASKLIST]
 }

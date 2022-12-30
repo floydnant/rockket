@@ -1,0 +1,86 @@
+<div class="mb-4" *ngIf="entity$ | async as entity">
+    <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
+    <!--     <button class="button-naked">Add Sublist</button> -->
+    <!--     <button class="button-naked">Add Description</button> -->
+    <!-- </div> -->
+    <!-- dont know 'bout these ones: -->
+    <!-- <button class="button-naked">Add Task</button> -->
+    <!-- <button class="button-naked">Share</button> -->
+
+    <h1 class="heading | mt-4">
+        <app-editable-entity-name [entity]="entity"></app-editable-entity-name>
+    </h1>
+
+    <div class="description | text-tinted-300 outline-none" contenteditable>
+        <p>And this is the part for the description</p>
+        <p>Where you can</p>
+        <ul>
+            <li>Describe the list/task in further detail</li>
+            <li>Take notes for yourself</li>
+            <li>Quickly write down / sketch out ideas</li>
+        </ul>
+    </div>
+
+    <div class="children | mt-5 flex items-center gap-3" cdkMenuBar>
+        <button
+            class="button-naked text-tinted-200 hover:text-tinted-100"
+            appTooltip="Create a new list inside this one"
+            (click)="createNewSublist()"
+            cdkMenuItem
+        >
+            <app-icon iconClass="fas fa-plus" class="mr-1"></app-icon>
+            New sublist
+        </button>
+
+        <div class="flex flex-wrap gap-2" *ngIf="entity.children.length; else noChildren">
+            <button
+                class="child | button-m text-tinted-200"
+                *ngFor="let child of entity.children"
+                routerLink="/home/{{ child.id }}"
+                cdkMenuItem
+                [cdkContextMenuTriggerFor]="options"
+                #trigger="cdkContextMenuTriggerFor"
+            >
+                <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
+                <app-entity-page-label [title]="child.name" [pageIcon]="EntityType.TASKLIST"></app-entity-page-label>
+
+                <ng-template #options>
+                    <app-drop-down
+                        [items]="(options$ | async) || []"
+                        [rootTrigger]="trigger"
+                        [data]="child.id"
+                    ></app-drop-down>
+                </ng-template>
+            </button>
+        </div>
+
+        <ng-template #noChildren>
+            <p class="m-0 text-tinted-500">
+                <app-icon iconClass="fas fa-genderless" class="mr-1 inline-block translate-y-px"></app-icon> No lists
+                inside
+            </p>
+        </ng-template>
+    </div>
+</div>
+
+<div
+    class="progress-container | group sticky -top-3 z-30 mb-5 flex items-center gap-2 bg-tinted-900 pt-4 pb-3 shadow-header"
+    *ngIf="progress$ | async as progress"
+>
+    <div
+        #progressBar
+        class="progress | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
+        appTooltip="{{ progress }}% closed - {{ closedTasks }}/{{ allTasks }}"
+        [tooltipOptions]="{ closeOnHostClick: false }"
+    >
+        <div class="h-full rounded bg-submit-400 transition-shadow" [style.width]="progress + '%'"></div>
+    </div>
+    <button
+        class="text-sm text-tinted-600 transition-colors group-hover:text-submit-400"
+        (click)="isShownAsPercentage = !isShownAsPercentage"
+    >
+        {{ isShownAsPercentage ? progress + '%' : closedTasks + ' / ' + allTasks }}
+    </button>
+</div>
+
+<app-tasks-demo></app-tasks-demo>

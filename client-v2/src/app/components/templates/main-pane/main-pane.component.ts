@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core'
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnDestroy,
+    ViewChild,
+} from '@angular/core'
 
 @Component({
     selector: 'app-main-pane',
@@ -19,8 +28,10 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } fro
             }
         `,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainPaneComponent implements AfterViewInit, OnDestroy {
+    constructor(private changeDetector: ChangeDetectorRef) {}
     // @TODO: Make the prose width adjustable with a drag, or have a couple presets
     @Input() prose = true
 
@@ -30,7 +41,10 @@ export class MainPaneComponent implements AfterViewInit, OnDestroy {
     observer = new IntersectionObserver(
         entries => {
             entries.forEach(entry => {
-                if (entry.target == this.scrollSpy.nativeElement) this.isScrolled = !entry.isIntersecting
+                if (entry.target == this.scrollSpy.nativeElement) {
+                    this.isScrolled = !entry.isIntersecting
+                    this.changeDetector.markForCheck()
+                }
             })
         },
         { threshold: [1] }

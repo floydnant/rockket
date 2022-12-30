@@ -47,6 +47,9 @@ import { MainPaneComponent } from './components/templates/main-pane/main-pane.co
 import { MutationDirective } from './directives/mutation.directive'
 import { MenuToggleComponent } from './components/templates/sidebar-layout/menu-toggle/menu-toggle.component'
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component'
+import { EntityViewComponent } from './components/organisms/entity-view/entity-view.component'
+import { TasklistViewComponent } from './components/organisms/entity-view/views/tasklist-view/tasklist-view.component'
+import { EditableEntityNameComponent } from './components/molecules/editable-entity-heading/editable-entity-name.component'
 
 @NgModule({
     declarations: [
@@ -82,6 +85,9 @@ import { DashboardComponent } from './pages/home/dashboard/dashboard.component'
         MutationDirective,
         MenuToggleComponent,
         DashboardComponent,
+        EntityViewComponent,
+        TasklistViewComponent,
+        EditableEntityNameComponent,
     ],
     imports: [
         BrowserModule,

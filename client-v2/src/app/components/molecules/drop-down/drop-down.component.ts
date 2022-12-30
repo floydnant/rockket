@@ -20,6 +20,14 @@ export enum MenuItemVariant {
     SUBMIT = 'menu-item--submit',
 }
 
+export const useDataForAction = (data: unknown) => {
+    return ({ action, children, ...item }: MenuItem): MenuItem => ({
+        ...item,
+        action: action ? (localData: unknown) => action(localData || data) : undefined,
+        children: children?.map(useDataForAction(data)),
+    })
+}
+
 @Component({
     selector: 'app-drop-down',
     templateUrl: './drop-down.component.html',

@@ -1,0 +1,4 @@
+.show-placeholder::before {
+    content: attr(data-placeholder);
+    @apply text-tinted-400;
+}
