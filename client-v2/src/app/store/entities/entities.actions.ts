@@ -2,6 +2,8 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { TasklistPreview, CreateTasklistDto, TaskList } from 'src/app/models/list.model'
 
+export type HttpServerErrorResponseWithData<T = { id: string }> = HttpServerErrorResponse & T
+
 export const entitiesActions = createActionGroup({
     source: 'Entities',
     events: {
@@ -14,14 +16,14 @@ export const entitiesActions = createActionGroup({
         //
         rename: props<{ id: string; newName: string }>(),
         'rename success': props<{ id: string; newName: string }>(),
-        'rename error': props<HttpServerErrorResponse>(),
+        'rename error': props<HttpServerErrorResponseWithData>(),
 
         'open delete dialog': props<{ id: string }>(),
         'abort delete dialog': emptyProps(),
         //
         delete: props<{ id: string }>(),
         'delete success': props<{ id: string }>(),
-        'delete error': props<HttpServerErrorResponse>(),
+        'delete error': props<HttpServerErrorResponseWithData>(),
     },
 })
 

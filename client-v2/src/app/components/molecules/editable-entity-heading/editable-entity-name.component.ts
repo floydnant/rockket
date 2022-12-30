@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
+import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import {
     BehaviorSubject,
+    combineLatest,
     debounceTime,
+    delay,
     distinctUntilChanged,
     filter,
     first,
@@ -13,10 +16,12 @@ import {
     switchMap,
     tap,
 } from 'rxjs'
-import { DEFAULT_TASKLIST_NAME, ENTITY_NAME_DEFAULTS } from 'src/app/models/defaults'
+import { ENTITY_NAME_DEFAULTS } from 'src/app/models/defaults'
 import { EntityPreviewRecursive, EntityType } from 'src/app/models/entities.model'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
+import { getLoadingUpdates } from 'src/app/utils/store.helpers'
+import { PageEntityState } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 
 @UntilDestroy()
 @Component({
@@ -26,9 +31,10 @@ import { entitiesActions } from 'src/app/store/entities/entities.actions'
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditableEntityNameComponent {
-    constructor(private store: Store<AppState>) {}
+    constructor(private store: Store<AppState>, private actions$: Actions) {}
 
     EntityType = EntityType
+    PageEntityState = PageEntityState
     ENTITY_NAME_DEFAULTS = ENTITY_NAME_DEFAULTS
 
     @ViewChild('editableEntityName') editableEntityName!: ElementRef<HTMLSpanElement>
@@ -39,8 +45,9 @@ export class EditableEntityNameComponent {
     entity$ = new BehaviorSubject<EntityPreviewRecursive | undefined | null>(null)
 
     entityName$ = this.entity$.pipe(
+        filter(entity => entity?.name != this.lastSentStoreUpdate),
         map(entity => {
-            if (Object.values(ENTITY_NAME_DEFAULTS).includes(entity?.name as string)) return ''
+            if (entity?.name == ENTITY_NAME_DEFAULTS[EntityType.TASKLIST]) return '' // @TODO: Remove hardcoded value
 
             return entity?.name
         }),
@@ -107,7 +114,7 @@ export class EditableEntityNameComponent {
         map(newEntityName => {
             if (newEntityName === null) return null
 
-            return newEntityName || DEFAULT_TASKLIST_NAME
+            return newEntityName || ENTITY_NAME_DEFAULTS[EntityType.TASKLIST] // @TODO: Remove hardcoded value
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )
@@ -116,14 +123,50 @@ export class EditableEntityNameComponent {
         .pipe(
             distinctUntilChanged(),
             switchMap(newName => {
-                return this.entity$.pipe(
+                return combineLatest([this.entity$, this.isLoading$]).pipe(
                     first(),
-                    tap(entity => {
+                    tap(([entity, isLoading]) => {
                         if (!entity || !newName) return
 
-                        return this.store.dispatch(entitiesActions.rename({ id: entity.id, newName }))
+                        const action = entitiesActions.rename({ id: entity.id, newName })
+                        if (isLoading) {
+                            this.updateQueue$.next(action)
+                            return
+                        }
+
+                        this.lastSentStoreUpdate = newName
+                        this.store.dispatch(action)
                     })
                 )
+            }),
+            untilDestroyed(this)
+        )
+        .subscribe()
+
+    isLoading$ = getLoadingUpdates(
+        this.actions$,
+        [entitiesActions.rename, entitiesActions.renameSuccess, entitiesActions.renameError],
+        action =>
+            this.entity$.pipe(
+                first(),
+                map(entity => entity?.id == action.id)
+            )
+    )
+
+    lastSentStoreUpdate: string | null = null
+
+    updateQueue$ = new BehaviorSubject<ReturnType<typeof entitiesActions.rename> | null>(null)
+    queueSubscription = this.isLoading$
+        .pipe(
+            filter(isLoading => !isLoading),
+            switchMap(() => this.updateQueue$.pipe(first())),
+            delay(0), // move to macro queue
+            map(queuedAction => {
+                if (queuedAction === null) return
+
+                this.lastSentStoreUpdate = queuedAction.newName
+                this.store.dispatch(queuedAction)
+                this.updateQueue$.next(null)
             }),
             untilDestroyed(this)
         )

@@ -1,20 +1,27 @@
-<!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
-<page-entity-icon class="mr-2.5 inline-block -translate-y-0.5 text-2xl" [icon]="EntityType.TASKLIST">
-</page-entity-icon>
+<div class="inline-flex items-center">
+    <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
+    <span>
+        <page-entity-icon
+            class="mr-2.5 inline-block -translate-y-0.5 text-2xl"
+            [icon]="(isLoading$ | async) ? PageEntityState.LOADING : EntityType.TASKLIST"
+        >
+        </page-entity-icon>
+    </span>
 
-<!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
-<span
-    class="title | inline-block min-w-[2rem] cursor-text outline-none"
-    [innerText]="entityName$ | async"
-    [class.show-placeholder]="!(entityNameDomState$ | async)"
-    [attr.data-placeholder]="ENTITY_NAME_DEFAULTS[EntityType.TASKLIST]"
-    #editableEntityName
-    contenteditable
-    focusable
-    #entityNameFocusable="focusable"
-    [spellcheck]="entityNameFocusable.isFocused"
-    (textChanges)="entityNameChanges$.next($event)"
-    [mutationOptions]="{ plainOnly: true, observe: entityNameFocusable.isFocused }"
-    (keydown)="keydownEvents$.next($event)"
-    (blur)="blurEvents$.next($event)"
-></span>
+    <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
+    <span
+        class="title | inline-block min-w-[2rem] cursor-text outline-none"
+        [innerText]="entityName$ | async"
+        [class.show-placeholder]="!(entityNameDomState$ | async)"
+        [attr.data-placeholder]="ENTITY_NAME_DEFAULTS[EntityType.TASKLIST]"
+        #editableEntityName
+        contenteditable
+        focusable
+        #entityNameFocusable="focusable"
+        [spellcheck]="entityNameFocusable.isFocused"
+        (textChanges)="entityNameChanges$.next($event)"
+        [mutationOptions]="{ plainOnly: true, observe: entityNameFocusable.isFocused }"
+        (keydown)="keydownEvents$.next($event)"
+        (blur)="blurEvents$.next($event)"
+    ></span>
+</div>

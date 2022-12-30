@@ -1,6 +1,6 @@
 import { Actions, ofType } from '@ngrx/effects'
 import { Action, ActionCreator, Creator } from '@ngrx/store'
-import { map, merge, of } from 'rxjs'
+import { concatMap, filter, map, merge, Observable, of, shareReplay, startWith } from 'rxjs'
 import { HttpServerErrorResponse } from '../http/types'
 
 export const getMessageFromHttpError = (err: HttpServerErrorResponse) =>
@@ -69,16 +69,33 @@ export const getErrorMapUpdates = ({ actions$, fields, resetAction, errorAction 
  * | ---------------------|---------------|
  * | `/error/i`           | `false`       |
  * | `/success/i`         | `false`       |
- * | all other cases      | `true`       |
+ * | all other cases      | `true`        |
  */
-export const getLoadingUpdates = (actions$: Actions, actionsToListenFor: AnyActionCreator[]) =>
-    merge(
-        of(false),
-        actions$.pipe(
-            ofType(...actionsToListenFor),
-            map(({ type }) => {
-                if (/success|error/i.test(type)) return false
-                else return true
-            })
-        )
+export const getLoadingUpdates = <T extends AnyActionCreator>(
+    actions$: Actions,
+    actionsToListenFor: T[],
+    filterPredicate?: (action: ReturnType<T>) => boolean | Observable<boolean>
+) =>
+    actions$.pipe(
+        ofType(...actionsToListenFor),
+        concatMap(action => {
+            if (!filterPredicate) return of(action)
+
+            const predicateResult = filterPredicate(action)
+
+            let shouldPass$: Observable<boolean>
+            if (typeof predicateResult == 'boolean') shouldPass$ = of(predicateResult)
+            else shouldPass$ = predicateResult
+
+            return shouldPass$.pipe(
+                filter(shouldPass => shouldPass),
+                map(() => action)
+            )
+        }),
+        map(({ type }) => {
+            if (/success|error/i.test(type)) return false
+            else return true
+        }),
+        startWith(false),
+        shareReplay({ bufferSize: 1, refCount: true })
     )

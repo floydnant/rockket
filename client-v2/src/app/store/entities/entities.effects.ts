@@ -90,8 +90,8 @@ export class EntitiesEffects {
                 return res$.pipe(
                     map(() => entitiesActions.renameSuccess({ id, newName })),
                     catchError(err => {
-                        this.toast.error(getMessageFromHttpError(err))
-                        return of(entitiesActions.renameError(err))
+
+                        return of(entitiesActions.renameError({ ...err, id }))
                     })
                 )
             })
@@ -160,7 +160,7 @@ export class EntitiesEffects {
                             map(() => entitiesActions.deleteSuccess({ id }))
                         )
                     }),
-                    catchError(err => of(entitiesActions.deleteError(err)))
+                    catchError(err => of(entitiesActions.deleteError({ ...err, id })))
                 )
             })
         )
