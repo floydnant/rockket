@@ -73,7 +73,7 @@ export class EntitiesEffects {
                             const newName = prompt(`Rename the ${entityType}`, entity.name)?.trim()
                             if (!newName) return entitiesActions.abortRenameDialog()
 
-                            return entitiesActions.rename({ id, newName })
+                            return entitiesActions.rename({ id, newName, showToast: true })
                         })
                     )
             })
@@ -83,13 +83,21 @@ export class EntitiesEffects {
     rename = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.rename),
-            mergeMap(({ id, newName }) => {
+            mergeMap(({ id, newName, showToast }) => {
                 const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
                 const res$ = this.entitiesService.rename({ entityType, id, newName })
 
                 return res$.pipe(
+                    showToast
+                        ? this.toast.observe({
+                              loading: `Renaming ${entityType}...`,
+                              success: `Renamed ${entityType}`,
+                              error: getMessageFromHttpError,
+                          })
+                        : tap(),
                     map(() => entitiesActions.renameSuccess({ id, newName })),
                     catchError(err => {
+                        if (!showToast) this.toast.error(getMessageFromHttpError(err))
 
                         return of(entitiesActions.renameError({ ...err, id }))
                     })

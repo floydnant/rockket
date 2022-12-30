@@ -14,7 +14,7 @@ export const entitiesActions = createActionGroup({
         'open rename dialog': props<{ id: string }>(),
         'abort rename dialog': emptyProps(),
         //
-        rename: props<{ id: string; newName: string }>(),
+        rename: props<{ id: string; newName: string; showToast?: boolean }>(),
         'rename success': props<{ id: string; newName: string }>(),
         'rename error': props<HttpServerErrorResponseWithData>(),
 
