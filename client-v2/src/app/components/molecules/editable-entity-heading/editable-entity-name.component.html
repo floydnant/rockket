@@ -23,5 +23,6 @@
         [mutationOptions]="{ plainOnly: true, observe: entityNameFocusable.isFocused }"
         (keydown)="keydownEvents$.next($event)"
         (blur)="blurEvents$.next($event)"
+        data-test-name="editable-entity-name"
     ></span>
 </div>

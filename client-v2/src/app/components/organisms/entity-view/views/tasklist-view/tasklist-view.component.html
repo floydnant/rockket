@@ -29,6 +29,7 @@
         (textChanges)="descriptionChanges$.next($event)"
         [mutationOptions]="{ observe: descriptionFocusable.isFocused }"
         (blur)="blurEvents$.next($event)"
+        data-test-name="description-editor"
     ></div>
     <!-- <p>And this is the part for the description</p>
             <p>Where you can</p>
@@ -38,7 +39,7 @@
             <li>Quickly write down / sketch out ideas</li>
         </ul> -->
 
-    <div class="button-group | mt-5 flex items-center gap-2" cdkMenuBar>
+    <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
         <button
             *ngIf="!(isDescriptionShown$ | async)"
             class="button-naked text-tinted-200 hover:text-tinted-100"
@@ -61,7 +62,12 @@
         </button>
     </div>
 
-    <div class="children | mt-3 flex flex-wrap gap-2" *ngIf="entity.children.length" cdkMenuBar>
+    <div
+        class="children | mt-3 flex flex-wrap gap-2"
+        *ngIf="entity.children.length"
+        cdkMenuBar
+        data-test-name="entity-children"
+    >
         <button
             class="child | button-m text-tinted-200"
             *ngFor="let child of entity.children"
@@ -69,6 +75,7 @@
             cdkMenuItem
             [cdkContextMenuTriggerFor]="options"
             #trigger="cdkContextMenuTriggerFor"
+            data-test-name="entity-child"
         >
             <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
             <app-entity-page-label [title]="child.name" [pageIcon]="EntityType.TASKLIST"></app-entity-page-label>
