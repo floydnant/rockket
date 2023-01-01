@@ -23,6 +23,7 @@ export enum EntityType {
 // }
 
 // @TODO: migrate to real Entity-interfaces above
+export type EntityPreview = TasklistPreview
 export type EntityPreviewRecursive = Omit<TasklistPreview, 'childLists'> & {
     children: EntityPreviewRecursive[]
 }
