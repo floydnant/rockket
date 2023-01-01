@@ -1,5 +1,9 @@
 <!-- @TODO: Fix the header width issue (breadcrumbs taking more than allowed) -->
-<div class="breadcrumbs | flex w-full flex-wrap py-2 px-4 text-tinted-300" cdkMenuBar>
+<div
+    class="breadcrumbs | flex w-full flex-wrap py-2 px-4 text-tinted-300"
+    cdkMenuBar
+    data-test-name="breadcrumbs-container"
+>
     <div *ngFor="let breadcrumb of breadcrumbs; let isLast = last" class="flex max-w-[80%]">
         <button
             class="breadcrumb | menu-item | truncate py-0 px-1.5"
@@ -8,6 +12,7 @@
             [cdkContextMenuTriggerFor]="menu"
             [routerLink]="breadcrumb.route"
             #trigger="cdkContextMenuTriggerFor"
+            data-test-name="breadcrumb"
         >
             <!-- appTooltip="Here will be more information" -->
             <ng-template #menu>
