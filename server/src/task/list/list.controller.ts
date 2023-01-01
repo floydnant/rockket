@@ -33,6 +33,7 @@ export class ListController {
     getRootLevelTasklists(@GetUser() user: User) {
         return this.listService.getRootLevelTasklists(user.id)
     }
+    // @TODO: This should be refactored into a separate entities.controller, .service, etc.
     @Get('all-lists')
     getAllTasklists(@GetUser() user: User) {
         return this.listService.getAllTasklists(user.id)
