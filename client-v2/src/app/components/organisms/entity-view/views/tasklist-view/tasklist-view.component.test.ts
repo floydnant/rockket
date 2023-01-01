@@ -12,12 +12,8 @@ import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 import { TasklistViewComponent } from './tasklist-view.component'
 
-const defaultTemplate = `
-    <app-tasklist-view></app-tasklist-view>
-`
-
-const setupComponent = (viewData: EntityViewData<TasklistDetail>, template = defaultTemplate) => {
-    cy.mount(template, {
+const setupComponent = (viewData: EntityViewData<TasklistDetail>) => {
+    cy.mount(`<app-tasklist-view></app-tasklist-view> `, {
         componentProperties: {},
         imports: [CdkMenuModule],
         declarations: [

@@ -21,7 +21,7 @@ export class TasklistViewComponent {
     constructor(
         @Inject(ENTITY_VIEW_DATA) private viewData: EntityViewData<TasklistDetail>,
         private store: Store<AppState>,
-        private entityView: EntityViewComponent
+        private entityView: EntityViewComponent // needed to update the secondary progress bar, @TODO: find a clearer way to do this
     ) {}
 
     EntityType = EntityType

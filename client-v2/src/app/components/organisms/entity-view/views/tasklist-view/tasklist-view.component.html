@@ -81,6 +81,7 @@
             <app-entity-page-label [title]="child.name" [pageIcon]="EntityType.TASKLIST"></app-entity-page-label>
 
             <ng-template #options>
+                <!-- @TODO: Using the options$ here is wrong, since the children might be of a different entityType than the parent. -->
                 <app-drop-down
                     [items]="(options$ | async) || []"
                     [rootTrigger]="trigger"
