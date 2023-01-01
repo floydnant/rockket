@@ -13,6 +13,8 @@ export interface EntityService {
     update(id: string, dto: Record<string, any>): Observable<Record<string, any>>
 
     delete(id: string): Observable<HttpSuccessResponse>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    loadDetail(id: string): Observable<Record<string, any>>
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type EntityServiceConstructor = new (...args: any[]) => EntityService
@@ -56,6 +58,9 @@ export class EntitiesService {
         return this.http.get<TasklistPreview[]>('/all-lists')
     }
 
+    loadDetail({ entityType, id }: EntityCrudDto) {
+        return this.injectEntityService(entityType).loadDetail(id)
+    }
     rename({ entityType, id, newName }: EntityCrudDto<{ newName: string }>) {
         return this.injectEntityService(entityType).update(id, { name: newName })
     }

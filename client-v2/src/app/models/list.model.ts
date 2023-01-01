@@ -1,7 +1,7 @@
 export interface TaskList {
     id: string
     name: string
-    description: string
+    description: string | null
     createdAt: string
     ownerId: string
 
@@ -12,6 +12,8 @@ export interface TaskList {
 }
 
 export type TasklistPreview = Pick<TaskList, 'id' | 'name' | 'childLists' | 'parentListId'>
+
+export type TasklistDetail = Pick<TaskList, 'description' | 'ownerId' | 'createdAt'>
 
 export interface CreateTasklistDto {
     name: string

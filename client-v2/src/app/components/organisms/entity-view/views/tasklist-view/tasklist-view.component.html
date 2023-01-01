@@ -1,4 +1,4 @@
-<div class="mb-4" *ngIf="entity$ | async as entity">
+<div class="" *ngIf="entity$ | async as entity">
     <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
     <!--     <button class="button-naked">Add Sublist</button> -->
     <!--     <button class="button-naked">Add Description</button> -->
@@ -11,17 +11,45 @@
         <app-editable-entity-name [entity]="entity"></app-editable-entity-name>
     </h1>
 
-    <div class="description | text-tinted-300 outline-none" contenteditable>
-        <p>And this is the part for the description</p>
-        <p>Where you can</p>
-        <ul>
-            <li>Describe the list/task in further detail</li>
-            <li>Take notes for yourself</li>
-            <li>Quickly write down / sketch out ideas</li>
-        </ul>
-    </div>
+    <!-- <div class="created-at | test-md text-tinted-400" *ngIf="detail$ | async as detail">
+        <span class="text-tinted-500">Created at</span> {{ detail?.createdAt | date }},
+        {{ detail?.createdAt | date : 'shortTime' }}
+    </div> -->
 
-    <div class="children | mt-5 flex items-center gap-3" cdkMenuBar>
+    <div
+        [hidden]="!(isDescriptionShown$ | async)"
+        class="description | text-tinted-300 outline-none"
+        [innerHTML]="description$ | async"
+        [class.show-placeholder]="!(descriptionDomState$ | async)"
+        [attr.data-placeholder]="'Description or notes'"
+        focusable
+        #descriptionFocusable="focusable"
+        contenteditable
+        [spellcheck]="descriptionFocusable.isFocused"
+        (textChanges)="descriptionChanges$.next($event)"
+        [mutationOptions]="{ observe: descriptionFocusable.isFocused }"
+        (blur)="blurEvents$.next($event)"
+    ></div>
+    <!-- <p>And this is the part for the description</p>
+            <p>Where you can</p>
+            <ul>
+                <li>Describe the list/task in further detail</li>
+                <li>Take notes for yourself</li>
+            <li>Quickly write down / sketch out ideas</li>
+        </ul> -->
+
+    <div class="button-group | mt-5 flex items-center gap-2" cdkMenuBar>
+        <button
+            *ngIf="!(isDescriptionShown$ | async)"
+            class="button-naked text-tinted-200 hover:text-tinted-100"
+            appTooltip="Add a description to this list"
+            (click)="isDescriptionShown$.next(true); descriptionFocusable.focus()"
+            cdkMenuItem
+        >
+            <app-icon iconClass="far fa-sticky-note" class="mr-1"></app-icon>
+            Add description
+        </button>
+
         <button
             class="button-naked text-tinted-200 hover:text-tinted-100"
             appTooltip="Create a new list inside this one"
@@ -31,35 +59,28 @@
             <app-icon iconClass="fas fa-plus" class="mr-1"></app-icon>
             New sublist
         </button>
+    </div>
 
-        <div class="flex flex-wrap gap-2" *ngIf="entity.children.length; else noChildren">
-            <button
-                class="child | button-m text-tinted-200"
-                *ngFor="let child of entity.children"
-                routerLink="/home/{{ child.id }}"
-                cdkMenuItem
-                [cdkContextMenuTriggerFor]="options"
-                #trigger="cdkContextMenuTriggerFor"
-            >
-                <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
-                <app-entity-page-label [title]="child.name" [pageIcon]="EntityType.TASKLIST"></app-entity-page-label>
+    <div class="children | mt-3 flex flex-wrap gap-2" *ngIf="entity.children.length" cdkMenuBar>
+        <button
+            class="child | button-m text-tinted-200"
+            *ngFor="let child of entity.children"
+            routerLink="/home/{{ child.id }}"
+            cdkMenuItem
+            [cdkContextMenuTriggerFor]="options"
+            #trigger="cdkContextMenuTriggerFor"
+        >
+            <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
+            <app-entity-page-label [title]="child.name" [pageIcon]="EntityType.TASKLIST"></app-entity-page-label>
 
-                <ng-template #options>
-                    <app-drop-down
-                        [items]="(options$ | async) || []"
-                        [rootTrigger]="trigger"
-                        [data]="child.id"
-                    ></app-drop-down>
-                </ng-template>
-            </button>
-        </div>
-
-        <ng-template #noChildren>
-            <p class="m-0 text-tinted-500">
-                <app-icon iconClass="fas fa-genderless" class="mr-1 inline-block translate-y-px"></app-icon> No lists
-                inside
-            </p>
-        </ng-template>
+            <ng-template #options>
+                <app-drop-down
+                    [items]="(options$ | async) || []"
+                    [rootTrigger]="trigger"
+                    [data]="child.id"
+                ></app-drop-down>
+            </ng-template>
+        </button>
     </div>
 </div>
 

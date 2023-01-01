@@ -38,7 +38,7 @@ export class EntitiesEffects {
             })
         )
 
-    loadEntityPreviews = createEffect(() => {
+    loadPreviews = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.loadPreviews),
             mergeMap(() => {
@@ -46,10 +46,30 @@ export class EntitiesEffects {
 
                 return res$.pipe(
                     map(listPreviews => entitiesActions.loadPreviewsSuccess({ previews: listPreviews })),
-                    catchError(err => {
-                        console.error(err)
-                        return of(entitiesActions.loadPreviewsError(err))
-                    })
+                    catchError(err => of(entitiesActions.loadPreviewsError(err)))
+                )
+            })
+        )
+    })
+
+    loadDetail = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(entitiesActions.loadDetail),
+            mergeMap(dto => {
+                const res$ = this.store
+                    .select(state => state.entities[dto.entityType]?.[dto.id])
+                    .pipe(
+                        first(),
+                        switchMap(entityDetail => {
+                            if (entityDetail) return of(entityDetail)
+
+                            return this.entitiesService.loadDetail(dto)
+                        })
+                    )
+
+                return res$.pipe(
+                    map(entityDetail => entitiesActions.loadDetailSuccess({ ...dto, entityDetail })),
+                    catchError(err => of(entitiesActions.loadDetailError({ ...err, id: dto.id })))
                 )
             })
         )

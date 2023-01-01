@@ -9,6 +9,7 @@ import {
     ViewChild,
 } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
+import { Store } from '@ngrx/store'
 import {
     BehaviorSubject,
     combineLatest,
@@ -20,6 +21,8 @@ import {
     tap,
 } from 'rxjs'
 import { EntityPreviewRecursive, EntityType } from 'src/app/models/entities.model'
+import { AppState } from 'src/app/store'
+import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { EntityMenuItemsMap } from '../../../shared/entity-menu-items'
 import { MenuItem } from '../../molecules/drop-down/drop-down.component'
 import { TasklistViewComponent } from './views/tasklist-view/tasklist-view.component'
@@ -28,11 +31,13 @@ const entityViewComponentMap: Record<EntityType, Type<unknown>> = {
     [EntityType.TASKLIST]: TasklistViewComponent,
 }
 
-export const ENTITY_VIEW_DATA = new InjectionToken('app.entity.view-data')
-export type EntityViewData = Observable<{
-    entity: EntityPreviewRecursive | null | undefined
-    options: MenuItem[] | null | undefined
-}>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const ENTITY_VIEW_DATA = new InjectionToken<EntityViewData<any>>('app.entity.view-data')
+export interface EntityViewData<T extends Record<string, unknown>> {
+    entity$: Observable<EntityPreviewRecursive | null | undefined>
+    detail$: Observable<T>
+    options$: Observable<MenuItem[] | null | undefined>
+}
 
 @UntilDestroy()
 @Component({
@@ -42,12 +47,16 @@ export type EntityViewData = Observable<{
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityViewComponent {
-    constructor(private injector: Injector) {}
+    constructor(private injector: Injector, private store: Store<AppState>) {}
 
     @Input() set entity(activeEntity: EntityPreviewRecursive | undefined | null) {
         this.entity$.next(activeEntity)
     }
     entity$ = new BehaviorSubject<EntityPreviewRecursive | undefined | null>(null)
+    entityDetail$ = combineLatest([this.entity$, this.store.select(state => state.entities)]).pipe(
+        map(([entity, entitiesState]) => entity && entitiesState[EntityType.TASKLIST]?.[entity.id]), // @TODO: Remove hardcoded value EntityType.TASKLIST
+        shareReplay({ bufferSize: 1, refCount: true })
+    )
 
     @Input() set entityOptionsMap(menuItems: EntityMenuItemsMap | undefined | null) {
         this.entityOptionsMap$.next(menuItems)
@@ -79,15 +88,15 @@ export class EntityViewComponent {
             return entityViewComponentMap[entityType]
         })
     )
-    entityViewData$: EntityViewData = combineLatest([this.entity$, this.entityOptionsMap$]).pipe(
-        map(([entity, optionsMap]) => {
-            // @TODO: Remove hardcoded value
-            const entityType = EntityType.TASKLIST
-            return { entity, options: optionsMap?.[entityType] }
-        })
-    )
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    entityViewData: EntityViewData<any> = {
+        entity$: this.entity$,
+        detail$: this.entityDetail$,
+        options$: this.entityOptionsItems$,
+    }
     entityViewInjector = Injector.create({
-        providers: [{ provide: ENTITY_VIEW_DATA, useValue: this.entityViewData$ as EntityViewData }],
+        providers: [{ provide: ENTITY_VIEW_DATA, useValue: this.entityViewData }],
         parent: this.injector,
     })
 
@@ -96,6 +105,12 @@ export class EntityViewComponent {
         .pipe(
             distinctUntilChanged((previous, current) => previous?.id == current?.id),
             tap(() => this.topElement?.nativeElement?.scrollIntoView({ behavior: 'smooth' })), // lets see how the 'smooth' behaviour feels after a while
+            tap(entity => {
+                if (!entity) return
+
+                const entityType = EntityType.TASKLIST // @TODO: Remove hardcoded value
+                this.store.dispatch(entitiesActions.loadDetail({ entityType, id: entity.id }))
+            }),
             untilDestroyed(this)
         )
         .subscribe()

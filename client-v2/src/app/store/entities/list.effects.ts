@@ -44,6 +44,23 @@ export class ListEffects {
         )
     })
 
+    updateDescription = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(listActions.updateDescription),
+            mergeMap(dto => {
+                const res$ = this.listService.update(dto.id, { description: dto.newDescription })
+
+                return res$.pipe(
+                    map(() => listActions.updateDescriptionSuccess(dto)),
+                    catchError(err => {
+                        this.toast.error('Failed to update description')
+                        return of(listActions.updateDescriptionError({ ...err, id: dto.id }))
+                    })
+                )
+            })
+        )
+    })
+
     duplicateList = createEffect(() => {
         return this.actions$.pipe(
             ofType(listActions.duplicateList),

@@ -21,4 +21,8 @@ export class ListService implements EntityService {
     delete(id: string) {
         return this.http.delete<HttpSuccessResponse>('/list/' + id)
     }
+
+    loadDetail(id: string) {
+        return this.http.get<TaskList>('/list/' + id)
+    }
 }

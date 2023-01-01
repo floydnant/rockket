@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatest, of } from 'rxjs'
-import { first, map, tap } from 'rxjs/operators'
+import { BehaviorSubject, combineLatest, merge, of } from 'rxjs'
+import { distinctUntilChanged, first, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 import { DEFAULT_TASKLIST_NAME } from 'src/app/models/defaults'
 import { EntityType } from 'src/app/models/entities.model'
+import { TasklistDetail } from 'src/app/models/list.model'
 import { AppState } from 'src/app/store'
-import { entitiesActions, listActions } from 'src/app/store/entities/entities.actions'
+import { listActions } from 'src/app/store/entities/entities.actions'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 
 @UntilDestroy()
@@ -18,7 +19,7 @@ import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../ent
 })
 export class TasklistViewComponent {
     constructor(
-        @Inject(ENTITY_VIEW_DATA) private viewData$: EntityViewData,
+        @Inject(ENTITY_VIEW_DATA) private viewData: EntityViewData<TasklistDetail>,
         private store: Store<AppState>,
         private entityView: EntityViewComponent
     ) {}
@@ -26,8 +27,51 @@ export class TasklistViewComponent {
     EntityType = EntityType
     DEFAULT_TASKLIST_NAME = DEFAULT_TASKLIST_NAME
 
-    entity$ = this.viewData$.pipe(map(viewData => viewData.entity))
-    options$ = this.viewData$.pipe(map(viewData => viewData.options))
+    entity$ = this.viewData.entity$
+    detail$ = this.viewData.detail$
+    options$ = this.viewData.options$
+
+    description$ = this.detail$.pipe(
+        map(detail => detail?.description),
+        distinctUntilChanged()
+    )
+    isDescriptionShown$ = new BehaviorSubject(false)
+
+    descriptionChanges$ = new BehaviorSubject<string | null>(null)
+    blurEvents$ = new BehaviorSubject<FocusEvent | null>(null)
+
+    descriptionSubscription = combineLatest([this.blurEvents$, this.description$])
+        .pipe(
+            tap(([blurEvent, description]) => {
+                if (blurEvent) {
+                    if (!description) this.isDescriptionShown$.next(false)
+                }
+                this.isDescriptionShown$.next(!!description)
+            }),
+            untilDestroyed(this)
+        )
+        .subscribe()
+
+    descriptionDomState$ = merge(
+        this.descriptionChanges$,
+        this.description$.pipe(
+            tap(() => {
+                if (this.descriptionChanges$.value !== null) this.descriptionChanges$.next(null)
+            })
+        )
+    ).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+
+    descriptionUpdatesSubscription = this.blurEvents$
+        .pipe(
+            switchMap(() => combineLatest([this.descriptionChanges$, this.entity$]).pipe(first())),
+            untilDestroyed(this)
+        )
+        .subscribe(([newDescription, entity]) => {
+            // @TODO: Throttled updates should only be sent to the server and not update the store yet.
+            // The store should only be updated when the editor is blurred.
+            if (!entity || newDescription === null) return
+            this.store.dispatch(listActions.updateDescription({ id: entity.id, newDescription }))
+        })
 
     closedTasks = 16
     allTasks = 37
