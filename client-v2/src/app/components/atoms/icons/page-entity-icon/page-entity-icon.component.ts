@@ -2,14 +2,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { EntityType } from 'src/app/models/entities.model'
 import { TaskStatus } from 'src/app/models/task.model'
 
-/** This will come from the db */
-// export enum EntityType {
-//     TASKLIST = 'Tasklist',
-//     TASK = 'Task',
-//     DOCUMENT = 'Document',
-//     VIEW = 'View',
-// }
-
 export enum PageEntityState {
     LOADING = 'Loading',
 }
@@ -20,12 +12,6 @@ export enum TaskState {
 }
 export type TaskIconKey = TaskStatus | TaskState
 
-// const entityTypeWithoutTask = {
-//     [EntityType.TASKLIST]: 'Tasklist',
-//     [EntityType.DOCUMENT]: 'Document',
-//     [EntityType.VIEW]: 'View',
-// }
-// type EntityTypeWihoutTask = keyof typeof entityTypeWithoutTask
 export type PageEntityIconKey = TaskIconKey | EntityType | PageEntityState
 
 export const taskStatusIconClassMap: Record<TaskIconKey, string> = {
