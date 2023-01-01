@@ -1,7 +1,7 @@
 import { EntityPreviewFlattend, EntityPreviewRecursive } from 'src/app/models/entities.model'
 import { TasklistPreview } from 'src/app/models/list.model'
 
-export const getEntityTree = (allEntities: TasklistPreview[]) => {
+export const buildEntityTree = (allEntities: TasklistPreview[]) => {
     const getChildren = (childIds: string[]): EntityPreviewRecursive[] => {
         const children = allEntities.filter(entity => childIds.includes(entity.id))
 
@@ -62,8 +62,8 @@ export const getParentByChildId = (
     }
 }
 
-export const getEntityById = (taskLists: EntityPreviewRecursive[], id: string): EntityPreviewRecursive | void => {
-    const res = getParentByChildId(taskLists, id)
+export const getEntityById = (entityTree: EntityPreviewRecursive[], id: string): EntityPreviewRecursive | void => {
+    const res = getParentByChildId(entityTree, id)
     if (!res) return
 
     return res.subTree[res.index]

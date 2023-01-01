@@ -3,7 +3,7 @@ import { EntityType } from 'src/app/models/entities.model'
 import { TasklistDetail } from 'src/app/models/list.model'
 import { entitiesActions, listActions } from './entities.actions'
 import { EntitiesState } from './entities.state'
-import { getParentByChildId, getEntityById, getEntityTree } from './utils'
+import { getParentByChildId, getEntityById, buildEntityTree } from './utils'
 
 const initialState: EntitiesState = {
     entityTree: null,
@@ -18,7 +18,7 @@ export const entitiesReducer = createReducer(
     on(entitiesActions.loadPreviewsSuccess, (state, { previews }) => {
         return {
             ...state,
-            entityTree: getEntityTree(previews),
+            entityTree: buildEntityTree(previews),
         }
     }),
 
