@@ -22,7 +22,18 @@ export const reducers: ActionReducerMap<AppState> = {
 export const effects = [AppEffects, AuthEffects, AccountEffects, ListEffects, EntitiesEffects]
 
 const actionLogger: MetaReducer<AppState> = reducer => (state, action) => {
-    console.info('%caction: %c' + action.type, 'color: hsl(130, 0%, 50%);', 'color: hsl(155, 100%, 50%);')
+    const isErrorAction = /error/i.test(action.type)
+    if (environment.production && !isErrorAction) return reducer(state, action)
+
+    const actionColor = isErrorAction ? 'color: hsl(345, 100%, 52%);' : 'color: hsl(155, 100%, 50%);'
+    console.info('%caction: %c' + action.type, 'color: hsl(130, 0%, 50%);', actionColor)
+
+    if (isErrorAction) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { type, ...error } = action
+        console.error(error)
+    }
+
     return reducer(state, action)
 }
-export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [actionLogger] : []
+export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [actionLogger] : [actionLogger]
