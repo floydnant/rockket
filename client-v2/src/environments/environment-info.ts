@@ -1,11 +1,11 @@
 export type NetlifyContext = 'production' | 'deploy-preview' | 'branch-deploy' | 'dev'
 export type AppContext = 'Production' | 'Review' | 'Staging' | 'Development' | 'Testing'
 
-// This is to suppress the error in cypress `process is not defined`
+// @TODO: #230 Fix this `process is not defined` issue occuring in cypress, sometimes in the build (btw wtf, why not always?)
 // eslint-disable-next-line no-var, @typescript-eslint/no-explicit-any
-var process: any = process || {
-    env: {},
-}
+// var process: any = process || {
+//     env: {},
+// }
 
 export const env = {
     NG_APP_ENV: process.env['NG_APP_ENV'] as string,

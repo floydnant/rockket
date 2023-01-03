@@ -27,9 +27,9 @@ import { EntityMenuItemsMap } from '../../../shared/entity-menu-items'
 import { MenuItem } from '../../molecules/drop-down/drop-down.component'
 import { TasklistViewComponent } from './views/tasklist-view/tasklist-view.component'
 
-const entityViewComponentMap: Record<EntityType, Type<unknown>> = {
+export const entityViewComponentMap: Record<EntityType, Type<unknown>> = {
     [EntityType.TASKLIST]: TasklistViewComponent,
-}
+} as const // @TODO: satisfies
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ENTITY_VIEW_DATA = new InjectionToken<EntityViewData<any>>('app.entity.view-data')
