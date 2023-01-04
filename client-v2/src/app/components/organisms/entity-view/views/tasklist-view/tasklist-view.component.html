@@ -46,6 +46,7 @@
             appTooltip="Add a description to this list"
             (click)="isDescriptionShown$.next(true); descriptionFocusable.focus()"
             cdkMenuItem
+            data-test-name="add-description"
         >
             <app-icon iconClass="far fa-sticky-note" class="mr-1"></app-icon>
             Add description
@@ -56,6 +57,7 @@
             appTooltip="Create a new list inside this one"
             (click)="createNewSublist()"
             cdkMenuItem
+            data-test-name="create-children"
         >
             <app-icon iconClass="fas fa-plus" class="mr-1"></app-icon>
             New sublist

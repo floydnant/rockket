@@ -47,6 +47,7 @@
                 class="rounded px-1.5 py-0.5 transition-colors duration-75 hover:bg-tinted-700"
                 appTooltip="Create new list"
                 (click)="createNewList()"
+                data-test-name="sidebar-create-new-list"
             >
                 <app-icon iconClass="fas fa-plus"></app-icon>
             </button>
@@ -72,6 +73,8 @@
                         routerLinkActive="active"
                         #nodeTooltip="appTooltip"
                         [cdkContextMenuTriggerFor]="nodeDropDown"
+                        data-test-name="entity-tree-node"
+                        [attr.data-level]="node.path.length"
                     >
                         <div class="indent-line" *ngFor="let line of range(node.path.length)">&nbsp;</div>
 
@@ -109,12 +112,17 @@
                         </div>
 
                         <div class="btn-group">
-                            <button class="" (click)="createNewList(node.id); $event.stopPropagation()">
+                            <button
+                                class=""
+                                (click)="createNewList(node.id); $event.stopPropagation()"
+                                data-test-name="create-child"
+                            >
                                 <app-icon iconClass="far fa-plus"></app-icon>
                             </button>
                             <button
                                 (click)="$event.stopPropagation(); nodeTooltip.hideTooltip()"
                                 [cdkMenuTriggerFor]="nodeDropDown"
+                                data-test-name="open-menu"
                             >
                                 <double-ellipsis-icon></double-ellipsis-icon>
                             </button>
