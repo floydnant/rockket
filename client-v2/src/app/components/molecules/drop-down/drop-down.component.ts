@@ -1,4 +1,4 @@
-import { CdkMenuTrigger } from '@angular/cdk/menu'
+import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu'
 import { Component, Input } from '@angular/core'
 import { moveToMacroQueue } from 'src/app/utils'
 import { PageEntityIconKey } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
@@ -7,7 +7,8 @@ export interface MenuItem {
     title?: string
     icon?: PageEntityIconKey
     route?: string
-    action?: () => void
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    action?: (data?: any) => void
     children?: MenuItem[]
     isSeperator?: boolean
     variant?: MenuItemVariant
@@ -19,6 +20,14 @@ export enum MenuItemVariant {
     SUBMIT = 'menu-item--submit',
 }
 
+export const useDataForAction = (data: unknown) => {
+    return ({ action, children, ...item }: MenuItem): MenuItem => ({
+        ...item,
+        action: action ? (localData: unknown) => action(localData || data) : undefined,
+        children: children?.map(useDataForAction(data)),
+    })
+}
+
 @Component({
     selector: 'app-drop-down',
     templateUrl: './drop-down.component.html',
@@ -26,11 +35,12 @@ export enum MenuItemVariant {
 })
 export class DropDownComponent {
     @Input() items!: MenuItem[]
-    @Input() rootTrigger?: CdkMenuTrigger
+    @Input() rootTrigger?: CdkMenuTrigger | CdkContextMenuTrigger
+    @Input() data?: unknown
 
     triggerAction(action: MenuItem['action']) {
         // this ensures that the keydown event doesn't get picked up by another component
-        moveToMacroQueue(() => action?.())
+        moveToMacroQueue(() => action?.(this.data))
     }
 
     MenuItemVariant = MenuItemVariant

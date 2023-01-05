@@ -1,0 +1,6 @@
+.progress-container:is(:hover, .glow) .progress :first-child {
+    box-shadow: 0 0 10px theme('colors.submit.400');
+}
+.progress-container.glow span {
+    @apply text-submit-400;
+}

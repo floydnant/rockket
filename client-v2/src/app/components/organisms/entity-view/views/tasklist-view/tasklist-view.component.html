@@ -1,0 +1,117 @@
+<div class="" *ngIf="entity$ | async as entity">
+    <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
+    <!--     <button class="button-naked">Add Sublist</button> -->
+    <!--     <button class="button-naked">Add Description</button> -->
+    <!-- </div> -->
+    <!-- dont know 'bout these ones: -->
+    <!-- <button class="button-naked">Add Task</button> -->
+    <!-- <button class="button-naked">Share</button> -->
+
+    <h1 class="heading | mt-4">
+        <app-editable-entity-name [entity]="entity"></app-editable-entity-name>
+    </h1>
+
+    <!-- <div class="created-at | test-md text-tinted-400" *ngIf="detail$ | async as detail">
+        <span class="text-tinted-500">Created at</span> {{ detail?.createdAt | date }},
+        {{ detail?.createdAt | date : 'shortTime' }}
+    </div> -->
+
+    <div
+        [hidden]="!(isDescriptionShown$ | async)"
+        class="description | text-tinted-300 outline-none"
+        [innerHTML]="description$ | async"
+        [class.show-placeholder]="!(descriptionDomState$ | async)"
+        [attr.data-placeholder]="'Description or notes'"
+        focusable
+        #descriptionFocusable="focusable"
+        contenteditable
+        [spellcheck]="descriptionFocusable.isFocused"
+        (textChanges)="descriptionChanges$.next($event)"
+        [mutationOptions]="{ observe: descriptionFocusable.isFocused }"
+        (blur)="blurEvents$.next($event)"
+        data-test-name="description-editor"
+    ></div>
+    <!-- <p>And this is the part for the description</p>
+            <p>Where you can</p>
+            <ul>
+                <li>Describe the list/task in further detail</li>
+                <li>Take notes for yourself</li>
+            <li>Quickly write down / sketch out ideas</li>
+        </ul> -->
+
+    <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
+        <button
+            *ngIf="!(isDescriptionShown$ | async)"
+            class="button-naked text-tinted-200 hover:text-tinted-100"
+            appTooltip="Add a description to this list"
+            (click)="isDescriptionShown$.next(true); descriptionFocusable.focus()"
+            cdkMenuItem
+            data-test-name="add-description"
+        >
+            <app-icon iconClass="far fa-sticky-note" class="mr-1"></app-icon>
+            Add description
+        </button>
+
+        <button
+            class="button-naked text-tinted-200 hover:text-tinted-100"
+            appTooltip="Create a new list inside this one"
+            (click)="createNewSublist()"
+            cdkMenuItem
+            data-test-name="create-children"
+        >
+            <app-icon iconClass="fas fa-plus" class="mr-1"></app-icon>
+            New sublist
+        </button>
+    </div>
+
+    <div
+        class="children | mt-3 flex flex-wrap gap-2"
+        *ngIf="entity.children.length"
+        cdkMenuBar
+        data-test-name="entity-children"
+    >
+        <button
+            class="child | button-m text-tinted-200"
+            *ngFor="let child of entity.children"
+            routerLink="/home/{{ child.id }}"
+            cdkMenuItem
+            [cdkContextMenuTriggerFor]="options"
+            #trigger="cdkContextMenuTriggerFor"
+            data-test-name="entity-child"
+        >
+            <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
+            <app-entity-page-label [title]="child.name" [pageIcon]="EntityType.TASKLIST"></app-entity-page-label>
+
+            <ng-template #options>
+                <!-- @TODO: Using the options$ here is wrong, since the children might be of a different entityType than the parent. -->
+                <app-drop-down
+                    [items]="(options$ | async) || []"
+                    [rootTrigger]="trigger"
+                    [data]="child.id"
+                ></app-drop-down>
+            </ng-template>
+        </button>
+    </div>
+</div>
+
+<div
+    class="progress-container | group sticky -top-3 z-30 mb-5 flex items-center gap-2 bg-tinted-900 pt-4 pb-3 shadow-header"
+    *ngIf="progress$ | async as progress"
+>
+    <div
+        #progressBar
+        class="progress | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
+        appTooltip="{{ progress }}% closed - {{ closedTasks }}/{{ allTasks }}"
+        [tooltipOptions]="{ closeOnHostClick: false }"
+    >
+        <div class="h-full rounded bg-submit-400 transition-shadow" [style.width]="progress + '%'"></div>
+    </div>
+    <button
+        class="text-sm text-tinted-600 transition-colors group-hover:text-submit-400"
+        (click)="isShownAsPercentage = !isShownAsPercentage"
+    >
+        {{ isShownAsPercentage ? progress + '%' : closedTasks + ' / ' + allTasks }}
+    </button>
+</div>
+
+<app-tasks-demo></app-tasks-demo>

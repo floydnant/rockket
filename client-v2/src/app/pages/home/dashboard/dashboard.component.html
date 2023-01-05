@@ -1,0 +1,13 @@
+<app-main-pane data-test-name="dashboard-page">
+    <ng-container header>
+        <div class="grow"></div>
+        <app-menu-toggle></app-menu-toggle>
+    </ng-container>
+
+    <ng-container main>
+        <div class="flex h-[70vh] flex-col items-center justify-center gap-3">
+            <p>Open a tasklist from the explorer or create a new one</p>
+            <p><button class="button" (click)="createNewTasklist()">Create new list</button></p>
+        </div>
+    </ng-container>
+</app-main-pane>

@@ -1,0 +1,13 @@
+<app-entity-view
+    [entity]="activeEntity$ | async"
+    [entityOptionsMap]="entityOptionsMap$ | async"
+    data-test-name="entity-page"
+>
+    <ng-container headerBeforeOptions>
+        <app-breadcrumbs [breadcrumbs]="(breadcrumbs$ | async) || []"></app-breadcrumbs>
+    </ng-container>
+
+    <ng-container headerAfterOptions>
+        <app-menu-toggle></app-menu-toggle>
+    </ng-container>
+</app-entity-view>

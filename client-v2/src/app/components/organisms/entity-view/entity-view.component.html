@@ -1,0 +1,40 @@
+<app-main-pane>
+    <ng-container header>
+        <div
+            class="header-progress | absolute bottom-0 left-0 h-[2px] bg-submit-500 transition-opacity"
+            [class.opacity-0]="!(progress$ | async)"
+            [style.width]="(progress$ | async) + '%'"
+        ></div>
+
+        <div class="grow">
+            <ng-content select="[headerBeforeOptions]"></ng-content>
+        </div>
+
+        <div cdkMenuBar>
+            <button
+                cdkMenuItem
+                class="button-icon-naked menu-item | py-2 px-4"
+                [cdkMenuTriggerFor]="options"
+                #trigger="cdkMenuTriggerFor"
+            >
+                <app-icon iconClass="fas fa-ellipsis-v"></app-icon>
+            </button>
+
+            <ng-template #options>
+                <app-drop-down
+                    [items]="(entityOptionsItems$ | async) || []"
+                    [rootTrigger]="trigger"
+                    [data]="(entity$ | async)?.id"
+                ></app-drop-down>
+            </ng-template>
+        </div>
+
+        <ng-content select="[headerAfterOptions]"></ng-content>
+    </ng-container>
+
+    <ng-container main>
+        <div #top></div>
+
+        <ng-container *ngComponentOutlet="entityViewComponent$ | async; injector: entityViewInjector"></ng-container>
+    </ng-container>
+</app-main-pane>

@@ -5,6 +5,8 @@ import { testName } from 'cypress/support/helpers'
 import { IconComponent } from '../../atoms/icons/icon/icon.component'
 import { LoadingSpinnerComponent } from '../../atoms/icons/loading-spinner/loading-spinner.component'
 import { UserMenuComponent } from '../../organisms/user-menu/user-menu.component'
+import { MainPaneComponent } from '../main-pane/main-pane.component'
+import { MenuToggleComponent } from './menu-toggle/menu-toggle.component'
 import { SidebarLayoutComponent } from './sidebar-layout.component'
 
 const setupComponent = (template: string) => {
@@ -21,9 +23,12 @@ const setupComponent = (template: string) => {
             LoadingSpinnerComponent,
             IconComponent,
             CdkMenuTrigger,
+            MainPaneComponent,
+            MenuToggleComponent,
         ],
     })
 }
+
 const defaultContent = `
     <ng-container sidebarHeader>sidebar header</ng-container>
     <ng-container sidebarContent>${Array(30)
@@ -31,12 +36,18 @@ const defaultContent = `
         .map(() => '<p>sidebar content</p>')
         .join('')}</ng-container>
 
-    <ng-container header><div class="w-full">Header</div></ng-container>
-
-    ${Array(30)
-        .fill('')
-        .map(() => '<p>main content</p>')
-        .join('')}
+    <app-main-pane>
+        <ng-container header>
+            Header
+            <app-menu-toggle index="1"></app-menu-toggle>
+        </ng-container>
+        <ng-container main>
+        ${Array(30)
+            .fill('')
+            .map(() => '<p>main content</p>')
+            .join('')}
+        </ng-container>
+    </app-main-pane>
 `
 const defaultTemplate = `<app-sidebar-layout> ${defaultContent} </app-sidebar-layout>`
 

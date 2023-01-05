@@ -11,4 +11,5 @@ export const environment: AppEnvironment = {
     PACKAGE_VERSION: env.NG_APP_PACKAGE_VERSION,
     SERVER_BASE_URL: env.NG_APP_SERVER_BASE_URL || serverBaseUrl,
     CONTEXT: context,
+    REVIEW_ID: env.NG_APP_REVIEW_ID,
 }

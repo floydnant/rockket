@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core'
+import { MenuService } from './menu.service'
 
 @Component({
     selector: 'app-sidebar-layout',
@@ -6,12 +7,12 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } fro
     styleUrls: ['./sidebar-layout.component.css'],
 })
 export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
-    @Input() prose = true
+    constructor(private menuService: MenuService) {}
+
     @Input() enableResize = true
 
-    isMenuOpen = true
+    isMenuOpen$ = this.menuService.isMenuOpen$
 
-    // @TODO: Make the prose width adjustable with a drag, or have a couple presets
     @ViewChild('resizeHandle') resizeHandle!: ElementRef<HTMLDivElement>
 
     ngAfterViewInit(): void {
@@ -21,7 +22,6 @@ export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
         }
 
         this.observer.observe(this.sidebarScrollSpy.nativeElement)
-        this.observer.observe(this.mainScrollSpy.nativeElement)
     }
     ngOnDestroy(): void {
         if (this.enableResize) {
@@ -47,14 +47,10 @@ export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
     isSidebarScrolled = false
     @ViewChild('sidebarScrollSpy') sidebarScrollSpy!: ElementRef<HTMLDivElement>
 
-    isMainScrolled = false
-    @ViewChild('mainScrollSpy') mainScrollSpy!: ElementRef<HTMLDivElement>
-
     observer = new IntersectionObserver(
         entries => {
             entries.forEach(entry => {
                 if (entry.target == this.sidebarScrollSpy.nativeElement) this.isSidebarScrolled = !entry.isIntersecting
-                if (entry.target == this.mainScrollSpy.nativeElement) this.isMainScrolled = !entry.isIntersecting
             })
         },
         { threshold: [1] }

@@ -1,14 +1,14 @@
 import { Component } from '@angular/core'
-import { ITask, prioritySortingMap, statusSortingMap, TaskPriority, TaskStatus } from '../../../models/task.model'
+import { Task, prioritySortingMap, statusSortingMap, TaskPriority, TaskStatus } from '../../../models/task.model'
 
-type TaskSorter = (a: ITask, b: ITask) => number
+type TaskSorter = (a: Task, b: Task) => number
 
 const sortByStatus: TaskSorter = (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status]
 const sortByPriority: TaskSorter = (a, b) => prioritySortingMap[a.priority] - prioritySortingMap[b.priority]
 
 const tasklist = Object.values(TaskStatus)
     .map(status =>
-        Object.values(TaskPriority).map<Partial<ITask>>((priority, i) => ({
+        Object.values(TaskPriority).map<Partial<Task>>((priority, i) => ({
             title: `This is a task (${status}, ${priority})`,
             description:
                 i % 2 == 0
@@ -20,7 +20,7 @@ const tasklist = Object.values(TaskStatus)
     )
     .flat()
 
-const sortTasklist = (tasklist: ITask[]) => {
+const sortTasklist = (tasklist: Task[]) => {
     const openTasks = tasklist
         .filter(
             // prettier-ignore
@@ -42,5 +42,5 @@ const sortTasklist = (tasklist: ITask[]) => {
     styleUrls: [],
 })
 export class TasksDemoComponent {
-    tasks: ITask[] = sortTasklist(tasklist as unknown as ITask[])
+    tasks: Task[] = sortTasklist(tasklist as unknown as Task[])
 }

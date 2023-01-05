@@ -1,4 +1,4 @@
-import { User } from 'src/app/models'
+import { User } from 'src/app/models/user.model'
 import { PartialRequired } from 'src/app/utils/type.helpers'
 
 export interface UserState {

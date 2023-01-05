@@ -3,8 +3,8 @@ import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { TaskPriority, TaskStatus } from 'src/app/models/task.model'
 import { DoubleEllipsisIconComponent } from '../../atoms/icons/double-ellipsis-icon/double-ellipsis-icon.component'
 import { IconComponent } from '../../atoms/icons/icon/icon.component'
+import { IconsModule } from '../../atoms/icons/icons.module'
 import { PriorityIconComponent } from '../../atoms/icons/priority-icon/priority-icon.component'
-import { StatusIconComponent } from '../../atoms/icons/status-icon/status-icon.component'
 
 import { TaskComponent } from './task.component'
 
@@ -14,14 +14,8 @@ describe('TaskComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                TaskComponent,
-                FocusableDirective,
-                StatusIconComponent,
-                PriorityIconComponent,
-                IconComponent,
-                DoubleEllipsisIconComponent,
-            ],
+            imports: [IconsModule],
+            declarations: [TaskComponent, FocusableDirective],
         }).compileComponents()
     })
 
@@ -33,6 +27,16 @@ describe('TaskComponent', () => {
             priority: TaskPriority.NONE,
             status: TaskStatus.OPEN,
             description: '',
+            listId: '',
+            ownerId: '',
+            closedAt: '',
+            deadline: '',
+            openedAt: '',
+            createdAt: '',
+            subtaskIds: [],
+            blockedById: '',
+            parentTaskId: '',
+            inProgressSince: '',
         }
         fixture.detectChanges()
     })

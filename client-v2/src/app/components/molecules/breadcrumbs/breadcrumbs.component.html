@@ -1,0 +1,39 @@
+<!-- @TODO: Fix the header width issue (breadcrumbs taking more than allowed) -->
+<div
+    class="breadcrumbs | flex w-full flex-wrap py-2 px-4 text-tinted-300"
+    cdkMenuBar
+    data-test-name="breadcrumbs-container"
+>
+    <div *ngFor="let breadcrumb of breadcrumbs; let isLast = last" class="flex max-w-[80%]">
+        <button
+            class="breadcrumb | menu-item | truncate py-0 px-1.5"
+            [class.text-tinted-100]="isLast"
+            cdkMenuItem
+            [cdkContextMenuTriggerFor]="menu"
+            [routerLink]="breadcrumb.route"
+            #trigger="cdkContextMenuTriggerFor"
+            data-test-name="breadcrumb"
+        >
+            <!-- appTooltip="Here will be more information" -->
+            <ng-template #menu>
+                <app-drop-down
+                    *ngIf="breadcrumb.contextMenuItems?.length"
+                    [items]="breadcrumb.contextMenuItems!"
+                    [rootTrigger]="trigger"
+                ></app-drop-down>
+            </ng-template>
+
+            <app-entity-page-label
+                *ngIf="isPageEntityIcon(breadcrumb.icon); else genericIcon"
+                [title]="breadcrumb.title"
+                [pageIcon]="breadcrumb.icon"
+            ></app-entity-page-label>
+
+            <ng-template #genericIcon>
+                <app-icon [iconClass]="breadcrumb.icon" *ngIf="breadcrumb.icon"></app-icon>
+                <span class="truncate">{{ breadcrumb.title }}</span>
+            </ng-template>
+        </button>
+        <span class="seperator | mx-0.5 text-tinted-500" *ngIf="!isLast">/</span>
+    </div>
+</div>

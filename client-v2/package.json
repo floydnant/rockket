@@ -3,7 +3,7 @@
     "version": "2.0.0",
     "scripts": {
         "dev": "ng serve",
-        "dev:lan": "ng serve --host 0.0.0.0",
+        "dev:lan": "echo \"Listening on http://$(ipconfig getifaddr en0):4200\" && NG_APP_SERVER_BASE_URL=http://$(ipconfig getifaddr en0):3000 ng serve --host 0.0.0.0",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
         "update-colors": "ts-node ./tools/update-colors.cts",
@@ -34,6 +34,7 @@
         "@angular/router": "^14.2.12",
         "@ngneat/hot-toast": "^4.1.0",
         "@ngneat/overview": "^3.0.0",
+        "@ngneat/until-destroy": "^9.2.2",
         "@ngrx/effects": "^14.3.2",
         "@ngrx/store": "^14.3.2",
         "@ngrx/store-devtools": "^14.3.2",

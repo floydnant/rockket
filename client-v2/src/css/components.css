@@ -4,12 +4,16 @@
         @apply text-submit-500 hover:text-submit-400 hover:underline;
     }
 
+    .button-m {
+        @apply rounded-md bg-tinted-800 px-2 py-0.5 text-tinted-300 transition-colors hover:bg-tinted-700 hover:text-tinted-100;
+    }
+    /*  This should be button-lg */
     .button {
         @apply rounded-md bg-tinted-500 py-2 px-5 font-semibold text-tinted-100 transition-colors hover:bg-tinted-600;
     }
 
     .button-naked {
-        @apply rounded py-0.5 px-2 transition-colors hover:bg-tinted-700;
+        @apply rounded-md py-0.5 px-2 transition-colors hover:bg-tinted-700;
         /* hover:text-tinted-100 */
     }
     .button-naked i {
@@ -36,6 +40,11 @@
     }
     .input::placeholder {
         @apply text-tinted-300;
+    }
+
+    .show-placeholder::before {
+        content: attr(data-placeholder);
+        @apply text-tinted-400;
     }
 
     :is(.input, .button)[disabled] {

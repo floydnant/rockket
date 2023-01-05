@@ -39,6 +39,17 @@ import { IconsModule } from './components/atoms/icons/icons.module'
 import { OverlayModule } from '@angular/cdk/overlay'
 import { TooltipDirective } from './directives/tooltip.directive'
 import { TooltipComponent } from './components/atoms/tooltip/tooltip.component'
+import { CdkTreeModule } from '@angular/cdk/tree'
+import { EntityPageLabelComponent } from './components/atoms/entity-page-label/entity-page-label.component'
+import { EntityPageComponent } from './pages/home/entity-page/entity-page.component'
+import { BreadcrumbsComponent } from './components/molecules/breadcrumbs/breadcrumbs.component'
+import { MainPaneComponent } from './components/templates/main-pane/main-pane.component'
+import { MutationDirective } from './directives/mutation.directive'
+import { MenuToggleComponent } from './components/templates/sidebar-layout/menu-toggle/menu-toggle.component'
+import { DashboardComponent } from './pages/home/dashboard/dashboard.component'
+import { EntityViewComponent } from './components/organisms/entity-view/entity-view.component'
+import { TasklistViewComponent } from './components/organisms/entity-view/views/tasklist-view/tasklist-view.component'
+import { EditableEntityNameComponent } from './components/molecules/editable-entity-heading/editable-entity-name.component'
 
 @NgModule({
     declarations: [
@@ -67,6 +78,16 @@ import { TooltipComponent } from './components/atoms/tooltip/tooltip.component'
         DropDownComponent,
         TooltipDirective,
         TooltipComponent,
+        EntityPageLabelComponent,
+        EntityPageComponent,
+        BreadcrumbsComponent,
+        MainPaneComponent,
+        MutationDirective,
+        MenuToggleComponent,
+        DashboardComponent,
+        EntityViewComponent,
+        TasklistViewComponent,
+        EditableEntityNameComponent,
     ],
     imports: [
         BrowserModule,
@@ -104,6 +125,7 @@ import { TooltipComponent } from './components/atoms/tooltip/tooltip.component'
         IconsModule,
         ModalModule,
         OverlayModule,
+        CdkTreeModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

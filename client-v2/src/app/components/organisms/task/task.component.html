@@ -15,7 +15,7 @@
                 [appTooltip]="blocked || data.status"
                 [tooltipOptions]="{ avoidPositions: ['right'] }"
             >
-                <status-icon [status]="loading || blocked || data.status"></status-icon>
+                <page-entity-icon [icon]="loading || blocked || data.status"></page-entity-icon>
             </span>
             <span
                 focusable
@@ -58,7 +58,7 @@
         focusable
         #notesFocusable="focusable"
         [class]="{ hidden: !data.description && !notesFocusable.isFocused }"
-        class="notes | mt-1 rounded-lg bg-tinted-900 py-1 px-2 text-tinted-300 outline-none ring-primary-400 transition-colors duration-75 focus:ring-2"
+        class="notes | mt-1 rounded-lg bg-tinted-900 py-1 px-2 text-tinted-300 outline-none ring-primary-400 transition-all duration-75 focus:ring-2"
         contenteditable
     >
         {{ this.loading || data.description }}

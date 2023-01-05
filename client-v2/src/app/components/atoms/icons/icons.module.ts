@@ -5,7 +5,6 @@ import { IconComponent } from './icon/icon.component'
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component'
 import { PageEntityIconComponent } from './page-entity-icon/page-entity-icon.component'
 import { PriorityIconComponent } from './priority-icon/priority-icon.component'
-import { StatusIconComponent } from './status-icon/status-icon.component'
 
 @NgModule({
     declarations: [
@@ -14,7 +13,6 @@ import { StatusIconComponent } from './status-icon/status-icon.component'
         LoadingSpinnerComponent,
         PageEntityIconComponent,
         PriorityIconComponent,
-        StatusIconComponent,
     ],
     imports: [CommonModule],
     exports: [
@@ -23,7 +21,6 @@ import { StatusIconComponent } from './status-icon/status-icon.component'
         LoadingSpinnerComponent,
         PageEntityIconComponent,
         PriorityIconComponent,
-        StatusIconComponent,
     ],
 })
 export class IconsModule {}

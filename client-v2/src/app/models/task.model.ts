@@ -29,10 +29,40 @@ export const prioritySortingMap: Record<TaskPriority, number> = {
     [TaskPriority.OPTIONAL]: 4,
 }
 
-export interface ITask {
+export interface Task {
     title: string
     description: string
     status: TaskStatus
     priority: TaskPriority
-    // more to come: createdAt, openedAt, inProgressSince, closedAt, events, deadline, blockedBy
+
+    createdAt: string
+    openedAt: string
+    deadline: string
+    inProgressSince: string
+    closedAt: string
+
+    ownerId: string
+    listId: string
+    parentTaskId: string
+    blockedById: string
+
+    subtaskIds: string[]
 }
+
+// @TODO: ITaskEvent
+
+type TaskUpdatable = Pick<
+    Task,
+    'title' | 'description' | 'status' | 'priority' | 'listId' | 'parentTaskId' | 'deadline' | 'blockedById'
+>
+export type CreateTaskDto = Pick<TaskUpdatable, 'title'> & Partial<TaskUpdatable>
+export type UpdateTaskDto = Partial<TaskUpdatable>
+
+// Task comments
+export interface TaskComment {
+    id: string
+    taskId: string
+    text: string
+}
+export type CreateTaskCommentDto = Pick<TaskComment, 'text'>
+export type UpdateTaskCommentDto = CreateTaskCommentDto

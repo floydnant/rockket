@@ -59,6 +59,7 @@ export class TooltipDirective {
     showTooltip(): void {
         if (this.overlayRef?.hasAttached()) return
 
+        // @TODO: skip this on mobile
         this.attachTooltip()
     }
 
