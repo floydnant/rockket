@@ -1,24 +1,49 @@
 export type NetlifyContext = 'production' | 'deploy-preview' | 'branch-deploy' | 'dev'
 export type AppContext = 'Production' | 'Review' | 'Staging' | 'Development' | 'Testing'
 
-// @TODO: #230 Fix this `process is not defined` issue occuring in cypress, sometimes in the build (btw wtf, why not always?)
-// eslint-disable-next-line no-var, @typescript-eslint/no-explicit-any
-// var process: any = process || {
-//     env: {},
-// }
-
-export const env = {
-    NG_APP_ENV: process.env['NG_APP_ENV'] as string,
-    NG_APP_PACKAGE_VERSION: process.env['NG_APP_PACKAGE_VERSION'] as string,
+interface Env {
+    NG_APP_ENV: string
+    NG_APP_PACKAGE_VERSION: string
 
     /** DEPLOYMENT ONLY */
-    NG_APP_REVIEW_ID: process.env['NG_APP_REVIEW_ID'],
+    NG_APP_REVIEW_ID: string | undefined
     /** DEPLOYMENT ONLY */
-    NG_APP_NETLIFY_CONTEXT: process.env['NG_APP_NETLIFY_CONTEXT'] as NetlifyContext | undefined,
+    NG_APP_NETLIFY_CONTEXT: NetlifyContext | undefined
 
-    NG_APP_TESTING_ENV: process.env['NG_APP_TESTING_ENV'] as 'true' | undefined,
-    NG_APP_SERVER_BASE_URL: process.env['NG_APP_SERVER_BASE_URL'],
+    NG_APP_TESTING_ENV: 'true' | undefined
+    NG_APP_SERVER_BASE_URL: string | undefined
+
+    WARNING?: string
 }
+
+declare const process: { env: Record<string, string | undefined> }
+export const env: Env = (() => {
+    try {
+        return {
+            NG_APP_ENV: process.env['NG_APP_ENV'] as string,
+            NG_APP_PACKAGE_VERSION: process.env['NG_APP_PACKAGE_VERSION'] as string,
+
+            NG_APP_REVIEW_ID: process.env['NG_APP_REVIEW_ID'],
+            NG_APP_NETLIFY_CONTEXT: process.env['NG_APP_NETLIFY_CONTEXT'] as NetlifyContext | undefined,
+
+            NG_APP_TESTING_ENV: process.env['NG_APP_TESTING_ENV'] as 'true' | undefined,
+            NG_APP_SERVER_BASE_URL: process.env['NG_APP_SERVER_BASE_URL'],
+        }
+    } catch (error) {
+        return {
+            WARNING: 'Current build config does not support environment variables.',
+
+            NG_APP_ENV: '',
+            NG_APP_PACKAGE_VERSION: '',
+
+            NG_APP_REVIEW_ID: undefined,
+            NG_APP_NETLIFY_CONTEXT: undefined,
+
+            NG_APP_TESTING_ENV: undefined,
+            NG_APP_SERVER_BASE_URL: undefined,
+        }
+    }
+})()
 
 export const contextMap: Record<NetlifyContext | 'testing', AppContext> = {
     production: 'Production',
