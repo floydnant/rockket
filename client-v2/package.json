@@ -46,7 +46,7 @@
     "@angular-devkit/build-angular": "^15.0.5",
     "@angular/cli": "^15.0.5",
     "@angular/compiler-cli": "^15.0.4",
-    "@cypress/schematic": "^2.3.0",
+    "@cypress/schematic": "^2.4.0",
     "@html-eslint/parser": "^0.15.0",
     "@ngx-env/builder": "^2.2.0",
     "@types/jasmine": "~4.3.1",
