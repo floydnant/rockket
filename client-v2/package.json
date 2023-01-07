@@ -38,7 +38,7 @@
         "@ngrx/effects": "^14.3.2",
         "@ngrx/store": "^14.3.2",
         "@ngrx/store-devtools": "^14.3.2",
-        "rxjs": "~7.5.0",
+        "rxjs": "~7.8.0",
         "tslib": "^2.4.1",
         "zone.js": "^0.12.0"
     },
