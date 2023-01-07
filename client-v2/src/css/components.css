@@ -1,3 +1,4 @@
+@tailwind components;
 @layer components {
     a:not([class|='button'], .skip-default-a-styles),
     .link {
@@ -56,4 +57,43 @@
         background-position: 4px 4px;
         background-size: 27px 27px;
     }
+
+    /* Related to cdk stuff */
+    .dropdown-menu {
+        min-width: 180px;
+        max-width: 280px;
+        @apply mx-2 flex flex-col gap-0.5 rounded-xl border border-tinted-800 bg-tinted-900 p-2 shadow-lg;
+    }
+
+    .menu-item {
+        @apply button-naked text-left;
+    }
+
+    .menu-item:is(:hover, :active, :focus-visible):is(.menu-item--default, :not([class*='menu-item--'])) {
+        @apply bg-tinted-700 outline-none;
+    }
+
+    .menu-item.menu-item--danger {
+        @apply text-danger-400 outline-none;
+    }
+    .menu-item.menu-item--danger:is(:hover, :active, :focus-visible) {
+        @apply bg-danger-400 text-danger-900;
+    }
+
+    .menu-item.menu-item--submit {
+        @apply text-submit-500 outline-none;
+    }
+    .menu-item.menu-item--submit:is(:hover, :active, :focus-visible) {
+        @apply bg-submit-400 text-submit-900;
+    }
+
+    /* .standalone-item {
+        background-color: rgb(239, 239, 239);
+    }
+    .standalone-item:hover {
+        background-color: rgb(208, 208, 208);
+    }
+    .standalone-item[aria-expanded='true'] {
+        background-color: rgb(208, 208, 208);
+    } */
 }
