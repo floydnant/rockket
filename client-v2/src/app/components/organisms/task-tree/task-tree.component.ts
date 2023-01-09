@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { BehaviorSubject, of } from 'rxjs'
-import { TaskPreview, TaskPriority, TaskStatus } from 'src/app/models/task.model'
+import { TaskPreview, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { getGeneralMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { taskActions } from 'src/app/store/entities/entities.actions'

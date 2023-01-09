@@ -5,7 +5,12 @@ import { BehaviorSubject, combineLatest, merge } from 'rxjs'
 import { distinctUntilChanged, first, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
-import { prioritySortingMap, statusSortingMap, TaskPreview, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import {
+    prioritySortingMap,
+    statusSortingMap,
+    TaskPreview,
+    TaskStatus,
+} from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
 import { listActions, taskActions } from 'src/app/store/entities/entities.actions'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
@@ -95,14 +100,16 @@ export class TasklistViewComponent {
 
     digest$ = this.tasks$.pipe(
         map(tasks => {
-            if (!tasks?.length) return null
+            if (!tasks) return null
             const sortedTasks = structuredClone(tasks).sort(sortByStatus).sort(sortByPriority)
 
             const open = tasks.filter(task => task.status == TaskStatus.OPEN || task.status == TaskStatus.BACKLOG)
             const inProgress = tasks.filter(task => task.status == TaskStatus.IN_PROGRESS)
-            const closed = tasks.filter(task => task.status == TaskStatus.COMPLETED || task.status == TaskStatus.CLOSED)
+            const closed = tasks.filter(
+                task => task.status == TaskStatus.COMPLETED || task.status == TaskStatus.NOT_PLANNED
+            )
 
-            const progress = (closed.length / tasks.length) * 100
+            const progress = (closed.length / tasks.length) * 100 || 0
             return {
                 all: sortedTasks,
                 open,
