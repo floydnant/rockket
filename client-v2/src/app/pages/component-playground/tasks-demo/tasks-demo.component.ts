@@ -1,5 +1,12 @@
 import { Component } from '@angular/core'
-import { Task, prioritySortingMap, statusSortingMap, TaskPriority, TaskStatus } from '../../../models/task.model'
+import {
+    prioritySortingMap,
+    statusSortingMap,
+    Task,
+    TaskPreview,
+    TaskPriority,
+    TaskStatus,
+} from '../../../models/task.model'
 
 type TaskSorter = (a: Task, b: Task) => number
 
@@ -24,14 +31,14 @@ const sortTasklist = (tasklist: Task[]) => {
     const openTasks = tasklist
         .filter(
             // prettier-ignore
-            t => t.status != TaskStatus.NOT_PLANNED &&
+            t => t.status != TaskStatus.CLOSED &&
                 t.status != TaskStatus.COMPLETED &&
                 t.status != TaskStatus.BACKLOG
         )
         .sort(sortByStatus)
         .sort(sortByPriority)
     const backlogTasks = tasklist.filter(t => t.status == TaskStatus.BACKLOG).sort(sortByPriority)
-    const closedTasks = tasklist.filter(t => t.status == TaskStatus.NOT_PLANNED || t.status == TaskStatus.COMPLETED) // @TODO: sort by closedAt
+    const closedTasks = tasklist.filter(t => t.status == TaskStatus.CLOSED || t.status == TaskStatus.COMPLETED) // @TODO: sort by closedAt
 
     return [...openTasks, ...backlogTasks, ...closedTasks]
 }
@@ -42,5 +49,5 @@ const sortTasklist = (tasklist: Task[]) => {
     styleUrls: [],
 })
 export class TasksDemoComponent {
-    tasks: Task[] = sortTasklist(tasklist as unknown as Task[])
+    tasks: TaskPreview[] = sortTasklist(tasklist as unknown as Task[])
 }

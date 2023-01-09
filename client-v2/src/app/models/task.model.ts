@@ -4,7 +4,7 @@ export enum TaskStatus {
     OPEN = 'Open',
     IN_PROGRESS = 'In_Progress',
     COMPLETED = 'Completed',
-    NOT_PLANNED = 'Not Planned',
+    CLOSED = 'Closed',
 }
 
 export const statusSortingMap: Record<TaskStatus, number> = {
@@ -12,7 +12,7 @@ export const statusSortingMap: Record<TaskStatus, number> = {
     [TaskStatus.OPEN]: 1,
     [TaskStatus.BACKLOG]: 2,
     [TaskStatus.COMPLETED]: 3,
-    [TaskStatus.NOT_PLANNED]: 4,
+    [TaskStatus.CLOSED]: 4,
 }
 
 export enum TaskPriority {
