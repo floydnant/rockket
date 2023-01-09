@@ -1,12 +1,15 @@
 import { createReducer, on } from '@ngrx/store'
 import { EntityType } from 'src/app/models/entities.model'
 import { TasklistDetail } from 'src/app/models/list.model'
-import { entitiesActions, listActions } from './entities.actions'
+import { TaskPreview } from 'src/app/models/task.model'
+import { entitiesActions, listActions, taskActions } from './entities.actions'
 import { EntitiesState } from './entities.state'
 import { getParentByChildId, getEntityById, buildEntityTree } from './utils'
 
 const initialState: EntitiesState = {
     entityTree: null,
+    taskTreeMap: null,
+
     [EntityType.TASKLIST]: null,
 
     // ...(Object.fromEntries(Object.values(EntityType).map(key => [key, null])) as Record<EntityType, null>),
@@ -94,6 +97,29 @@ export const entitiesReducer = createReducer(
                     ...previousTasklistDetail,
                     description: newDescription,
                 },
+            },
+        }
+    }),
+
+    ////////////////////////////////// Task ////////////////////////////////////
+    on(taskActions.loadRootLevelTasksSuccess, (state, { listId: id, tasks }) => {
+        return {
+            ...state,
+            taskTreeMap: {
+                ...(state.taskTreeMap || {}),
+                [id]: tasks,
+            },
+        }
+    }),
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    on(taskActions.createSuccess, (state, { type, ...task }) => {
+        const previousTasks: TaskPreview[] = state.taskTreeMap?.[task.listId] || []
+        return {
+            ...state,
+            taskTreeMap: {
+                ...(state.taskTreeMap || {}),
+                [task.listId]: [...previousTasks, task],
             },
         }
     })
