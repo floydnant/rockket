@@ -10,7 +10,7 @@ const initialState: EntitiesState = {
     entityDetails: {
         [EntityType.TASKLIST]: {},
     },
-    
+
     taskTreeMap: null,
 }
 

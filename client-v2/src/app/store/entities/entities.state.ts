@@ -12,5 +12,5 @@ export interface EntitiesState {
     } // @TODO: satisfies Record<EntityType, any>
 
     /** Mapped to their tasklist */
-    taskTreeMap: TaskTreeMap | null // @TODO: should be tht recursive version
+    taskTreeMap: TaskTreeMap | null // @TODO: should be the recursive version
 }
