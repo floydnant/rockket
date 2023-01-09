@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { storeMock } from 'src/app/utils/unit-test.mocks'
 
 import { TaskTreeComponent } from './task-tree.component'
 
@@ -9,6 +10,7 @@ describe('TaskTreeComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [TaskTreeComponent],
+            providers: [storeMock],
         }).compileComponents()
 
         fixture = TestBed.createComponent(TaskTreeComponent)

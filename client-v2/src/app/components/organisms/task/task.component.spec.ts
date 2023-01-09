@@ -1,3 +1,4 @@
+import { CdkMenuModule } from '@angular/cdk/menu'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { TaskPriority, TaskStatus } from 'src/app/models/task.model'
@@ -14,7 +15,7 @@ describe('TaskComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [IconsModule],
+            imports: [IconsModule, CdkMenuModule],
             declarations: [TaskComponent, FocusableDirective],
         }).compileComponents()
     })
@@ -22,21 +23,22 @@ describe('TaskComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(TaskComponent)
         component = fixture.componentInstance
-        component.data = {
+        component.task = {
+            id: '',
             title: 'Task title here',
             priority: TaskPriority.NONE,
             status: TaskStatus.OPEN,
             description: '',
             listId: '',
-            ownerId: '',
-            closedAt: '',
-            deadline: '',
-            openedAt: '',
-            createdAt: '',
-            subtaskIds: [],
-            blockedById: '',
+            // ownerId: '',
+            // closedAt: '',
+            // deadline: '',
+            // openedAt: '',
+            // createdAt: '',
+            // subtaskIds: [],
+            // blockedById: '',
             parentTaskId: '',
-            inProgressSince: '',
+            // inProgressSince: '',
         }
         fixture.detectChanges()
     })
