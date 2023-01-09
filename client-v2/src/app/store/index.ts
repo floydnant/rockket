@@ -9,6 +9,7 @@ import { entitiesReducer } from './entities/entities.reducer'
 import { EntitiesState } from './entities/entities.state'
 import { ListEffects } from './entities/list.effects'
 import { EntitiesEffects } from './entities/entities.effects'
+import { TaskEffects } from './entities/task.effects'
 
 export interface AppState {
     user: UserState
@@ -19,7 +20,7 @@ export const reducers: ActionReducerMap<AppState> = {
     entities: entitiesReducer,
 }
 
-export const effects = [AppEffects, AuthEffects, AccountEffects, ListEffects, EntitiesEffects]
+export const effects = [AppEffects, AuthEffects, AccountEffects, ListEffects, EntitiesEffects, TaskEffects]
 
 const actionLogger: MetaReducer<AppState> = reducer => (state, action) => {
     const isErrorAction = /error/i.test(action.type)

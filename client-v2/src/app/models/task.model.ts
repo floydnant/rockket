@@ -1,7 +1,8 @@
+// @TODO: Update these fields in the backend
 export enum TaskStatus {
     BACKLOG = 'Backlog',
     OPEN = 'Open',
-    IN_PROGRESS = 'In Progress',
+    IN_PROGRESS = 'In_Progress',
     COMPLETED = 'Completed',
     NOT_PLANNED = 'Not Planned',
 }
@@ -30,6 +31,7 @@ export const prioritySortingMap: Record<TaskPriority, number> = {
 }
 
 export interface Task {
+    id: string
     title: string
     description: string
     status: TaskStatus
@@ -49,13 +51,19 @@ export interface Task {
     subtaskIds: string[]
 }
 
+export type TaskPreview = Pick<Task, 'id' | 'title' | 'status' | 'priority' | 'listId' | 'parentTaskId'> & {
+    description: string | null
+}
+
+export type TaskPreviewRecursive = TaskPreview & { children: TaskPreviewRecursive[] | null }
+
 // @TODO: ITaskEvent
 
 type TaskUpdatable = Pick<
     Task,
     'title' | 'description' | 'status' | 'priority' | 'listId' | 'parentTaskId' | 'deadline' | 'blockedById'
 >
-export type CreateTaskDto = Pick<TaskUpdatable, 'title'> & Partial<TaskUpdatable>
+export type CreateTaskDto = Pick<TaskUpdatable, 'title' | 'listId'> & Partial<TaskUpdatable>
 export type UpdateTaskDto = Partial<TaskUpdatable>
 
 // Task comments
