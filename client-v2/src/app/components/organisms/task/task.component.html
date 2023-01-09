@@ -1,33 +1,37 @@
 <li
+    *ngIf="task$ | async as task"
     class="task | flex w-full max-w-full list-none flex-col rounded-xl bg-tinted-800 py-2 px-1 pb-1 transition-colors duration-75"
     [class]="{
-        'bg-submit-800': data.status == TaskStatus.COMPLETED,
-        'text-submit-200': data.status == TaskStatus.COMPLETED,
-        completed: data.status == TaskStatus.COMPLETED,
-        titleHasFocus: titleFocusable.isFocused,
-        notesHasFocus: notesFocusable.isFocused
+        'bg-submit-800': task.status == TaskStatus.COMPLETED,
+        'text-submit-200': task.status == TaskStatus.COMPLETED,
+        completed: task.status == TaskStatus.COMPLETED,
+        titleHasFocus: titleFocusable.isFocused
     }"
 >
+    <!-- @TODO: Fix this -->
+    <!-- notesHasFocus: notesFocusable.isFocused -->
     <div class="mb-1 box-border flex max-w-full items-center justify-between gap-2 px-2">
         <div class="max-w-[calc(100%-1.7rem)]">
             <span
                 class="status | mr-2 text-lg"
-                [appTooltip]="blocked || data.status"
+                [appTooltip]="blocked || task.status"
                 [tooltipOptions]="{ avoidPositions: ['right'] }"
             >
-                <page-entity-icon [icon]="loading || blocked || data.status"></page-entity-icon>
+                <page-entity-icon [icon]="loading || blocked || task.status"></page-entity-icon>
             </span>
             <span
+                #taskTitle
                 focusable
                 #titleFocusable="focusable"
                 class="title | outline-none"
                 [class]="{
-                    'line-through': data.status == TaskStatus.NOT_PLANNED,
-                    'decoration-danger-400': data.status == TaskStatus.NOT_PLANNED
+                    'line-through': task.status == TaskStatus.CLOSED,
+                    'decoration-danger-400': task.status == TaskStatus.CLOSED
                 }"
                 contenteditable
+                (blur)="task.title != taskTitle.innerText && titleChange.emit(taskTitle.innerText)"
             >
-                {{ data.title }}
+                {{ task.title }}
             </span>
         </div>
         <div class="relative mr-0.5 max-w-max">
@@ -39,28 +43,38 @@
                 ></app-icon>
                 <priority-icon
                     *ngIf="
-                        data.status != TaskStatus.COMPLETED &&
-                        data.status != TaskStatus.NOT_PLANNED &&
-                        data.priority != TaskPriority.NONE
+                        task.status != TaskStatus.COMPLETED &&
+                        task.status != TaskStatus.CLOSED &&
+                        task.priority != TaskPriority.NONE
                     "
-                    [priority]="data.priority"
-                    [appTooltip]="data.priority"
+                    [priority]="task.priority"
+                    [appTooltip]="task.priority"
                     [tooltipOptions]="{ avoidPositions: ['left'] }"
                 ></priority-icon>
             </div>
             <double-ellipsis-icon
+                [cdkMenuTriggerFor]="menu"
+                #trigger="cdkMenuTriggerFor"
                 class="absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
             ></double-ellipsis-icon>
+            <ng-template #menu>
+                <app-drop-down
+                    [items]="(menuItems$ | async) || []"
+                    [rootTrigger]="trigger"
+                    [data]="task.id"
+                ></app-drop-down>
+            </ng-template>
         </div>
     </div>
 
     <div
+        *ngIf="task.description"
         focusable
         #notesFocusable="focusable"
-        [class]="{ hidden: !data.description && !notesFocusable.isFocused }"
+        [class]="{ hidden: !task.description && !notesFocusable.isFocused }"
         class="notes | mt-1 rounded-lg bg-tinted-900 py-1 px-2 text-tinted-300 outline-none ring-primary-400 transition-all duration-75 focus:ring-2"
         contenteditable
     >
-        {{ this.loading || data.description }}
+        {{ this.loading || task.description }}
     </div>
 </li>

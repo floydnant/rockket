@@ -50,6 +50,7 @@ import { DashboardComponent } from './pages/home/dashboard/dashboard.component'
 import { EntityViewComponent } from './components/organisms/entity-view/entity-view.component'
 import { TasklistViewComponent } from './components/organisms/entity-view/views/tasklist-view/tasklist-view.component'
 import { EditableEntityNameComponent } from './components/molecules/editable-entity-heading/editable-entity-name.component'
+import { TaskTreeComponent } from './components/organisms/task-tree/task-tree.component'
 
 @NgModule({
     declarations: [
@@ -88,6 +89,7 @@ import { EditableEntityNameComponent } from './components/molecules/editable-ent
         EntityViewComponent,
         TasklistViewComponent,
         EditableEntityNameComponent,
+        TaskTreeComponent,
     ],
     imports: [
         BrowserModule,

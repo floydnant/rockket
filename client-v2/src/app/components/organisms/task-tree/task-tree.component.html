@@ -1,0 +1,11 @@
+<div class="flex w-full flex-col gap-2">
+    <app-task
+        *ngFor="let task of tasks$ | async"
+        [task]="task"
+        [menuItems]="(menuItems$ | async) || []"
+        (titleChange)="onTitleChange(task.id, $event)"
+        (descriptionChange)="onDescriptionChange(task.id, $event)"
+        (statusChange)="onStatusChange(task.id, $event)"
+        (priorityChange)="onPriorityChange(task.id, $event)"
+    ></app-task>
+</div>
