@@ -1,2 +1,8 @@
+[environments.production.deploy]
+startCommand = 'DATABASE_URL=$DATABASE_BASE_URL/prod npm run start'
+
+[environments.Staging.deploy]
+startCommand = 'DATABASE_URL=$DATABASE_BASE_URL/main npm run start'
+
 [environments.pr.deploy]
 startCommand = 'DATABASE_URL=$DATABASE_BASE_URL/pr-$(bash ./get-pull-number-from-branch.sh $RAILWAY_GIT_BRANCH) npm run start'
