@@ -15,7 +15,7 @@ const defaultTemplate = `
 `
 
 const setupComponent = (template = defaultTemplate) => {
-    const entityViewComponents: typeof entityViewComponentMap[keyof typeof entityViewComponentMap][] = [
+    const entityViewComponents: (typeof entityViewComponentMap)[keyof typeof entityViewComponentMap][] = [
         TasklistViewComponent,
     ]
     cy.mount(template, {
