@@ -45,7 +45,7 @@ export class EntityPageComponent {
     breadcrumbs$ = this.activeEntityTrace$.pipe(
         map(trace =>
             trace?.map<Breadcrumb>(entity => ({
-                title: entity.name,
+                title: entity.title,
                 icon: EntityType.TASKLIST, // @TODO: Remove hardcoded value
                 route: `/home/${entity.id}`,
                 // @TODO: Remove hardcoded value

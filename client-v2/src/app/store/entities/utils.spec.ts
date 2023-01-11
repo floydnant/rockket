@@ -2,53 +2,53 @@ import { EntityPreview, EntityPreviewFlattend, EntityPreviewRecursive } from 'sr
 import { buildEntityTree, flattenEntityTree, getParentByChildId, traceEntity } from './utils'
 
 const entityPreviewsFixture: EntityPreview[] = [
-    { id: '1', name: 'First', childLists: ['3'], parentListId: '' },
-    { id: '2', name: 'Second', childLists: [], parentListId: '' },
-    { id: '3', name: 'First nested', childLists: ['4'], parentListId: '1' },
-    { id: '4', name: 'Deep nested', childLists: [], parentListId: '3' },
+    { id: '1', title: 'First', childLists: ['3'], parentListId: '' },
+    { id: '2', title: 'Second', childLists: [], parentListId: '' },
+    { id: '3', title: 'First nested', childLists: ['4'], parentListId: '1' },
+    { id: '4', title: 'Deep nested', childLists: [], parentListId: '3' },
 ]
 const entityTreeFixture: EntityPreviewRecursive[] = [
     {
         id: '1',
-        name: 'First',
+        title: 'First',
         parentListId: '',
         children: [
             {
                 id: '3',
-                name: 'First nested',
+                title: 'First nested',
                 parentListId: '1',
-                children: [{ id: '4', name: 'Deep nested', children: [], parentListId: '3' }],
+                children: [{ id: '4', title: 'Deep nested', children: [], parentListId: '3' }],
             },
         ],
     },
-    { id: '2', name: 'Second', parentListId: '', children: [] },
+    { id: '2', title: 'Second', parentListId: '', children: [] },
 ]
 
 const entityTreeFlattenedFixture: EntityPreviewFlattend[] = [
     {
         id: '1',
-        name: 'First',
+        title: 'First',
         parentListId: '',
         childrenCount: 1,
         path: [],
     },
     {
         id: '3',
-        name: 'First nested',
+        title: 'First nested',
         parentListId: '1',
         childrenCount: 1,
         path: ['1'],
     },
     {
         id: '4',
-        name: 'Deep nested',
+        title: 'Deep nested',
         parentListId: '3',
         childrenCount: 0,
         path: ['1', '3'],
     },
     {
         id: '2',
-        name: 'Second',
+        title: 'Second',
         parentListId: '',
         childrenCount: 0,
         path: [],
@@ -77,24 +77,24 @@ describe('Store entity utils', () => {
             const traceFixture: EntityPreviewRecursive[] = [
                 {
                     id: '1',
-                    name: 'First',
+                    title: 'First',
                     parentListId: '',
                     children: [
                         {
                             id: '3',
-                            name: 'First nested',
+                            title: 'First nested',
                             parentListId: '1',
-                            children: [{ id: '4', name: 'Deep nested', children: [], parentListId: '3' }],
+                            children: [{ id: '4', title: 'Deep nested', children: [], parentListId: '3' }],
                         },
                     ],
                 },
                 {
                     id: '3',
-                    name: 'First nested',
+                    title: 'First nested',
                     parentListId: '1',
-                    children: [{ id: '4', name: 'Deep nested', children: [], parentListId: '3' }],
+                    children: [{ id: '4', title: 'Deep nested', children: [], parentListId: '3' }],
                 },
-                { id: '4', name: 'Deep nested', children: [], parentListId: '3' },
+                { id: '4', title: 'Deep nested', children: [], parentListId: '3' },
             ]
             expect(trace).toEqual(traceFixture)
         })
@@ -104,7 +104,7 @@ describe('Store entity utils', () => {
         it('should return the correct result', () => {
             const result = getParentByChildId(entityTreeFixture, '4')
             const resultFixture: ReturnType<typeof getParentByChildId> = {
-                subTree: [{ id: '4', name: 'Deep nested', children: [], parentListId: '3' }],
+                subTree: [{ id: '4', title: 'Deep nested', children: [], parentListId: '3' }],
                 index: 0,
             }
 

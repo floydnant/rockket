@@ -19,5 +19,5 @@ export const users = {
 }
 
 export const newList: CreateTasklistDto = {
-    name: 'The new tasklist',
+    title: 'The new tasklist',
 }

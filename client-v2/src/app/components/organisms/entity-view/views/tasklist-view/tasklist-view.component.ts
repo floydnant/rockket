@@ -3,7 +3,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { BehaviorSubject, combineLatest, merge } from 'rxjs'
 import { distinctUntilChanged, first, map, shareReplay, switchMap, tap } from 'rxjs/operators'
-import { ENTITY_NAME_DEFAULTS } from 'src/app/models/defaults'
 import { EntityType } from 'src/app/models/entities.model'
 import { TasklistDetail } from 'src/app/models/list.model'
 import { prioritySortingMap, statusSortingMap, TaskPreview, TaskStatus } from 'src/app/models/task.model'
@@ -41,7 +40,6 @@ export class TasklistViewComponent {
     }
 
     EntityType = EntityType
-    DEFAULT_TASKLIST_NAME = ENTITY_NAME_DEFAULTS[EntityType.TASKLIST]
 
     entity$ = this.viewData.entity$
     detail$ = this.viewData.detail$
@@ -102,7 +100,9 @@ export class TasklistViewComponent {
 
             const open = tasks.filter(task => task.status == TaskStatus.OPEN || task.status == TaskStatus.BACKLOG)
             const inProgress = tasks.filter(task => task.status == TaskStatus.IN_PROGRESS)
-            const closed = tasks.filter(task => task.status == TaskStatus.COMPLETED || task.status == TaskStatus.CLOSED)
+            const closed = tasks.filter(
+                task => task.status == TaskStatus.COMPLETED || task.status == TaskStatus.NOT_PLANNED
+            )
 
             const progress = (closed.length / tasks.length) * 100
             return {

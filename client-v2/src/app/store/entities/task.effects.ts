@@ -4,6 +4,8 @@ import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { catchError, map, mergeMap, of } from 'rxjs'
 import { DialogService } from 'src/app/modal/dialog.service'
+import { ENTITY_TITLE_DEFAULTS } from 'src/app/models/defaults'
+import { EntityType } from 'src/app/models/entities.model'
 import { TaskService } from 'src/app/services/entity.services/task.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
@@ -38,10 +40,13 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(taskActions.create),
             mergeMap(dto => {
-                return this.taskService.create(dto).pipe(
+                const title = dto.title || 'NEVER' // ENTITY_TITLE_DEFAULTS[EntityType.TASK]
+                const res$ = this.taskService.create({ ...dto, title })
+
+                return res$.pipe(
                     this.toast.observe({
                         loading: 'Creating task...',
-                        success: `Created task '${dto.title}'`,
+                        success: `Created task '${title}'`,
                         error: getMessageFromHttpError,
                     }),
                     map(task => taskActions.createSuccess(task)),

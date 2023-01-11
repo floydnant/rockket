@@ -2,19 +2,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 
-import { EditableEntityNameComponent } from './editable-entity-name.component'
+import { EditableEntityTitleComponent } from './editable-entity-title.component'
 
 describe('EditableEntityHeadingComponent', () => {
-    let component: EditableEntityNameComponent
-    let fixture: ComponentFixture<EditableEntityNameComponent>
+    let component: EditableEntityTitleComponent
+    let fixture: ComponentFixture<EditableEntityTitleComponent>
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EditableEntityNameComponent, FocusableDirective],
+            declarations: [EditableEntityTitleComponent, FocusableDirective],
             providers: [storeMock, actionsMock],
         }).compileComponents()
 
-        fixture = TestBed.createComponent(EditableEntityNameComponent)
+        fixture = TestBed.createComponent(EditableEntityTitleComponent)
         component = fixture.componentInstance
         fixture.detectChanges()
     })

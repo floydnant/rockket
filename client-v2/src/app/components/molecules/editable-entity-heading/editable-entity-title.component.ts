@@ -16,7 +16,7 @@ import {
     switchMap,
     tap,
 } from 'rxjs'
-import { ENTITY_NAME_DEFAULTS } from 'src/app/models/defaults'
+import { ENTITY_TITLE_DEFAULTS } from 'src/app/models/defaults'
 import { EntityPreviewRecursive, EntityType } from 'src/app/models/entities.model'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
@@ -25,58 +25,58 @@ import { PageEntityState } from '../../atoms/icons/page-entity-icon/page-entity-
 
 @UntilDestroy()
 @Component({
-    selector: 'app-editable-entity-name',
-    templateUrl: './editable-entity-name.component.html',
-    styleUrls: ['./editable-entity-name.component.css'],
+    selector: 'app-editable-entity-title',
+    templateUrl: './editable-entity-title.component.html',
+    styleUrls: ['./editable-entity-title.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditableEntityNameComponent {
+export class EditableEntityTitleComponent {
     constructor(private store: Store<AppState>, private actions$: Actions) {}
 
     EntityType = EntityType
     PageEntityState = PageEntityState
-    ENTITY_NAME_DEFAULTS = ENTITY_NAME_DEFAULTS
+    ENTITY_TITLE_DEFAULTS = ENTITY_TITLE_DEFAULTS
 
-    @ViewChild('editableEntityName') editableEntityName!: ElementRef<HTMLSpanElement>
+    @ViewChild('editableEntityTitle') editableEntityTitle!: ElementRef<HTMLSpanElement>
 
     @Input() set entity(activeEntity: EntityPreviewRecursive | undefined | null) {
         this.entity$.next(activeEntity)
     }
     entity$ = new BehaviorSubject<EntityPreviewRecursive | undefined | null>(null)
 
-    entityName$ = this.entity$.pipe(
-        filter(entity => entity?.name != this.lastSentStoreUpdate),
+    entityTitle$ = this.entity$.pipe(
+        filter(entity => entity?.title != this.lastSentStoreUpdate),
         tap(() => (this.lastSentStoreUpdate = null)),
         map(entity => {
-            if (entity?.name == ENTITY_NAME_DEFAULTS[EntityType.TASKLIST]) return '' // @TODO: Remove hardcoded value
+            if (entity?.title == ENTITY_TITLE_DEFAULTS[EntityType.TASKLIST]) return '' // @TODO: Remove hardcoded value
 
-            return entity?.name
+            return entity?.title
         }),
-        distinctUntilChanged((prev, currEntityName) => {
-            if (prev === '' && currEntityName === '') return false
+        distinctUntilChanged((prev, currEntityTitle) => {
+            if (prev === '' && currEntityTitle === '') return false
 
-            return currEntityName == prev
+            return currEntityTitle == prev
         }),
-        switchMap(entityName => {
-            return this.entityNameChanges$.pipe(
+        switchMap(entityTitle => {
+            return this.entityTitleChanges$.pipe(
                 first(),
-                filter(newEntityName => {
-                    if (!newEntityName) return true
+                filter(newEntityTitle => {
+                    if (!newEntityTitle) return true
 
-                    return entityName != newEntityName
+                    return entityTitle != newEntityTitle
                 }),
-                map(() => entityName)
+                map(() => entityTitle)
             )
         }),
-        tap(entityName => {
-            /*  This is necessary in case of updating the entityname from empty to also empty.
-                Because apparently, angular does not do the update, which is bad when the entityname was edited before,
-                meaning, the edited entityname won't be overwritten. So we have to do that manually.
+        tap(entityTitle => {
+            /*  This is necessary in case of updating the entity title from empty to also empty.
+                Because apparently, angular does not do the update, which is bad when the entity title was edited before,
+                meaning, the edited entity title won't be overwritten. So we have to do that manually.
 
-                We could narrow this down even further with comparing to the previous entityname (`pairwise()` operator),
+                We could narrow this down even further with comparing to the previous entity title (`pairwise()` operator),
                 and only update if both are empty, but this should suffice for now. */
-            if (entityName === '' && this.editableEntityName?.nativeElement) {
-                this.editableEntityName.nativeElement.innerText = ''
+            if (entityTitle === '' && this.editableEntityTitle?.nativeElement) {
+                this.editableEntityTitle.nativeElement.innerText = ''
             }
         }),
         shareReplay({ bufferSize: 1, refCount: true })
@@ -84,18 +84,18 @@ export class EditableEntityNameComponent {
 
     keydownEvents$ = new BehaviorSubject<KeyboardEvent | null>(null)
     blurEvents$ = new BehaviorSubject<FocusEvent | null>(null)
-    entityNameChanges$ = new BehaviorSubject<string | null>(null)
+    entityTitleChanges$ = new BehaviorSubject<string | null>(null)
 
-    entityNameDomState$ = merge(
-        this.entityNameChanges$,
-        this.entityName$.pipe(
+    entityTitleDomState$ = merge(
+        this.entityTitleChanges$,
+        this.entityTitle$.pipe(
             tap(() => {
-                if (this.entityNameChanges$.value !== null) this.entityNameChanges$.next(null)
+                if (this.entityTitleChanges$.value !== null) this.entityTitleChanges$.next(null)
             })
         )
     ).pipe(shareReplay({ bufferSize: 1, refCount: true }))
 
-    entityNameUpdateEvents$ = merge(
+    entityTitleUpdateEvents$ = merge(
         this.keydownEvents$.pipe(
             filter(event => {
                 if (event?.code == 'Enter') {
@@ -104,38 +104,38 @@ export class EditableEntityNameComponent {
                 }
                 return false
             }),
-            switchMap(() => this.entityNameChanges$.pipe(first()))
+            switchMap(() => this.entityTitleChanges$.pipe(first()))
         ),
         this.blurEvents$.pipe(
             filter(e => !!e),
-            switchMap(() => this.entityNameChanges$.pipe(first()))
+            switchMap(() => this.entityTitleChanges$.pipe(first()))
         ),
-        this.entityNameChanges$.pipe(debounceTime(600))
+        this.entityTitleChanges$.pipe(debounceTime(600))
     ).pipe(
-        map(newEntityName => {
-            if (newEntityName === null) return null
+        map(newEntityTitle => {
+            if (newEntityTitle === null) return null
 
-            return newEntityName || ENTITY_NAME_DEFAULTS[EntityType.TASKLIST] // @TODO: Remove hardcoded value
+            return newEntityTitle || ENTITY_TITLE_DEFAULTS[EntityType.TASKLIST] // @TODO: Remove hardcoded value
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    entityNameUpdatesSubscription = this.entityNameUpdateEvents$
+    entityTitleUpdatesSubscription = this.entityTitleUpdateEvents$
         .pipe(
             distinctUntilChanged(),
-            switchMap(newName => {
+            switchMap(newTitle => {
                 return combineLatest([this.entity$, this.isLoading$]).pipe(
                     first(),
                     tap(([entity, isLoading]) => {
-                        if (!entity || !newName) return
+                        if (!entity || !newTitle) return
 
-                        const action = entitiesActions.rename({ id: entity.id, newName })
+                        const action = entitiesActions.rename({ id: entity.id, title: newTitle })
                         if (isLoading) {
                             this.updateQueue$.next(action)
                             return
                         }
 
-                        this.lastSentStoreUpdate = newName
+                        this.lastSentStoreUpdate = newTitle
                         this.store.dispatch(action)
                     })
                 )
@@ -165,7 +165,7 @@ export class EditableEntityNameComponent {
             map(queuedAction => {
                 if (queuedAction === null) return
 
-                this.lastSentStoreUpdate = queuedAction.newName
+                this.lastSentStoreUpdate = queuedAction.title
                 this.store.dispatch(queuedAction)
                 this.updateQueue$.next(null)
             }),

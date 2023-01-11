@@ -31,14 +31,14 @@ const sortTasklist = (tasklist: Task[]) => {
     const openTasks = tasklist
         .filter(
             // prettier-ignore
-            t => t.status != TaskStatus.CLOSED &&
+            t => t.status != TaskStatus.NOT_PLANNED &&
                 t.status != TaskStatus.COMPLETED &&
                 t.status != TaskStatus.BACKLOG
         )
         .sort(sortByStatus)
         .sort(sortByPriority)
     const backlogTasks = tasklist.filter(t => t.status == TaskStatus.BACKLOG).sort(sortByPriority)
-    const closedTasks = tasklist.filter(t => t.status == TaskStatus.CLOSED || t.status == TaskStatus.COMPLETED) // @TODO: sort by closedAt
+    const closedTasks = tasklist.filter(t => t.status == TaskStatus.NOT_PLANNED || t.status == TaskStatus.COMPLETED) // @TODO: sort by closedAt
 
     return [...openTasks, ...backlogTasks, ...closedTasks]
 }

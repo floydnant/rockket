@@ -29,7 +29,7 @@ export class ListRepository {
             where: { id: listId },
             select: {
                 id: true,
-                name: true,
+                title: true,
                 description: true,
                 ownerId: true,
                 createdAt: true,
@@ -67,7 +67,7 @@ export class ListRepository {
             },
             select: {
                 id: true,
-                name: true,
+                title: true,
                 childLists: { select: { id: true } },
             },
         })
@@ -86,7 +86,7 @@ export class ListRepository {
             select: {
                 id: true,
                 parentListId: true,
-                name: true,
+                title: true,
                 childLists: { select: { id: true } },
             },
         })

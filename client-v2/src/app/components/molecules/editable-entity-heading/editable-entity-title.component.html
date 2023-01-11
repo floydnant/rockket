@@ -11,16 +11,16 @@
     <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
     <span
         class="title | inline-block min-w-[2rem] cursor-text outline-none"
-        [innerText]="entityName$ | async"
-        [class.show-placeholder]="!(entityNameDomState$ | async)"
-        [attr.data-placeholder]="ENTITY_NAME_DEFAULTS[EntityType.TASKLIST]"
-        #editableEntityName
+        [innerText]="entityTitle$ | async"
+        [class.show-placeholder]="!(entityTitleDomState$ | async)"
+        [attr.data-placeholder]="ENTITY_TITLE_DEFAULTS[EntityType.TASKLIST]"
+        #editableEntityTitle
         contenteditable
         focusable
-        #entityNameFocusable="focusable"
-        [spellcheck]="entityNameFocusable.isFocused"
-        (textChanges)="entityNameChanges$.next($event)"
-        [mutationOptions]="{ plainOnly: true, observe: entityNameFocusable.isFocused }"
+        #entityTitleFocusable="focusable"
+        [spellcheck]="entityTitleFocusable.isFocused"
+        (textChanges)="entityTitleChanges$.next($event)"
+        [mutationOptions]="{ plainOnly: true, observe: entityTitleFocusable.isFocused }"
         (keydown)="keydownEvents$.next($event)"
         (blur)="blurEvents$.next($event)"
         data-test-name="editable-entity-name"

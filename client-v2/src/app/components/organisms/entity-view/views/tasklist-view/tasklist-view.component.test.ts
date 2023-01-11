@@ -3,10 +3,10 @@ import { testName } from 'cypress/support/helpers'
 import { BehaviorSubject, of } from 'rxjs'
 import { EntityPageLabelComponent } from 'src/app/components/atoms/entity-page-label/entity-page-label.component'
 import { DropDownComponent } from 'src/app/components/molecules/drop-down/drop-down.component'
-import { EditableEntityNameComponent } from 'src/app/components/molecules/editable-entity-heading/editable-entity-name.component'
+import { EditableEntityTitleComponent } from 'src/app/components/molecules/editable-entity-heading/editable-entity-title.component'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
-import { EntityPreviewRecursive } from 'src/app/models/entities.model'
+import { EntityPreviewRecursive, EntityType } from 'src/app/models/entities.model'
 import { TasklistDetail } from 'src/app/models/list.model'
 import { TaskTreeMap } from 'src/app/store/entities/entities.state'
 import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
@@ -30,7 +30,7 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
             TasklistViewComponent,
             MutationDirective,
             FocusableDirective,
-            EditableEntityNameComponent,
+            EditableEntityTitleComponent,
             EntityPageLabelComponent,
             DropDownComponent,
         ],
@@ -45,9 +45,10 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
 
 const entityFixture: EntityPreviewRecursive = {
     id: 'the mock id',
-    name: 'The mock name',
+    entityType: EntityType.TASKLIST,
+    title: 'The mock name',
     children: [],
-    parentListId: '',
+    parentId: '',
 }
 const entityDetailFixture: TasklistDetail = { description: null, createdAt: '', ownerId: '' }
 
@@ -59,7 +60,7 @@ describe('TasklistViewComponent', () => {
             options$: new BehaviorSubject(null),
         })
 
-        cy.get(testName('editable-entity-name')).contains(entityFixture.name)
+        cy.get(testName('editable-entity-name')).contains(entityFixture.title)
         cy.get(testName('description-editor')).should('be.hidden')
         cy.get(testName('entity-children')).should('not.exist')
     })
@@ -81,7 +82,13 @@ describe('TasklistViewComponent', () => {
     })
 
     describe('Children', () => {
-        const childEntity = { name: 'A child within', children: [], id: '123', parentListId: 'the mock id' }
+        const childEntity: EntityPreviewRecursive = {
+            title: 'A child within',
+            entityType: EntityType.TASKLIST,
+            children: [],
+            id: '123',
+            parentId: 'the mock id',
+        }
         beforeEach(() => {
             setupComponent({
                 entity$: new BehaviorSubject({
@@ -96,7 +103,7 @@ describe('TasklistViewComponent', () => {
         it('renders the children', () => {
             cy.get(testName('entity-children')).should('exist')
             cy.get(testName('entity-child')).should('have.length', 1)
-            cy.get(testName('entity-child')).contains(childEntity.name)
+            cy.get(testName('entity-child')).contains(childEntity.title)
         })
 
         it('right click on child opens menu', () => {

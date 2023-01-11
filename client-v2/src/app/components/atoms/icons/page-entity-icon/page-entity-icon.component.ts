@@ -19,7 +19,7 @@ export const taskStatusIconClassMap: Record<TaskIconKey, string> = {
     [TaskStatus.IN_PROGRESS]: 'far fa-clock text-secondary-400',
     [TaskStatus.BACKLOG]: 'fas fa-spinner text-tinted-300 rotate-[-45deg]',
     [TaskStatus.COMPLETED]: 'fas fa-check-circle text-submit-400',
-    [TaskStatus.CLOSED]: 'fas fa-times-circle text-danger-400',
+    [TaskStatus.NOT_PLANNED]: 'fas fa-times-circle text-danger-400',
     [TaskState.BLOCKED]: 'far fa-ban text-tinted-300',
     // [TaskState.LOADING]: 'far fa-spinner-third animate-spin text-tinted-200',
 }

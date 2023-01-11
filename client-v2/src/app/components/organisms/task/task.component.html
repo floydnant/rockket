@@ -25,8 +25,8 @@
                 #titleFocusable="focusable"
                 class="title | outline-none"
                 [class]="{
-                    'line-through': task.status == TaskStatus.CLOSED,
-                    'decoration-danger-400': task.status == TaskStatus.CLOSED
+                    'line-through': task.status == TaskStatus.NOT_PLANNED,
+                    'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED
                 }"
                 contenteditable
                 (blur)="task.title != taskTitle.innerText && titleChange.emit(taskTitle.innerText)"
@@ -44,7 +44,7 @@
                 <priority-icon
                     *ngIf="
                         task.status != TaskStatus.COMPLETED &&
-                        task.status != TaskStatus.CLOSED &&
+                        task.status != TaskStatus.NOT_PLANNED &&
                         task.priority != TaskPriority.NONE
                     "
                     [priority]="task.priority"

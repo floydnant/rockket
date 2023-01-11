@@ -5,7 +5,7 @@ import { enumInvalidMessage } from '../../utilities/validation'
 export class CreateTasklistDto {
     @IsNotEmpty()
     @IsString()
-    name: string
+    title: string
 
     @IsOptional()
     @IsString()
@@ -18,7 +18,7 @@ export class CreateTasklistDto {
 export class UpdateTasklistDto {
     @IsOptional()
     @IsString()
-    name?: string
+    title?: string
 
     @IsOptional()
     @IsString()

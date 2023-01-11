@@ -1,6 +1,6 @@
 export interface TaskList {
     id: string
-    name: string
+    title: string
     description: string | null
     createdAt: string
     ownerId: string
@@ -11,12 +11,12 @@ export interface TaskList {
     // participants: string[] // maybe this one as well
 }
 
-export type TasklistPreview = Pick<TaskList, 'id' | 'name' | 'childLists' | 'parentListId'>
+export type TasklistPreview = Pick<TaskList, 'id' | 'title' | 'childLists' | 'parentListId'>
 
 export type TasklistDetail = Pick<TaskList, 'description' | 'ownerId' | 'createdAt'>
 
-export interface CreateTasklistDto {
-    name: string
+export type CreateTasklistDto = {
+    title: string
     description?: string
     parentListId?: string
 }

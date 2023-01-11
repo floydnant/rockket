@@ -61,8 +61,8 @@ export class EntitiesService {
     loadDetail({ entityType, id }: EntityCrudDto) {
         return this.injectEntityService(entityType).loadDetail(id)
     }
-    rename({ entityType, id, newName }: EntityCrudDto<{ newName: string }>) {
-        return this.injectEntityService(entityType).update(id, { name: newName })
+    rename({ entityType, id, title }: EntityCrudDto<{ title: string }>) {
+        return this.injectEntityService(entityType).update(id, { title })
     }
     delete({ entityType, id }: EntityCrudDto) {
         return this.injectEntityService(entityType).delete(id)
