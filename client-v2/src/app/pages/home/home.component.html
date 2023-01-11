@@ -83,7 +83,7 @@
                                 *ngIf="node.expandable; else noToggleIcon"
                                 class="node-toggle"
                                 cdkTreeNodeToggle
-                                [attr.aria-label]="'Toggle ' + node.name"
+                                [attr.aria-label]="'Toggle ' + node.title"
                                 (click)="node.isExpanded = !node.isExpanded"
                             >
                                 <app-icon
@@ -104,7 +104,7 @@
                             <ng-template #label>
                                 <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
                                 <app-entity-page-label
-                                    [title]="node.name"
+                                    [title]="node.title"
                                     [pageIcon]="node.entityType || EntityType.TASKLIST"
                                 ></app-entity-page-label>
                             </ng-template>

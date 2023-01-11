@@ -15,7 +15,7 @@ import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 
 export interface EntityTreeNode {
     id: string
-    name: string
+    title: string
     path: string[] // <-- level: path.length
     expandable: boolean
 

@@ -35,12 +35,12 @@ export const entitiesReducer = createReducer(
         } as EntitiesState
     }),
 
-    on(entitiesActions.renameSuccess, (state, { id, newName }) => {
+    on(entitiesActions.renameSuccess, (state, { id, title }) => {
         const entityTreeCopy = structuredClone(state.entityTree)
         const entity = getEntityById(entityTreeCopy, id)
         if (!entity) return state
 
-        entity.name = newName
+        entity.title = title
 
         return {
             ...state,

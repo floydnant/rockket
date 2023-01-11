@@ -10,7 +10,7 @@ export enum EntityType {
 // export interface EntityPreview {
 //     id: string
 //     type: EntityType
-//     name: string
+//     title: string
 //     parentId: string | undefined
 //     children: string[]
 // }

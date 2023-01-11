@@ -21,7 +21,7 @@ beforeEach(async () => {
 describe('List CRUD (e2e)', () => {
     it('can create a tasklist', async () => {
         const createdList: Tasklist = await createTasklist(app, authToken, newList)
-        expect(createdList.name).toEqual(newList.name)
+        expect(createdList.title).toEqual(newList.title)
     })
     it('can update a tasklist', async () => {
         const createdList = await createTasklist(app, authToken, newList)

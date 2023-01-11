@@ -6,7 +6,7 @@ import { TasklistDetail } from 'src/app/models/list.model'
 import { storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityPageLabelComponent } from '../../atoms/entity-page-label/entity-page-label.component'
 import { DropDownComponent } from '../../molecules/drop-down/drop-down.component'
-import { EditableEntityNameComponent } from '../../molecules/editable-entity-heading/editable-entity-name.component'
+import { EditableEntityTitleComponent } from '../../molecules/editable-entity-heading/editable-entity-title.component'
 import { EntityViewComponent, entityViewComponentMap } from './entity-view.component'
 import { TasklistViewComponent } from './views/tasklist-view/tasklist-view.component'
 
@@ -27,7 +27,7 @@ const setupComponent = (template = defaultTemplate) => {
         declarations: [
             EntityViewComponent,
             ...entityViewComponents,
-            EditableEntityNameComponent,
+            EditableEntityTitleComponent,
             EntityPageLabelComponent,
             DropDownComponent,
         ],
@@ -44,7 +44,7 @@ const setupComponent = (template = defaultTemplate) => {
 
 const entityFixture: EntityPreviewRecursive = {
     id: 'the mock id',
-    name: 'The mock name',
+    title: 'The mock name',
     children: [],
     parentListId: '',
 }

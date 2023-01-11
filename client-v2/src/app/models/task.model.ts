@@ -1,9 +1,9 @@
 export enum TaskStatus {
     BACKLOG = 'Backlog',
     OPEN = 'Open',
-    IN_PROGRESS = 'In Progress',
+    IN_PROGRESS = 'In_Progress',
     COMPLETED = 'Completed',
-    NOT_PLANNED = 'Not Planned',
+    NOT_PLANNED = 'Not_Planned',
 }
 
 export const statusSortingMap: Record<TaskStatus, number> = {

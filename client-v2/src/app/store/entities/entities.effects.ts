@@ -90,10 +90,10 @@ export class EntitiesEffects {
                             if (!entity) return entitiesActions.abortRenameDialog()
 
                             const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
-                            const newName = prompt(`Rename the ${entityType}`, entity.name)?.trim()
-                            if (!newName) return entitiesActions.abortRenameDialog()
+                            const title = prompt(`Rename the ${entityType}`, entity.title)?.trim()
+                            if (!title) return entitiesActions.abortRenameDialog()
 
-                            return entitiesActions.rename({ id, newName, showToast: true })
+                            return entitiesActions.rename({ id, title, showToast: true })
                         })
                     )
             })
@@ -103,9 +103,9 @@ export class EntitiesEffects {
     rename = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.rename),
-            mergeMap(({ id, newName, showToast }) => {
+            mergeMap(({ id, title, showToast }) => {
                 const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
-                const res$ = this.entitiesService.rename({ entityType, id, newName })
+                const res$ = this.entitiesService.rename({ entityType, id, title })
 
                 return res$.pipe(
                     showToast
@@ -115,7 +115,7 @@ export class EntitiesEffects {
                               error: getMessageFromHttpError,
                           })
                         : tap(),
-                    map(() => entitiesActions.renameSuccess({ id, newName })),
+                    map(() => entitiesActions.renameSuccess({ id, title })),
                     catchError(err => {
                         if (!showToast) this.toast.error(getMessageFromHttpError(err))
 
@@ -143,7 +143,7 @@ export class EntitiesEffects {
                             const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
                             const closed$ = this.dialogService.confirm({
                                 title: `Delete this ${entityType}?`,
-                                text: `Are you sure you want to delete the ${entityType} '${entity.name}'?`,
+                                text: `Are you sure you want to delete the ${entityType} '${entity.title}'?`,
                                 buttons: [{ text: 'Cancel' }, { text: 'Delete', className: 'button--danger' }],
                             }).closed
 
