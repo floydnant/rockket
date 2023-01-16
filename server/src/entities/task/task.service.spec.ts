@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { UserModule } from '../user/user.module'
-import { PrismaModule } from '../prisma-abstractions/prisma.module'
-import { ListRepository } from './list/list.repository'
+import { UserModule } from '../../user/user.module'
+import { PrismaModule } from '../../prisma-abstractions/prisma.module'
+import { ListRepository } from '../list/list.repository'
 import { TaskRepository } from './task.repository'
 import { TaskService } from './task.service'
-import { PermissionsService } from './permissions/permissions.service'
+import { PermissionsService } from '../permissions/permissions.service'
 
 describe('TaskService', () => {
     let service: TaskService

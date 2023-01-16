@@ -9,6 +9,8 @@ export class ListRepository {
     constructor(private prisma: PrismaService) {}
 
     async createTasklist(userId: string, { parentListId, ...dto }: CreateTasklistDto) {
+        if (parentListId) await this.getTasklistById(parentListId) // throw if parentList not found
+
         return await this.prisma.tasklist.create({
             data: {
                 ...dto,
@@ -78,7 +80,7 @@ export class ListRepository {
         }))
     }
 
-    async getAllTasklists(userId: string) {
+    async getAllTasklistPreviews(userId: string) {
         const lists = await this.prisma.tasklist.findMany({
             where: {
                 participants: { some: { userId } },
@@ -91,6 +93,7 @@ export class ListRepository {
             },
         })
 
+        // @TODO: remove this once switched from `TasklistPreview` to `EntityPreview`
         return lists.map(({ childLists, ...list }) => ({
             ...list,
             childLists: childLists.map((l) => l.id),

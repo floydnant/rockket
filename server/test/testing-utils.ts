@@ -3,9 +3,9 @@ import { TestingModule, Test } from '@nestjs/testing'
 import { AppModule } from '../src/app.module'
 import * as superRequest from 'supertest'
 import { SignupCredentialsDto, LoginCredentialsDto } from '../src/user/dto/auth-credetials.dto'
-import { CreateTasklistDto } from '../src/task/list/list.dto'
+import { CreateTasklistDto } from '../src/entities/list/list.dto'
 import { Task, Tasklist } from '@prisma/client'
-import { CreateTaskDto } from '../src/task/task.dto'
+import { CreateTaskDto } from '../src/entities/task/task.dto'
 
 export const initApplication = async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({

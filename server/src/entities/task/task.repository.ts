@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { TaskEventUpdateField } from '@prisma/client'
-import { SELECT_user_preview } from '../prisma-abstractions/query-helpers'
-import { PrismaService } from '../prisma-abstractions/prisma.service'
+import { SELECT_user_preview } from '../../prisma-abstractions/query-helpers'
+import { PrismaService } from '../../prisma-abstractions/prisma.service'
 import { CreateTaskCommentDto, CreateTaskDto, UpdateTaskCommentDto, UpdateTaskDto } from './task.dto'
 
 @Injectable()
