@@ -22,9 +22,10 @@
 
             <ng-template #options>
                 <app-drop-down
+                    *ngIf="entity$ | async as entity"
                     [items]="(entityOptionsItems$ | async) || []"
                     [rootTrigger]="trigger"
-                    [data]="(entity$ | async)?.id"
+                    [data]="{ id: entity.id, entityType: entity.entityType }"
                 ></app-drop-down>
             </ng-template>
         </div>

@@ -61,8 +61,9 @@
                 <app-drop-down
                     [items]="(menuItems$ | async) || []"
                     [rootTrigger]="trigger"
-                    [data]="task.id"
                 ></app-drop-down>
+                <!-- @TODO: add data back in, once `TASK` is available on EntityType -->
+                <!-- [data]="{ id: task.id, entityType: EntityType.TASK }" -->
             </ng-template>
         </div>
     </div>

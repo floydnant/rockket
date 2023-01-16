@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview, TaskPriority, TaskStatus } from '../../../fullstack-shared-models/task.model'
 import { PageEntityState, TaskState } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 import { MenuItem } from '../../molecules/drop-down/drop-down.component'
@@ -11,6 +12,7 @@ import { MenuItem } from '../../molecules/drop-down/drop-down.component'
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskComponent {
+    EntityType = EntityType
     TaskStatus = TaskStatus
     TaskPriority = TaskPriority
 

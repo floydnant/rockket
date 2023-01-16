@@ -19,18 +19,18 @@ export const entitiesActions = createActionGroup({
         'load detail success': props<EntityCrudDto<{ entityDetail: Record<string, any> }>>(),
         'load detail error': props<HttpServerErrorResponseWithData>(),
 
-        'open rename dialog': props<{ id: string }>(),
+        'open rename dialog': props<EntityCrudDto>(),
         'abort rename dialog': emptyProps(),
         //
-        rename: props<{ id: string; title: string; showToast?: boolean }>(),
-        'rename success': props<{ id: string; title: string }>(),
+        rename: props<EntityCrudDto<{ title: string; showToast?: boolean }>>(),
+        'rename success': props<EntityCrudDto<{ title: string }>>(),
         'rename error': props<HttpServerErrorResponseWithData>(),
 
-        'open delete dialog': props<{ id: string }>(),
+        'open delete dialog': props<EntityCrudDto>(),
         'abort delete dialog': emptyProps(),
         //
-        delete: props<{ id: string }>(),
-        'delete success': props<{ id: string }>(),
+        delete: props<EntityCrudDto>(),
+        'delete success': props<EntityCrudDto>(),
         'delete error': props<HttpServerErrorResponseWithData>(),
     },
 })
