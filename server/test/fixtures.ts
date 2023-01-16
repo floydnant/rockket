@@ -1,4 +1,4 @@
-import { CreateTasklistDto } from '../src/task/list/list.dto'
+import { CreateTasklistDto } from '../src/entities/list/list.dto'
 
 export const users = {
     jonathan: {

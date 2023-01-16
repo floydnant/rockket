@@ -55,7 +55,7 @@ export class EntitiesService {
     }
 
     getEntityPreviews() {
-        return this.http.get<TasklistPreview[]>('/all-lists')
+        return this.http.get<TasklistPreview[]>('/entities')
     }
 
     loadDetail({ entityType, id }: EntityCrudDto) {

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@n
 import { AuthGuard } from '@nestjs/passport'
 import { User } from '@prisma/client'
 import { GetUser } from '../../decorators/get-user.decorator'
-import { TaskService } from '../task.service'
+import { TaskService } from '../task/task.service'
 import { CreateTasklistDto, UpdateTasklistDto, ShareTasklistDto, UpdatePermissionsDto } from './list.dto'
 import { ListService } from './list.service'
 
@@ -32,11 +32,6 @@ export class ListController {
     @Get('lists')
     getRootLevelTasklists(@GetUser() user: User) {
         return this.listService.getRootLevelTasklists(user.id)
-    }
-    // @TODO: This should be refactored into a separate entities.controller, .service, etc.
-    @Get('all-lists')
-    getAllTasklists(@GetUser() user: User) {
-        return this.listService.getAllTasklists(user.id)
     }
 
     // nested child list previews

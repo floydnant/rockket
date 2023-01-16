@@ -48,7 +48,7 @@ export class ListService {
         return this.listRepository.getRootLevelTasklists(userId)
     }
     async getAllTasklists(userId: string) {
-        return this.listRepository.getAllTasklists(userId)
+        return this.listRepository.getAllTasklistPreviews(userId)
     }
 
     async getChildTasklists(userId: string, listId: string) {

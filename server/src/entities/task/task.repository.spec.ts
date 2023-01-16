@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { PrismaModule } from '../prisma-abstractions/prisma.module'
+import { PrismaModule } from '../../prisma-abstractions/prisma.module'
 import { TaskRepository } from './task.repository'
 
 describe('TaskRepositoryService', () => {

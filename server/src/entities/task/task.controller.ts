@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { User } from '@prisma/client'
-import { GetUser } from '../decorators/get-user.decorator'
+import { GetUser } from '../../decorators/get-user.decorator'
 import { CreateTaskCommentDto, CreateTaskDto, UpdateTaskCommentDto, UpdateTaskDto } from './task.dto'
 import { TaskService } from './task.service'
 

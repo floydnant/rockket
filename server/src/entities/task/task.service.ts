@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { ListPermission } from '@prisma/client'
-import { PermissionsService } from './permissions/permissions.service'
+import { PermissionsService } from '../permissions/permissions.service'
 import { CreateTaskCommentDto, CreateTaskDto, UpdateTaskCommentDto, UpdateTaskDto } from './task.dto'
 import { TaskRepository } from './task.repository'
 
@@ -35,7 +35,8 @@ export class TaskService {
         const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.View)
         if (!hasPermission) throw new ForbiddenException("You don't have permission to view this task")
 
-        return this.taskRepository.deleteTask(taskId)
+        await this.taskRepository.deleteTask(taskId)
+        return { successMessage: 'Task deleted successfully' }
     }
 
     // subtasks

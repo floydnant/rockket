@@ -1,6 +1,6 @@
 import { TaskPriority, TaskStatus } from '@prisma/client'
 import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
-import { enumInvalidMessage } from '../utilities/validation'
+import { enumInvalidMessage } from '../../utilities/validation'
 
 class TaskDto {
     @IsNotEmpty()
