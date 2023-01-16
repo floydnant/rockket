@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 import { HttpService } from '../http/http.service'
 import { HttpSuccessResponse } from '../http/types'
-import { EntityType } from '../models/entities.model'
-import { TasklistPreview } from '../models/list.model'
+import { EntityType } from '../fullstack-shared-models/entities.model'
+import { TasklistPreview } from '../fullstack-shared-models/list.model'
 import { ListService } from './entity.services/list.service'
 
 export interface EntityService {

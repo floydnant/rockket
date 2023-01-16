@@ -1,3 +1,5 @@
+import { EntityPreview, EntityPreviewRecursive, EntityType } from './entities.model'
+
 // @TODO: Update these fields in the backend
 export enum TaskStatus {
     BACKLOG = 'Backlog',

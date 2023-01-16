@@ -3,9 +3,14 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { BehaviorSubject, combineLatest, merge } from 'rxjs'
 import { distinctUntilChanged, first, map, shareReplay, switchMap, tap } from 'rxjs/operators'
-import { EntityType } from 'src/app/models/entities.model'
-import { TasklistDetail } from 'src/app/models/list.model'
-import { prioritySortingMap, statusSortingMap, TaskPreview, TaskStatus } from 'src/app/models/task.model'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
+import {
+    prioritySortingMap,
+    statusSortingMap,
+    TaskPreview,
+    TaskStatus,
+} from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
 import { listActions, taskActions } from 'src/app/store/entities/entities.actions'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'

@@ -1,7 +1,7 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { HttpServerErrorResponse } from 'src/app/http/types'
-import { TasklistPreview, CreateTasklistDto, TaskList } from 'src/app/models/list.model'
-import { CreateTaskDto, TaskPreview, TaskPriority, TaskStatus } from 'src/app/models/task.model'
+import { TasklistPreview, CreateTasklistDto, TaskList } from 'src/app/fullstack-shared-models/list.model'
+import { CreateTaskDto, TaskPreview, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { EntityCrudDto } from 'src/app/services/entities.service'
 
 export type HttpServerErrorResponseWithData<T = { id: string }> = HttpServerErrorResponse & T

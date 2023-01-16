@@ -16,8 +16,8 @@ import {
     switchMap,
     tap,
 } from 'rxjs'
-import { ENTITY_TITLE_DEFAULTS } from 'src/app/models/defaults'
-import { EntityPreviewRecursive, EntityType } from 'src/app/models/entities.model'
+import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
+import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'

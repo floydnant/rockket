@@ -1,6 +1,6 @@
 import { Store } from '@ngrx/store'
 import { MenuItem, MenuItemVariant } from '../components/molecules/drop-down/drop-down.component'
-import { EntityType } from '../models/entities.model'
+import { EntityType } from '../fullstack-shared-models/entities.model'
 import { AppState } from '../store'
 import { entitiesActions, listActions } from '../store/entities/entities.actions'
 

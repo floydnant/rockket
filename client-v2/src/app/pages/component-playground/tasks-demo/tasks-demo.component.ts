@@ -6,7 +6,7 @@ import {
     TaskPreview,
     TaskPriority,
     TaskStatus,
-} from '../../../models/task.model'
+} from '../../../fullstack-shared-models/task.model'
 
 type TaskSorter = (a: Task, b: Task) => number
 

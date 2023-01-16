@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpService } from 'src/app/http/http.service'
 import { HttpSuccessResponse } from 'src/app/http/types'
-import { CreateTaskDto, Task, TaskPreview, UpdateTaskDto } from 'src/app/models/task.model'
+import { CreateTaskDto, Task, TaskPreview, UpdateTaskDto } from 'src/app/fullstack-shared-models/task.model'
 import { EntityService } from '../entities.service'
 
 @Injectable({

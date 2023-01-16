@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { EntityType } from 'src/app/models/entities.model'
-import { TaskStatus } from 'src/app/models/task.model'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 
 export enum PageEntityState {
     LOADING = 'Loading',

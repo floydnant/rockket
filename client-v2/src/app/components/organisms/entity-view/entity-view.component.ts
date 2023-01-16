@@ -20,7 +20,7 @@ import {
     shareReplay,
     tap,
 } from 'rxjs'
-import { EntityPreviewRecursive, EntityType } from 'src/app/models/entities.model'
+import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { EntityMenuItemsMap } from '../../../shared/entity-menu-items'

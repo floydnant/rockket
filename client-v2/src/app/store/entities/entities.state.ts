@@ -1,6 +1,6 @@
-import { EntityPreviewRecursive, EntityType } from 'src/app/models/entities.model'
-import { TasklistDetail } from 'src/app/models/list.model'
-import { TaskPreview } from 'src/app/models/task.model'
+import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
+import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 
 export type TaskTreeMap = Record<string, TaskPreview[]>
 
