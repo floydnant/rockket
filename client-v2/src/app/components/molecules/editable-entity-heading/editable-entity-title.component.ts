@@ -12,6 +12,7 @@ import {
     first,
     map,
     merge,
+    of,
     shareReplay,
     switchMap,
     tap,
@@ -48,9 +49,10 @@ export class EditableEntityTitleComponent {
         filter(entity => entity?.title != this.lastSentStoreUpdate),
         tap(() => (this.lastSentStoreUpdate = null)),
         map(entity => {
-            if (entity?.title == ENTITY_TITLE_DEFAULTS[EntityType.TASKLIST]) return '' // @TODO: Remove hardcoded value
+            if (!entity) return null
+            if (entity.title == ENTITY_TITLE_DEFAULTS[entity.entityType]) return ''
 
-            return entity?.title
+            return entity.title
         }),
         distinctUntilChanged((prev, currEntityTitle) => {
             if (prev === '' && currEntityTitle === '') return false
@@ -112,10 +114,16 @@ export class EditableEntityTitleComponent {
         ),
         this.entityTitleChanges$.pipe(debounceTime(600))
     ).pipe(
-        map(newEntityTitle => {
-            if (newEntityTitle === null) return null
+        switchMap(newEntityTitle => {
+            if (newEntityTitle === null) return of(null)
 
-            return newEntityTitle || ENTITY_TITLE_DEFAULTS[EntityType.TASKLIST] // @TODO: Remove hardcoded value
+            return this.entity$.pipe(
+                first(),
+                map(entity => {
+                    if (!entity) return null
+                    return newEntityTitle || ENTITY_TITLE_DEFAULTS[entity.entityType]
+                })
+            )
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )

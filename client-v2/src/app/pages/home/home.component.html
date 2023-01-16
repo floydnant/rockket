@@ -102,10 +102,9 @@
                             </ng-template>
 
                             <ng-template #label>
-                                <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
                                 <app-entity-page-label
                                     [title]="node.title"
-                                    [pageIcon]="node.entityType || EntityType.TASKLIST"
+                                    [pageIcon]="node.entityType"
                                 ></app-entity-page-label>
                             </ng-template>
                             <ng-container *ngTemplateOutlet="label"></ng-container>
@@ -128,7 +127,7 @@
                             </button>
                         </div>
                         <ng-template #nodeDropDown>
-                            <app-drop-down [items]="nodeMenuItems" [data]="{ id: node.id, entityType: node.entityType }"></app-drop-down>
+                            <app-drop-down [items]="node.menuItems" [data]="{ id: node.id, entityType: node.entityType }"></app-drop-down>
                         </ng-template>
                     </button>
                 </cdk-tree-node>
