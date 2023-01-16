@@ -24,6 +24,8 @@ export class TaskTreeComponent {
 
     onTitleChange(id: string, newTitle: string) {
         this.store.dispatch(taskActions.rename({ id, newTitle }))
+        // @TODO: use this
+        // this.store.dispatch(entitiesActions.rename({ id, newTitle, entityType: EntityType.TASK }))
     }
     onDescriptionChange(id: string, newDescription: string) {
         this.store.dispatch(taskActions.updateDescription({ id, newDescription }))
