@@ -78,7 +78,7 @@ export class EntitiesEffects {
     showRenameDialog = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.openRenameDialog),
-            switchMap(({ id }) => {
+            switchMap(({ id, entityType }) => {
                 return this.store
                     .select(state => state.entities.entityTree)
                     .pipe(
@@ -89,11 +89,10 @@ export class EntitiesEffects {
                             const entity = getEntityById(entityTree, id)
                             if (!entity) return entitiesActions.abortRenameDialog()
 
-                            const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
                             const title = prompt(`Rename the ${entityType}`, entity.title)?.trim()
                             if (!title) return entitiesActions.abortRenameDialog()
 
-                            return entitiesActions.rename({ id, title, showToast: true })
+                            return entitiesActions.rename({ id, entityType, title, showToast: true })
                         })
                     )
             })
@@ -103,8 +102,7 @@ export class EntitiesEffects {
     rename = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.rename),
-            mergeMap(({ id, title, showToast }) => {
-                const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
+            mergeMap(({ id, entityType, title, showToast }) => {
                 const res$ = this.entitiesService.rename({ entityType, id, title })
 
                 return res$.pipe(
@@ -115,7 +113,7 @@ export class EntitiesEffects {
                               error: getMessageFromHttpError,
                           })
                         : tap(),
-                    map(() => entitiesActions.renameSuccess({ id, title })),
+                    map(() => entitiesActions.renameSuccess({ id, entityType, title })),
                     catchError(err => {
                         if (!showToast) this.toast.error(getMessageFromHttpError(err))
 
@@ -129,7 +127,7 @@ export class EntitiesEffects {
     showDeleteDialog = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.openDeleteDialog),
-            switchMap(({ id }) => {
+            switchMap(({ id, entityType }) => {
                 return this.store
                     .select(state => state.entities.entityTree)
                     .pipe(
@@ -140,7 +138,6 @@ export class EntitiesEffects {
                             const entity = getEntityById(entityTree, id)
                             if (!entity) return of(entitiesActions.abortDeleteDialog())
 
-                            const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
                             const closed$ = this.dialogService.confirm({
                                 title: `Delete this ${entityType}?`,
                                 text: `Are you sure you want to delete the ${entityType} '${entity.title}'?`,
@@ -149,7 +146,7 @@ export class EntitiesEffects {
 
                             return closed$.pipe(
                                 map(response => {
-                                    if (response == 'Delete') return entitiesActions.delete({ id })
+                                    if (response == 'Delete') return entitiesActions.delete({ id, entityType })
                                     return entitiesActions.abortDeleteDialog()
                                 })
                             )
@@ -162,8 +159,7 @@ export class EntitiesEffects {
     delete = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.delete),
-            mergeMap(({ id }) => {
-                const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
+            mergeMap(({ id, entityType }) => {
                 const res$ = this.entitiesService.delete({ entityType, id })
 
                 return res$.pipe(
@@ -185,7 +181,7 @@ export class EntitiesEffects {
 
                                 this.router.navigateByUrl(parentEntity ? `/home/${parentEntity.id}` : '/home')
                             }),
-                            map(() => entitiesActions.deleteSuccess({ id }))
+                            map(() => entitiesActions.deleteSuccess({ id, entityType }))
                         )
                     }),
                     catchError(err => of(entitiesActions.deleteError({ ...err, id })))

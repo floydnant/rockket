@@ -123,19 +123,19 @@ export class EditableEntityTitleComponent {
     entityTitleUpdatesSubscription = this.entityTitleUpdateEvents$
         .pipe(
             distinctUntilChanged(),
-            switchMap(newTitle => {
+            switchMap(title => {
                 return combineLatest([this.entity$, this.isLoading$]).pipe(
                     first(),
                     tap(([entity, isLoading]) => {
-                        if (!entity || !newTitle) return
+                        if (!entity || !title) return
 
-                        const action = entitiesActions.rename({ id: entity.id, title: newTitle })
+                        const action = entitiesActions.rename({ id: entity.id, entityType: entity.entityType, title })
                         if (isLoading) {
                             this.updateQueue$.next(action)
                             return
                         }
 
-                        this.lastSentStoreUpdate = newTitle
+                        this.lastSentStoreUpdate = title
                         this.store.dispatch(action)
                     })
                 )
