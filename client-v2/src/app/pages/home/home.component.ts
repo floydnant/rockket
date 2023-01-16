@@ -4,7 +4,8 @@ import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { map, startWith, switchMap, tap } from 'rxjs'
+import { map, tap } from 'rxjs'
+import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
@@ -19,18 +20,20 @@ export interface EntityTreeNode {
     path: string[] // <-- level: path.length
     expandable: boolean
 
-    isExpanded?: boolean
-    entityType?: EntityType
+    isExpanded: boolean
+    entityType: EntityType
+
+    menuItems: MenuItem[]
 }
 
-export const convertToEntityTreeNode = (list: EntityPreviewFlattend): EntityTreeNode => {
-    const { childrenCount, ...rest } = list
+export const convertToEntityTreeNode = (entity: EntityPreviewFlattend): EntityTreeNode => {
+    const { childrenCount, ...restEntity } = entity
     const node: EntityTreeNode = {
-        ...rest,
-        expandable: childrenCount > 0,
+        ...restEntity,
 
-        isExpanded: rest.path.length < 2,
-        entityType: EntityType.TASKLIST, // @TODO: Remove hardcoded value
+        expandable: childrenCount > 0,
+        isExpanded: restEntity.path.length < 2,
+        menuItems: [],
     }
     return node
 }
@@ -80,12 +83,6 @@ export class HomeComponent implements OnInit {
     entityPreviewsTransformed$ = this.store
         .select(state => state.entities.entityTree)
         .pipe(
-            switchMap(tree => {
-                return this.route.url.pipe(
-                    startWith(),
-                    map(() => tree)
-                )
-            }),
             map(entityTree => {
                 // @TODO: come up with a better solution for this
                 // NOTE: using `ActivatedRoute` doesn't work in here either
@@ -97,11 +94,12 @@ export class HomeComponent implements OnInit {
                 const treeNodes = flattenEntityTree(entityTree).map(convertToEntityTreeNode)
                 const [, ...entityTraceWithoutActive] = traceEntity(entityTree, activeId).reverse()
 
-                return treeNodes.map(node => {
+                return treeNodes.map<EntityTreeNode>(node => {
                     const isContainedInTrace = entityTraceWithoutActive.some(entity => entity.id == node.id)
                     return {
                         ...node,
                         isExpanded: node.isExpanded || isContainedInTrace,
+                        menuItems: this.nodeMenuItemsMap[node.entityType],
                     }
                 })
             }),
@@ -124,6 +122,5 @@ export class HomeComponent implements OnInit {
         this.store.dispatch(listActions.createTaskList({ parentListId }))
     }
 
-    // @TODO: Remove hardcoded value
-    nodeMenuItems = getEntityMenuItemsMap(this.store)[EntityType.TASKLIST]
+    nodeMenuItemsMap = getEntityMenuItemsMap(this.store)
 }

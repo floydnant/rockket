@@ -1,19 +1,17 @@
-<div class="inline-flex items-center">
-    <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
+<div class="inline-flex items-center" *ngIf="entity$ | async as entity">
     <span>
         <page-entity-icon
             class="mr-2.5 inline-block -translate-y-0.5 text-2xl"
-            [icon]="(isLoading$ | async) ? PageEntityState.LOADING : EntityType.TASKLIST"
+            [icon]="(isLoading$ | async) ? PageEntityState.LOADING : entity.entityType"
         >
         </page-entity-icon>
     </span>
 
-    <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
     <span
         class="title | inline-block min-w-[2rem] cursor-text outline-none"
         [innerText]="entityTitle$ | async"
         [class.show-placeholder]="!(entityTitleDomState$ | async)"
-        [attr.data-placeholder]="ENTITY_TITLE_DEFAULTS[EntityType.TASKLIST]"
+        [attr.data-placeholder]="ENTITY_TITLE_DEFAULTS[entity.entityType]"
         #editableEntityTitle
         contenteditable
         focusable

@@ -46,10 +46,9 @@ export class EntityPageComponent {
         map(trace =>
             trace?.map<Breadcrumb>(entity => ({
                 title: entity.title,
-                icon: EntityType.TASKLIST, // @TODO: Remove hardcoded value
+                icon: entity.entityType,
                 route: `/home/${entity.id}`,
-                // @TODO: Remove hardcoded value
-                contextMenuItems: this.entityOptionsMap[EntityType.TASKLIST].map(useDataForAction(entity.id)),
+                contextMenuItems: this.entityOptionsMap[entity.entityType].map(useDataForAction(entity.id)),
             }))
         )
     )
