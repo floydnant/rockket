@@ -57,7 +57,7 @@ export class EntityViewComponent {
         map(([entity, entitiesState]) => {
             if (!entity) return null
 
-            return entitiesState[entity.entityType]?.[entity.id]
+            return entitiesState.entityDetails[entity.entityType][entity.id]
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )

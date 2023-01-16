@@ -57,7 +57,7 @@ export class EntitiesEffects {
             ofType(entitiesActions.loadDetail),
             mergeMap(dto => {
                 const res$ = this.store
-                    .select(state => state.entities[dto.entityType]?.[dto.id])
+                    .select(state => state.entities.entityDetails[dto.entityType][dto.id])
                     .pipe(
                         first(),
                         switchMap(entityDetail => {

@@ -8,7 +8,11 @@ import { getParentByChildId, getEntityById, buildEntityTree } from './utils'
 
 const initialState: EntitiesState = {
     entityTree: null,
-    [EntityType.TASKLIST]: null,
+    taskTreeMap: null,
+
+    entityDetails: {
+        [EntityType.TASKLIST]: {},
+    },
 
     // ...(Object.fromEntries(Object.values(EntityType).map(key => [key, null])) as Record<EntityType, null>),
 }
@@ -24,16 +28,17 @@ export const entitiesReducer = createReducer(
     }),
 
     on(entitiesActions.loadDetailSuccess, (state, { entityType, id, entityDetail }): EntitiesState => {
+        const entityDetailsCopy = structuredClone(state.entityDetails) as EntitiesState['entityDetails']
+
+        entityDetailsCopy[entityType][id] = {
+            ...(entityDetailsCopy[entityType][id] || {}),
+            ...entityDetail,
+        }
+
         return {
             ...state,
-            [entityType]: {
-                ...(state[entityType] || {}),
-                [id]: {
-                    ...(state[entityType]?.[id] || {}),
-                    ...entityDetail,
-                },
-            },
-        } as EntitiesState
+            entityDetails: entityDetailsCopy,
+        }
     }),
 
     on(entitiesActions.renameSuccess, (state, { id, title }): EntitiesState => {
@@ -91,17 +96,16 @@ export const entitiesReducer = createReducer(
         }
     }),
     on(listActions.updateDescriptionSuccess, (state, { id, newDescription }): EntitiesState => {
-        const otherTasklistDetails = state[EntityType.TASKLIST] || {}
-        const previousTasklistDetail = state[EntityType.TASKLIST]?.[id] || ({} as TasklistDetail)
+        const entityDetailsCopy = structuredClone(state.entityDetails) as EntitiesState['entityDetails']
+
+        entityDetailsCopy[EntityType.TASKLIST][id] = {
+            ...(entityDetailsCopy[EntityType.TASKLIST][id] || {}),
+            description: newDescription,
+        }
+
         return {
             ...state,
-            [EntityType.TASKLIST]: {
-                ...otherTasklistDetails,
-                [id]: {
-                    ...previousTasklistDetail,
-                    description: newDescription,
-                },
-            },
+            entityDetails: entityDetailsCopy,
         }
     })
 )
