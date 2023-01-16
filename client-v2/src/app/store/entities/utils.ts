@@ -5,20 +5,20 @@ import {
 } from 'src/app/fullstack-shared-models/entities.model'
 
 export const buildEntityTree = (allEntities: EntityPreview[]) => {
-    const getChildren = (childIds: string[]): EntityPreviewRecursive[] => {
-        const children = allEntities.filter(entity => childIds.includes(entity.id))
+    const getChildren = (parentId: string): EntityPreviewRecursive[] => {
+        const children = allEntities.filter(entity => parentId == entity.parentId)
 
-        return children.map(({ childLists, ...child }) => {
-            const grandChildren = getChildren(childLists)
-            return { ...child, children: grandChildren }
+        return children.map(entity => {
+            const grandChildren = getChildren(entity.id)
+            return { ...entity, children: grandChildren }
         })
     }
 
     const entityTree = allEntities
-        .filter(entity => !entity.parentListId)
-        .map<EntityPreviewRecursive>(({ childLists, ...entity }) => ({
+        .filter(entity => !entity.parentId)
+        .map<EntityPreviewRecursive>(entity => ({
             ...entity,
-            children: getChildren(childLists),
+            children: getChildren(entity.id),
         }))
     return entityTree
 }

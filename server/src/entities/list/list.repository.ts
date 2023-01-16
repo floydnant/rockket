@@ -89,15 +89,10 @@ export class ListRepository {
                 id: true,
                 parentListId: true,
                 title: true,
-                childLists: { select: { id: true } },
             },
         })
 
-        // @TODO: remove this once switched from `TasklistPreview` to `EntityPreview`
-        return lists.map(({ childLists, ...list }) => ({
-            ...list,
-            childLists: childLists.map((l) => l.id),
-        }))
+        return lists
     }
 
     async getChildTasklists(listId: string) {

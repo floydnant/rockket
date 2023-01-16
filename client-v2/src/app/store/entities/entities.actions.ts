@@ -3,6 +3,7 @@ import { HttpServerErrorResponse } from 'src/app/http/types'
 import { TasklistPreview, CreateTasklistDto, TaskList } from 'src/app/fullstack-shared-models/list.model'
 import { CreateTaskDto, TaskPreview, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { EntityCrudDto } from 'src/app/services/entities.service'
+import { EntityPreview } from 'src/app/fullstack-shared-models/entities.model'
 
 export type HttpServerErrorResponseWithData<T = { id: string }> = HttpServerErrorResponse & T
 
@@ -10,7 +11,7 @@ export const entitiesActions = createActionGroup({
     source: 'Entities',
     events: {
         'load previews': emptyProps(),
-        'load previews success': props<{ previews: TasklistPreview[] }>(),
+        'load previews success': props<{ previews: EntityPreview[] }>(),
         'load previews error': props<HttpServerErrorResponse>(),
 
         'load detail': props<EntityCrudDto>(),
