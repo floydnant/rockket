@@ -1,4 +1,4 @@
-import { TasklistPreview } from "./list.model"
+import { TasklistPreview } from './list.model'
 
 // @TODO: Hook up the `shared`-folder syncing functionality
 

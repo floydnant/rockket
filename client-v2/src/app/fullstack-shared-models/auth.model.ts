@@ -1,5 +1,4 @@
 import { UserPreview } from './user.model'
-import { HttpSuccessResponse } from '../http/types'
 
 export interface SignupCredentialsDto {
     username: string
@@ -14,5 +13,3 @@ export interface LoginCredentialsDto {
 export type LoggedInUser = UserPreview & {
     authToken: string
 }
-
-export type AuthSuccessResponse = HttpSuccessResponse<{ user: LoggedInUser }>

@@ -1,5 +1,7 @@
 import { TasklistPreview } from './list.model'
 
+// @TODO: Hook up the `shared`-folder syncing functionality
+
 export enum EntityType {
     TASKLIST = 'Tasklist',
     // TASK = 'Task',

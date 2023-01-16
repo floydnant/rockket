@@ -53,30 +53,11 @@ export interface Task {
     subtaskIds: string[]
 }
 
-interface ConvertTaskToEntity {
-    (task: TaskPreview): EntityPreview
-    (task: TaskPreviewRecursive): EntityPreviewRecursive
-}
-
-// @TODO: find a good spot for this
-export const convertTaskToEntity: ConvertTaskToEntity = ({ id, listId, parentTaskId, title, ...rest }) => ({
-    id,
-    entityType: EntityType.TASK,
-    parentId: parentTaskId || listId,
-    title,
-    children: ('children' in rest ? rest.children?.map(convertTaskToEntity) : undefined) as EntityPreviewRecursive[],
-})
-
 export type TaskPreview = Pick<Task, 'id' | 'title' | 'status' | 'priority' | 'listId' | 'parentTaskId'> & {
     description: string | null
 }
-export type TaskDetail = Task
 
 export type TaskPreviewRecursive = TaskPreview & { children: TaskPreviewRecursive[] | null }
-export type TaskPreviewFlattend = Omit<TaskPreviewRecursive, 'children'> & {
-    path: string[]
-    childrenCount: number
-}
 
 // @TODO: ITaskEvent
 

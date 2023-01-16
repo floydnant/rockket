@@ -1,4 +1,8 @@
-import { EntityPreview, EntityPreviewFlattend, EntityPreviewRecursive } from 'src/app/models/entities.model'
+import {
+    EntityPreview,
+    EntityPreviewFlattend,
+    EntityPreviewRecursive,
+} from 'src/app/fullstack-shared-models/entities.model'
 
 export const buildEntityTree = (allEntities: EntityPreview[]) => {
     const getChildren = (childIds: string[]): EntityPreviewRecursive[] => {

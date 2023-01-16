@@ -5,11 +5,12 @@ import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
 import { catchError, map, mergeMap, Observable, of, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { DialogService } from 'src/app/modal/dialog.service'
-import { AuthSuccessResponse, SignupCredentialsDto } from 'src/app/models/auth.model'
+import { SignupCredentialsDto } from 'src/app/fullstack-shared-models/auth.model'
 import { AuthService } from 'src/app/services/auth.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { appActions } from '../app.actions'
 import { authActions } from './user.actions'
+import { AuthSuccessResponse } from 'src/app/shared/models'
 
 @Injectable()
 export class AuthEffects {

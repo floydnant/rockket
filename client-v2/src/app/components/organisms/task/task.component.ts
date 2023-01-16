@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core'
-import { Task, TaskPriority, TaskStatus } from '../../../models/task.model'
+import { Task, TaskPriority, TaskStatus } from '../../../fullstack-shared-models/task.model'
 import { PageEntityState, TaskState } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 
 @Component({

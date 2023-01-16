@@ -1,7 +1,8 @@
 import { createReducer, on } from '@ngrx/store'
-import { EntityType } from 'src/app/models/entities.model'
-import { TasklistDetail } from 'src/app/models/list.model'
-import { entitiesActions, listActions } from './entities.actions'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
+import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
+import { entitiesActions, listActions, taskActions } from './entities.actions'
 import { EntitiesState } from './entities.state'
 import { getParentByChildId, getEntityById, buildEntityTree } from './utils'
 
