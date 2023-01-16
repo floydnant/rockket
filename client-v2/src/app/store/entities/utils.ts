@@ -52,7 +52,7 @@ export const traceEntity = (
     })
 }
 
-export const getParentByChildId = (
+export const getParentEntityByChildId = (
     entityTree: EntityPreviewRecursive[],
     id: string
 ): { subTree: EntityPreviewRecursive[]; index: number } | void => {
@@ -62,14 +62,14 @@ export const getParentByChildId = (
         if (entity.id == id) return { subTree: entityTree, index }
 
         if (entity.children.length) {
-            const result = getParentByChildId(entity.children, id)
+            const result = getParentEntityByChildId(entity.children, id)
             if (result) return result
         }
     }
 }
 
 export const getEntityById = (entityTree: EntityPreviewRecursive[], id: string): EntityPreviewRecursive | void => {
-    const res = getParentByChildId(entityTree, id)
+    const res = getParentEntityByChildId(entityTree, id)
     if (!res) return
 
     return res.subTree[res.index]
