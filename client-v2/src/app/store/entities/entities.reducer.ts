@@ -4,7 +4,7 @@ import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { entitiesActions, listActions, taskActions } from './entities.actions'
 import { EntitiesState } from './entities.state'
-import { getParentByChildId, getEntityById, buildEntityTree } from './utils'
+import { getParentEntityByChildId, getEntityById, buildEntityTree } from './utils'
 
 const initialState: EntitiesState = {
     entityTree: null,
@@ -56,7 +56,7 @@ export const entitiesReducer = createReducer(
 
     on(entitiesActions.deleteSuccess, (state, { id }): EntitiesState => {
         const entityTreeCopy = structuredClone(state.entityTree)
-        const result = getParentByChildId(entityTreeCopy, id)
+        const result = getParentEntityByChildId(entityTreeCopy, id)
         if (!result) return state
 
         result.subTree.splice(result.index, 1)
