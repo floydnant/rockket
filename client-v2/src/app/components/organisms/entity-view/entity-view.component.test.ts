@@ -1,7 +1,7 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { Injector } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
-import { EntityPreviewRecursive } from 'src/app/fullstack-shared-models/entities.model'
+import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
 import { storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityPageLabelComponent } from '../../atoms/entity-page-label/entity-page-label.component'
@@ -44,9 +44,10 @@ const setupComponent = (template = defaultTemplate) => {
 
 const entityFixture: EntityPreviewRecursive = {
     id: 'the mock id',
+    entityType: EntityType.TASKLIST,
     title: 'The mock name',
     children: [],
-    parentListId: '',
+    parentId: '',
 }
 const entityDetailFixture: TasklistDetail = { description: null, createdAt: '', ownerId: '' }
 
