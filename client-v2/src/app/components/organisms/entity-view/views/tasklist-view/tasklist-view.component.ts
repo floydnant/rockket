@@ -5,12 +5,6 @@ import { BehaviorSubject, combineLatest, merge, of } from 'rxjs'
 import { distinctUntilChanged, first, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
-import {
-    prioritySortingMap,
-    statusSortingMap,
-    TaskPreview,
-    TaskStatus,
-} from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
 import { listActions } from 'src/app/store/entities/entities.actions'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'

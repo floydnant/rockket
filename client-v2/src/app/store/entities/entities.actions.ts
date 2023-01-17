@@ -1,7 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { HttpServerErrorResponse } from 'src/app/http/types'
-import { TasklistPreview, CreateTasklistDto, TaskList } from 'src/app/fullstack-shared-models/list.model'
-import { CreateTaskDto, TaskPreview, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import { CreateTasklistDto, TaskList } from 'src/app/fullstack-shared-models/list.model'
 import { EntityCrudDto } from 'src/app/services/entities.service'
 import { EntityPreview } from 'src/app/fullstack-shared-models/entities.model'
 

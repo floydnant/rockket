@@ -3,7 +3,6 @@ import {
     prioritySortingMap,
     statusSortingMap,
     Task,
-    TaskPreview,
     TaskPriority,
     TaskStatus,
 } from '../../../fullstack-shared-models/task.model'

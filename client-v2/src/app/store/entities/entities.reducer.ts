@@ -1,14 +1,11 @@
 import { createReducer, on } from '@ngrx/store'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
-import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
-import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
-import { entitiesActions, listActions, taskActions } from './entities.actions'
+import { entitiesActions, listActions } from './entities.actions'
 import { EntitiesState } from './entities.state'
 import { getParentEntityByChildId, getEntityById, buildEntityTree } from './utils'
 
 const initialState: EntitiesState = {
     entityTree: null,
-    taskTreeMap: null,
 
     entityDetails: {
         [EntityType.TASKLIST]: {},
