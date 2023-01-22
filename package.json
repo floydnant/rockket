@@ -1,29 +1,19 @@
 {
-    "name": "todo-app",
-    "version": "1.0.0",
-    "description": "<img src=\"./src/assets/todo-app-logo/todo-app-logo.png\" height=\"100px\">",
+    "name": "rockket",
+    "version": "2.0.0",
+    "description": "A small, carefully crafted todo app with a focus on user experience, built with ❤️ and angular.",
     "scripts": {
-        "server+client": "concurrently \"cd client && ng serve\" \"cd server && ts-node-dev server.ts\"",
-        "server": "cd server && ts-node-dev server.ts",
-        "client": "cd client && npm run serve",
-        "client:lan": "cd client && npm run serve:lan",
-        "client:build:no-watch": "cd client && npm run build",
-        "client:build:serve": "concurrently \"cd client && npm run build:watch\" \"npm run client:serve-build\"",
-        "client:serve-build": "cd client && angular-http-server -o --path ./dist/todo-app",
+        "ci": "bash ./run-ci-scripts.sh server && bash ./run-ci-scripts.sh client-v2",
         "deploy": "git checkout prod && git pull origin main && git push && git checkout main && echo '' && echo 'deploying should be in the building phase by now'"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/dein-ding/ToDo-App.git"
+        "url": "git+https://github.com/dein-ding/todo-app.git"
     },
     "author": "Floyd Haremsa",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/dein-ding/ToDo-App/issues"
+        "url": "https://github.com/dein-ding/todo-app/issues"
     },
-    "homepage": "https://github.com/dein-ding/ToDo-App#readme",
-    "devDependencies": {
-        "angular-http-server": "^1.10.0",
-        "concurrently": "^6.3.0"
-    }
+    "homepage": "https://rockket.netlify.app"
 }

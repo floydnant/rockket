@@ -20,7 +20,7 @@ import {
     shareReplay,
     tap,
 } from 'rxjs'
-import { EntityPreviewRecursive, EntityType } from 'src/app/models/entities.model'
+import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { EntityMenuItemsMap } from '../../../shared/entity-menu-items'
@@ -54,7 +54,11 @@ export class EntityViewComponent {
     }
     entity$ = new BehaviorSubject<EntityPreviewRecursive | undefined | null>(null)
     entityDetail$ = combineLatest([this.entity$, this.store.select(state => state.entities)]).pipe(
-        map(([entity, entitiesState]) => entity && entitiesState[EntityType.TASKLIST]?.[entity.id]), // @TODO: Remove hardcoded value EntityType.TASKLIST
+        map(([entity, entitiesState]) => {
+            if (!entity) return null
+
+            return entitiesState.entityDetails[entity.entityType][entity.id]
+        }),
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
@@ -65,27 +69,20 @@ export class EntityViewComponent {
     entityOptionsItems$ = this.entity$.pipe(
         distinctUntilChanged((previous, current) => previous?.id == current?.id),
         combineLatestWith(this.entityOptionsMap$),
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         map(([entity, optionsMap]) => {
-            // @TODO: Remove hardcoded value
-            const entityType = EntityType.TASKLIST
-            return optionsMap?.[entityType]
+            if (!entity) return null
+
+            return optionsMap?.[entity.entityType]
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
     entityViewComponent$ = this.entity$.pipe(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        distinctUntilChanged((previous, current) => {
-            // @TODO: Remove hardcoded value
-            const entityType = EntityType.TASKLIST
-            return entityType == entityType
-        }),
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        distinctUntilChanged((previous, current) => previous?.entityType == current?.entityType),
         map(entity => {
-            // @TODO: Remove hardcoded value
-            const entityType = EntityType.TASKLIST
-            return entityViewComponentMap[entityType]
+            if (!entity) return null
+
+            return entityViewComponentMap[entity.entityType]
         })
     )
 
@@ -108,8 +105,7 @@ export class EntityViewComponent {
             tap(entity => {
                 if (!entity) return
 
-                const entityType = EntityType.TASKLIST // @TODO: Remove hardcoded value
-                this.store.dispatch(entitiesActions.loadDetail({ entityType, id: entity.id }))
+                this.store.dispatch(entitiesActions.loadDetail({ entityType: entity.entityType, id: entity.id }))
             }),
             untilDestroyed(this)
         )

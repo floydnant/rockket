@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core'
-import { TaskPriority } from 'src/app/models/task.model'
+import { TaskPriority } from 'src/app/fullstack-shared-models/task.model'
 
 const statusIconClassMap: Record<TaskPriority, { amount?: number; class: string }> = {
     [TaskPriority.OPTIONAL]: { class: 'fas fa-question text-submit-400' },

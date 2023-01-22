@@ -8,7 +8,7 @@
     <!-- <button class="button-naked">Share</button> -->
 
     <h1 class="heading | mt-4">
-        <app-editable-entity-name [entity]="entity"></app-editable-entity-name>
+        <app-editable-entity-title [entity]="entity"></app-editable-entity-title>
     </h1>
 
     <!-- <div class="created-at | test-md text-tinted-400" *ngIf="detail$ | async as detail">
@@ -79,15 +79,14 @@
             #trigger="cdkContextMenuTriggerFor"
             data-test-name="entity-child"
         >
-            <!-- @TODO: remove hardcoded value EntityType.TASKLIST -->
-            <app-entity-page-label [title]="child.name" [pageIcon]="EntityType.TASKLIST"></app-entity-page-label>
+            <app-entity-page-label [title]="child.title" [pageIcon]="child.entityType"></app-entity-page-label>
 
             <ng-template #options>
                 <!-- @TODO: Using the options$ here is wrong, since the children might be of a different entityType than the parent. -->
                 <app-drop-down
                     [items]="(options$ | async) || []"
                     [rootTrigger]="trigger"
-                    [data]="child.id"
+                    [data]="{ id: child.id, entityType: child.entityType }"
                 ></app-drop-down>
             </ng-template>
         </button>

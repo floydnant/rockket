@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpService } from '../http/http.service'
-import { SignupCredentialsDto, AuthSuccessResponse, LoginCredentialsDto } from '../models/auth.model'
+import { SignupCredentialsDto, LoginCredentialsDto } from '../fullstack-shared-models/auth.model'
+import { AuthSuccessResponse } from '../shared/models'
 
 @Injectable({
     providedIn: 'root',

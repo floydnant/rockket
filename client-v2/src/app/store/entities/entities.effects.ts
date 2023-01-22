@@ -5,7 +5,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { catchError, concatMap, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
 import { DialogService } from 'src/app/modal/dialog.service'
-import { EntityType } from 'src/app/models/entities.model'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { EntitiesService } from 'src/app/services/entities.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
@@ -57,7 +57,7 @@ export class EntitiesEffects {
             ofType(entitiesActions.loadDetail),
             mergeMap(dto => {
                 const res$ = this.store
-                    .select(state => state.entities[dto.entityType]?.[dto.id])
+                    .select(state => state.entities.entityDetails[dto.entityType][dto.id])
                     .pipe(
                         first(),
                         switchMap(entityDetail => {
@@ -78,7 +78,7 @@ export class EntitiesEffects {
     showRenameDialog = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.openRenameDialog),
-            switchMap(({ id }) => {
+            switchMap(({ id, entityType }) => {
                 return this.store
                     .select(state => state.entities.entityTree)
                     .pipe(
@@ -89,11 +89,10 @@ export class EntitiesEffects {
                             const entity = getEntityById(entityTree, id)
                             if (!entity) return entitiesActions.abortRenameDialog()
 
-                            const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
-                            const newName = prompt(`Rename the ${entityType}`, entity.name)?.trim()
-                            if (!newName) return entitiesActions.abortRenameDialog()
+                            const title = prompt(`Rename the ${entityType}`, entity.title)?.trim()
+                            if (!title) return entitiesActions.abortRenameDialog()
 
-                            return entitiesActions.rename({ id, newName, showToast: true })
+                            return entitiesActions.rename({ id, entityType, title, showToast: true })
                         })
                     )
             })
@@ -103,9 +102,8 @@ export class EntitiesEffects {
     rename = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.rename),
-            mergeMap(({ id, newName, showToast }) => {
-                const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
-                const res$ = this.entitiesService.rename({ entityType, id, newName })
+            mergeMap(({ id, entityType, title, showToast }) => {
+                const res$ = this.entitiesService.rename({ entityType, id, title })
 
                 return res$.pipe(
                     showToast
@@ -115,7 +113,7 @@ export class EntitiesEffects {
                               error: getMessageFromHttpError,
                           })
                         : tap(),
-                    map(() => entitiesActions.renameSuccess({ id, newName })),
+                    map(() => entitiesActions.renameSuccess({ id, entityType, title })),
                     catchError(err => {
                         if (!showToast) this.toast.error(getMessageFromHttpError(err))
 
@@ -129,7 +127,7 @@ export class EntitiesEffects {
     showDeleteDialog = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.openDeleteDialog),
-            switchMap(({ id }) => {
+            switchMap(({ id, entityType }) => {
                 return this.store
                     .select(state => state.entities.entityTree)
                     .pipe(
@@ -140,16 +138,15 @@ export class EntitiesEffects {
                             const entity = getEntityById(entityTree, id)
                             if (!entity) return of(entitiesActions.abortDeleteDialog())
 
-                            const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
                             const closed$ = this.dialogService.confirm({
                                 title: `Delete this ${entityType}?`,
-                                text: `Are you sure you want to delete the ${entityType} '${entity.name}'?`,
+                                text: `Are you sure you want to delete the ${entityType} '${entity.title}'?`,
                                 buttons: [{ text: 'Cancel' }, { text: 'Delete', className: 'button--danger' }],
                             }).closed
 
                             return closed$.pipe(
                                 map(response => {
-                                    if (response == 'Delete') return entitiesActions.delete({ id })
+                                    if (response == 'Delete') return entitiesActions.delete({ id, entityType })
                                     return entitiesActions.abortDeleteDialog()
                                 })
                             )
@@ -162,8 +159,7 @@ export class EntitiesEffects {
     delete = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.delete),
-            mergeMap(({ id }) => {
-                const entityType = EntityType.TASKLIST // @TODO: remove hardcoded value
+            mergeMap(({ id, entityType }) => {
                 const res$ = this.entitiesService.delete({ entityType, id })
 
                 return res$.pipe(
@@ -185,7 +181,7 @@ export class EntitiesEffects {
 
                                 this.router.navigateByUrl(parentEntity ? `/home/${parentEntity.id}` : '/home')
                             }),
-                            map(() => entitiesActions.deleteSuccess({ id }))
+                            map(() => entitiesActions.deleteSuccess({ id, entityType }))
                         )
                     }),
                     catchError(err => of(entitiesActions.deleteError({ ...err, id })))

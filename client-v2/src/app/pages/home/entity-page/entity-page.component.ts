@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store'
 import { map, of, shareReplay, switchMap } from 'rxjs'
 import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs.component'
 import { useDataForAction } from 'src/app/components/molecules/drop-down/drop-down.component'
-import { EntityType } from 'src/app/models/entities.model'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { traceEntity } from 'src/app/store/entities/utils'
@@ -45,11 +45,12 @@ export class EntityPageComponent {
     breadcrumbs$ = this.activeEntityTrace$.pipe(
         map(trace =>
             trace?.map<Breadcrumb>(entity => ({
-                title: entity.name,
-                icon: EntityType.TASKLIST, // @TODO: Remove hardcoded value
+                title: entity.title,
+                icon: entity.entityType,
                 route: `/home/${entity.id}`,
-                // @TODO: Remove hardcoded value
-                contextMenuItems: this.entityOptionsMap[EntityType.TASKLIST].map(useDataForAction(entity.id)),
+                contextMenuItems: this.entityOptionsMap[entity.entityType].map(
+                    useDataForAction({ id: entity.id, entityType: entity.entityType })
+                ),
             }))
         )
     )

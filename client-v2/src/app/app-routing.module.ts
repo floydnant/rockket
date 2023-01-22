@@ -69,7 +69,7 @@ const routes: Routes = [
                     inject(Store).select((state: AppState) => {
                         const activeEntityId = route.paramMap.get('id') as string
                         const activeEntity = getEntityById(state.entities.entityTree || [], activeEntityId)
-                        return activeEntity ? `${activeEntity.name} ${APP_TITLE_SUFFIX}` : APP_TITLE
+                        return activeEntity ? `${activeEntity.title} ${APP_TITLE_SUFFIX}` : APP_TITLE
                     }),
             },
             { path: '', component: DashboardComponent, title: `Dashboard ${APP_TITLE_SUFFIX}` },

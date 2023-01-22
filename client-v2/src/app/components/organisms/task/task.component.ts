@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
-import { TaskPreview, TaskPriority, TaskStatus } from '../../../models/task.model'
+import { TaskPreview, TaskPriority, TaskStatus } from '../../../fullstack-shared-models/task.model'
 import { PageEntityState, TaskState } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 import { MenuItem } from '../../molecules/drop-down/drop-down.component'
 

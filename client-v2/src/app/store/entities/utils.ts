@@ -1,20 +1,24 @@
-import { EntityPreview, EntityPreviewFlattend, EntityPreviewRecursive } from 'src/app/models/entities.model'
+import {
+    EntityPreview,
+    EntityPreviewFlattend,
+    EntityPreviewRecursive,
+} from 'src/app/fullstack-shared-models/entities.model'
 
 export const buildEntityTree = (allEntities: EntityPreview[]) => {
-    const getChildren = (childIds: string[]): EntityPreviewRecursive[] => {
-        const children = allEntities.filter(entity => childIds.includes(entity.id))
+    const getChildren = (parentId: string): EntityPreviewRecursive[] => {
+        const children = allEntities.filter(entity => parentId == entity.parentId)
 
-        return children.map(({ childLists, ...child }) => {
-            const grandChildren = getChildren(childLists)
-            return { ...child, children: grandChildren }
+        return children.map(entity => {
+            const grandChildren = getChildren(entity.id)
+            return { ...entity, children: grandChildren }
         })
     }
 
     const entityTree = allEntities
-        .filter(entity => !entity.parentListId)
-        .map<EntityPreviewRecursive>(({ childLists, ...entity }) => ({
+        .filter(entity => !entity.parentId)
+        .map<EntityPreviewRecursive>(entity => ({
             ...entity,
-            children: getChildren(childLists),
+            children: getChildren(entity.id),
         }))
     return entityTree
 }
@@ -48,7 +52,7 @@ export const traceEntity = (
     })
 }
 
-export const getParentByChildId = (
+export const getParentEntityByChildId = (
     entityTree: EntityPreviewRecursive[],
     id: string
 ): { subTree: EntityPreviewRecursive[]; index: number } | void => {
@@ -58,14 +62,14 @@ export const getParentByChildId = (
         if (entity.id == id) return { subTree: entityTree, index }
 
         if (entity.children.length) {
-            const result = getParentByChildId(entity.children, id)
+            const result = getParentEntityByChildId(entity.children, id)
             if (result) return result
         }
     }
 }
 
 export const getEntityById = (entityTree: EntityPreviewRecursive[], id: string): EntityPreviewRecursive | void => {
-    const res = getParentByChildId(entityTree, id)
+    const res = getParentEntityByChildId(entityTree, id)
     if (!res) return
 
     return res.subTree[res.index]

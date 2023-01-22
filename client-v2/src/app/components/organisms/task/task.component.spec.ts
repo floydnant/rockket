@@ -1,11 +1,8 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
-import { TaskPriority, TaskStatus } from 'src/app/models/task.model'
-import { DoubleEllipsisIconComponent } from '../../atoms/icons/double-ellipsis-icon/double-ellipsis-icon.component'
-import { IconComponent } from '../../atoms/icons/icon/icon.component'
+import { TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { IconsModule } from '../../atoms/icons/icons.module'
-import { PriorityIconComponent } from '../../atoms/icons/priority-icon/priority-icon.component'
 
 import { TaskComponent } from './task.component'
 
