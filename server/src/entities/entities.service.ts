@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { EntityPreview, EntityType } from 'src/fullstack-shared-models/entities.model'
-import { ListService } from 'src/entities/list/list.service'
-import { TaskService } from 'src/entities/task/task.service'
+import { EntityPreview, EntityType } from '../fullstack-shared-models/entities.model'
+import { ListService } from './list/list.service'
+import { TaskService } from './task/task.service'
 
 @Injectable()
 export class EntitiesService {

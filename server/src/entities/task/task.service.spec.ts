@@ -1,17 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { UserModule } from '../../user/user.module'
 import { PrismaModule } from '../../prisma-abstractions/prisma.module'
 import { ListRepository } from '../list/list.repository'
+import { PermissionsService } from '../permissions/permissions.service'
 import { TaskRepository } from './task.repository'
 import { TaskService } from './task.service'
-import { PermissionsService } from '../permissions/permissions.service'
 
 describe('TaskService', () => {
     let service: TaskService
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [PrismaModule, UserModule],
+            imports: [PrismaModule],
             providers: [TaskService, TaskRepository, ListRepository, PermissionsService],
         }).compile()
 
