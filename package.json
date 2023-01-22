@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "<img src=\"./src/assets/todo-app-logo/todo-app-logo.png\" height=\"100px\">",
     "scripts": {
+        "ci": "bash ./run-ci-scripts.sh server && bash ./run-ci-scripts.sh client-v2",
         "server+client": "concurrently \"cd client && ng serve\" \"cd server && ts-node-dev server.ts\"",
         "server": "cd server && ts-node-dev server.ts",
         "client": "cd client && npm run serve",
