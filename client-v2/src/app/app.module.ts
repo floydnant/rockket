@@ -49,7 +49,7 @@ import { MenuToggleComponent } from './components/templates/sidebar-layout/menu-
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component'
 import { EntityViewComponent } from './components/organisms/entity-view/entity-view.component'
 import { TasklistViewComponent } from './components/organisms/entity-view/views/tasklist-view/tasklist-view.component'
-import { EditableEntityNameComponent } from './components/molecules/editable-entity-heading/editable-entity-name.component'
+import { EditableEntityTitleComponent } from './components/molecules/editable-entity-heading/editable-entity-title.component'
 
 @NgModule({
     declarations: [
@@ -87,7 +87,7 @@ import { EditableEntityNameComponent } from './components/molecules/editable-ent
         DashboardComponent,
         EntityViewComponent,
         TasklistViewComponent,
-        EditableEntityNameComponent,
+        EditableEntityTitleComponent,
     ],
     imports: [
         BrowserModule,

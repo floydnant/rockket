@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { CreateTasklistDto, TaskList, UpdateTasklistDto } from 'src/app/models/list.model'
+import { CreateTasklistDto, TaskList, UpdateTasklistDto } from 'src/app/fullstack-shared-models/list.model'
 import { HttpService } from '../../http/http.service'
 import { HttpSuccessResponse } from '../../http/types'
 import { EntityService } from '../entities.service'

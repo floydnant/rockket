@@ -3,9 +3,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { BehaviorSubject, combineLatest, merge, of } from 'rxjs'
 import { distinctUntilChanged, first, map, shareReplay, switchMap, tap } from 'rxjs/operators'
-import { ENTITY_NAME_DEFAULTS } from 'src/app/models/defaults'
-import { EntityType } from 'src/app/models/entities.model'
-import { TasklistDetail } from 'src/app/models/list.model'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
 import { AppState } from 'src/app/store'
 import { listActions } from 'src/app/store/entities/entities.actions'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
@@ -25,7 +24,6 @@ export class TasklistViewComponent {
     ) {}
 
     EntityType = EntityType
-    DEFAULT_TASKLIST_NAME = ENTITY_NAME_DEFAULTS[EntityType.TASKLIST]
 
     entity$ = this.viewData.entity$
     detail$ = this.viewData.detail$

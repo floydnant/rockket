@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common'
 import { PrismaClient, Tasklist } from '@prisma/client'
-import { UpdateTasklistDto } from '../src/task/list/list.dto'
+import { UpdateTasklistDto } from '../src/entities/list/list.dto'
 import { DbHelper } from '../src/prisma-abstractions/db-helper'
 import { newList, users } from './fixtures'
 import { initApplication, signup, createTasklist, typeBearer, request } from './testing-utils'
@@ -21,7 +21,7 @@ beforeEach(async () => {
 describe('List CRUD (e2e)', () => {
     it('can create a tasklist', async () => {
         const createdList: Tasklist = await createTasklist(app, authToken, newList)
-        expect(createdList.name).toEqual(newList.name)
+        expect(createdList.title).toEqual(newList.title)
     })
     it('can update a tasklist', async () => {
         const createdList = await createTasklist(app, authToken, newList)
