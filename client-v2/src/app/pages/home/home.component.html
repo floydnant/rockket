@@ -127,7 +127,10 @@
                             </button>
                         </div>
                         <ng-template #nodeDropDown>
-                            <app-drop-down [items]="node.menuItems" [data]="{ id: node.id, entityType: node.entityType }"></app-drop-down>
+                            <app-drop-down
+                                [items]="node.menuItems"
+                                [data]="{ id: node.id, entityType: node.entityType }"
+                            ></app-drop-down>
                         </ng-template>
                     </button>
                 </cdk-tree-node>

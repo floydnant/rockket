@@ -103,7 +103,11 @@ model Task {
     //
     blockedBy    Task?    @relation("blocking", fields: [blockedById], references: [id])
     blockedById  String?
-
+    //   ||
+    //   ||
+    //  _||_
+    //  \  /
+    //   \/
     // dependencies Task[] @relation("dependencies")
     // dependendents Task[] @relation("dependencies")
 

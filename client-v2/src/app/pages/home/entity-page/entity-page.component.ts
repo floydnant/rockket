@@ -48,7 +48,9 @@ export class EntityPageComponent {
                 title: entity.title,
                 icon: entity.entityType,
                 route: `/home/${entity.id}`,
-                contextMenuItems: this.entityOptionsMap[entity.entityType].map(useDataForAction(entity.id)),
+                contextMenuItems: this.entityOptionsMap[entity.entityType].map(
+                    useDataForAction({ id: entity.id, entityType: entity.entityType })
+                ),
             }))
         )
     )
