@@ -70,7 +70,6 @@ export const taskActions = createActionGroup({
         'create success': props<{ createdTask: TaskPreview }>(),
         'create error': props<HttpServerErrorResponseWithData>(),
 
-
         'update status': props<{ id: string; status: TaskStatus }>(),
         'update status success': props<{ id: string; status: TaskStatus }>(),
         'update status error': props<HttpServerErrorResponseWithData>(),
