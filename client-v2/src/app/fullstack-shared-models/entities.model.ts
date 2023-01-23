@@ -1,6 +1,6 @@
 export enum EntityType {
     TASKLIST = 'Tasklist',
-    // TASK = 'Task',
+    TASK = 'Task',
     // DOCUMENT = 'Document',
     // VIEW = 'View',
 }

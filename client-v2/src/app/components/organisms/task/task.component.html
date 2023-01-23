@@ -7,6 +7,7 @@
         completed: task.status == TaskStatus.COMPLETED,
         titleHasFocus: titleFocusable.isFocused
     }"
+    [cdkContextMenuTriggerFor]="menu"
 >
     <!-- @TODO: Fix this -->
     <!-- notesHasFocus: notesFocusable.isFocused -->
@@ -57,10 +58,13 @@
                 #trigger="cdkMenuTriggerFor"
                 class="absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
             ></double-ellipsis-icon>
+
             <ng-template #menu>
-                <app-drop-down [items]="(menuItems$ | async) || []" [rootTrigger]="trigger"></app-drop-down>
-                <!-- @TODO: add [data] back in, once TASK is avialable -->
-                <!-- [data]="{ id: task.id, entityType: EntityType.TASK }" -->
+                <app-drop-down
+                    [items]="(menuItems$ | async) || []"
+                    [rootTrigger]="trigger"
+                    [data]="{ id: task.id, entityType: EntityType.TASK }"
+                ></app-drop-down>
             </ng-template>
         </div>
     </div>

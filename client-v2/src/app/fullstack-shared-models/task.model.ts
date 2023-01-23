@@ -53,8 +53,13 @@ export interface Task {
 export type TaskPreview = Pick<Task, 'id' | 'title' | 'status' | 'priority' | 'listId' | 'parentTaskId'> & {
     description: string | null
 }
+export type TaskDetail = Task
 
 export type TaskPreviewRecursive = TaskPreview & { children: TaskPreviewRecursive[] | null }
+export type TaskPreviewFlattend = Omit<TaskPreviewRecursive, 'children'> & {
+    path: string[]
+    childrenCount: number
+}
 
 // @TODO: ITaskEvent
 

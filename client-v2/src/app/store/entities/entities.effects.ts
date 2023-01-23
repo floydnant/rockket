@@ -3,14 +3,15 @@ import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { catchError, concatMap, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
+import { catchError, concatMap, first, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs'
 import { DialogService } from 'src/app/modal/dialog.service'
-import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TaskList } from 'src/app/fullstack-shared-models/list.model'
+import { Task } from 'src/app/fullstack-shared-models/task.model'
 import { EntitiesService } from 'src/app/services/entities.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
 import { entitiesActions } from './entities.actions'
-import { getEntityById, traceEntity } from './utils'
+import { getEntityByIdIncludingTasks, traceEntity } from './utils'
 
 @Injectable()
 export class EntitiesEffects {
@@ -80,13 +81,14 @@ export class EntitiesEffects {
             ofType(entitiesActions.openRenameDialog),
             switchMap(({ id, entityType }) => {
                 return this.store
-                    .select(state => state.entities.entityTree)
+                    .select(state => state.entities)
                     .pipe(
                         first(),
-                        map(entityTree => {
-                            if (!entityTree) return entitiesActions.abortRenameDialog()
+                        map(({ entityTree, taskTreeMap }) => {
+                            if (!entityTree || !taskTreeMap) return entitiesActions.abortRenameDialog()
 
-                            const entity = getEntityById(entityTree, id)
+                            // @TODO: We can optimize this by checking the entityType and calling the appropriate function accordingly
+                            const entity = getEntityByIdIncludingTasks(entityTree, taskTreeMap, id)
                             if (!entity) return entitiesActions.abortRenameDialog()
 
                             const title = prompt(`Rename the ${entityType}`, entity.title)?.trim()
@@ -103,7 +105,7 @@ export class EntitiesEffects {
         return this.actions$.pipe(
             ofType(entitiesActions.rename),
             mergeMap(({ id, entityType, title, showToast }) => {
-                const res$ = this.entitiesService.rename({ entityType, id, title })
+                const res$ = this.entitiesService.rename({ entityType, id, title }) as Observable<Task | TaskList>
 
                 return res$.pipe(
                     showToast
@@ -129,13 +131,14 @@ export class EntitiesEffects {
             ofType(entitiesActions.openDeleteDialog),
             switchMap(({ id, entityType }) => {
                 return this.store
-                    .select(state => state.entities.entityTree)
+                    .select(state => state.entities)
                     .pipe(
                         first(),
-                        concatMap(entityTree => {
-                            if (!entityTree) return of(entitiesActions.abortDeleteDialog())
+                        concatMap(({ entityTree, taskTreeMap }) => {
+                            if (!entityTree || !taskTreeMap) return of(entitiesActions.abortDeleteDialog())
 
-                            const entity = getEntityById(entityTree, id)
+                            // @TODO: We can optimize this by checking the entityType and calling the appropriate function accordingly
+                            const entity = getEntityByIdIncludingTasks(entityTree, taskTreeMap, id)
                             if (!entity) return of(entitiesActions.abortDeleteDialog())
 
                             const closed$ = this.dialogService.confirm({

@@ -4,6 +4,10 @@
         @apply text-submit-500 hover:text-submit-400 hover:underline;
     }
 
+    pre {
+        @apply select-text text-submit-400;
+    }
+
     .button-m {
         @apply rounded-md bg-tinted-800 px-2 py-0.5 text-tinted-300 transition-colors hover:bg-tinted-700 hover:text-tinted-100;
     }

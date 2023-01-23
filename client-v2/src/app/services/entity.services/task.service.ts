@@ -29,4 +29,8 @@ export class TaskService implements EntityService {
     loadRootLevelTasks(listId: string) {
         return this.http.get<TaskPreview[]>(`/list/${listId}/tasks`)
     }
+
+    loadAllTaskPreviews() {
+        return this.http.get<TaskPreview[]>(`/task/previews`)
+    }
 }

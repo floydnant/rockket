@@ -1,17 +1,27 @@
 import { createReducer, on } from '@ngrx/store'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
-import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
+import { TaskPreviewRecursive } from 'src/app/fullstack-shared-models/task.model'
 import { entitiesActions, listActions, taskActions } from './entities.actions'
-import { EntitiesState } from './entities.state'
-import { getParentEntityByChildId, getEntityById, buildEntityTree } from './utils'
+import { EntitiesState, TaskTreeMap } from './entities.state'
+import {
+    buildEntityTree,
+    buildTaskTree,
+    buildTaskTreeMap,
+    getEntityById,
+    getParentEntityByChildIdIncludingTasks,
+    getTaskById,
+} from './utils'
 
 const initialState: EntitiesState = {
     entityTree: null,
     entityDetails: {
         [EntityType.TASKLIST]: {},
+        [EntityType.TASK]: {},
     },
 
     taskTreeMap: null,
+    // taskLoadingMap: {},
+    // tasksLoadingForParentMap: {},
 }
 
 export const entitiesReducer = createReducer(
@@ -38,7 +48,21 @@ export const entitiesReducer = createReducer(
         }
     }),
 
-    on(entitiesActions.renameSuccess, (state, { id, title }): EntitiesState => {
+    on(entitiesActions.renameSuccess, (state, { id, title, entityType }): EntitiesState => {
+        if (entityType == EntityType.TASK) {
+            const taskTreeMapCopy = structuredClone(state.taskTreeMap)
+            const task = getTaskById(taskTreeMapCopy, id)
+            if (!task) return state
+
+            task.title = title
+
+            return {
+                ...state,
+                taskTreeMap: taskTreeMapCopy,
+            }
+        }
+
+        // @TODO: We can optimize this by checking the entityType, then calling the appropriate function and reducing the appropriate state
         const entityTreeCopy = structuredClone(state.entityTree)
         const entity = getEntityById(entityTreeCopy, id)
         if (!entity) return state
@@ -53,12 +77,19 @@ export const entitiesReducer = createReducer(
 
     on(entitiesActions.deleteSuccess, (state, { id }): EntitiesState => {
         const entityTreeCopy = structuredClone(state.entityTree)
-        const result = getParentEntityByChildId(entityTreeCopy, id)
+        const taskTreeMapCopy = structuredClone(state.taskTreeMap)
+
+        // @TODO: We can optimize this by checking the entityType, then calling the appropriate function and reducing the appropriate state
+        const result = getParentEntityByChildIdIncludingTasks(entityTreeCopy, taskTreeMapCopy, id)
         if (!result) return state
 
         result.subTree.splice(result.index, 1)
 
-        return { ...state, entityTree: entityTreeCopy }
+        return {
+            ...state,
+            entityTree: entityTreeCopy,
+            taskTreeMap: taskTreeMapCopy,
+        }
     }),
 
     ////////////////////////////////// Tasklist ////////////////////////////////////
@@ -107,25 +138,40 @@ export const entitiesReducer = createReducer(
     }),
 
     ////////////////////////////////// Task ////////////////////////////////////
-    on(taskActions.loadRootLevelTasksSuccess, (state, { listId: id, tasks }) => {
+    on(taskActions.loadTaskPreviewsSuccess, (state, { previews }): EntitiesState => {
         return {
             ...state,
-            taskTreeMap: {
-                ...(state.taskTreeMap || {}),
-                [id]: tasks,
-            },
+            taskTreeMap: buildTaskTreeMap(previews),
         }
     }),
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    on(taskActions.createSuccess, (state, { type, ...task }) => {
-        const previousTasks: TaskPreview[] = state.taskTreeMap?.[task.listId] || []
+    on(taskActions.loadRootLevelTasksSuccess, (state, { listId, tasks }): EntitiesState => {
+        const newTaskTreeMap = { ...(structuredClone(state.taskTreeMap) || {}) } as TaskTreeMap
+
+        newTaskTreeMap[listId] = buildTaskTree(tasks)
+
         return {
             ...state,
-            taskTreeMap: {
-                ...(state.taskTreeMap || {}),
-                [task.listId]: [...previousTasks, task],
-            },
+            taskTreeMap: newTaskTreeMap,
+        }
+    }),
+    on(taskActions.createSuccess, (state, { createdTask }): EntitiesState => {
+        const newTaskTreeMap = structuredClone(state.taskTreeMap || {}) as TaskTreeMap
+        if (!newTaskTreeMap[createdTask.listId]) newTaskTreeMap[createdTask.listId] = []
+
+        const createdTaskRecursive: TaskPreviewRecursive = { ...createdTask, children: null }
+        if (!createdTask.parentTaskId) newTaskTreeMap[createdTask.listId].push(createdTaskRecursive)
+        else {
+            const parentTask = getTaskById(newTaskTreeMap[createdTask.listId], createdTask.parentTaskId)
+            if (!parentTask) throw new Error('Could not find parent task')
+
+            if (parentTask.children) parentTask.children.push(createdTaskRecursive)
+            else parentTask.children = [createdTaskRecursive]
+        }
+
+        return {
+            ...state,
+            taskTreeMap: newTaskTreeMap,
         }
     })
 )

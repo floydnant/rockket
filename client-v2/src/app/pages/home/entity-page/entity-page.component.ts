@@ -5,10 +5,9 @@ import { Store } from '@ngrx/store'
 import { map, of, shareReplay, switchMap } from 'rxjs'
 import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs.component'
 import { useDataForAction } from 'src/app/components/molecules/drop-down/drop-down.component'
-import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
-import { traceEntity } from 'src/app/store/entities/utils'
+import { traceEntity, traceEntityIncludingTasks } from 'src/app/store/entities/utils'
 
 @UntilDestroy()
 @Component({
@@ -28,12 +27,21 @@ export class EntityPageComponent {
     activeEntityTrace$ = this.activeEntityId$.pipe(
         switchMap(activeId => {
             return this.store
-                .select(state => state.entities.entityTree)
+                .select(state => state.entities)
                 .pipe(
-                    map(entityTree => {
+                    map(({ entityTree, taskTreeMap }) => {
+                        // @TODO: how do we check if the entity is loading or if the request was not even sent yet?
                         if (!entityTree) return null
 
-                        return traceEntity(entityTree, activeId)
+                        // const isActiveTaskLoading = taskLoadingMap[activeId] as boolean | undefined
+                        // if (!isActiveTaskLoading) {
+                        //     this.store.dispatch(Load the given task)
+                        //     return null
+                        // }
+
+                        if (!taskTreeMap) return traceEntity(entityTree, activeId)
+
+                        return traceEntityIncludingTasks(entityTree, taskTreeMap, activeId)
                     })
                 )
         }),

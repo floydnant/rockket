@@ -1,7 +1,7 @@
 import { ArrayDataSource } from '@angular/cdk/collections'
 import { FlatTreeControl } from '@angular/cdk/tree'
 import { Component, OnInit } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { map, tap } from 'rxjs'
@@ -9,8 +9,8 @@ import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.compo
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
-import { entitiesActions, listActions } from 'src/app/store/entities/entities.actions'
-import { flattenEntityTree, traceEntity } from 'src/app/store/entities/utils'
+import { entitiesActions, listActions, taskActions } from 'src/app/store/entities/entities.actions'
+import { flattenEntityTreeIncludingTasks, traceEntity } from 'src/app/store/entities/utils'
 import { moveToMacroQueue } from 'src/app/utils'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 
@@ -30,7 +30,6 @@ export const convertToEntityTreeNode = (entity: EntityPreviewFlattend): EntityTr
     const { childrenCount, ...restEntity } = entity
     const node: EntityTreeNode = {
         ...restEntity,
-
         expandable: childrenCount > 0,
         isExpanded: restEntity.path.length < 2,
         menuItems: [],
@@ -44,12 +43,18 @@ export const convertToEntityTreeNode = (entity: EntityPreviewFlattend): EntityTr
     styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-    constructor(private store: Store<AppState>, private actions$: Actions, private route: ActivatedRoute) {}
+    constructor(
+        private store: Store<AppState>,
+        private actions$: Actions,
+        private route: ActivatedRoute,
+        private router: Router
+    ) {}
 
     EntityType = EntityType
 
     ngOnInit(): void {
         moveToMacroQueue(() => this.store.dispatch(entitiesActions.loadPreviews()))
+        moveToMacroQueue(() => this.store.dispatch(taskActions.loadTaskPreviews()))
     }
 
     getParentNode(node: EntityTreeNode) {
@@ -81,9 +86,9 @@ export class HomeComponent implements OnInit {
 
     entityPreviewsTransformed: EntityTreeNode[] = []
     entityPreviewsTransformed$ = this.store
-        .select(state => state.entities.entityTree)
+        .select(state => state.entities)
         .pipe(
-            map(entityTree => {
+            map(({ entityTree, taskTreeMap }) => {
                 // @TODO: come up with a better solution for this
                 // NOTE: using `ActivatedRoute` doesn't work in here either
                 const segments = location.pathname.split('/')
@@ -91,7 +96,9 @@ export class HomeComponent implements OnInit {
 
                 if (!entityTree) return []
 
-                const treeNodes = flattenEntityTree(entityTree).map(convertToEntityTreeNode)
+                const flattendEntityTree = flattenEntityTreeIncludingTasks(entityTree, taskTreeMap || {})
+                const treeNodes = flattendEntityTree.map(convertToEntityTreeNode)
+
                 const [, ...entityTraceWithoutActive] = traceEntity(entityTree, activeId).reverse()
 
                 return treeNodes.map<EntityTreeNode>(node => {

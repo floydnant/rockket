@@ -33,26 +33,30 @@ export class TasklistViewComponent {
         private store: Store<AppState>,
         private entityView: EntityViewComponent // needed to update the secondary progress bar, @TODO: find a clearer way to do this
     ) {
-        this.entity$
-            .pipe(
-                distinctUntilChanged((previous, current) => previous?.id == current?.id),
-                untilDestroyed(this)
-            )
-            .subscribe(entity => {
-                if (!entity) return
-                this.store.dispatch(taskActions.loadRootLevelTasks({ listId: entity.id }))
-            })
+        // @TODO: This will be needed again when fetching stuff lazily (not the whole tree up front)
+        // this.entity$
+        //     .pipe(
+        //         distinctUntilChanged((previous, current) => previous?.id == current?.id),
+        //         untilDestroyed(this)
+        //     )
+        //     .subscribe(entity => {
+        //         if (!entity) return
+        //         this.store.dispatch(taskActions.loadRootLevelTasks({ listId: entity.id }))
+        //     })
     }
 
     EntityType = EntityType
 
+    // @TODO: rename this to `tasklist$` as we know that it must be a tasklist
     entity$ = this.viewData.entity$
     detail$ = this.viewData.detail$
     options$ = this.viewData.options$
+
+    children$ = this.entity$.pipe(map(entity => entity?.children.filter(child => child.entityType != EntityType.TASK)))
     tasks$ = combineLatest([this.store.select(state => state.entities.taskTreeMap), this.entity$]).pipe(
         map(([taskTreeMap, entity]) => {
             if (!taskTreeMap || !entity) return null
-            return taskTreeMap[entity.id]
+            return taskTreeMap[entity.id] || []
         })
     )
 
@@ -109,6 +113,7 @@ export class TasklistViewComponent {
                 task => task.status == TaskStatus.COMPLETED || task.status == TaskStatus.NOT_PLANNED
             )
 
+            // @TODO: we should calculate the progress recursively
             const progress = (closed.length / tasks.length) * 100 || 0
             return {
                 all: sortedTasks,
@@ -165,7 +170,7 @@ export class TasklistViewComponent {
     createTask() {
         this.entity$.pipe(first()).subscribe(entity => {
             if (!entity) return
-            this.store.dispatch(taskActions.create({ listId: entity.id, title: 'Untitled task' }))
+            this.store.dispatch(taskActions.create({ listId: entity.id }))
         })
     }
 }

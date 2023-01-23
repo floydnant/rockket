@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { BehaviorSubject, of } from 'rxjs'
-import { TaskPreview, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
-import { getGeneralMenuItems } from 'src/app/shared/entity-menu-items'
+import { TaskPreviewRecursive, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { AppState } from 'src/app/store'
-import { taskActions } from 'src/app/store/entities/entities.actions'
+import { entitiesActions, taskActions } from 'src/app/store/entities/entities.actions'
 
 @Component({
     selector: 'app-task-tree',
@@ -15,15 +16,15 @@ import { taskActions } from 'src/app/store/entities/entities.actions'
 export class TaskTreeComponent {
     constructor(private store: Store<AppState>) {}
 
-    tasks$ = new BehaviorSubject<TaskPreview[] | null>(null)
-    @Input() set tasks(tasks: TaskPreview[]) {
+    tasks$ = new BehaviorSubject<TaskPreviewRecursive[] | null>(null)
+    @Input() set tasks(tasks: TaskPreviewRecursive[]) {
         this.tasks$.next(tasks)
     }
 
-    menuItems$ = of(getGeneralMenuItems(this.store))
+    menuItems$ = of(getEntityMenuItemsMap(this.store)[EntityType.TASK])
 
-    onTitleChange(id: string, newTitle: string) {
-        this.store.dispatch(taskActions.rename({ id, newTitle }))
+    onTitleChange(id: string, title: string) {
+        this.store.dispatch(entitiesActions.rename({ id, title, entityType: EntityType.TASK }))
     }
     onDescriptionChange(id: string, newDescription: string) {
         this.store.dispatch(taskActions.updateDescription({ id, newDescription }))

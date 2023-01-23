@@ -45,4 +45,25 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
         },
         ...getDangerMenuItems(store),
     ],
+    [EntityType.TASK]: [
+        ...getGeneralMenuItems(store),
+        // {
+        //     title: 'New Subtask',
+        //     action: (dto: EntityCrudDto) => store.dispatch(taskActions.create({ })),
+        // },
+        {
+            title: 'Open',
+            // @TODO: this is really fuckin hacky, lets think of a better way
+            route: '/home/:id',
+        },
+        // {
+        //     title: 'Duplicate',
+        //     action: (dto: EntityCrudDto) => store.dispatch(listActions.duplicateList(dto)),
+        // },
+        // {
+        //     title: `Export`,
+        //     action: (dto: EntityCrudDto) => store.dispatch(listActions.exportList(dto)),
+        // },
+        ...getDangerMenuItems(store),
+    ],
 })

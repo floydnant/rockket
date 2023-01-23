@@ -8,6 +8,23 @@ import { CreateTaskCommentDto, CreateTaskDto, UpdateTaskCommentDto, UpdateTaskDt
 export class TaskRepository {
     constructor(private prisma: PrismaService) {}
 
+    async getAllTasks(userId: string) {
+        return this.prisma.task.findMany({
+            /* @TODO: We are not fetching tasks for nested lists that the user has indirect access to 
+                      (lists that the user has not explicitly permission for, but can access due to having permission for ancestor lists) */
+            where: { list: { participants: { some: { userId } } } },
+            select: {
+                id: true,
+                title: true,
+                listId: true,
+                parentTaskId: true,
+                status: true,
+                priority: true,
+                description: true,
+            },
+        })
+    }
+
     async createTask(userId: string, dto: CreateTaskDto) {
         return this.prisma.task.create({
             data: {

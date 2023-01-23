@@ -8,6 +8,10 @@ import { TaskRepository } from './task.repository'
 export class TaskService {
     constructor(private taskRepository: TaskRepository, private permissions: PermissionsService) {}
 
+    async getAllTaskPreviews(userId: string) {
+        return this.taskRepository.getAllTasks(userId)
+    }
+
     async createTask(userId: string, dto: CreateTaskDto) {
         const hasPermission = await this.permissions.hasPermissionForList(
             userId,

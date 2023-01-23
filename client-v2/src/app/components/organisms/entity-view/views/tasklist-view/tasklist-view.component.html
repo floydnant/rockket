@@ -72,7 +72,7 @@
     >
         <button
             class="child | button-m text-tinted-200"
-            *ngFor="let child of entity.children"
+            *ngFor="let child of children$ | async"
             routerLink="/home/{{ child.id }}"
             cdkMenuItem
             [cdkContextMenuTriggerFor]="options"

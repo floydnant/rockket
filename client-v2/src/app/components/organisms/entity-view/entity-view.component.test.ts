@@ -8,6 +8,7 @@ import { EntityPageLabelComponent } from '../../atoms/entity-page-label/entity-p
 import { DropDownComponent } from '../../molecules/drop-down/drop-down.component'
 import { EditableEntityTitleComponent } from '../../molecules/editable-entity-heading/editable-entity-title.component'
 import { EntityViewComponent, entityViewComponentMap } from './entity-view.component'
+import { TaskViewComponent } from './views/task-view/task-view.component'
 import { TasklistViewComponent } from './views/tasklist-view/tasklist-view.component'
 
 const defaultTemplate = `
@@ -15,8 +16,9 @@ const defaultTemplate = `
 `
 
 const setupComponent = (template = defaultTemplate) => {
-    const entityViewComponents: (typeof entityViewComponentMap)[keyof typeof entityViewComponentMap][] = [
+    const entityViewComponents: typeof entityViewComponentMap[keyof typeof entityViewComponentMap][] = [
         TasklistViewComponent,
+        TaskViewComponent,
     ]
     cy.mount(template, {
         componentProperties: {

@@ -1,9 +1,10 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { HttpServerErrorResponse } from 'src/app/http/types'
+import { EntityPreview } from 'src/app/fullstack-shared-models/entities.model'
 import { CreateTasklistDto, TaskList } from 'src/app/fullstack-shared-models/list.model'
 import { CreateTaskDto, TaskPreview, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { EntityCrudDto } from 'src/app/services/entities.service'
-import { EntityPreview } from 'src/app/fullstack-shared-models/entities.model'
+import { PartialRequired } from 'src/app/utils/type.helpers'
 
 export type HttpServerErrorResponseWithData<T = { id: string }> = HttpServerErrorResponse & T
 
@@ -57,21 +58,18 @@ export const listActions = createActionGroup({
 export const taskActions = createActionGroup({
     source: 'Entity/Tasks',
     events: {
+        'load task previews': emptyProps(),
+        'load task previews success': props<{ previews: TaskPreview[] }>(),
+        'load task previews error': props<HttpServerErrorResponse>(),
+
         'load root level tasks': props<{ listId: string }>(),
         'load root level tasks success': props<{ listId: string; tasks: TaskPreview[] }>(),
         'load root level tasks error': props<HttpServerErrorResponseWithData>(),
 
-        create: props<CreateTaskDto>(),
-        'create success': props<TaskPreview>(),
+        create: props<PartialRequired<CreateTaskDto, 'listId'>>(),
+        'create success': props<{ createdTask: TaskPreview }>(),
         'create error': props<HttpServerErrorResponseWithData>(),
 
-        rename: props<{ id: string; newTitle: string }>(),
-        'rename success': props<{ id: string; newTitle: string }>(),
-        'rename error': props<HttpServerErrorResponseWithData>(),
-
-        delete: props<{ id: string }>(),
-        'delete success': props<{ id: string }>(),
-        'delete error': props<HttpServerErrorResponseWithData>(),
 
         'update status': props<{ id: string; status: TaskStatus }>(),
         'update status success': props<{ id: string; status: TaskStatus }>(),
