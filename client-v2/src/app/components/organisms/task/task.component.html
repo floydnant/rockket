@@ -11,8 +11,9 @@
 >
     <!-- @TODO: Fix this -->
     <!-- notesHasFocus: notesFocusable.isFocused -->
-    <div class="mb-1 box-border flex max-w-full items-center justify-between gap-2 px-2">
+    <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
         <div class="max-w-[calc(100%-1.7rem)]">
+            <div class="first-row">
             <span
                 class="status | mr-2 text-lg"
                 [appTooltip]="blocked || task.status"
@@ -34,6 +35,24 @@
             >
                 {{ task.title }}
             </span>
+        </div>
+
+            <div class="second-row | ml-0.5 flex gap-2" [class]="{ 'mt-1': (nodeData$ | async)?.hasChildren }">
+                <ng-container *ngIf="nodeData$ | async as nodeData">
+                    <button
+                        class="text-md text-tinted-400 transition-colors hover:text-tinted-300"
+                        *ngIf="nodeData.hasChildren"
+                        (click)="expansionChange.emit(!nodeData.isExpanded)"
+                    >
+                        <app-icon
+                            iconClass="fas fa-chevron-right"
+                            class="mr-1 inline-block transition-transform"
+                            [class.rotate-90]="nodeData.isExpanded"
+                        ></app-icon>
+                        Subtasks
+                    </button>
+                </ng-container>
+            </div>
         </div>
         <div class="relative mr-0.5 max-w-max">
             <div class="icon-group | flex max-w-max flex-wrap items-center justify-end gap-3 transition-transform">

@@ -1,11 +1,28 @@
 <div class="flex w-full flex-col gap-2">
-    <app-task
-        *ngFor="let task of tasks$ | async"
-        [task]="task"
-        [menuItems]="(menuItems$ | async) || []"
-        (titleChange)="onTitleChange(task.id, $event)"
-        (descriptionChange)="onDescriptionChange(task.id, $event)"
-        (statusChange)="onStatusChange(task.id, $event)"
-        (priorityChange)="onPriorityChange(task.id, $event)"
-    ></app-task>
+    <div class="tree-container | flex flex-col">
+        <div
+            *ngFor="let taskNode of treeWithUiChanges$ | async; let index = index"
+            class="tree-node | flex h-fit"
+            [class.hidden]="!shouldRender(taskNode)"
+        >
+            <div
+                class="indent-line | mr-6 border-l border-tinted-800"
+                *ngFor="let line of range(taskNode.path.length); let isMostInnerIndentLine = last"
+                [class.mt-2]="
+                    isMostInnerIndentLine && (getPreviousNode(index)?.path?.length || 0) < taskNode.path.length
+                "
+            ></div>
+
+            <app-task
+                [data]="taskNode"
+                class="mt-2 grow"
+                [menuItems]="(menuItems$ | async) || []"
+                (expansionChange)="toggleExpansion(taskNode, $event)"
+                (titleChange)="onTitleChange(taskNode.taskPreview.id, $event)"
+                (descriptionChange)="onDescriptionChange(taskNode.taskPreview.id, $event)"
+                (statusChange)="onStatusChange(taskNode.taskPreview.id, $event)"
+                (priorityChange)="onPriorityChange(taskNode.taskPreview.id, $event)"
+            ></app-task>
+        </div>
+    </div>
 </div>

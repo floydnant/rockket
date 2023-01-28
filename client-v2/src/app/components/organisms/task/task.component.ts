@@ -4,6 +4,7 @@ import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview, TaskPriority, TaskStatus } from '../../../fullstack-shared-models/task.model'
 import { PageEntityState, TaskState } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 import { MenuItem } from '../../molecules/drop-down/drop-down.component'
+import { TaskTreeNode } from '../task-tree/task-tree.component'
 
 @Component({
     selector: 'app-task',
@@ -17,8 +18,10 @@ export class TaskComponent {
     TaskPriority = TaskPriority
 
     task$ = new BehaviorSubject<TaskPreview | null>(null)
-    @Input() set task(tasks: TaskPreview) {
-        this.task$.next(tasks)
+    nodeData$ = new BehaviorSubject<Omit<TaskTreeNode, 'taskPreview'> | null>(null)
+    @Input() set data({ taskPreview, ...data }: TaskTreeNode) {
+        this.nodeData$.next(data)
+        this.task$.next(taskPreview)
     }
 
     menuItems$_ = new BehaviorSubject<MenuItem[] | null>(null)
@@ -31,6 +34,8 @@ export class TaskComponent {
             return items?.map(item => ({ ...item, route: item.route?.replace(/:id/, this.task$.value?.id || ':id') }))
         })
     )
+
+    @Output() expansionChange = new EventEmitter<boolean>()
 
     @Output() titleChange = new EventEmitter<string>()
     @Output() descriptionChange = new EventEmitter<string>()
