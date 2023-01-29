@@ -99,11 +99,12 @@ export class TaskEffects {
                 const res$ = this.taskService.update(id, { status })
 
                 return res$.pipe(
+                    this.toast.observe({
+                        success: `Updated status to ${status}`,
+                        error: 'Failed to update the status of this task.',
+                    }),
                     map(() => taskActions.updateStatusSuccess({ id, status })),
-                    catchError(err => {
-                        this.toast.error('Failed to update the status of this task.')
-                        return of(taskActions.updateStatusError({ ...err, id }))
-                    })
+                    catchError(err => of(taskActions.updateStatusError({ ...err, id })))
                 )
             })
         )

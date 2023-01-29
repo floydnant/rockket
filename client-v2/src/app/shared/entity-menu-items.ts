@@ -1,9 +1,10 @@
 import { Store } from '@ngrx/store'
 import { MenuItem, MenuItemVariant } from '../components/molecules/drop-down/drop-down.component'
 import { EntityType } from '../fullstack-shared-models/entities.model'
+import { TaskStatus } from '../fullstack-shared-models/task.model'
 import { EntityCrudDto } from '../services/entities.service'
 import { AppState } from '../store'
-import { entitiesActions, listActions } from '../store/entities/entities.actions'
+import { entitiesActions, listActions, taskActions } from '../store/entities/entities.actions'
 
 export type EntityMenuItemsMap = Record<EntityType, MenuItem[]>
 
@@ -21,6 +22,39 @@ export const getDangerMenuItems = (store: Store<AppState>): MenuItem[] => [
         action: (dto: EntityCrudDto) => store.dispatch(entitiesActions.openDeleteDialog(dto)),
     },
 ]
+
+export const getTaskStatusMenuItems = (store: Store<AppState>) =>
+    Object.values(TaskStatus).map<MenuItem>(status => ({
+        title: status.replace(/_/g, ' '),
+        icon: status,
+        action: (dto: { id: string }) => {
+            store.dispatch(taskActions.updateStatus({ id: dto.id, status }))
+        },
+    }))
+
+export const useDataForAction = (data: unknown) => {
+    return ({ action, children, ...item }: MenuItem): MenuItem => ({
+        ...item,
+        action: action ? (localData: unknown) => action(localData || data) : undefined,
+        children: children?.map(useDataForAction(data)),
+    })
+}
+export const interceptDataForAction = (callback: (data: unknown) => unknown) => {
+    return ({ action, children, ...item }: MenuItem): MenuItem => ({
+        ...item,
+        action: action ? (localData: unknown) => action(callback(localData)) : undefined,
+        children: children?.map(interceptDataForAction(callback)),
+    })
+}
+export const interceptItem = (callback: (item: MenuItem) => MenuItem) => {
+    return (item: MenuItem): MenuItem => {
+        const callbackResult = callback(item)
+        return {
+            ...callbackResult,
+            children: item.children?.map(interceptItem(callback)),
+        }
+    }
+}
 
 export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMap => ({
     [EntityType.TASKLIST]: [
@@ -55,6 +89,10 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
             title: 'Open',
             // @TODO: this is really fuckin hacky, lets think of a better way
             route: '/home/:id',
+        },
+        {
+            title: 'Status',
+            children: getTaskStatusMenuItems(store),
         },
         // {
         //     title: 'Duplicate',

@@ -43,4 +43,19 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
             taskTreeMap: newTaskTreeMap,
         }
     }),
+
+    on(taskActions.updateStatusSuccess, (state, { id, status }) => {
+        const taskTreeMapCopy = structuredClone(state.taskTreeMap || {}) as TaskTreeMap
+
+        // @TODO: This could be optimized by using the `listId` to reduce the number of tasks to iterate over
+        const task = getTaskById(Object.values(taskTreeMapCopy).flat(), id)
+        if (task) {
+            task.status = status
+        }
+
+        return {
+            ...state,
+            taskTreeMap: taskTreeMapCopy,
+        }
+    }),
 ]

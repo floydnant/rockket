@@ -14,33 +14,39 @@
     <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
         <div class="max-w-[calc(100%-1.7rem)]">
             <div class="first-row">
-            <span
-                class="status | mr-2 text-lg"
-                [appTooltip]="blocked || task.status"
-                [tooltipOptions]="{ avoidPositions: ['right'] }"
-            >
-                <page-entity-icon [icon]="loading || blocked || task.status"></page-entity-icon>
-            </span>
-            <span
-                #taskTitle
-                focusable
-                #titleFocusable="focusable"
-                class="title | outline-none"
-                [class]="{
-                    'line-through': task.status == TaskStatus.NOT_PLANNED,
-                    'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED
-                }"
-                contenteditable
-                (blur)="task.title != taskTitle.innerText && titleChange.emit(taskTitle.innerText)"
-            >
-                {{ task.title }}
-            </span>
-        </div>
+                <button
+                    class="status-btn"
+                    [appTooltip]="blocked || task.status"
+                    [tooltipOptions]="{ avoidPositions: ['right'] }"
+                    [cdkMenuTriggerFor]="taskStatusMenu"
+                >
+                    <page-entity-icon [icon]="loading || blocked || task.status"></page-entity-icon>
+                </button>
+                <ng-template #taskStatusMenu>
+                    <app-drop-down
+                        [items]="(taskStatusMenuItems$ | async) || []"
+                        [data]="{ id: task.id }"
+                    ></app-drop-down>
+                </ng-template>
+                <span
+                    #taskTitle
+                    [innerText]="task.title"
+                    focusable
+                    #titleFocusable="focusable"
+                    class="title | outline-none"
+                    [class]="{
+                        'line-through': task.status == TaskStatus.NOT_PLANNED,
+                        'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED
+                    }"
+                    contenteditable
+                    (blur)="task.title != taskTitle.innerText && titleChange.emit(taskTitle.innerText)"
+                ></span>
+            </div>
 
             <div class="second-row | ml-0.5 flex gap-2" [class]="{ 'mt-1': (nodeData$ | async)?.hasChildren }">
                 <ng-container *ngIf="nodeData$ | async as nodeData">
                     <button
-                        class="text-md text-tinted-400 transition-colors hover:text-tinted-300"
+                        class="subtask-toggle"
                         *ngIf="nodeData.hasChildren"
                         (click)="expansionChange.emit(!nodeData.isExpanded)"
                     >

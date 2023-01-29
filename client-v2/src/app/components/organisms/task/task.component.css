@@ -46,3 +46,17 @@
 .task.completed double-ellipsis-icon {
     @apply text-submit-300;
 }
+
+.subtask-toggle {
+    @apply text-md text-tinted-400 transition-colors hover:text-tinted-300;
+}
+.task.completed .subtask-toggle {
+    @apply text-submit-500 hover:text-submit-300;
+}
+
+.status-btn {
+    @apply -ml-1 mr-2.5 rounded-lg px-1 text-lg transition-colors hover:bg-tinted-500;
+}
+.task.completed .status-btn {
+    @apply hover:bg-submit-600;
+}

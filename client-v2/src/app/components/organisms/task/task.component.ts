@@ -35,6 +35,10 @@ export class TaskComponent {
         })
     )
 
+    taskStatusMenuItems$ = this.menuItems$.pipe(
+        map(items => items?.find(({ title }) => title == 'Status')?.children || [])
+    )
+
     @Output() expansionChange = new EventEmitter<boolean>()
 
     @Output() titleChange = new EventEmitter<string>()

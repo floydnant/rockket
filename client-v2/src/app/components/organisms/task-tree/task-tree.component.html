@@ -16,7 +16,7 @@
             <app-task
                 [data]="taskNode"
                 class="mt-2 grow"
-                [menuItems]="(menuItems$ | async) || []"
+                [menuItems]="(menuItemsMap$ | async)?.[taskNode.taskPreview.id] || []"
                 (expansionChange)="toggleExpansion(taskNode, $event)"
                 (titleChange)="onTitleChange(taskNode.taskPreview.id, $event)"
                 (descriptionChange)="onDescriptionChange(taskNode.taskPreview.id, $event)"

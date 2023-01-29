@@ -98,7 +98,7 @@ export const convertTaskToEntity: ConvertTaskToEntity = ({ id, listId, parentTas
     entityType: EntityType.TASK,
     parentId: parentTaskId || listId,
     title,
-    children: ('children' in rest ? rest.children?.map(convertTaskToEntity) : undefined) as EntityPreviewRecursive[],
+    children: 'children' in rest ? rest.children?.map(convertTaskToEntity) : undefined,
 })
 
 export const buildTaskTree = (alltasks: TaskPreview[]) => {

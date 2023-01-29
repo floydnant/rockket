@@ -43,7 +43,7 @@ export class TaskTreeComponent {
         this.tasks$.next(tasks)
     }
 
-    flattendTaskTree = this.tasks$.pipe(
+    flattendTaskTree$ = this.tasks$.pipe(
         map(tasks => {
             if (!tasks) return []
             const treeNodes = flattenTaskTree(tasks).map(convertToTaskTreeNode)
@@ -57,7 +57,7 @@ export class TaskTreeComponent {
     }
 
     treeWithUiChanges!: TaskTreeNode[]
-    treeWithUiChanges$ = this.flattendTaskTree.pipe(
+    treeWithUiChanges$ = this.flattendTaskTree$.pipe(
         combineLatestWith(this.uiChangeEvents),
         map(([taskNodes, changeEvent]) => {
             if (!changeEvent) return taskNodes
@@ -108,7 +108,27 @@ export class TaskTreeComponent {
         return prevNode
     }
 
-    menuItems$ = of(getEntityMenuItemsMap(this.store)[EntityType.TASK])
+    menuItemsMap$ = this.flattendTaskTree$.pipe(
+        map(flattendTree => {
+            const menuItemEntries = flattendTree.map(({ taskPreview }) => {
+                const menuItems = getEntityMenuItemsMap(this.store)[EntityType.TASK].map(item => {
+                    if (item.title != 'Status') return item
+
+                    item.children = item.children?.map(taskStatusItem => {
+                        return {
+                            ...taskStatusItem,
+                            isActive: taskPreview.status == taskStatusItem.icon, // @TODO: this will break once the icon is not equl to the status anymore
+                        }
+                    })
+
+                    return item
+                })
+
+                return [taskPreview.id, menuItems] as const
+            })
+            return Object.fromEntries(menuItemEntries)
+        })
+    )
 
     onTitleChange(id: string, title: string) {
         this.store.dispatch(entitiesActions.rename({ id, title, entityType: EntityType.TASK }))
