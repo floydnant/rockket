@@ -1,7 +1,8 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { BehaviorSubject, of } from 'rxjs'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
-import { TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import { TaskPreview, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { IconsModule } from '../../atoms/icons/icons.module'
 
 import { TaskComponent } from './task.component'
@@ -20,7 +21,7 @@ describe('TaskComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(TaskComponent)
         component = fixture.componentInstance
-        component.task = {
+        component.task$ = new BehaviorSubject({
             id: '',
             title: 'Task title here',
             priority: TaskPriority.NONE,
@@ -36,7 +37,7 @@ describe('TaskComponent', () => {
             // blockedById: '',
             parentTaskId: '',
             // inProgressSince: '',
-        }
+        } as null | TaskPreview)
         fixture.detectChanges()
     })
 
