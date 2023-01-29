@@ -23,8 +23,9 @@ export const reducers: ActionReducerMap<AppState> = {
 export const effects = [AppEffects, AuthEffects, AccountEffects, ListEffects, EntitiesEffects, TaskEffects]
 
 const actionLogger: MetaReducer<AppState> = reducer => (state, action) => {
+    const isProd = environment.CONTEXT == 'Production' || environment.CONTEXT == 'Staging'
     const isErrorAction = /error/i.test(action.type)
-    if (environment.production && !isErrorAction) return reducer(state, action)
+    if (isProd && !isErrorAction) return reducer(state, action)
 
     const actionColor = isErrorAction ? 'color: hsl(345, 100%, 52%);' : 'color: hsl(155, 100%, 50%);'
     console.info('%caction: %c' + action.type, 'color: hsl(130, 0%, 50%);', actionColor)
