@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { catchError, map, mergeMap, of } from 'rxjs'
+import { catchError, first, map, mergeMap, of, switchMap } from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { DialogService } from 'src/app/modal/dialog.service'
 import { TaskService } from 'src/app/services/entity.services/task.service'
@@ -10,6 +10,7 @@ import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
 import { taskActions } from './entities.actions'
+import { getTaskById } from './utils'
 
 @Injectable()
 export class TaskEffects {
@@ -58,9 +59,26 @@ export class TaskEffects {
     createTask = createEffect(() => {
         return this.actions$.pipe(
             ofType(taskActions.create),
-            mergeMap(dto => {
+            mergeMap(({ listId, ...dto }) => {
                 const title = dto.title || ENTITY_TITLE_DEFAULTS[EntityType.TASK]
-                const res$ = this.taskService.create({ ...dto, title })
+
+                if (!listId && !dto.parentTaskId) throw new Error('Must specify a listId or a parentTaskId')
+
+                const listId$ = listId
+                    ? of(listId)
+                    : this.store
+                          .select(state => state.entities)
+                          .pipe(
+                              first(),
+                              map(({ taskTreeMap }) => {
+                                  const taskTree = Object.values(taskTreeMap || []).flat()
+                                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                  const task = getTaskById(taskTree, dto.parentTaskId!)
+                                  return task?.listId as string
+                              })
+                          )
+
+                const res$ = listId$.pipe(switchMap(listId => this.taskService.create({ ...dto, listId, title })))
 
                 return res$.pipe(
                     this.toast.observe({
@@ -69,7 +87,7 @@ export class TaskEffects {
                         error: getMessageFromHttpError,
                     }),
                     map(createdTask => taskActions.createSuccess({ createdTask })),
-                    catchError(err => of(taskActions.createError({ ...err, id: dto.listId })))
+                    catchError(err => of(taskActions.createError({ ...err, id: listId || dto.parentTaskId })))
                 )
             })
         )

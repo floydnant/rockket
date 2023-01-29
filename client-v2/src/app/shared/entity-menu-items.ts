@@ -81,10 +81,10 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
     ],
     [EntityType.TASK]: [
         ...getGeneralMenuItems(store),
-        // {
-        //     title: 'New Subtask',
-        //     action: (dto: EntityCrudDto) => store.dispatch(taskActions.create({ })),
-        // },
+        {
+            title: 'New Subtask',
+            action: (dto: EntityCrudDto) => store.dispatch(taskActions.create({ parentTaskId: dto.id })),
+        },
         {
             title: 'Open',
             // @TODO: this is really fuckin hacky, lets think of a better way

@@ -66,7 +66,7 @@ export const taskActions = createActionGroup({
         'load root level tasks success': props<{ listId: string; tasks: TaskPreview[] }>(),
         'load root level tasks error': props<HttpServerErrorResponseWithData>(),
 
-        create: props<PartialRequired<CreateTaskDto, 'listId'>>(),
+        create: props<Partial<CreateTaskDto>>(),
         'create success': props<{ createdTask: TaskPreview }>(),
         'create error': props<HttpServerErrorResponseWithData>(),
 
