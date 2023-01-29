@@ -9,6 +9,7 @@ export interface MenuItem {
     route?: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     action?: (data?: any) => void
+    isActive?: boolean
     children?: MenuItem[]
     isSeperator?: boolean
     variant?: MenuItemVariant
