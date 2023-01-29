@@ -30,14 +30,14 @@ export class TaskService {
         return this.taskRepository.getTaskById(taskId)
     }
     async updateTask(userId: string, taskId: string, dto: UpdateTaskDto) {
-        const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.View)
-        if (!hasPermission) throw new ForbiddenException("You don't have permission to view this task")
+        const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.Edit)
+        if (!hasPermission) throw new ForbiddenException("You don't have permission to update this task")
 
         return this.taskRepository.updateTask(userId, taskId, dto)
     }
     async deleteTask(userId: string, taskId: string) {
-        const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.View)
-        if (!hasPermission) throw new ForbiddenException("You don't have permission to view this task")
+        const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.Edit)
+        if (!hasPermission) throw new ForbiddenException("You don't have permission to delete this task")
 
         await this.taskRepository.deleteTask(taskId)
         return { successMessage: 'Task deleted successfully' }

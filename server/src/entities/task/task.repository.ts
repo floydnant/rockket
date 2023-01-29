@@ -67,7 +67,11 @@ export class TaskRepository {
     }
 
     async deleteTask(taskId: string) {
-        return this.prisma.task.delete({ where: { id: taskId } })
+        return this.prisma.$transaction([
+            this.prisma.taskEvent.deleteMany({ where: { taskId } }),
+            this.prisma.taskComment.deleteMany({ where: { taskId } }),
+            this.prisma.task.delete({ where: { id: taskId } }),
+        ])
     }
 
     async getSubtasks(taskId: string) {
