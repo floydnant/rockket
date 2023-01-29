@@ -12,7 +12,8 @@ import {
     TaskStatus,
 } from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
-import { listActions, taskActions } from 'src/app/store/entities/entities.actions'
+import { listActions } from 'src/app/store/entities/list/list.actions'
+import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 
 type TaskSorter = (a: TaskPreview, b: TaskPreview) => number

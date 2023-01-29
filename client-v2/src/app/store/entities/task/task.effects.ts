@@ -8,9 +8,9 @@ import { DialogService } from 'src/app/modal/dialog.service'
 import { TaskService } from 'src/app/services/entity.services/task.service'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
-import { AppState } from '..'
-import { taskActions } from './entities.actions'
-import { getTaskById } from './utils'
+import { AppState } from '../..'
+import { getTaskById } from '../utils'
+import { taskActions } from './task.actions'
 
 @Injectable()
 export class TaskEffects {

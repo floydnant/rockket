@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatestWith, map, of, tap } from 'rxjs'
+import { BehaviorSubject, combineLatestWith, map, tap } from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import {
     TaskPreviewFlattend,
@@ -10,7 +10,8 @@ import {
 } from 'src/app/fullstack-shared-models/task.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
-import { entitiesActions, taskActions } from 'src/app/store/entities/entities.actions'
+import { entitiesActions } from 'src/app/store/entities/entities.actions'
+import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { flattenTaskTree } from 'src/app/store/entities/utils'
 
 export interface TaskTreeNode {

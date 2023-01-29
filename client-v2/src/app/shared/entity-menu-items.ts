@@ -4,7 +4,9 @@ import { EntityType } from '../fullstack-shared-models/entities.model'
 import { TaskStatus } from '../fullstack-shared-models/task.model'
 import { EntityCrudDto } from '../services/entities.service'
 import { AppState } from '../store'
-import { entitiesActions, listActions, taskActions } from '../store/entities/entities.actions'
+import { entitiesActions } from '../store/entities/entities.actions'
+import { listActions } from '../store/entities/list/list.actions'
+import { taskActions } from '../store/entities/task/task.actions'
 
 export type EntityMenuItemsMap = Record<EntityType, MenuItem[]>
 

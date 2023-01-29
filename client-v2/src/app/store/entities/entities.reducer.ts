@@ -2,8 +2,8 @@ import { createReducer, on } from '@ngrx/store'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { entitiesActions } from './entities.actions'
 import { EntitiesState, TaskTreeMap } from './entities.state'
-import { taskReducerOns } from './task.reducer'
-import { tasklistReducerOns } from './tasklist.reducer'
+import { taskReducerOns } from './task/task.reducer'
+import { tasklistReducerOns } from './list/list.reducer'
 import { buildEntityTree, getEntityById, getParentEntityByChildIdIncludingTasks, getTaskById } from './utils'
 
 const initialState: EntitiesState = {

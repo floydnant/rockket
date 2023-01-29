@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { AppState } from 'src/app/store'
-import { listActions } from 'src/app/store/entities/entities.actions'
+import { listActions } from 'src/app/store/entities/list/list.actions'
 
 @Component({
     selector: 'app-dashboard',

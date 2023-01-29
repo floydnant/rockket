@@ -7,9 +7,9 @@ import { UserState } from './user/user.state'
 import { userReducer } from './user/user.reducer'
 import { entitiesReducer } from './entities/entities.reducer'
 import { EntitiesState } from './entities/entities.state'
-import { ListEffects } from './entities/list.effects'
+import { ListEffects } from './entities/list/list.effects'
 import { EntitiesEffects } from './entities/entities.effects'
-import { TaskEffects } from './entities/task.effects'
+import { TaskEffects } from './entities/task/task.effects'
 
 export interface AppState {
     user: UserState

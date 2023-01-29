@@ -1,9 +1,9 @@
 import { on } from '@ngrx/store'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { ReducerOns } from 'src/app/utils/store.helpers'
-import { listActions } from './entities.actions'
-import { EntitiesState } from './entities.state'
-import { getEntityById } from './utils'
+import { EntitiesState } from '../entities.state'
+import { getEntityById } from '../utils'
+import { listActions } from './list.actions'
 
 export const tasklistReducerOns: ReducerOns<EntitiesState> = [
     on(listActions.createTaskListSuccess, (state, { createdList: { parentListId, ...createdList } }): EntitiesState => {
