@@ -1,16 +1,10 @@
 import { createReducer, on } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
-import { TaskPreviewRecursive } from 'src/app/fullstack-shared-models/task.model'
-import { entitiesActions, listActions, taskActions } from './entities.actions'
-import { EntitiesState, TaskTreeMap } from './entities.state'
-import {
-    buildEntityTree,
-    buildTaskTree,
-    buildTaskTreeMap,
-    getEntityById,
-    getParentEntityByChildIdIncludingTasks,
-    getTaskById,
-} from './utils'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { entitiesActions } from './entities.actions'
+import { EntitiesState } from './entities.state'
+import { taskReducerOns } from './task.reducer'
+import { tasklistReducerOns } from './tasklist.reducer'
+import { buildEntityTree, getEntityById, getParentEntityByChildIdIncludingTasks, getTaskById } from './utils'
 
 const initialState: EntitiesState = {
     entityTree: null,
@@ -26,6 +20,9 @@ const initialState: EntitiesState = {
 
 export const entitiesReducer = createReducer(
     initialState,
+
+    ...tasklistReducerOns,
+    ...taskReducerOns,
 
     on(entitiesActions.loadPreviewsSuccess, (state, { previews }): EntitiesState => {
         return {
@@ -89,89 +86,6 @@ export const entitiesReducer = createReducer(
             ...state,
             entityTree: entityTreeCopy,
             taskTreeMap: taskTreeMapCopy,
-        }
-    }),
-
-    ////////////////////////////////// Tasklist ////////////////////////////////////
-    on(listActions.createTaskListSuccess, (state, { createdList: { parentListId, ...createdList } }): EntitiesState => {
-        const listEntity: EntityPreviewRecursive = {
-            ...createdList,
-            entityType: EntityType.TASKLIST,
-            parentId: parentListId,
-            children: [],
-        }
-
-        if (!parentListId)
-            return {
-                ...state,
-                entityTree: [...(state.entityTree || []), listEntity],
-            }
-
-        const entityTreeCopy = structuredClone(state.entityTree)
-        const parentList = getEntityById(entityTreeCopy, parentListId)
-
-        if (!parentList)
-            return {
-                ...state,
-                entityTree: [...(state.entityTree || []), listEntity],
-            }
-
-        parentList.children?.push(listEntity)
-
-        return {
-            ...state,
-            entityTree: entityTreeCopy,
-        }
-    }),
-    on(listActions.updateDescriptionSuccess, (state, { id, newDescription }): EntitiesState => {
-        const entityDetailsCopy = structuredClone(state.entityDetails) as EntitiesState['entityDetails']
-
-        entityDetailsCopy[EntityType.TASKLIST][id] = {
-            ...(entityDetailsCopy[EntityType.TASKLIST][id] || {}),
-            description: newDescription,
-        }
-
-        return {
-            ...state,
-            entityDetails: entityDetailsCopy,
-        }
-    }),
-
-    ////////////////////////////////// Task ////////////////////////////////////
-    on(taskActions.loadTaskPreviewsSuccess, (state, { previews }): EntitiesState => {
-        return {
-            ...state,
-            taskTreeMap: buildTaskTreeMap(previews),
-        }
-    }),
-
-    on(taskActions.loadRootLevelTasksSuccess, (state, { listId, tasks }): EntitiesState => {
-        const newTaskTreeMap = { ...(structuredClone(state.taskTreeMap) || {}) } as TaskTreeMap
-
-        newTaskTreeMap[listId] = buildTaskTree(tasks)
-
-        return {
-            ...state,
-            taskTreeMap: newTaskTreeMap,
-        }
-    }),
-    on(taskActions.createSuccess, (state, { createdTask }): EntitiesState => {
-        const newTaskTreeMap = structuredClone(state.taskTreeMap || {}) as TaskTreeMap
-        if (!newTaskTreeMap[createdTask.listId]) newTaskTreeMap[createdTask.listId] = []
-
-        const createdTaskRecursive: TaskPreviewRecursive = { ...createdTask, children: null }
-        if (!createdTask.parentTaskId) newTaskTreeMap[createdTask.listId].push(createdTaskRecursive)
-        else {
-            const parentTask = getTaskById(newTaskTreeMap[createdTask.listId], createdTask.parentTaskId)
-            if (!parentTask) throw new Error('Could not find parent task')
-
-            if (parentTask.children) parentTask.children.push(createdTaskRecursive)
-            else parentTask.children = [createdTaskRecursive]
-        }
-
-        return {
-            ...state,
-            taskTreeMap: newTaskTreeMap,
         }
     })
 )

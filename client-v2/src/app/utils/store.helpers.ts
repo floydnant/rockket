@@ -1,5 +1,5 @@
 import { Actions, ofType } from '@ngrx/effects'
-import { Action, ActionCreator, Creator } from '@ngrx/store'
+import { Action, ActionCreator, Creator, ReducerTypes } from '@ngrx/store'
 import { concatMap, filter, map, merge, Observable, of, shareReplay, startWith } from 'rxjs'
 import { HttpServerErrorResponse } from '../http/types'
 
@@ -26,6 +26,8 @@ export type ErrorActionCreator = ActionCreator<
         }
     >
 >
+
+export type ReducerOns<State extends object> = ReducerTypes<State, readonly AnyActionCreator[]>[]
 
 interface GetErrorMapUpdatesOptions {
     actions$: Actions
