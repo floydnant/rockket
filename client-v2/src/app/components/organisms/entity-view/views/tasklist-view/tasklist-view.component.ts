@@ -52,7 +52,7 @@ export class TasklistViewComponent {
     detail$ = this.viewData.detail$
     options$ = this.viewData.options$
 
-    children$ = this.entity$.pipe(map(entity => entity?.children.filter(child => child.entityType != EntityType.TASK)))
+    children$ = this.entity$.pipe(map(entity => entity?.children?.filter(child => child.entityType != EntityType.TASK)))
     tasks$ = combineLatest([this.store.select(state => state.entities.taskTreeMap), this.entity$]).pipe(
         map(([taskTreeMap, entity]) => {
             if (!taskTreeMap || !entity) return null

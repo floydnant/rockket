@@ -30,7 +30,7 @@ export const convertToEntityTreeNode = (entity: EntityPreviewFlattend): EntityTr
     const { childrenCount, ...restEntity } = entity
     const node: EntityTreeNode = {
         ...restEntity,
-        expandable: childrenCount > 0,
+        expandable: (childrenCount || 0) > 0,
         isExpanded: restEntity.path.length < 2,
         menuItems: [],
     }

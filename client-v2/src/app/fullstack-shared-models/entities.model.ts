@@ -12,9 +12,9 @@ export interface EntityPreview {
     parentId: string | undefined
 }
 export type EntityPreviewRecursive = EntityPreview & {
-    children: EntityPreviewRecursive[]
+    children: EntityPreviewRecursive[] | undefined
 }
 export type EntityPreviewFlattend = Omit<EntityPreviewRecursive, 'children'> & {
     path: string[]
-    childrenCount: number
+    childrenCount: number | undefined
 }

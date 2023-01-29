@@ -32,10 +32,10 @@ export const flattenEntityTree = (
 ): EntityPreviewFlattend[] => {
     return entityTree.flatMap(entity => {
         const { children, ...rest } = entity
-        const flatEntity = { ...rest, path, childrenCount: children.length }
+        const flatEntity: EntityPreviewFlattend = { ...rest, path, childrenCount: children?.length }
         const subpath = [...path, entity.id]
 
-        return [flatEntity, ...flattenEntityTree(children, subpath)]
+        return [flatEntity, ...flattenEntityTree(children || [], subpath)]
     })
 }
 
@@ -55,7 +55,7 @@ export const traceEntity = (enitityTree: EntityPreviewRecursive[], id: string): 
     return enitityTree.flatMap(entity => {
         if (entity.id == id) return [entity]
 
-        if (!entity.children.length) return []
+        if (!entity.children?.length) return []
 
         const subtrace = traceEntity(entity.children, id)
         if (subtrace.length) return [entity, ...subtrace]
@@ -73,7 +73,7 @@ export const getParentEntityByChildId = (
 
         if (entity.id == id) return { subTree: entityTree, index }
 
-        if (entity.children.length) {
+        if (entity.children?.length) {
             const result = getParentEntityByChildId(entity.children, id)
             if (result) return result
         }
@@ -177,7 +177,7 @@ export const traceEntityIncludingTasks = (
     return enitityTree.flatMap(entity => {
         if (entity.id == id) return [entity]
 
-        if (entity.children.length) {
+        if (entity.children?.length) {
             const subtrace = traceEntityIncludingTasks(entity.children, taskTreeMap, id)
             if (subtrace.length) return [entity, ...subtrace]
         }
@@ -199,12 +199,12 @@ export const flattenEntityTreeIncludingTasks = (
     return entityTree.flatMap(entity => {
         const { children, ...rest } = entity
         const tasks = taskTreeMap[entity.id]?.map(convertTaskToEntity) || []
-        const flatEntity = { ...rest, path, childrenCount: children.length + tasks.length }
+        const flatEntity = { ...rest, path, childrenCount: (children?.length || 0) + tasks.length }
         const subpath = [...path, entity.id]
 
         return [
             flatEntity,
-            ...flattenEntityTreeIncludingTasks([...children /* , ...tasks */], taskTreeMap, subpath),
+            ...flattenEntityTreeIncludingTasks(children || [], taskTreeMap, subpath),
             ...flattenEntityTree(tasks, subpath),
             // ...flattenTaskTree(taskTreeMap[list.id].map(convertTaskToEntity)),
         ]
@@ -221,7 +221,7 @@ export const getParentEntityByChildIdIncludingTasks = (
 
         if (entity.id == id) return { subTree: entityTree, index }
 
-        if (entity.children.length) {
+        if (entity.children?.length) {
             const result = getParentEntityByChildIdIncludingTasks(entity.children, taskTreeMap, id)
             if (result) return result
         }

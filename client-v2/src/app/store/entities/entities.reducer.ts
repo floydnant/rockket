@@ -116,7 +116,7 @@ export const entitiesReducer = createReducer(
                 entityTree: [...(state.entityTree || []), listEntity],
             }
 
-        parentList.children.push(listEntity)
+        parentList.children?.push(listEntity)
 
         return {
             ...state,
