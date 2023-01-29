@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { entitiesActions } from './entities.actions'
-import { EntitiesState } from './entities.state'
+import { EntitiesState, TaskTreeMap } from './entities.state'
 import { taskReducerOns } from './task.reducer'
 import { tasklistReducerOns } from './tasklist.reducer'
 import { buildEntityTree, getEntityById, getParentEntityByChildIdIncludingTasks, getTaskById } from './utils'
@@ -47,8 +47,8 @@ export const entitiesReducer = createReducer(
 
     on(entitiesActions.renameSuccess, (state, { id, title, entityType }): EntitiesState => {
         if (entityType == EntityType.TASK) {
-            const taskTreeMapCopy = structuredClone(state.taskTreeMap)
-            const task = getTaskById(taskTreeMapCopy, id)
+            const taskTreeMapCopy = structuredClone(state.taskTreeMap) as TaskTreeMap
+            const task = getTaskById(Object.values(taskTreeMapCopy).flat(), id)
             if (!task) return state
 
             task.title = title
