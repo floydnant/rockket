@@ -6,3 +6,9 @@ export const stripNonWordChars = (str: string) =>
         .replace(/\W+/g, '-')
         .replace(/-+$|^-+/g, '')
         .toLowerCase()
+
+export const interpolateParams = (template: string, params: Record<string, string | number>) => {
+    return Object.entries(params).reduce((acc, [key, value]) => {
+        return acc.replace(new RegExp(`:${key}`, 'g'), value.toString())
+    }, template)
+}

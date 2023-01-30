@@ -8,8 +8,6 @@ import { entitiesActions } from '../store/entities/entities.actions'
 import { listActions } from '../store/entities/list/list.actions'
 import { taskActions } from '../store/entities/task/task.actions'
 
-export type EntityMenuItemsMap = Record<EntityType, MenuItem[]>
-
 export const getGeneralMenuItems = (store: Store<AppState>): MenuItem[] => [
     {
         title: `Rename`,
@@ -34,29 +32,7 @@ export const getTaskStatusMenuItems = (store: Store<AppState>) =>
         },
     }))
 
-export const useDataForAction = (data: unknown) => {
-    return ({ action, children, ...item }: MenuItem): MenuItem => ({
-        ...item,
-        action: action ? (localData: unknown) => action(localData || data) : undefined,
-        children: children?.map(useDataForAction(data)),
-    })
-}
-export const interceptDataForAction = (callback: (data: unknown) => unknown) => {
-    return ({ action, children, ...item }: MenuItem): MenuItem => ({
-        ...item,
-        action: action ? (localData: unknown) => action(callback(localData)) : undefined,
-        children: children?.map(interceptDataForAction(callback)),
-    })
-}
-export const interceptItem = (callback: (item: MenuItem) => MenuItem) => {
-    return (item: MenuItem): MenuItem => {
-        const callbackResult = callback(item)
-        return {
-            ...callbackResult,
-            children: item.children?.map(interceptItem(callback)),
-        }
-    }
-}
+export type EntityMenuItemsMap = Record<EntityType, MenuItem[]>
 
 export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMap => ({
     [EntityType.TASKLIST]: [

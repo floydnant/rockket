@@ -1,5 +1,5 @@
 <div class="menu | dropdown-menu" cdkMenu data-test-name="drop-down-menu">
-    <ng-container *ngFor="let menuItem of items">
+    <ng-container *ngFor="let menuItem of items$ | async">
         <ng-template #chevron>
             <app-icon class="chevron | translate-x-2 text-tinted-500" iconClass="fas fa-chevron-right"></app-icon>
         </ng-template>

@@ -1,6 +1,8 @@
 import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu'
 import { Component, Input } from '@angular/core'
+import { BehaviorSubject, map } from 'rxjs'
 import { moveToMacroQueue } from 'src/app/utils'
+import { useParamsForRoute } from 'src/app/utils/menu-item.helpers'
 import { PageEntityIconKey } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
 
 export interface MenuItem {
@@ -27,9 +29,16 @@ export enum MenuItemVariant {
     styleUrls: ['./drop-down.component.css'],
 })
 export class DropDownComponent {
-    @Input() items!: MenuItem[]
+    items$_ = new BehaviorSubject<MenuItem[]>([])
+    @Input() set items(items: MenuItem[]) {
+        this.items$_.next(items)
+    }
+    items$ = this.items$_.pipe(map(items => (!this.data ? items : items.map(useParamsForRoute(this.data)))))
+
+    /** `data` is used for actions and route param interpolation */
+    @Input() data?: Record<string, string | number>
+    /** `rootTrigger` is used to close the whole menu tree, when nested items are clicked */
     @Input() rootTrigger?: CdkMenuTrigger | CdkContextMenuTrigger
-    @Input() data?: unknown
 
     triggerAction(action: MenuItem['action']) {
         // this ensures that the keydown event doesn't get picked up by another component

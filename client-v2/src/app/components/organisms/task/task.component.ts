@@ -24,16 +24,10 @@ export class TaskComponent {
         this.task$.next(taskPreview)
     }
 
-    menuItems$_ = new BehaviorSubject<MenuItem[] | null>(null)
+    menuItems$ = new BehaviorSubject<MenuItem[] | null>(null)
     @Input() set menuItems(items: MenuItem[]) {
-        this.menuItems$_.next(items)
+        this.menuItems$.next(items)
     }
-    // @TODO: This is a hacky way, lets find a better solution
-    menuItems$ = this.menuItems$_.pipe(
-        map(items => {
-            return items?.map(item => ({ ...item, route: item.route?.replace(/:id/, this.task$.value?.id || ':id') }))
-        })
-    )
 
     taskStatusMenuItems$ = this.menuItems$.pipe(
         map(items => items?.find(({ title }) => title == 'Status')?.children || [])
