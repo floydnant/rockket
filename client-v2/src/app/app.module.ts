@@ -52,6 +52,7 @@ import { TasklistViewComponent } from './components/organisms/entity-view/views/
 import { EditableEntityTitleComponent } from './components/molecules/editable-entity-heading/editable-entity-title.component'
 import { TaskTreeComponent } from './components/organisms/task-tree/task-tree.component'
 import { TaskViewComponent } from './components/organisms/entity-view/views/task-view/task-view.component'
+import { InlineEditorComponent } from './components/atoms/inline-editor/inline-editor.component'
 
 @NgModule({
     declarations: [
@@ -92,6 +93,7 @@ import { TaskViewComponent } from './components/organisms/entity-view/views/task
         EditableEntityTitleComponent,
         TaskTreeComponent,
         TaskViewComponent,
+        InlineEditorComponent,
     ],
     imports: [
         BrowserModule,

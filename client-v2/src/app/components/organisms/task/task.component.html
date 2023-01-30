@@ -5,7 +5,7 @@
         'bg-submit-800': task.status == TaskStatus.COMPLETED,
         'text-submit-200': task.status == TaskStatus.COMPLETED,
         completed: task.status == TaskStatus.COMPLETED,
-        titleHasFocus: titleFocusable.isFocused
+        titleHasFocus: inlineEditor.isFocused
     }"
     [cdkContextMenuTriggerFor]="menu"
 >
@@ -13,9 +13,9 @@
     <!-- notesHasFocus: notesFocusable.isFocused -->
     <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
         <div class="max-w-[calc(100%-1.7rem)]">
-            <div class="first-row">
+            <div class="first-row | flex items-center">
                 <button
-                    class="status-btn"
+                    class="status-btn | icon-btn"
                     [appTooltip]="blocked || task.status"
                     [tooltipOptions]="{ avoidPositions: ['right'] }"
                     [cdkMenuTriggerFor]="taskStatusMenu"
@@ -28,19 +28,19 @@
                         [data]="{ id: task.id }"
                     ></app-drop-down>
                 </ng-template>
-                <span
-                    #taskTitle
-                    [innerText]="task.title"
-                    focusable
-                    #titleFocusable="focusable"
-                    class="title | outline-none"
+
+                <app-inline-editor
+                    #inlineEditor
+                    [textInput]="task.title"
+                    [placeholder]="PLACEHOLDER"
+                    [placeholderColor]="placeholderColorMap[task.status]"
                     [class]="{
                         'line-through': task.status == TaskStatus.NOT_PLANNED,
                         'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED
                     }"
-                    contenteditable
-                    (blur)="task.title != taskTitle.innerText && titleChange.emit(taskTitle.innerText)"
-                ></span>
+                    [onlyUpdateOnBlur]="true"
+                    (update)="titleChange.emit($event || '')"
+                ></app-inline-editor>
             </div>
 
             <div class="second-row | ml-0.5 flex gap-2" [class]="{ 'mt-1': (nodeData$ | async)?.hasChildren }">
@@ -78,11 +78,13 @@
                     [tooltipOptions]="{ avoidPositions: ['left'] }"
                 ></priority-icon>
             </div>
-            <double-ellipsis-icon
+            <button
+                class="| icon-btn | absolute top-[50%] right-0 translate-y-[-50%] !px-1.5 text-tinted-200 transition-opacity"
                 [cdkMenuTriggerFor]="menu"
                 #trigger="cdkMenuTriggerFor"
-                class="absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
-            ></double-ellipsis-icon>
+            >
+                <double-ellipsis-icon></double-ellipsis-icon>
+            </button>
 
             <ng-template #menu>
                 <app-drop-down

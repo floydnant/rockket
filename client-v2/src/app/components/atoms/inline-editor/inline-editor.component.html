@@ -1,0 +1,18 @@
+<span
+    class="inline-block min-w-[2rem] cursor-text outline-none"
+    [innerText]="text$ | async"
+    [class.show-placeholder]="!(textDomState$ | async)"
+    [attr.data-placeholder]="placeholder"
+    [style.--placeholder-color]="placeholderColor"
+    #inlineEditor
+    contenteditable
+    focusable
+    (focusChange)="isFocused = $event"
+    #editorFocusable="focusable"
+    [spellcheck]="editorFocusable.isFocused"
+    (textChanges)="textChanges$.next($event)"
+    [mutationOptions]="{ plainOnly: true, observe: editorFocusable.isFocused }"
+    (keydown)="keydownEvents$.next($event)"
+    (blur)="blurEvents$.next($event)"
+    data-test-name="inline-editor"
+></span>

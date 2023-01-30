@@ -55,8 +55,12 @@
 }
 
 .status-btn {
-    @apply -ml-1 mr-2.5 rounded-lg px-1 text-lg transition-colors hover:bg-tinted-500;
+    @apply -ml-1 mr-2.5 text-lg;
 }
-.task.completed .status-btn {
+
+.icon-btn {
+    @apply rounded-lg px-1 transition-colors hover:bg-tinted-500;
+}
+.task.completed .icon-btn {
     @apply hover:bg-submit-600;
 }

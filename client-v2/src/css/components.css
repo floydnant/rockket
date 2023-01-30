@@ -48,7 +48,7 @@
 
     .show-placeholder::before {
         content: attr(data-placeholder);
-        @apply text-tinted-400;
+        color: var(--placeholder-color, theme('colors.tinted.400') );
     }
 
     :is(.input, .button)[disabled] {
