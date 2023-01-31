@@ -11,6 +11,7 @@ env:
 
 jobs:
     drop-db:
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'dependencies') }}
         runs-on: ubuntu-latest
         steps:
             - name: Drop the PR database
