@@ -2,6 +2,7 @@ import { CdkMenuModule } from '@angular/cdk/menu'
 import { testName } from 'cypress/support/helpers'
 import { BehaviorSubject, of } from 'rxjs'
 import { EntityPageLabelComponent } from 'src/app/components/atoms/entity-page-label/entity-page-label.component'
+import { InlineEditorComponent } from 'src/app/components/atoms/inline-editor/inline-editor.component'
 import { DropDownComponent } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EditableEntityTitleComponent } from 'src/app/components/molecules/editable-entity-heading/editable-entity-title.component'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
@@ -33,6 +34,7 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
             EditableEntityTitleComponent,
             EntityPageLabelComponent,
             DropDownComponent,
+            InlineEditorComponent,
         ],
         providers: [
             { provide: ENTITY_VIEW_DATA, useValue: viewData },
@@ -112,5 +114,10 @@ describe('TasklistViewComponent', () => {
         })
 
         it.skip('can add a child')
+    })
+
+    describe('Task tree', () => {
+        it.skip('displays the task tree')
+        it.skip('test')
     })
 })
