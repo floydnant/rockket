@@ -72,6 +72,8 @@ export const getErrorMapUpdates = ({ actions$, fields, resetAction, errorAction 
  * | `/error/i`           | `false`       |
  * | `/success/i`         | `false`       |
  * | all other cases      | `true`        |
+ * 
+ * You can optionally specify a predicate to filter the actions that fired (e.g. only take an action with a matching id)
  */
 export const getLoadingUpdates = <T extends AnyActionCreator>(
     actions$: Actions,

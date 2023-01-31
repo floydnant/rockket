@@ -22,7 +22,7 @@ export class TaskViewComponent {
     detail$ = this.viewData.detail$
     options$ = this.viewData.options$
 
-    task$ = combineLatest([this.viewData.entity$.pipe(), this.store.select(state => state.entities.taskTreeMap)]).pipe(
+    task$ = combineLatest([this.viewData.entity$, this.store.select(state => state.entities.taskTreeMap)]).pipe(
         map(([taskEntity, taskTreeMap]) => {
             if (!taskEntity || !taskTreeMap) return null
 
