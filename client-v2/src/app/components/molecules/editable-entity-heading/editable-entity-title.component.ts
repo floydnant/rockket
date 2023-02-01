@@ -63,6 +63,7 @@ export class EditableEntityTitleComponent {
         )
         .subscribe()
 
+    // @TODO: we should have a better buffering mechanism, so that one stream is in charge of dispatching actions
     updateQueue$ = new BehaviorSubject<ReturnType<typeof entitiesActions.rename> | null>(null)
     queueSubscription = this.isLoading$
         .pipe(

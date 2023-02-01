@@ -8,11 +8,15 @@ import {
     first,
     map,
     merge,
+    Observable,
+    of,
     shareReplay,
     switchMap,
     tap,
     throttleTime,
 } from 'rxjs'
+
+export const INLINE_EDITOR_DELAY_TIME = 600
 
 @UntilDestroy()
 @Component({
@@ -32,7 +36,6 @@ export class InlineEditorComponent {
     @Input() placeholder?: string
     @Input() placeholderColor?: string
     @Input() onlyUpdateOnBlur = false
-    @Input() debounceTime = 600
 
     @Output() update = new EventEmitter<string | null>()
 
@@ -42,6 +45,7 @@ export class InlineEditorComponent {
 
         map(textInput => {
             if (!textInput) return null
+            // @TODO: this should be the responsibility of the parent component (placeholder should not be part of the text stream)
             if (textInput == this.placeholder) return ''
 
             return textInput
@@ -103,22 +107,22 @@ export class InlineEditorComponent {
                 return false
             }),
             switchMap(() => this.textChanges$.pipe(first())),
-            throttleTime(this.debounceTime)
+            throttleTime(INLINE_EDITOR_DELAY_TIME)
         ),
         this.blurEvents$.pipe(
             filter(e => !!e),
             switchMap(() => this.textChanges$.pipe(first())),
-            throttleTime(this.debounceTime)
+            throttleTime(INLINE_EDITOR_DELAY_TIME)
         ),
         this.textChanges$.pipe(
             filter(() => !this.onlyUpdateOnBlur),
-            debounceTime(this.debounceTime)
+            debounceTime(INLINE_EDITOR_DELAY_TIME)
         )
     ).pipe(
         map(newText => {
             if (newText === null) return null
 
-            return newText || this.placeholder || ''
+            return newText || this.placeholder || '' // @TODO: same here with placeholder
         }),
         distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: true })
