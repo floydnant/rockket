@@ -9,6 +9,7 @@ import {
     prioritySortingMap,
     statusSortingMap,
     TaskPreview,
+    TaskPreviewRecursive,
     TaskStatus,
 } from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
@@ -106,7 +107,7 @@ export class TasklistViewComponent {
     digest$ = this.tasks$.pipe(
         map(tasks => {
             if (!tasks) return null
-            const sortedTasks = structuredClone(tasks).sort(sortByStatus).sort(sortByPriority)
+            const sortedTasks = structuredClone(tasks).sort(sortByStatus).sort(sortByPriority) as TaskPreviewRecursive[]
 
             const open = tasks.filter(task => task.status == TaskStatus.OPEN || task.status == TaskStatus.BACKLOG)
             const inProgress = tasks.filter(task => task.status == TaskStatus.IN_PROGRESS)
