@@ -38,7 +38,7 @@
                         'line-through': task.status == TaskStatus.NOT_PLANNED,
                         'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED
                     }"
-                    [onlyUpdateOnBlur]="true"
+                    [enableDebouncedUpdates]="false"
                     (update)="titleChange.emit($event || '')"
                 ></app-inline-editor>
             </div>

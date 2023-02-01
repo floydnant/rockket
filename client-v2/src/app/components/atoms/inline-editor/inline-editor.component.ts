@@ -8,8 +8,6 @@ import {
     first,
     map,
     merge,
-    Observable,
-    of,
     shareReplay,
     switchMap,
     tap,
@@ -35,7 +33,7 @@ export class InlineEditorComponent {
 
     @Input() placeholder?: string
     @Input() placeholderColor?: string
-    @Input() onlyUpdateOnBlur = false
+    @Input() enableDebouncedUpdates = true
 
     @Output() update = new EventEmitter<string | null>()
 
@@ -106,16 +104,16 @@ export class InlineEditorComponent {
                 }
                 return false
             }),
-            switchMap(() => this.textChanges$.pipe(first())),
-            throttleTime(INLINE_EDITOR_DELAY_TIME)
+            throttleTime(INLINE_EDITOR_DELAY_TIME),
+            switchMap(() => this.textChanges$.pipe(first()))
         ),
         this.blurEvents$.pipe(
             filter(e => !!e),
-            switchMap(() => this.textChanges$.pipe(first())),
-            throttleTime(INLINE_EDITOR_DELAY_TIME)
+            throttleTime(INLINE_EDITOR_DELAY_TIME),
+            switchMap(() => this.textChanges$.pipe(first()))
         ),
         this.textChanges$.pipe(
-            filter(() => !this.onlyUpdateOnBlur),
+            filter(() => this.enableDebouncedUpdates),
             debounceTime(INLINE_EDITOR_DELAY_TIME)
         )
     ).pipe(
