@@ -29,12 +29,3 @@ export const useParamsForRoute = (params: Record<string, string | number>) => {
         route: route && interpolateParams(route, params),
     }))
 }
-
-// @TODO: this should better be in a dedicated testing utils file
-export const useStubsForActions = (stubMap?: Record<string, ReturnType<typeof cy.stub>>) => {
-    return interceptItem(({ action, title }) => {
-        const customStub = title && stubMap?.[title]
-        const stub = customStub || cy.stub().as(`item:${title}`)
-        return { action: action && stub }
-    })
-}
