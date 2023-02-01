@@ -19,6 +19,7 @@
                     [appTooltip]="blocked || task.status"
                     [tooltipOptions]="{ avoidPositions: ['right'] }"
                     [cdkMenuTriggerFor]="taskStatusMenu"
+                    data-test-name="task-status-button"
                 >
                     <page-entity-icon [icon]="loading || blocked || task.status"></page-entity-icon>
                 </button>
@@ -40,6 +41,7 @@
                     }"
                     [enableDebouncedUpdates]="false"
                     (update)="titleChange.emit($event || '')"
+                    data-test-name="task-title"
                 ></app-inline-editor>
             </div>
 
@@ -49,6 +51,7 @@
                         class="subtask-toggle"
                         *ngIf="nodeData.hasChildren"
                         (click)="expansionChange.emit(!nodeData.isExpanded)"
+                        data-test-name="subtask-toggle"
                     >
                         <app-icon
                             iconClass="fas fa-chevron-right"
@@ -66,6 +69,7 @@
                     *ngIf="isOverdue"
                     class="overdue-icon | animate-ping"
                     iconClass="fas fa-exclamation-triangle text-danger-400"
+                    data-test-name="overdue-icon"
                 ></app-icon>
                 <priority-icon
                     *ngIf="
@@ -76,12 +80,14 @@
                     [priority]="task.priority"
                     [appTooltip]="task.priority"
                     [tooltipOptions]="{ avoidPositions: ['left'] }"
+                    data-test-name="task-priority-button"
                 ></priority-icon>
             </div>
             <button
                 class="| icon-btn | absolute top-[50%] right-0 translate-y-[-50%] !px-1.5 text-tinted-200 transition-opacity"
                 [cdkMenuTriggerFor]="menu"
                 #trigger="cdkMenuTriggerFor"
+                data-test-name="task-menu-button"
             >
                 <double-ellipsis-icon></double-ellipsis-icon>
             </button>
@@ -103,6 +109,7 @@
         [class]="{ hidden: !task.description && !notesFocusable.isFocused }"
         class="notes | mt-1 rounded-lg bg-tinted-900 py-1 px-2 text-tinted-300 outline-none ring-primary-400 transition-all duration-75 focus:ring-2"
         contenteditable
+        data-test-name="task-description"
     >
         {{ this.loading || task.description }}
     </div>

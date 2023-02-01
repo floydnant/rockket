@@ -1,33 +1,40 @@
 import { interpolateParams } from '.'
 import { MenuItem } from '../components/molecules/drop-down/drop-down.component'
 
+export const interceptItem = (callback: (item: MenuItem) => Partial<Omit<MenuItem, 'children'>>) => {
+    return (item: MenuItem): MenuItem => {
+        if (item.isSeperator) return item
+        return {
+            ...item,
+            ...callback(item),
+            children: item.children?.map(interceptItem(callback)),
+        }
+    }
+}
+
 export const useDataForAction = (data: unknown) => {
-    return ({ action, children, ...item }: MenuItem): MenuItem => ({
-        ...item,
-        action: action ? (localData: unknown) => action(localData || data) : undefined,
-        children: children?.map(useDataForAction(data)),
-    })
+    return interceptItem(({ action }) => ({
+        action: action && ((localData: unknown) => action(localData || data)),
+    }))
 }
 
 export const interceptDataForAction = (callback: (data: unknown) => unknown) => {
-    return ({ action, children, ...item }: MenuItem): MenuItem => ({
-        ...item,
-        action: action ? (localData: unknown) => action(callback(localData)) : undefined,
-        children: children?.map(interceptDataForAction(callback)),
-    })
-}
-
-export const interceptItem = (callback: (item: MenuItem) => MenuItem) => {
-    return (item: MenuItem): MenuItem => ({
-        ...callback(item),
-        children: item.children?.map(interceptItem(callback)),
-    })
+    return interceptItem(({ action }) => ({
+        action: action && ((localData: unknown) => action(callback(localData))),
+    }))
 }
 
 export const useParamsForRoute = (params: Record<string, string | number>) => {
-    return ({ route, children, ...item }: MenuItem): MenuItem => ({
-        ...item,
-        route: route ? interpolateParams(route, params) : undefined,
-        children: children?.map(useParamsForRoute(params)),
+    return interceptItem(({ route }) => ({
+        route: route && interpolateParams(route, params),
+    }))
+}
+
+// @TODO: this should better be in a dedicated testing utils file
+export const useStubsForActions = (stubMap?: Record<string, ReturnType<typeof cy.stub>>) => {
+    return interceptItem(({ action, title }) => {
+        const customStub = title && stubMap?.[title]
+        const stub = customStub || cy.stub().as(`item:${title}`)
+        return { action: action && stub }
     })
 }
