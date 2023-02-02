@@ -5,9 +5,12 @@
         'bg-submit-800': task.status == TaskStatus.COMPLETED,
         'text-submit-200': task.status == TaskStatus.COMPLETED,
         completed: task.status == TaskStatus.COMPLETED,
-        titleHasFocus: inlineEditor.isFocused
+        titleHasFocus: inlineEditor.isFocused,
+        isHovered
     }"
     [cdkContextMenuTriggerFor]="menu"
+    (cdkContextMenuOpened)="isHovered = true"
+    (cdkContextMenuClosed)="isHovered = false"
 >
     <!-- @TODO: Fix this -->
     <!-- notesHasFocus: notesFocusable.isFocused -->
@@ -19,6 +22,8 @@
                     [appTooltip]="blocked || task.status"
                     [tooltipOptions]="{ avoidPositions: ['right'] }"
                     [cdkMenuTriggerFor]="statusMenu"
+                    (cdkMenuOpened)="isHovered = true"
+                    (cdkMenuClosed)="isHovered = false"
                     data-test-name="task-status-button"
                 >
                     <page-entity-icon [icon]="loading || blocked || task.status"></page-entity-icon>
@@ -78,6 +83,8 @@
                     [appTooltip]="task.priority"
                     [tooltipOptions]="{ avoidPositions: ['left'] }"
                     [cdkMenuTriggerFor]="priorityMenu"
+                    (cdkMenuOpened)="isHovered = true"
+                    (cdkMenuClosed)="isHovered = false"
                     data-test-name="task-priority-button"
                 >
                     <priority-icon [priority]="task.priority"></priority-icon>
@@ -92,6 +99,8 @@
             <button
                 class="| icon-btn | absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
                 [cdkMenuTriggerFor]="menu"
+                (cdkMenuOpened)="isHovered = true"
+                (cdkMenuClosed)="isHovered = false"
                 #trigger="cdkMenuTriggerFor"
                 data-test-name="task-menu-button"
             >

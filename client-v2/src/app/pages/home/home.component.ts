@@ -132,4 +132,6 @@ export class HomeComponent implements OnInit {
     }
 
     nodeMenuItemsMap = getEntityMenuItemsMap(this.store)
+
+    isHovered: Record<string, boolean> = {}
 }

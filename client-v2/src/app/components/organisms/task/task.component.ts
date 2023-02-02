@@ -55,4 +55,6 @@ export class TaskComponent {
     isOverdue = false
     loading: false | PageEntityState.LOADING = false
     blocked: false | TaskState.BLOCKED = false // disabled for now
+
+    isHovered = false
 }

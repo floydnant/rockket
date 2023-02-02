@@ -66,6 +66,7 @@
                 <cdk-tree-node *cdkTreeNodeDef="let node" [class.hidden]="!shouldRender(node)">
                     <button
                         class="tree-node"
+                        [class.isHovered]="isHovered[node.id]"
                         [class.nested]="node.path.length > 0"
                         [appTooltip]="label"
                         [tooltipOptions]="{ preferredPosition: 'right' }"
@@ -73,6 +74,8 @@
                         routerLinkActive="active"
                         #nodeTooltip="appTooltip"
                         [cdkContextMenuTriggerFor]="nodeDropDown"
+                        (cdkContextMenuOpened)="isHovered[node.id] = true"
+                        (cdkContextMenuClosed)="isHovered[node.id] = false"
                         data-test-name="entity-tree-node"
                         [attr.data-level]="node.path.length"
                     >
@@ -121,6 +124,8 @@
                             <button
                                 (click)="$event.stopPropagation(); nodeTooltip.hideTooltip()"
                                 [cdkMenuTriggerFor]="nodeDropDown"
+                                (cdkMenuOpened)="isHovered[node.id] = true"
+                                (cdkMenuClosed)="isHovered[node.id] = false"
                                 data-test-name="open-menu"
                             >
                                 <double-ellipsis-icon></double-ellipsis-icon>
