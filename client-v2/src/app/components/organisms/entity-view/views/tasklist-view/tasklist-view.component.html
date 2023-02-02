@@ -94,16 +94,23 @@
 </div>
 
 <div
-    class="progress-container | group sticky -top-2 z-30 mt-2 flex items-center gap-2 bg-tinted-900 py-2 shadow-header"
     *ngIf="digest$ | async as digest"
+    class="progress-container | group sticky -top-2 z-30 mt-2 flex items-center gap-2 rounded-b-[12.5px] py-2 px-3.5 shadow-header"
+    [appTooltip]="progressTooltip"
+    [tooltipOptions]="{ closeOnHostClick: false, preferredPosition: 'bottom' }"
 >
+    <ng-template #progressTooltip>
+        <span class="">
+            {{ digest.progressRounded }}% closed - {{ digest.closed.length }} / {{ digest.open.length }}
+        </span>
+        <span class="text-tinted-300">{{
+            digest.inProgress.length ? '(' + digest.inProgress.length + ' in progress)' : ''
+        }}</span>
+    </ng-template>
+
     <div
         #progressBar
         class="progress-bar | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
-        appTooltip="{{ digest.progressRounded }}% closed - {{ digest.closed.length }}/{{ digest.open.length }} {{
-            digest.inProgress.length ? '(' + digest.inProgress.length + ' in progress)' : ''
-        }}"
-        [tooltipOptions]="{ closeOnHostClick: false }"
     >
         <div class="progress | h-full rounded bg-submit-400" [style.width]="digest.progress + '%'"></div>
     </div>
@@ -111,7 +118,7 @@
         class="text-sm text-tinted-600 transition-colors group-hover:text-submit-400"
         (click)="isShownAsPercentage = !isShownAsPercentage"
     >
-        {{ isShownAsPercentage ? digest.progressRounded + '%' : digest.closed.length + ' / ' + digest.open.length }}
+        {{ isShownAsPercentage ? digest.progressRounded + ' %' : digest.closed.length + ' / ' + digest.open.length }}
     </button>
 </div>
 

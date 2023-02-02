@@ -1,3 +1,13 @@
+@supports not (backdrop-filter: blur()) {
+    .progress-container {
+        @apply bg-tinted-900;
+    }
+}
+@supports (backdrop-filter: blur()) {
+    .progress-container {
+        @apply bg-tinted-900/60 backdrop-blur;
+    }
+}
 .progress-container:is(:hover, .glow) .progress {
     box-shadow: 0 0 10px theme('colors.submit.400');
 }
