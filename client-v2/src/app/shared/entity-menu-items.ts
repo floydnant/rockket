@@ -1,7 +1,7 @@
 import { Store } from '@ngrx/store'
 import { MenuItem, MenuItemVariant } from '../components/molecules/drop-down/drop-down.component'
 import { EntityType } from '../fullstack-shared-models/entities.model'
-import { TaskStatus } from '../fullstack-shared-models/task.model'
+import { TaskPriority, TaskStatus } from '../fullstack-shared-models/task.model'
 import { EntityCrudDto } from '../services/entities.service'
 import { AppState } from '../store'
 import { entitiesActions } from '../store/entities/entities.actions'
@@ -29,6 +29,14 @@ export const getTaskStatusMenuItems = (store: Store<AppState>) =>
         icon: status,
         action: (dto: { id: string }) => {
             store.dispatch(taskActions.updateStatus({ id: dto.id, status }))
+        },
+    }))
+export const getTaskPriorityMenuItems = (store: Store<AppState>) =>
+    Object.values(TaskPriority).map<MenuItem>(priority => ({
+        title: priority.replace(/_/g, ' '),
+        // icon: priority, // @TODO: requires a more generic icon mechanism
+        action: (dto: { id: string }) => {
+            store.dispatch(taskActions.updatePriority({ id: dto.id, priority }))
         },
     }))
 
@@ -71,6 +79,10 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
         {
             title: 'Status',
             children: getTaskStatusMenuItems(store),
+        },
+        {
+            title: 'Priority',
+            children: getTaskPriorityMenuItems(store),
         },
         // {
         //     title: 'Duplicate',

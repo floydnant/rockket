@@ -58,4 +58,19 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
             taskTreeMap: taskTreeMapCopy,
         }
     }),
+
+    on(taskActions.updatePrioritySuccess, (state, { id, priority }) => {
+        const taskTreeMapCopy = structuredClone(state.taskTreeMap || {}) as TaskTreeMap
+
+        // @TODO: This could be optimized by using the `listId` to reduce the number of tasks to iterate over
+        const task = getTaskById(Object.values(taskTreeMapCopy).flat(), id)
+        if (task) {
+            task.priority = priority
+        }
+
+        return {
+            ...state,
+            taskTreeMap: taskTreeMapCopy,
+        }
+    }),
 ]

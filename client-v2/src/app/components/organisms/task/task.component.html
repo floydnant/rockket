@@ -18,16 +18,13 @@
                     class="status-btn | icon-btn"
                     [appTooltip]="blocked || task.status"
                     [tooltipOptions]="{ avoidPositions: ['right'] }"
-                    [cdkMenuTriggerFor]="taskStatusMenu"
+                    [cdkMenuTriggerFor]="statusMenu"
                     data-test-name="task-status-button"
                 >
                     <page-entity-icon [icon]="loading || blocked || task.status"></page-entity-icon>
                 </button>
-                <ng-template #taskStatusMenu>
-                    <app-drop-down
-                        [items]="(taskStatusMenuItems$ | async) || []"
-                        [data]="{ id: task.id }"
-                    ></app-drop-down>
+                <ng-template #statusMenu>
+                    <app-drop-down [items]="(statusMenuItems$ | async) || []" [data]="{ id: task.id }"></app-drop-down>
                 </ng-template>
 
                 <app-inline-editor
@@ -71,20 +68,29 @@
                     iconClass="fas fa-exclamation-triangle text-danger-400"
                     data-test-name="overdue-icon"
                 ></app-icon>
-                <priority-icon
+                <div
+                    class="priority-button | icon-btn"
                     *ngIf="
                         task.status != TaskStatus.COMPLETED &&
                         task.status != TaskStatus.NOT_PLANNED &&
                         task.priority != TaskPriority.NONE
                     "
-                    [priority]="task.priority"
                     [appTooltip]="task.priority"
                     [tooltipOptions]="{ avoidPositions: ['left'] }"
+                    [cdkMenuTriggerFor]="priorityMenu"
                     data-test-name="task-priority-button"
-                ></priority-icon>
+                >
+                    <priority-icon [priority]="task.priority"></priority-icon>
+                </div>
+                <ng-template #priorityMenu>
+                    <app-drop-down
+                        [items]="(priorityMenuItems$ | async) || []"
+                        [data]="{ id: task.id }"
+                    ></app-drop-down>
+                </ng-template>
             </div>
             <button
-                class="| icon-btn | absolute top-[50%] right-0 translate-y-[-50%] !px-1.5 text-tinted-200 transition-opacity"
+                class="| icon-btn | absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
                 [cdkMenuTriggerFor]="menu"
                 #trigger="cdkMenuTriggerFor"
                 data-test-name="task-menu-button"

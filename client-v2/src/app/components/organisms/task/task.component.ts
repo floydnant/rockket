@@ -40,8 +40,9 @@ export class TaskComponent {
         this.menuItems$.next(items)
     }
 
-    taskStatusMenuItems$ = this.menuItems$.pipe(
-        map(items => items?.find(({ title }) => title == 'Status')?.children || [])
+    statusMenuItems$ = this.menuItems$.pipe(map(items => items?.find(({ title }) => title == 'Status')?.children || []))
+    priorityMenuItems$ = this.menuItems$.pipe(
+        map(items => items?.find(({ title }) => title == 'Priority')?.children || [])
     )
 
     @Output() expansionChange = new EventEmitter<boolean>()
