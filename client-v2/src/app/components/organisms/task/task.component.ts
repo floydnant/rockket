@@ -55,7 +55,10 @@ export class TaskComponent {
     @Output() priorityChange = new EventEmitter<TaskPriority>()
 
     isOverdue = false
-    loading: false | EntityState.LOADING = false
+    @Input() isLoading = false
+    get loading() {
+        return this.isLoading ? EntityState.LOADING : false
+    }
     blocked = false // disabled for now
 
     isHovered = false

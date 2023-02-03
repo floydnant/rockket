@@ -118,7 +118,7 @@ export class TaskEffects {
 
                 return res$.pipe(
                     this.toast.observe({
-                        success: `Updated status to ${status}`,
+                        // success: `Updated status to ${status}`,
                         error: 'Failed to update the status of this task.',
                     }),
                     map(() => taskActions.updateStatusSuccess({ id, status })),
