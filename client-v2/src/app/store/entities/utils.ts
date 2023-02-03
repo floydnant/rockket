@@ -88,17 +88,26 @@ export const getEntityById = (entityTree: EntityPreviewRecursive[], id: string):
 }
 
 interface ConvertTaskToEntity {
-    (task: TaskPreview): EntityPreview & Pick<TaskPreview, 'status'>
-    (task: TaskPreviewRecursive): EntityPreviewRecursive & Pick<TaskPreview, 'status'>
+    (task: TaskPreview): EntityPreview & Pick<TaskPreview, 'status' | 'priority'>
+    (task: TaskPreviewRecursive): EntityPreviewRecursive & Pick<TaskPreview, 'status' | 'priority'>
 }
 
 // @TODO: find a good spot for this
-export const convertTaskToEntity: ConvertTaskToEntity = ({ id, listId, parentTaskId, title, status, ...rest }) => ({
+export const convertTaskToEntity: ConvertTaskToEntity = ({
+    id,
+    listId,
+    parentTaskId,
+    title,
+    status,
+    priority,
+    ...rest
+}) => ({
     id,
     entityType: EntityType.TASK,
     parentId: parentTaskId || listId,
     title,
     status,
+    priority,
     children: 'children' in rest ? rest.children?.map(convertTaskToEntity) : undefined,
 })
 

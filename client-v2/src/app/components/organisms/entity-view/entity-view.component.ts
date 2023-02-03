@@ -22,8 +22,10 @@ import {
     tap,
 } from 'rxjs'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
+import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 import { EntityMenuItemsMap } from '../../../shared/entity-menu-items'
 import { MenuItem } from '../../molecules/drop-down/drop-down.component'
 import { TaskViewComponent } from './views/task-view/task-view.component'
@@ -75,7 +77,9 @@ export class EntityViewComponent {
         map(([entity, optionsMap]) => {
             if (!entity) return null
 
-            return optionsMap?.[entity.entityType]
+            return optionsMap?.[entity.entityType].map(
+                useTaskForActiveItems(entity as EntityPreviewRecursive & TaskPreview)
+            )
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )

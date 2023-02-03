@@ -14,6 +14,7 @@ import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { flattenTaskTree } from 'src/app/store/entities/utils'
+import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 
 export interface TaskTreeNode {
@@ -116,27 +117,7 @@ export class TaskTreeComponent {
     menuItemsMap$ = this.flattendTaskTree$.pipe(
         map(flattendTree => {
             const menuItemEntries = flattendTree.map(({ taskPreview }) => {
-                const menuItems = this.taskMenuItems.map(item => {
-                    let children = item.children
-
-                    if (item.title == 'Status') {
-                        children = item.children?.map(taskStatusItem => ({
-                            ...taskStatusItem,
-                            // @TODO: this will break once the icon is not equl to the status anymore
-                            isActive: taskPreview.status == taskStatusItem.icon,
-                        }))
-                    }
-
-                    if (item.title == 'Priority') {
-                        children = item.children?.map(taskPriorityItem => ({
-                            ...taskPriorityItem,
-                            // @TODO: this will break once the icon is not equl to the status anymore
-                            isActive: taskPreview.priority == taskPriorityItem.icon,
-                        }))
-                    }
-
-                    return { ...item, children }
-                })
+                const menuItems = this.taskMenuItems.map(useTaskForActiveItems(taskPreview))
 
                 return [taskPreview.id, menuItems] as const
             })

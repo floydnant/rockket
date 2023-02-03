@@ -9,7 +9,7 @@ import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { traceEntity, traceEntityIncludingTasks } from 'src/app/store/entities/utils'
-import { useDataForAction } from 'src/app/utils/menu-item.helpers'
+import { useDataForAction, useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 
 @UntilDestroy()
 @Component({
@@ -58,9 +58,9 @@ export class EntityPageComponent {
                 title: entity.title,
                 icon: (entity as EntityPreviewRecursive & Pick<TaskPreview, 'status'>).status || entity.entityType,
                 route: `/home/${entity.id}`,
-                contextMenuItems: this.entityOptionsMap[entity.entityType].map(
-                    useDataForAction({ id: entity.id, entityType: entity.entityType })
-                ),
+                contextMenuItems: this.entityOptionsMap[entity.entityType]
+                    .map(useDataForAction({ id: entity.id, entityType: entity.entityType }))
+                    .map(useTaskForActiveItems(entity as EntityPreviewRecursive & TaskPreview)),
             }))
         )
     )

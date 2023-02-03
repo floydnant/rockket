@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store'
 import { map, tap } from 'rxjs'
 import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
@@ -14,6 +15,7 @@ import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { flattenEntityTreeIncludingTasks, traceEntity } from 'src/app/store/entities/utils'
 import { moveToMacroQueue } from 'src/app/utils'
+import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 
 export interface EntityTreeNode {
@@ -108,7 +110,9 @@ export class HomeComponent implements OnInit {
                     return {
                         ...node,
                         isExpanded: node.isExpanded || isContainedInTrace,
-                        menuItems: this.nodeMenuItemsMap[node.entityType],
+                        menuItems: this.nodeMenuItemsMap[node.entityType].map(
+                            useTaskForActiveItems(node as EntityTreeNode & TaskPreview)
+                        ),
                     }
                 })
             }),
@@ -131,7 +135,7 @@ export class HomeComponent implements OnInit {
         this.store.dispatch(listActions.createTaskList({ parentListId }))
     }
 
-    nodeMenuItemsMap = getEntityMenuItemsMap(this.store)
+    private readonly nodeMenuItemsMap = getEntityMenuItemsMap(this.store)
 
     isHovered: Record<string, boolean> = {}
 }
