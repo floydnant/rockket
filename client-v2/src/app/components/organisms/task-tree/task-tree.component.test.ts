@@ -3,7 +3,7 @@ import { testName } from 'cypress/support/helpers'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
 import { TaskPreviewRecursive, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
-import { storeMock } from 'src/app/utils/unit-test.mocks'
+import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { IconsModule } from '../../atoms/icons/icons.module'
 import { InlineEditorComponent } from '../../atoms/inline-editor/inline-editor.component'
 import { TaskComponent } from '../task/task.component'
@@ -14,7 +14,7 @@ const setupComponent = (taskTree: TaskPreviewRecursive[]) => {
         componentProperties: { taskTree },
         imports: [IconsModule, CdkMenuModule],
         declarations: [TaskTreeComponent, TaskComponent, InlineEditorComponent, FocusableDirective, MutationDirective],
-        providers: [storeMock],
+        providers: [storeMock, actionsMock],
     })
 }
 
