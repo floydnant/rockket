@@ -3,10 +3,10 @@ import { BehaviorSubject, map } from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { TaskPreview, TaskPriority, TaskStatus } from '../../../fullstack-shared-models/task.model'
-import { PageEntityState, TaskState } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
+import { EntityState } from '../../atoms/icons/icon/icons'
 import { MenuItem } from '../../molecules/drop-down/drop-down.component'
 import { TaskTreeNode } from '../task-tree/task-tree.component'
-import colors from '../../../../../colors.json'
+import { colors } from 'src/app/shared/colors'
 
 @Component({
     selector: 'app-task',
@@ -53,8 +53,8 @@ export class TaskComponent {
     @Output() priorityChange = new EventEmitter<TaskPriority>()
 
     isOverdue = false
-    loading: false | PageEntityState.LOADING = false
-    blocked: false | TaskState.BLOCKED = false // disabled for now
+    loading: false | EntityState.LOADING = false
+    blocked = false // disabled for now
 
     isHovered = false
 }

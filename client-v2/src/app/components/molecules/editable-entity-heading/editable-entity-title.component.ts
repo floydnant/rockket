@@ -8,7 +8,7 @@ import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'
-import { PageEntityState } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
+import { EntityState } from '../../atoms/icons/icon/icons'
 
 @UntilDestroy()
 @Component({
@@ -21,7 +21,7 @@ export class EditableEntityTitleComponent {
     constructor(private store: Store<AppState>, private actions$: Actions) {}
 
     EntityType = EntityType
-    PageEntityState = PageEntityState
+    EntityState = EntityState
     ENTITY_TITLE_DEFAULTS = ENTITY_TITLE_DEFAULTS
 
     entity$ = new BehaviorSubject<EntityPreviewRecursive | undefined | null>(null)

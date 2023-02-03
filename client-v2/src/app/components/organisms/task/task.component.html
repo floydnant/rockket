@@ -26,7 +26,7 @@
                     (cdkMenuClosed)="isHovered = false"
                     data-test-name="task-status-button"
                 >
-                    <page-entity-icon [icon]="loading || blocked || task.status"></page-entity-icon>
+                    <app-icon [iconClass]="loading || task.status"></app-icon>
                 </button>
                 <ng-template #statusMenu>
                     <app-drop-down [items]="(statusMenuItems$ | async) || []" [data]="{ id: task.id }"></app-drop-down>
@@ -87,7 +87,7 @@
                     (cdkMenuClosed)="isHovered = false"
                     data-test-name="task-priority-button"
                 >
-                    <priority-icon [priority]="task.priority"></priority-icon>
+                    <app-icon [iconClass]="task.priority"></app-icon>
                 </div>
                 <ng-template #priorityMenu>
                     <app-drop-down

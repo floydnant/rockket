@@ -15,11 +15,11 @@ export const statusSortingMap: Record<TaskStatus, number> = {
 }
 
 export enum TaskPriority {
-    OPTIONAL = 'Optional',
-    NONE = 'None',
-    MEDIUM = 'Medium',
-    HIGH = 'High',
     URGENT = 'Urgent',
+    HIGH = 'High',
+    MEDIUM = 'Medium',
+    NONE = 'None',
+    OPTIONAL = 'Optional',
 }
 export const prioritySortingMap: Record<TaskPriority, number> = {
     [TaskPriority.URGENT]: 0,

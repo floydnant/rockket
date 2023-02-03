@@ -40,7 +40,7 @@ export class SettingsComponent {
         appearance: { title: 'Appearance', route: '/settings/appearance', icon: 'fas fa-eye' },
     }
 
-    breadcrumbs$ = this.route.url.pipe(
+    breadcrumbs$: Observable<Breadcrumb[]> = this.route.url.pipe(
         switchMap(() => {
             const routes = this.route.pathFromRoot
             const lastChild = routes[routes.length - 1].children[0]
@@ -51,7 +51,7 @@ export class SettingsComponent {
             const path = segments[segments.length - 1].path as keyof typeof this.pathBreadcrumbMap
             const breadcrumb = this.pathBreadcrumbMap[path]
 
-            return [{ title: 'Settings', route: '/settings', icon: 'fas fa-cog' }, breadcrumb]
+            return [{ title: 'Settings', route: '/settings', icon: 'settings' }, breadcrumb]
         })
     )
 }

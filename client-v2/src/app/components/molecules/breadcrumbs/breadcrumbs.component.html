@@ -23,16 +23,7 @@
                 ></app-drop-down>
             </ng-template>
 
-            <app-entity-page-label
-                *ngIf="isPageEntityIcon(breadcrumb.icon); else genericIcon"
-                [title]="breadcrumb.title"
-                [pageIcon]="breadcrumb.icon"
-            ></app-entity-page-label>
-
-            <ng-template #genericIcon>
-                <app-icon [iconClass]="breadcrumb.icon" *ngIf="breadcrumb.icon"></app-icon>
-                <span class="truncate">{{ breadcrumb.title }}</span>
-            </ng-template>
+            <app-entity-page-label [pageTitle]="breadcrumb.title" [pageIcon]="breadcrumb.icon"></app-entity-page-label>
         </button>
         <span class="seperator | mx-0.5 text-tinted-500" *ngIf="!isLast">/</span>
     </div>

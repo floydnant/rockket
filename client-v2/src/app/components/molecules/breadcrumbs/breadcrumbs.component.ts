@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { isPageEntityIcon, PageEntityIconKey } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
+import { IconKey } from '../../atoms/icons/icon/icons'
 import { MenuItem } from '../drop-down/drop-down.component'
 
 export interface Breadcrumb {
     title: string
-    icon: PageEntityIconKey | string
+    icon: IconKey
     route: string
     contextMenuItems?: MenuItem[]
 }
@@ -23,6 +23,4 @@ export interface Breadcrumb {
 })
 export class BreadcrumbsComponent {
     @Input() breadcrumbs!: Breadcrumb[]
-
-    isPageEntityIcon = isPageEntityIcon
 }

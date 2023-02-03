@@ -3,11 +3,12 @@ import { Component, Input } from '@angular/core'
 import { BehaviorSubject, map } from 'rxjs'
 import { moveToMacroQueue } from 'src/app/utils'
 import { useParamsForRoute } from 'src/app/utils/menu-item.helpers'
-import { PageEntityIconKey } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
+import { IconKey } from '../../atoms/icons/icon/icons'
 
 export interface MenuItem {
     title?: string
-    icon?: PageEntityIconKey
+    /** Any valid `IconKey` or FontAwesome icon class */
+    icon?: IconKey
     route?: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     action?: (data?: any) => void

@@ -79,7 +79,7 @@
             #trigger="cdkContextMenuTriggerFor"
             data-test-name="entity-child"
         >
-            <app-entity-page-label [title]="child.title" [pageIcon]="child.entityType"></app-entity-page-label>
+            <app-entity-page-label [pageTitle]="child.title" [pageIcon]="child.entityType"></app-entity-page-label>
 
             <ng-template #options>
                 <!-- @TODO: Using the options$ here is wrong, since the children might be of a different entityType than the parent. -->

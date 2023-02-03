@@ -8,11 +8,12 @@
         </ng-template>
 
         <ng-template #icon>
-            <page-entity-icon
+            <app-icon
                 *ngIf="menuItem.icon"
-                [icon]="menuItem.icon"
+                [iconClass]="menuItem.icon"
                 class="mr-1 inline-block scale-[1.3]"
-            ></page-entity-icon>
+                [class.text-tinted-400]="!menuItem.variant || menuItem.variant == MenuItemVariant.DEFAULT"
+            ></app-icon>
         </ng-template>
 
         <a
@@ -43,8 +44,10 @@
             (cdkMenuItemTriggered)="link.click(); rootTrigger?.close?.()"
             data-test-name="menu-item"
         >
-            <ng-container *ngTemplateOutlet="icon"></ng-container>
-            <span class="title">{{ menuItem.title }}</span>
+            <span>
+                <ng-container *ngTemplateOutlet="icon"></ng-container>
+                <span class="title">{{ menuItem.title }}</span>
+            </span>
             <ng-container *ngTemplateOutlet="chevron"></ng-container>
         </a>
 
@@ -69,8 +72,10 @@
             [cdkMenuTriggerFor]="subMenu"
             data-test-name="menu-item"
         >
-            <ng-container *ngTemplateOutlet="icon"></ng-container>
-            <span class="title">{{ menuItem.title }}</span>
+            <span>
+                <ng-container *ngTemplateOutlet="icon"></ng-container>
+                <span class="title">{{ menuItem.title }}</span>
+            </span>
             <ng-container *ngTemplateOutlet="chevron"></ng-container>
         </button>
 

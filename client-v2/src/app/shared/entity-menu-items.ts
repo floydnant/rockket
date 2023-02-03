@@ -11,6 +11,7 @@ import { taskActions } from '../store/entities/task/task.actions'
 export const getGeneralMenuItems = (store: Store<AppState>): MenuItem[] => [
     {
         title: `Rename`,
+        icon: 'edit',
         action: (dto: EntityCrudDto) => store.dispatch(entitiesActions.openRenameDialog(dto)),
     },
 ]
@@ -18,6 +19,7 @@ export const getDangerMenuItems = (store: Store<AppState>): MenuItem[] => [
     { isSeperator: true },
     {
         title: `Delete`,
+        icon: 'trash',
         variant: MenuItemVariant.DANGER,
         action: (dto: EntityCrudDto) => store.dispatch(entitiesActions.openDeleteDialog(dto)),
     },
@@ -34,7 +36,7 @@ export const getTaskStatusMenuItems = (store: Store<AppState>) =>
 export const getTaskPriorityMenuItems = (store: Store<AppState>) =>
     Object.values(TaskPriority).map<MenuItem>(priority => ({
         title: priority.replace(/_/g, ' '),
-        // icon: priority, // @TODO: requires a more generic icon mechanism
+        icon: priority,
         action: (dto: { id: string }) => {
             store.dispatch(taskActions.updatePriority({ id: dto.id, priority }))
         },
@@ -47,9 +49,11 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
         ...getGeneralMenuItems(store),
         {
             title: 'New inside',
+            icon: 'plus',
             children: [
                 {
                     title: 'Tasklist',
+                    icon: EntityType.TASKLIST,
                     action: (dto: EntityCrudDto) =>
                         store.dispatch(listActions.createTaskList({ parentListId: dto.id })),
                 },
@@ -57,31 +61,36 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
         },
         {
             title: 'Duplicate',
+            icon: 'clone',
             action: (dto: EntityCrudDto) => store.dispatch(listActions.duplicateList(dto)),
         },
         {
             title: `Export`,
+            icon: 'export',
             action: (dto: EntityCrudDto) => store.dispatch(listActions.exportList(dto)),
         },
         ...getDangerMenuItems(store),
     ],
     [EntityType.TASK]: [
-        ...getGeneralMenuItems(store),
         {
             title: 'New Subtask',
+            icon: 'plus',
             action: (dto: EntityCrudDto) => store.dispatch(taskActions.create({ parentTaskId: dto.id })),
         },
+        ...getGeneralMenuItems(store),
         {
-            title: 'Open',
-            // @TODO: this is really fuckin hacky, lets think of a better way
+            title: 'Open as page',
+            icon: 'expand',
             route: '/home/:id',
         },
         {
             title: 'Status',
+            icon: 'status',
             children: getTaskStatusMenuItems(store),
         },
         {
             title: 'Priority',
+            icon: 'priority',
             children: getTaskPriorityMenuItems(store),
         },
         // {
