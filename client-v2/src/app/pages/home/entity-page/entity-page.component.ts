@@ -4,6 +4,8 @@ import { UntilDestroy } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { map, of, shareReplay, switchMap } from 'rxjs'
 import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs.component'
+import { EntityPreviewRecursive } from 'src/app/fullstack-shared-models/entities.model'
+import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { traceEntity, traceEntityIncludingTasks } from 'src/app/store/entities/utils'
@@ -54,7 +56,7 @@ export class EntityPageComponent {
         map(trace =>
             trace?.map<Breadcrumb>(entity => ({
                 title: entity.title,
-                icon: entity.entityType,
+                icon: (entity as EntityPreviewRecursive & Pick<TaskPreview, 'status'>).status || entity.entityType,
                 route: `/home/${entity.id}`,
                 contextMenuItems: this.entityOptionsMap[entity.entityType].map(
                     useDataForAction({ id: entity.id, entityType: entity.entityType })

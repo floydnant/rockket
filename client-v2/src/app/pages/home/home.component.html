@@ -49,7 +49,7 @@
                 (click)="createNewList()"
                 data-test-name="sidebar-create-new-list"
             >
-                <app-icon iconClass="fas fa-plus"></app-icon>
+                <app-icon iconClass="plus"></app-icon>
             </button>
         </p>
 
@@ -107,7 +107,7 @@
                             <ng-template #label>
                                 <app-entity-page-label
                                     [pageTitle]="node.title"
-                                    [pageIcon]="node.entityType"
+                                    [pageIcon]="node.status || node.entityType"
                                 ></app-entity-page-label>
                             </ng-template>
                             <ng-container *ngTemplateOutlet="label"></ng-container>
@@ -119,7 +119,7 @@
                                 (click)="createNewList(node.id); $event.stopPropagation()"
                                 data-test-name="create-child"
                             >
-                                <app-icon iconClass="far fa-plus"></app-icon>
+                                <app-icon iconClass="plus"></app-icon>
                             </button>
                             <button
                                 (click)="$event.stopPropagation(); nodeTooltip.hideTooltip()"

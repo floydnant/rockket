@@ -4,6 +4,7 @@ import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { BehaviorSubject, combineLatest, delay, filter, first, map, switchMap, tap } from 'rxjs'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
@@ -24,9 +25,9 @@ export class EditableEntityTitleComponent {
     EntityState = EntityState
     ENTITY_TITLE_DEFAULTS = ENTITY_TITLE_DEFAULTS
 
-    entity$ = new BehaviorSubject<EntityPreviewRecursive | undefined | null>(null)
+    entity$ = new BehaviorSubject<(EntityPreviewRecursive & Pick<TaskPreview, 'status'>) | undefined | null>(null)
     @Input() set entity(activeEntity: EntityPreviewRecursive | undefined | null) {
-        this.entity$.next(activeEntity)
+        this.entity$.next(activeEntity as EntityPreviewRecursive & Pick<TaskPreview, 'status'>)
     }
 
     titleUpdates$ = new BehaviorSubject<string | null>(null)
