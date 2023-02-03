@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
+import { Action } from '@ngrx/store/src/models'
 import { map, tap } from 'rxjs'
 import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
@@ -133,6 +134,13 @@ export class HomeComponent implements OnInit {
 
     createNewList(parentListId?: string) {
         this.store.dispatch(listActions.createTaskList({ parentListId }))
+    }
+    createChild(id: string, entityType: EntityType) {
+        const machine: Record<EntityType, Action> = {
+            [EntityType.TASKLIST]: listActions.createTaskList({ parentListId: id }),
+            [EntityType.TASK]: taskActions.create({ parentTaskId: id }),
+        }
+        this.store.dispatch(machine[entityType])
     }
 
     private readonly nodeMenuItemsMap = getEntityMenuItemsMap(this.store)

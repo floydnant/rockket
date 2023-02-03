@@ -68,7 +68,7 @@
                         class="tree-node"
                         [class.isHovered]="isHovered[node.id]"
                         [class.nested]="node.path.length > 0"
-                        [appTooltip]="label"
+                        [appTooltip]="tooltip"
                         [tooltipOptions]="{ preferredPosition: 'right' }"
                         routerLink="/home/{{ node.id }}"
                         routerLinkActive="active"
@@ -79,6 +79,11 @@
                         data-test-name="entity-tree-node"
                         [attr.data-level]="node.path.length"
                     >
+                        <ng-template #tooltip>
+                            <app-icon [iconClass]="node.status || node.entityType"></app-icon>
+                            {{ node.title }}
+                        </ng-template>
+
                         <div class="indent-line" *ngFor="let line of range(node.path.length)">&nbsp;</div>
 
                         <div class="content">
@@ -104,19 +109,15 @@
                                 </div>
                             </ng-template>
 
-                            <ng-template #label>
-                                <app-entity-page-label
-                                    [pageTitle]="node.title"
-                                    [pageIcon]="node.status || node.entityType"
-                                ></app-entity-page-label>
-                            </ng-template>
-                            <ng-container *ngTemplateOutlet="label"></ng-container>
+                            <app-entity-page-label
+                                [pageTitle]="node.title"
+                                [pageIcon]="node.status || node.entityType"
+                            ></app-entity-page-label>
                         </div>
 
                         <div class="btn-group">
                             <button
-                                class=""
-                                (click)="createNewList(node.id); $event.stopPropagation()"
+                                (click)="createChild(node.id, node.entityType); $event.stopPropagation()"
                                 data-test-name="create-child"
                             >
                                 <app-icon iconClass="plus"></app-icon>

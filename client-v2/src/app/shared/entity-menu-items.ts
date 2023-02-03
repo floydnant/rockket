@@ -48,7 +48,7 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
     [EntityType.TASKLIST]: [
         ...getGeneralMenuItems(store),
         {
-            title: 'New inside',
+            title: 'New Inside',
             icon: 'plus',
             children: [
                 {
@@ -56,6 +56,11 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
                     icon: EntityType.TASKLIST,
                     action: (dto: EntityCrudDto) =>
                         store.dispatch(listActions.createTaskList({ parentListId: dto.id })),
+                },
+                {
+                    title: 'Task',
+                    icon: EntityType.TASK,
+                    action: (dto: EntityCrudDto) => store.dispatch(taskActions.create({ listId: dto.id })),
                 },
             ],
         },
@@ -79,7 +84,7 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
         },
         ...getGeneralMenuItems(store),
         {
-            title: 'Open as page',
+            title: 'Open as Page',
             icon: 'expand',
             route: '/home/:id',
         },

@@ -59,7 +59,7 @@ export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingK
 
 export const defaultEntityIcons: Record<EntityType, string> = {
     [EntityType.TASKLIST]: 'far fa-tasks text-tinted-400',
-    [EntityType.TASK]: taskStatusIconMap[TaskStatus.OPEN],
+    [EntityType.TASK]: extraIcons.status,
 }
 
 export const entityIcons = {
