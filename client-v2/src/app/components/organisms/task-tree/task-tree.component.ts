@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatestWith, map, tap } from 'rxjs'
+import { BehaviorSubject, combineLatestWith, map, shareReplay, tap } from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import {
     TaskPreviewFlattend,
@@ -109,26 +109,38 @@ export class TaskTreeComponent {
         return prevNode
     }
 
+    private readonly taskMenuItems = getEntityMenuItemsMap(this.store)[EntityType.TASK]
+
     menuItemsMap$ = this.flattendTaskTree$.pipe(
         map(flattendTree => {
             const menuItemEntries = flattendTree.map(({ taskPreview }) => {
-                const menuItems = getEntityMenuItemsMap(this.store)[EntityType.TASK].map(item => {
-                    if (item.title != 'Status') return item
+                const menuItems = this.taskMenuItems.map(item => {
+                    let children = item.children
 
-                    item.children = item.children?.map(taskStatusItem => {
-                        return {
+                    if (item.title == 'Status') {
+                        children = item.children?.map(taskStatusItem => ({
                             ...taskStatusItem,
-                            isActive: taskPreview.status == taskStatusItem.icon, // @TODO: this will break once the icon is not equl to the status anymore
-                        }
-                    })
+                            // @TODO: this will break once the icon is not equl to the status anymore
+                            isActive: taskPreview.status == taskStatusItem.icon,
+                        }))
+                    }
 
-                    return item
+                    if (item.title == 'Priority') {
+                        children = item.children?.map(taskPriorityItem => ({
+                            ...taskPriorityItem,
+                            // @TODO: this will break once the icon is not equl to the status anymore
+                            isActive: taskPreview.priority == taskPriorityItem.icon,
+                        }))
+                    }
+
+                    return { ...item, children }
                 })
 
                 return [taskPreview.id, menuItems] as const
             })
             return Object.fromEntries(menuItemEntries)
-        })
+        }),
+        shareReplay({ bufferSize: 1, refCount: true })
     )
 
     onTitleChange(id: string, title: string) {
