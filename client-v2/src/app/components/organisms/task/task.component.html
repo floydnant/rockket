@@ -19,13 +19,18 @@
             <div class="first-row | flex items-center">
                 <button
                     class="status-btn | icon-btn"
-                    [appTooltip]="blocked || task.status"
+                    [appTooltip]="statusTooltip"
                     [tooltipOptions]="{ avoidPositions: ['right'] }"
                     [cdkMenuTriggerFor]="statusMenu"
                     (cdkMenuOpened)="isHovered = true"
                     (cdkMenuClosed)="isHovered = false"
                     data-test-name="task-status-button"
                 >
+                    <ng-template #statusTooltip>
+                        <span class="text-tinted-300">Status: </span>
+                        <span [class]="statusColorMap[task.status]">{{ task.status.replace('_', ' ') }}</span>
+                    </ng-template>
+
                     <app-icon [iconClass]="loading || task.status"></app-icon>
                 </button>
                 <ng-template #statusMenu>
@@ -80,13 +85,17 @@
                         task.status != TaskStatus.NOT_PLANNED &&
                         task.priority != TaskPriority.NONE
                     "
-                    [appTooltip]="task.priority"
+                    [appTooltip]="priorityTooltip"
                     [tooltipOptions]="{ avoidPositions: ['left'] }"
                     [cdkMenuTriggerFor]="priorityMenu"
                     (cdkMenuOpened)="isHovered = true"
                     (cdkMenuClosed)="isHovered = false"
                     data-test-name="task-priority-button"
                 >
+                    <ng-template #priorityTooltip>
+                        <span class="text-tinted-300">Priority: </span>
+                        <span>{{ task.priority }}</span>
+                    </ng-template>
                     <app-icon [iconClass]="task.priority"></app-icon>
                 </div>
                 <ng-template #priorityMenu>

@@ -6,7 +6,7 @@ import { TaskPreview, TaskPriority, TaskStatus } from '../../../fullstack-shared
 import { EntityState } from '../../atoms/icons/icon/icons'
 import { MenuItem } from '../../molecules/drop-down/drop-down.component'
 import { TaskTreeNode } from '../task-tree/task-tree.component'
-import { colors } from 'src/app/shared/colors'
+import { colors, taskStatusColorMap } from 'src/app/shared/colors'
 
 @Component({
     selector: 'app-task',
@@ -19,6 +19,8 @@ export class TaskComponent {
     TaskStatus = TaskStatus
     TaskPriority = TaskPriority
     PLACEHOLDER = ENTITY_TITLE_DEFAULTS[EntityType.TASK]
+
+    statusColorMap = { ...taskStatusColorMap, [TaskStatus.OPEN]: 'text-tinted-100' }
 
     placeholderColorMap = {
         ...(Object.fromEntries(Object.values(TaskStatus).map(status => [status, colors.tinted[400]])) as Record<
