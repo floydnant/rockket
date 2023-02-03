@@ -6,8 +6,10 @@ import { BehaviorSubject, combineLatest, delay, filter, first, map, switchMap, t
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
+import { getTaskStatusMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
+import { useTaskForActiveStatus } from 'src/app/utils/menu-item.helpers'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 import { EntityState } from '../../atoms/icons/icon/icons'
 
@@ -25,9 +27,11 @@ export class EditableEntityTitleComponent {
     EntityState = EntityState
     ENTITY_TITLE_DEFAULTS = ENTITY_TITLE_DEFAULTS
 
-    entity$ = new BehaviorSubject<(EntityPreviewRecursive & Pick<TaskPreview, 'status'>) | undefined | null>(null)
+    entity$ = new BehaviorSubject<
+        (EntityPreviewRecursive & Pick<TaskPreview, 'status' | 'priority'>) | undefined | null
+    >(null)
     @Input() set entity(activeEntity: EntityPreviewRecursive | undefined | null) {
-        this.entity$.next(activeEntity as EntityPreviewRecursive & Pick<TaskPreview, 'status'>)
+        this.entity$.next(activeEntity as EntityPreviewRecursive & Pick<TaskPreview, 'status' | 'priority'>)
     }
 
     titleUpdates$ = new BehaviorSubject<string | null>(null)
@@ -80,4 +84,13 @@ export class EditableEntityTitleComponent {
             untilDestroyed(this)
         )
         .subscribe()
+
+    private readonly taskStatusMenuItems = getTaskStatusMenuItems(this.store)
+    taskStatusMenuItems$ = this.entity$.pipe(
+        map(entity => {
+            if (!entity || !('status' in entity)) return null
+
+            return this.taskStatusMenuItems.map(useTaskForActiveStatus(entity))
+        })
+    )
 }

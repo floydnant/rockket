@@ -1,11 +1,28 @@
 <div class="inline-flex items-center" *ngIf="entity$ | async as entity">
-    <span>
+    <ng-template #icon>
         <app-icon
-            class="mr-2.5 inline-block -translate-y-0.5 text-2xl"
+            class="text-2xl"
             [iconClass]="(isLoading$ | async) ? EntityState.LOADING : entity.status || entity.entityType"
         >
         </app-icon>
-    </span>
+    </ng-template>
+
+    <div class="mr-2.5 inline-block -translate-y-0.5">
+        <button
+            *ngIf="taskStatusMenuItems$ | async as statusItems; else elseBlock"
+            [cdkMenuTriggerFor]="statusMenu"
+            class="icon-btn"
+        >
+            <ng-container *ngTemplateOutlet="icon"></ng-container>
+            <ng-template #statusMenu>
+                <app-drop-down [items]="statusItems" [data]="{ id: entity.id }"></app-drop-down>
+            </ng-template>
+        </button>
+
+        <ng-template #elseBlock>
+            <ng-container *ngTemplateOutlet="icon"></ng-container>
+        </ng-template>
+    </div>
 
     <app-inline-editor
         class="title"

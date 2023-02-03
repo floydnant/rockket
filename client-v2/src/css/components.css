@@ -31,6 +31,9 @@
     .button-icon-naked i {
         @apply m-0 inline-block aspect-square rounded py-0.5 px-2.5 text-base transition-colors hover:bg-tinted-700;
     }
+    .icon-btn {
+        @apply inline-flex aspect-square min-w-[1.75rem] items-center justify-center rounded-[9px] px-1 transition-colors hover:bg-tinted-500;
+    }
 
     .button--submit {
         @apply bg-submit-400 text-tinted-900 hover:bg-submit-600;
@@ -48,7 +51,7 @@
 
     .show-placeholder::before {
         content: attr(data-placeholder);
-        color: var(--placeholder-color, theme('colors.tinted.400') );
+        color: var(--placeholder-color, theme('colors.tinted.400'));
     }
 
     :is(.input, .button)[disabled] {
