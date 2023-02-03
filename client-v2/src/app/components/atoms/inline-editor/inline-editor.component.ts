@@ -33,6 +33,7 @@ export class InlineEditorComponent {
 
     @Input() placeholder?: string
     @Input() placeholderColor?: string
+    @Input() editorClass?: string | Record<string, boolean>
     @Input() enableDebouncedUpdates = true
 
     @Output() update = new EventEmitter<string | null>()

@@ -42,9 +42,9 @@
                     [textInput]="task.title"
                     [placeholder]="PLACEHOLDER"
                     [placeholderColor]="placeholderColorMap[task.status]"
-                    [class]="{
+                    [editorClass]="{
                         'line-through': task.status == TaskStatus.NOT_PLANNED,
-                        'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED
+                        'decoration-tinted-200': task.status == TaskStatus.NOT_PLANNED
                     }"
                     [enableDebouncedUpdates]="false"
                     (update)="titleChange.emit($event || '')"

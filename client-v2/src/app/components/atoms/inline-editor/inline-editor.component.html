@@ -2,6 +2,7 @@
     class="inline-block min-w-[2rem] cursor-text outline-none"
     [innerText]="text$ | async"
     [class.show-placeholder]="!(textDomState$ | async)"
+    [class]="editorClass"
     [attr.data-placeholder]="placeholder"
     [style.--placeholder-color]="placeholderColor"
     #inlineEditor
