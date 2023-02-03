@@ -3,12 +3,11 @@
         <app-editable-entity-title [entity]="entity"></app-editable-entity-title>
     </h1>
 
-    <!-- <pre> {{ entity | json }} </pre> -->
     <pre> {{ detail$ | async | json }} </pre>
 </ng-container>
 
 <ng-container *ngIf="task$ | async as task">
-    <!-- <pre> {{ task | json }} </pre> -->
+    <app-page-progress-bar [taskTree]="task.children || []"></app-page-progress-bar>
 
     <app-task-tree *ngIf="task.children" [tasks]="task.children"></app-task-tree>
 </ng-container>

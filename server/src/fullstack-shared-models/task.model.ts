@@ -1,7 +1,7 @@
 export enum TaskStatus {
-    BACKLOG = 'Backlog',
-    OPEN = 'Open',
     IN_PROGRESS = 'In_Progress',
+    OPEN = 'Open',
+    BACKLOG = 'Backlog',
     COMPLETED = 'Completed',
     NOT_PLANNED = 'Not_Planned',
 }
@@ -15,11 +15,11 @@ export const statusSortingMap: Record<TaskStatus, number> = {
 }
 
 export enum TaskPriority {
-    OPTIONAL = 'Optional',
-    NONE = 'None',
-    MEDIUM = 'Medium',
-    HIGH = 'High',
     URGENT = 'Urgent',
+    HIGH = 'High',
+    MEDIUM = 'Medium',
+    NONE = 'None',
+    OPTIONAL = 'Optional',
 }
 export const prioritySortingMap: Record<TaskPriority, number> = {
     [TaskPriority.URGENT]: 0,
@@ -53,8 +53,13 @@ export interface Task {
 export type TaskPreview = Pick<Task, 'id' | 'title' | 'status' | 'priority' | 'listId' | 'parentTaskId'> & {
     description: string | null
 }
+export type TaskDetail = Task
 
 export type TaskPreviewRecursive = TaskPreview & { children: TaskPreviewRecursive[] | null }
+export type TaskPreviewFlattend = Omit<TaskPreviewRecursive, 'children'> & {
+    path: string[]
+    childrenCount: number
+}
 
 // @TODO: ITaskEvent
 

@@ -53,6 +53,7 @@ import { EditableEntityTitleComponent } from './components/molecules/editable-en
 import { TaskTreeComponent } from './components/organisms/task-tree/task-tree.component'
 import { TaskViewComponent } from './components/organisms/entity-view/views/task-view/task-view.component'
 import { InlineEditorComponent } from './components/atoms/inline-editor/inline-editor.component'
+import { PageProgressBarComponent } from './components/molecules/page-progress-bar/page-progress-bar.component'
 
 @NgModule({
     declarations: [
@@ -94,6 +95,7 @@ import { InlineEditorComponent } from './components/atoms/inline-editor/inline-e
         TaskTreeComponent,
         TaskViewComponent,
         InlineEditorComponent,
+        PageProgressBarComponent,
     ],
     imports: [
         BrowserModule,

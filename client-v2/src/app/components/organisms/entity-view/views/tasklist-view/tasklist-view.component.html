@@ -1,4 +1,4 @@
-<div class="" *ngIf="entity$ | async as entity">
+<div class="" *ngIf="listEntity$ | async as entity">
     <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
     <!--     <button class="button-naked">Add Sublist</button> -->
     <!--     <button class="button-naked">Add Description</button> -->
@@ -93,36 +93,9 @@
     </div>
 </div>
 
-<div
-    *ngIf="digest$ | async as digest"
-    class="progress-container | group sticky -top-2 z-30 mt-2 flex items-center gap-2 rounded-b-[12.5px] py-2 px-3.5 shadow-header"
-    [appTooltip]="progressTooltip"
-    [tooltipOptions]="{ closeOnHostClick: false, preferredPosition: 'bottom' }"
->
-    <ng-template #progressTooltip>
-        <span class="">
-            {{ digest.progressRounded }}% closed - {{ digest.closed.length }} / {{ digest.open.length }}
-        </span>
-        <span class="text-tinted-300">{{
-            digest.inProgress.length ? '(' + digest.inProgress.length + ' in progress)' : ''
-        }}</span>
-    </ng-template>
+<ng-container *ngIf="tasks$ | async as tasks; else loadingTasks">
+    <app-page-progress-bar [taskTree]="tasks"></app-page-progress-bar>
 
-    <div
-        #progressBar
-        class="progress-bar | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
-    >
-        <div class="progress | h-full rounded bg-submit-400" [style.width]="digest.progress + '%'"></div>
-    </div>
-    <button
-        class="text-sm text-tinted-600 transition-colors group-hover:text-submit-400"
-        (click)="isShownAsPercentage = !isShownAsPercentage"
-    >
-        {{ isShownAsPercentage ? digest.progressRounded + ' %' : digest.closed.length + ' / ' + digest.open.length }}
-    </button>
-</div>
-
-<ng-container *ngIf="digest$ | async as digest; else loadingTasks">
     <div class="options | mb-3 mt-2 flex gap-2">
         <button
             class="button-naked text-tinted-200 hover:text-tinted-100"
@@ -134,8 +107,8 @@
         </button>
     </div>
 
-    <ng-container *ngIf="digest.all.length; else noTasks">
-        <app-task-tree [tasks]="digest.all"></app-task-tree>
+    <ng-container *ngIf="tasks.length; else noTasks">
+        <app-task-tree [tasks]="tasks"></app-task-tree>
         <!-- <pre class="select-text">{{ tasks | json }}</pre> -->
     </ng-container>
 

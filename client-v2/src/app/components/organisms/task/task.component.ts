@@ -20,7 +20,11 @@ export class TaskComponent {
     TaskPriority = TaskPriority
     PLACEHOLDER = ENTITY_TITLE_DEFAULTS[EntityType.TASK]
 
-    statusColorMap = { ...taskStatusColorMap, [TaskStatus.OPEN]: 'text-tinted-100' }
+    statusColorMap = {
+        ...taskStatusColorMap,
+        [TaskStatus.OPEN]: 'text-tinted-100',
+        [TaskStatus.BACKLOG]: 'text-tinted-100',
+    }
 
     placeholderColorMap = {
         ...(Object.fromEntries(Object.values(TaskStatus).map(status => [status, colors.tinted[400]])) as Record<

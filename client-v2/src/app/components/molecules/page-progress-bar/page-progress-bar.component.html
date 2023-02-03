@@ -1,0 +1,44 @@
+<div
+    *ngIf="digest$ | async as digest"
+    class="progress-container | group -top-2 z-30 mt-2 flex items-center gap-2 rounded-b-[12.5px] py-2 px-3.5 shadow-header"
+    [class.sticky]="digest.progress != 0"
+    [class.glow]="isProgressBarIncreasing$ | async"
+    [appTooltip]="progressTooltip"
+    [tooltipOptions]="{ closeOnHostClick: false, preferredPosition: 'bottom' }"
+>
+    <div
+        #progressBar
+        class="progress-bar | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
+    >
+        <div class="progress | h-full rounded bg-submit-400" [style.width]="digest.progress + '%'"></div>
+    </div>
+    <button
+        class="progress-number | text-sm text-tinted-600 transition-colors"
+        (click)="isShownAsPercentage = !isShownAsPercentage"
+    >
+        {{ isShownAsPercentage ? digest.progressRounded + ' %' : digest.closed + ' / ' + digest.all }}
+    </button>
+
+    <ng-template #progressTooltip>
+        <span class="text-xl font-bold"> {{ digest.progress.toFixed(2).replace('.00', '') }} %</span>
+        <hr class="my-2" />
+        <table>
+            <tr *ngFor="let status of taskStatuses">
+                <td class="pr-1"><app-icon [iconClass]="status"></app-icon></td>
+                <td [class]="statusColorMap[status]">{{ status.replace('_', ' ') }}</td>
+                <td class="pl-4 text-center">{{ digest.byStatus[status] }}</td>
+                <td class="text-right text-tinted-300">
+                    <span class="pl-4" [class.hidden]="!digest.byStatus[status]">
+                        {{ ((digest.byStatus[status] / digest.all) * 100).toFixed(2).replace('.00', '') }} %
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="text-tinted-400">All</td>
+                <td class="pl-4">{{ digest.all }}</td>
+                <td></td>
+            </tr>
+        </table>
+    </ng-template>
+</div>

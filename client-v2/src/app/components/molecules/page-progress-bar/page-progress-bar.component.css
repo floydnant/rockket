@@ -1,0 +1,26 @@
+@supports not (backdrop-filter: blur()) {
+    .progress-container {
+        @apply bg-tinted-900;
+    }
+}
+@supports (backdrop-filter: blur()) {
+    .progress-container {
+        @apply bg-tinted-900/60 backdrop-blur;
+    }
+}
+.progress-container:is(:hover, .glow) .progress {
+    box-shadow: 0 0 10px theme('colors.submit.400');
+}
+.progress {
+    transition: box-shadow 85ms, width 800ms ease-in-out;
+}
+.progress-container.glow span {
+    @apply text-submit-400;
+}
+.progress-container:is(:hover, .glow) .progress-number {
+    @apply text-submit-400;
+}
+
+table tr:not(:last-child) td {
+    @apply pb-0.5
+}
