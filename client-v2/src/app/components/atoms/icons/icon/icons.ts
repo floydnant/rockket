@@ -42,17 +42,12 @@ export const taskStatusIconMap: Record<TaskStatus, string> = concatMatchingKeys(
 
 export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingKeys(
     {
-        // [TaskPriority.URGENT]: 'fas fa-exclamation-square',
-        // [TaskPriority.HIGH]: 'fas fa-bolt',
-        // [TaskPriority.MEDIUM]: 'fas fa-exclamation',
-        // [TaskPriority.NONE]: 'far fa-exclamation',
-        // [TaskPriority.OPTIONAL]: 'fas fa-question',
-
         [TaskPriority.URGENT]: 'fas fa-exclamation-square',
         [TaskPriority.HIGH]: 'fas fa-exclamation-circle',
         [TaskPriority.MEDIUM]: 'fas fa-exclamation',
         [TaskPriority.NONE]: 'far fa-minus',
-        [TaskPriority.OPTIONAL]: 'fas fa-question',
+        // [TaskPriority.OPTIONAL]: 'fas fa-question',
+        [TaskPriority.OPTIONAL]: 'far fa-square rotate-45 scale-[0.8]',
     } as const,
     taskPriorityColorMap
 )
