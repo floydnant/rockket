@@ -5,7 +5,7 @@
     }
 
     pre {
-        @apply select-text text-submit-400;
+        @apply select-text text-submit-400 whitespace-pre-wrap;
     }
 
     .button-m {

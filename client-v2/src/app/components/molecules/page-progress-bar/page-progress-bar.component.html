@@ -21,24 +21,26 @@
 
     <ng-template #progressTooltip>
         <span class="text-xl font-bold"> {{ digest.progress.toFixed(2).replace('.00', '') }} %</span>
-        <hr class="my-2" />
-        <table>
-            <tr *ngFor="let status of taskStatuses">
-                <td class="pr-1"><app-icon [iconClass]="status"></app-icon></td>
-                <td [class]="statusColorMap[status]">{{ status.replace('_', ' ') }}</td>
-                <td class="pl-4 text-center">{{ digest.byStatus[status] }}</td>
-                <td class="text-right text-tinted-300">
-                    <span class="pl-4" [class.hidden]="!digest.byStatus[status]">
-                        {{ ((digest.byStatus[status] / digest.all) * 100).toFixed(2).replace('.00', '') }} %
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td class="text-tinted-400">All</td>
-                <td class="pl-4">{{ digest.all }}</td>
-                <td></td>
-            </tr>
-        </table>
+        <ng-template *ngIf="digest.progress">
+            <hr class="my-2" />
+            <table>
+                <tr *ngFor="let status of taskStatuses">
+                    <td class="pr-1"><app-icon [iconClass]="status"></app-icon></td>
+                    <td [class]="statusColorMap[status]">{{ status.replace('_', ' ') }}</td>
+                    <td class="pl-4 text-center">{{ digest.byStatus[status] }}</td>
+                    <td class="text-right text-tinted-300">
+                        <span class="pl-4" [class.hidden]="!digest.byStatus[status]">
+                            {{ ((digest.byStatus[status] / digest.all) * 100).toFixed(2).replace('.00', '') }} %
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-tinted-400">All</td>
+                    <td class="pl-4">{{ digest.all }}</td>
+                    <td></td>
+                </tr>
+            </table>
+        </ng-template>
     </ng-template>
 </div>

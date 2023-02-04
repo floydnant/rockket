@@ -104,12 +104,22 @@ export class TaskTreeComponent {
         return true
     }
     range(number: number) {
-        return new Array(number)
+        return new Array(number).fill(null).map((_, index) => index)
     }
-    getPreviousNode(index: number) {
-        const prevNode = this.treeWithUiChanges[index - 1]
-        if (!prevNode) return null
-        return prevNode
+    getNodeAt(index: number): TaskTreeNode | undefined {
+        return this.treeWithUiChanges[index]
+    }
+    isPreviousLineSpotATask(nodeIndex: number, lineIndex: number, nodeLevel: number) {
+        const previousNode = this.getNodeAt(nodeIndex - 1)
+        const previousNodeLevel = previousNode?.path?.length || 0
+
+        return previousNodeLevel + lineIndex < nodeLevel
+    }
+    isNextLineSpotATask(nodeIndex: number, lineIndex: number, nodeLevel: number) {
+        const nextNode = this.getNodeAt(nodeIndex + 1)
+        const nextNodeLevel = nextNode?.path?.length || 0
+
+        return nextNodeLevel + lineIndex < nodeLevel
     }
 
     private readonly taskMenuItems = getEntityMenuItemsMap(this.store)[EntityType.TASK]
