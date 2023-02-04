@@ -1,4 +1,13 @@
 {
     "workbench.colorTheme": "Bearded Theme Void",
-    "workbench.iconTheme": "bearded-icons"
+    "workbench.iconTheme": "bearded-icons",
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "todo-app",
+            "connectString": "postgresql://postgres:postgres@localhost:5432/todo-app?schema=public"
+        }
+    ]
 }

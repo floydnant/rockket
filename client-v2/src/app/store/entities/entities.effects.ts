@@ -4,6 +4,7 @@ import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { catchError, concatMap, first, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskList } from 'src/app/fullstack-shared-models/list.model'
 import { Task } from 'src/app/fullstack-shared-models/task.model'
 import { DialogService } from 'src/app/modal/dialog.service'
@@ -141,9 +142,19 @@ export class EntitiesEffects {
                             const entity = getEntityByIdIncludingTasks(entityTree, taskTreeMap, id)
                             if (!entity) return of(entitiesActions.abortDeleteDialog())
 
+                            const hasChildren = (entity.children?.length || 0) > 0
+
+                            const messages = {
+                                [EntityType.TASK]: `Are you sure you want to delete '${entity.title}'${
+                                    hasChildren ? ' and all its subtasks' : ''
+                                }?`,
+                            } as Record<EntityType, string>
+
                             const closed$ = this.dialogService.confirm({
                                 title: `Delete this ${entityType}?`,
-                                text: `Are you sure you want to delete the ${entityType} '${entity.title}'?`,
+                                text:
+                                    messages[entityType] ||
+                                    `Are you sure you want to delete the ${entityType} '${entity.title}'?`,
                                 buttons: [{ text: 'Cancel' }, { text: 'Delete', className: 'button--danger' }],
                             }).closed
 

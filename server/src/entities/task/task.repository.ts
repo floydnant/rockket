@@ -67,11 +67,35 @@ export class TaskRepository {
     }
 
     async deleteTask(taskId: string) {
-        return this.prisma.$transaction([
-            this.prisma.taskEvent.deleteMany({ where: { taskId } }),
-            this.prisma.taskComment.deleteMany({ where: { taskId } }),
-            this.prisma.task.delete({ where: { id: taskId } }),
+        // @SCHEMA_CHANGE requires updating this query
+        const nestedChildren: { id: string; parentTaskId: string }[] = await this.prisma.$queryRaw`
+            WITH RECURSIVE all_tasks AS (
+                SELECT id, "parentTaskId"
+                FROM public."Task"
+                WHERE id = ${taskId}
+
+                UNION
+
+                SELECT t.id, t."parentTaskId"
+                FROM public."Task" t
+                    INNER JOIN all_tasks a ON a.id = t."parentTaskId"
+            )
+            SELECT * FROM all_tasks
+        `
+
+        const taskIds = nestedChildren.map((child) => child.id)
+
+        const transactionResult = await this.prisma.$transaction([
+            this.prisma.taskEvent.deleteMany({ where: { taskId: { in: taskIds } } }),
+            this.prisma.taskComment.deleteMany({ where: { taskId: { in: taskIds } } }),
+            this.prisma.task.deleteMany({ where: { id: { in: taskIds } } }),
         ])
+
+        return {
+            taskEvents: transactionResult[0].count,
+            taskComments: transactionResult[1].count,
+            tasks: transactionResult[2].count,
+        }
     }
 
     async getSubtasks(taskId: string) {

@@ -39,8 +39,15 @@ export class TaskService {
         const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.Edit)
         if (!hasPermission) throw new ForbiddenException("You don't have permission to delete this task")
 
-        await this.taskRepository.deleteTask(taskId)
-        return { successMessage: 'Task deleted successfully' }
+        const { tasks, taskComments } = await this.taskRepository.deleteTask(taskId)
+
+        const tasksPlural = tasks == 1 ? '' : 's'
+        const commentsPlural = taskComments == 1 ? '' : 's'
+        const commentsMessage = taskComments ? ` and ${taskComments} related comment${commentsPlural}` : ''
+
+        return {
+            successMessage: `Deleted ${tasks} task${tasksPlural}${commentsMessage}.`,
+        }
     }
 
     // subtasks
