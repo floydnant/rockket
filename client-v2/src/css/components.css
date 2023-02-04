@@ -5,7 +5,7 @@
     }
 
     pre {
-        @apply select-text text-submit-400 whitespace-pre-wrap;
+        @apply select-text whitespace-pre-wrap text-submit-400;
     }
 
     .button-m {
@@ -13,11 +13,11 @@
     }
     /*  This should be button-lg */
     .button {
-        @apply rounded-md bg-tinted-500 py-2 px-5 font-semibold text-tinted-100 transition-colors hover:bg-tinted-600;
+        @apply rounded-lg bg-tinted-500 py-2 px-5 font-semibold text-tinted-100 transition-colors hover:bg-tinted-600;
     }
 
     .button-naked {
-        @apply rounded-md py-0.5 px-2 transition-colors hover:bg-tinted-700;
+        @apply rounded-md py-1 px-2 transition-colors hover:bg-tinted-700;
         /* hover:text-tinted-100 */
     }
     .button-naked i {
@@ -32,7 +32,7 @@
         @apply m-0 inline-block aspect-square rounded py-0.5 px-2.5 text-base transition-colors hover:bg-tinted-700;
     }
     .icon-btn {
-        @apply inline-flex aspect-square min-w-[1.75rem] items-center justify-center rounded-[9px] px-1 transition-colors hover:bg-tinted-500;
+        @apply inline-flex aspect-square min-w-[1.75rem] items-center justify-center rounded-lg px-1 transition-colors hover:bg-tinted-500;
     }
 
     .button--submit {
@@ -43,7 +43,7 @@
     }
 
     .input {
-        @apply rounded bg-tinted-700 py-2 px-3 outline-none ring-primary-400 focus:ring-2;
+        @apply rounded-lg bg-tinted-700 py-2 px-3 outline-none ring-primary-400 focus:ring-2;
     }
     .input::placeholder {
         @apply text-tinted-300;

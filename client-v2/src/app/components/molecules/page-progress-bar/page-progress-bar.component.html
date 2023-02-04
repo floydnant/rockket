@@ -20,8 +20,10 @@
     </button>
 
     <ng-template #progressTooltip>
-        <span class="text-xl font-bold"> {{ digest.progress.toFixed(2).replace('.00', '') }} %</span>
-        <ng-template *ngIf="digest.progress">
+        <span [class]="digest.progress && 'text-xl font-bold'">
+            {{ digest.progress.toFixed(2).replace('.00', '') }} %</span
+        >
+        <ng-container *ngIf="digest.progress">
             <hr class="my-2" />
             <table>
                 <tr *ngFor="let status of taskStatuses">
@@ -41,6 +43,6 @@
                     <td></td>
                 </tr>
             </table>
-        </ng-template>
+        </ng-container>
     </ng-template>
 </div>

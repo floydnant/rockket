@@ -88,6 +88,7 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
             icon: 'expand',
             route: '/home/:id',
         },
+        { isSeperator: true },
         {
             title: 'Status',
             icon: 'status',

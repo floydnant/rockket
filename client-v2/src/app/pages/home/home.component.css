@@ -3,7 +3,7 @@
         w-full
         items-stretch
         justify-start
-        rounded-lg
+        rounded-md
         text-tinted-300
         transition-colors
         duration-75;

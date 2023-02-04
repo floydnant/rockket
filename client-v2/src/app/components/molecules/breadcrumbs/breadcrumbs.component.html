@@ -6,7 +6,7 @@
 >
     <div *ngFor="let breadcrumb of breadcrumbs; let isLast = last" class="flex max-w-[80%]">
         <button
-            class="breadcrumb | menu-item | max-w-[20ch] truncate py-0 px-1.5"
+            class="breadcrumb | menu-item | max-w-[20ch] truncate py-0.5 px-1.5"
             [class.text-tinted-100]="isLast"
             cdkMenuItem
             [cdkContextMenuTriggerFor]="menu"

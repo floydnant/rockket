@@ -22,6 +22,8 @@ const extraIcons = {
     settings: 'fas fa-cog',
     user: 'fas fa-user',
     eye: 'fas fa-eye',
+    logout: 'fas fa-sign-out-alt',
+    workspace: 'fas fa-garage',
 }
 
 export const entityStateIcons = {

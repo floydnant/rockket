@@ -4,14 +4,14 @@ import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { catchError, concatMap, first, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs'
-import { DialogService } from 'src/app/modal/dialog.service'
 import { TaskList } from 'src/app/fullstack-shared-models/list.model'
 import { Task } from 'src/app/fullstack-shared-models/task.model'
+import { DialogService } from 'src/app/modal/dialog.service'
 import { EntitiesService } from 'src/app/services/entities.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
 import { entitiesActions } from './entities.actions'
-import { getEntityByIdIncludingTasks, traceEntity } from './utils'
+import { getEntityByIdIncludingTasks, traceEntityIncludingTasks } from './utils'
 
 @Injectable()
 export class EntitiesEffects {
@@ -25,17 +25,17 @@ export class EntitiesEffects {
     ) {}
 
     activeEntityTrace$ = this.store
-        .select(state => state.entities.entityTree)
+        .select(state => state.entities)
         .pipe(
-            map(entityTree => {
+            map(({ entityTree, taskTreeMap }) => {
                 // @TODO: come up with a better solution for this
                 // NOTE: using `ActivatedRoute` doesn't work in effects
                 const segments = location.pathname.split('/')
                 const activeId = segments[segments.length - 1]
 
-                if (!entityTree || !activeId) return null
+                if (!entityTree || !taskTreeMap || !activeId) return null
 
-                return traceEntity(entityTree, activeId)
+                return traceEntityIncludingTasks(entityTree, taskTreeMap, activeId)
             })
         )
 
@@ -167,7 +167,7 @@ export class EntitiesEffects {
 
                 return res$.pipe(
                     this.toast.observe({
-                        loading: 'Deleting tasklist...',
+                        loading: `Deleting ${entityType}...`,
                         success: res => res.successMessage,
                         error: getMessageFromHttpError,
                     }),
@@ -178,7 +178,7 @@ export class EntitiesEffects {
                                 if (!trace) return
 
                                 const activeEntity = trace[trace.length - 1]
-                                if (activeEntity.id != id) return
+                                if (activeEntity?.id != id) return
 
                                 const parentEntity = trace[trace.length - 2]
 
