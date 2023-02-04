@@ -8,7 +8,8 @@ export const interceptItem = (callback: (item: MenuItem) => Partial<Omit<MenuIte
         return {
             ...item,
             ...callback(item),
-            children: item.children?.map(interceptItem(callback)),
+            // we cannot use optional chaining syntax here, because cypress->webpack complains
+            children: item.children && item.children.map(interceptItem(callback)),
         }
     }
 }
@@ -58,7 +59,7 @@ export const useTaskForActiveItems = (task: Pick<TaskPreview, 'status' | 'priori
 
         return {
             ...item,
-            children: item.children?.map(mapper(task)),
+            children: item.children && item.children.map(mapper(task)),
         }
     }
 }
