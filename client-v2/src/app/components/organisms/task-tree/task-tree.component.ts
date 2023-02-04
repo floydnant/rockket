@@ -95,10 +95,10 @@ export class TaskTreeComponent {
     }
     shouldRender(node: TaskTreeNode) {
         let parent = this.getParentNode(node)
+
         while (parent) {
-            if (!parent.isExpanded) {
-                return false
-            }
+            if (!parent.isExpanded) return false
+
             parent = this.getParentNode(parent)
         }
         return true
@@ -106,8 +106,21 @@ export class TaskTreeComponent {
     range(number: number) {
         return new Array(number).fill(null).map((_, index) => index)
     }
-    getNodeAt(index: number): TaskTreeNode | undefined {
-        return this.treeWithUiChanges[index]
+    private getNextVisibleNode(index: number, node: TaskTreeNode) {
+        let nextNode: TaskTreeNode = node
+        while (!this.shouldRender(nextNode)) {
+            nextNode = this.treeWithUiChanges[++index]
+        }
+        return nextNode
+    }
+    private getNodeAt(index: number, nextVisibleNode = false): TaskTreeNode | undefined {
+        const node = this.treeWithUiChanges[index]
+
+        if (nextVisibleNode && !this.shouldRender(node)) {
+            return this.getNextVisibleNode(index, node)
+        }
+
+        return node
     }
     isPreviousLineSpotATask(nodeIndex: number, lineIndex: number, nodeLevel: number) {
         const previousNode = this.getNodeAt(nodeIndex - 1)
@@ -116,7 +129,7 @@ export class TaskTreeComponent {
         return previousNodeLevel + lineIndex < nodeLevel
     }
     isNextLineSpotATask(nodeIndex: number, lineIndex: number, nodeLevel: number) {
-        const nextNode = this.getNodeAt(nodeIndex + 1)
+        const nextNode = this.getNodeAt(nodeIndex + 1, true)
         const nextNodeLevel = nextNode?.path?.length || 0
 
         return nextNodeLevel + lineIndex < nodeLevel
