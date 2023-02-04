@@ -101,6 +101,7 @@ export class InlineEditorComponent {
             filter(event => {
                 if (event?.code == 'Enter') {
                     event.preventDefault()
+                    this.inlineEditor.nativeElement.blur()
                     return true
                 }
                 return false
@@ -110,6 +111,7 @@ export class InlineEditorComponent {
         ),
         this.blurEvents$.pipe(
             filter(e => !!e),
+            tap(() => this.deselectEditor()),
             throttleTime(INLINE_EDITOR_DELAY_TIME),
             switchMap(() => this.textChanges$.pipe(first()))
         ),
@@ -140,4 +142,8 @@ export class InlineEditorComponent {
         .subscribe()
 
     lastEmittedUpdate: string | null = null
+
+    deselectEditor() {
+        window.getSelection()?.removeAllRanges()
+    }
 }

@@ -9,6 +9,8 @@ import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { getTaskStatusMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
+import { listActions } from 'src/app/store/entities/list/list.actions'
+import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { useTaskForActiveStatus } from 'src/app/utils/menu-item.helpers'
 import { getLoadingUpdates } from 'src/app/utils/store.helpers'
 import { EntityState } from '../../atoms/icons/icon/icons'
@@ -38,7 +40,35 @@ export class EditableEntityTitleComponent {
 
     isLoading$ = getLoadingUpdates(
         this.actions$,
-        [entitiesActions.rename, entitiesActions.renameSuccess, entitiesActions.renameError],
+        [
+            entitiesActions.rename,
+            entitiesActions.renameSuccess,
+            entitiesActions.renameError,
+
+            entitiesActions.delete,
+            entitiesActions.deleteSuccess,
+            entitiesActions.deleteError,
+
+            listActions.updateDescription,
+            listActions.updateDescriptionSuccess,
+            listActions.updateDescriptionError,
+
+            // taskActions.create,
+            // taskActions.createSuccess,
+            // taskActions.createError,
+
+            taskActions.updateDescription,
+            taskActions.updateDescriptionSuccess,
+            taskActions.updateDescriptionError,
+
+            taskActions.updateStatus,
+            taskActions.updateStatusSuccess,
+            taskActions.updateStatusError,
+
+            taskActions.updatePriority,
+            taskActions.updatePrioritySuccess,
+            taskActions.updatePriorityError,
+        ],
         action =>
             this.entity$.pipe(
                 first(),

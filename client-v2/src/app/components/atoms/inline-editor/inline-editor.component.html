@@ -15,5 +15,6 @@
     [mutationOptions]="{ plainOnly: true, observe: editorFocusable.isFocused }"
     (keydown)="keydownEvents$.next($event)"
     (blur)="blurEvents$.next($event)"
+    enterKeyHint="Done"
     data-test-name="inline-editor"
 ></span>

@@ -44,7 +44,8 @@
                     [placeholderColor]="placeholderColorMap[task.status]"
                     [editorClass]="{
                         'line-through': task.status == TaskStatus.NOT_PLANNED,
-                        'decoration-tinted-200': task.status == TaskStatus.NOT_PLANNED
+                        'decoration-tinted-200': task.status == TaskStatus.NOT_PLANNED,
+                        'pr-9': true
                     }"
                     [enableDebouncedUpdates]="false"
                     (update)="titleChange.emit($event || '')"

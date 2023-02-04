@@ -29,6 +29,7 @@
         [textInput]="(entity$ | async)?.title || ''"
         [placeholder]="ENTITY_TITLE_DEFAULTS[entity.entityType]"
         (update)="titleUpdates$.next($event)"
+        editorClass="pr-14"
         data-test-name="editable-entity-name"
     ></app-inline-editor>
 </div>
