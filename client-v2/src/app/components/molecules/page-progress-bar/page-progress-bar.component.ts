@@ -24,40 +24,34 @@ import { TaskPreview, TaskStatus, TaskPreviewRecursive } from 'src/app/fullstack
 import { taskStatusColorMap, TwColorClass } from 'src/app/shared/colors'
 import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
 
-const getMapByStatus = (taskTree: TaskPreview[]) => {
-    const map = Object.values(TaskStatus).reduce((acc, status) => {
-        return {
+export const filterByStatus = <T extends TaskPreview>(taskTree: T[]) => {
+    const statusCountMap = Object.values(TaskStatus).reduce(
+        (acc, status) => ({
             ...acc,
-            [status]: taskTree.filter(task => task.status === status).length,
-        }
-    }, {} as Record<TaskStatus, number>)
-    return map
+            [status]: taskTree.filter(task => task.status == status),
+        }),
+        {} as Record<TaskStatus, T[]>
+    )
+    return statusCountMap
 }
-// @TODO: Implement this
-const getMapByStatusRecursive = (taskTree: TaskPreviewRecursive[]): Record<TaskStatus, number> => {
-    const map = getMapByStatus(taskTree)
+
+const getStatusCountMapRecursive = (taskTree: TaskPreviewRecursive[]): Record<TaskStatus, number> => {
+    const map = Object.fromEntries(
+        Object.entries(filterByStatus(taskTree)).map(([status, tasks]) => [status, tasks.length])
+    ) as Record<TaskStatus, number>
 
     const mapRecursive = taskTree.reduce<Record<TaskStatus, number>>((acc, task) => {
-        const childrenStatusMap = (task.children?.length && getMapByStatusRecursive(task.children)) || null
-        console.log(childrenStatusMap)
+        const childrenStatusCountMap = (task.children?.length && getStatusCountMapRecursive(task.children)) || null
 
-        return Object.fromEntries(
-            Object.entries(acc).map(([status, taskCount]) => {
-                const childrenWithStatus = !task.children?.length
-                    ? 0
-                    : (childrenStatusMap?.[status as TaskStatus] || 0) / task.children.length
-                const childrenWithStatusFormatted = parseFloat(childrenWithStatus.toFixed(2)) || 0
+        const statusCountEntries = Object.entries(acc).map(([status, taskCount]) => {
+            const childrenCount = childrenStatusCountMap?.[status as TaskStatus] || 0
 
-                const closedStatuses = [TaskStatus.COMPLETED, TaskStatus.NOT_PLANNED]
-                const contribution =
-                    closedStatuses.includes(status as TaskStatus) && closedStatuses.includes(task.status)
-                        ? 1
-                        : childrenWithStatusFormatted
+            return [status, taskCount + childrenCount]
+        })
 
-                return [status, taskCount + contribution]
-            })
-        ) as Record<TaskStatus, number>
+        return Object.fromEntries(statusCountEntries) as Record<TaskStatus, number>
     }, map)
+
     return mapRecursive
 }
 
@@ -91,11 +85,12 @@ export class PageProgressBarComponent implements AfterViewInit, OnDestroy {
         map(tasks => {
             if (!tasks) return null
 
-            const statusTaskCountMap = getMapByStatus(tasks)
+            const statusTaskCountMap = getStatusCountMapRecursive(tasks)
+
             const all = Object.values(statusTaskCountMap).reduce((acc, curr) => acc + curr)
             const closed = statusTaskCountMap[TaskStatus.NOT_PLANNED] + statusTaskCountMap[TaskStatus.COMPLETED]
-
             const progress = (closed / all) * 100 || 0
+
             return {
                 all,
                 closed,

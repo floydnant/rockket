@@ -14,18 +14,35 @@
     </div>
     <button
         class="progress-number | text-sm text-tinted-600 transition-colors"
+        [class.!text-submit-400]="digest.closed == digest.all"
         (click)="isShownAsPercentage = !isShownAsPercentage"
+        [appTooltip]="isShownAsPercentage ? 'Display as fraction' : 'Display as percentage'"
+        [tooltipOptions]="{ avoidPositions: ['left'] }"
     >
         {{ isShownAsPercentage ? digest.progressRounded + ' %' : digest.closed + ' / ' + digest.all }}
     </button>
 
     <ng-template #progressTooltip>
-        <span [class]="digest.all ? 'text-xl font-bold' : ''">
-            {{ digest.progress.toFixed(2).replace('.00', '') }} %</span
-        >
-        <ng-template #noTasks><span class="text-tinted-300"> - No tasks</span></ng-template>
+        <ng-template #noTasks>0 %<span class="text-tinted-300"> - No tasks</span></ng-template>
 
         <ng-container *ngIf="digest.all; else noTasks">
+            <div class="flex items-end justify-between gap-4">
+                <span class="text-xl font-bold">
+                    {{
+                        isShownAsPercentage
+                            ? digest.progress.toFixed(2).replace('.00', '') + ' %'
+                            : digest.closed + ' / ' + digest.all
+                    }}
+                </span>
+                <span class="text-tinted-400">
+                    {{
+                        !isShownAsPercentage
+                            ? digest.progress.toFixed(2).replace('.00', '') + ' %'
+                            : digest.closed + ' / ' + digest.all
+                    }}
+                    Closed
+                </span>
+            </div>
             <hr class="my-2" />
             <table>
                 <tr *ngFor="let status of taskStatuses">
