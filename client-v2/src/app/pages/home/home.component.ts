@@ -89,6 +89,8 @@ export class HomeComponent implements OnInit {
         return new Array(number)
     }
 
+    // @TODO: Add trackByFn to improve UX + Performance
+
     entityPreviewsTransformed: EntityTreeNode[] = []
     entityPreviewsTransformed$ = this.store
         .select(state => state.entities)

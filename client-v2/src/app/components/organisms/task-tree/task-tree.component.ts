@@ -103,6 +103,11 @@ export class TaskTreeComponent {
         }
         return true
     }
+
+    trackByFn(_index: number, { taskPreview: { id, title, status, priority, description }, isExpanded }: TaskTreeNode) {
+        return id + title + status + priority + description + isExpanded
+    }
+
     range(number: number) {
         return new Array(number).fill(null).map((_, index) => index)
     }
