@@ -2,6 +2,8 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { EntityPreview } from 'src/app/fullstack-shared-models/entities.model'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { EntityCrudDto } from 'src/app/services/entities.service'
+import { listActions } from './list/list.actions'
+import { taskActions } from './task/task.actions'
 
 export type HttpServerErrorResponseWithData<T = { id: string }> = HttpServerErrorResponse & T
 
@@ -32,3 +34,37 @@ export const entitiesActions = createActionGroup({
         'delete error': props<HttpServerErrorResponseWithData>(),
     },
 })
+
+export const loadingStateActions = [
+    entitiesActions.loadDetail,
+    entitiesActions.loadDetailSuccess,
+    entitiesActions.loadDetailError,
+
+    entitiesActions.rename,
+    entitiesActions.renameSuccess,
+    entitiesActions.renameError,
+
+    entitiesActions.delete,
+    entitiesActions.deleteSuccess,
+    entitiesActions.deleteError,
+
+    listActions.updateDescription,
+    listActions.updateDescriptionSuccess,
+    listActions.updateDescriptionError,
+
+    // taskActions.create,
+    // taskActions.createSuccess,
+    // taskActions.createError,
+
+    taskActions.updateDescription,
+    taskActions.updateDescriptionSuccess,
+    taskActions.updateDescriptionError,
+
+    taskActions.updateStatus,
+    taskActions.updateStatusSuccess,
+    taskActions.updateStatusError,
+
+    taskActions.updatePriority,
+    taskActions.updatePrioritySuccess,
+    taskActions.updatePriorityError,
+]

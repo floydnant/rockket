@@ -12,7 +12,7 @@ import { AppState } from 'src/app/store'
 import { accountActions, authActions } from 'src/app/store/user/user.actions'
 import { userFeature } from 'src/app/store/user/user.selectors'
 import { moveToMacroQueue } from 'src/app/utils'
-import { getErrorMapUpdates, getLoadingUpdates } from '../../../utils/store.helpers'
+import { getErrorMapUpdates, loadingUpdates } from '../../../utils/store.helpers'
 
 @Component({
     templateUrl: './account.component.html',
@@ -108,11 +108,12 @@ export class SettingsAccountComponent implements OnDestroy {
         this.usernameControl.reset()
         this.usernameControl.patchValue(this.usernameFromStore)
     }
-    usernameFormLoading$ = getLoadingUpdates(this.actions$, [
-        accountActions.updateUsername,
-        accountActions.updateUsernameSuccess,
-        accountActions.updateUsernameError,
-    ]).pipe(
+    usernameFormLoading$ = this.actions$.pipe(
+        loadingUpdates([
+            accountActions.updateUsername,
+            accountActions.updateUsernameSuccess,
+            accountActions.updateUsernameError,
+        ]),
         tap(isLoading => {
             if (isLoading) this.usernameControl.disable()
             else this.usernameControl.enable()
@@ -137,11 +138,9 @@ export class SettingsAccountComponent implements OnDestroy {
     onEmailFormSubmit(dto: { email: string; password: string }) {
         this.store.dispatch(accountActions.updateEmail(dto))
     }
-    emailFormLoading$: NonNullable<Observable<boolean>> = getLoadingUpdates(this.actions$, [
-        accountActions.updateEmail,
-        accountActions.updateEmailSuccess,
-        accountActions.updateEmailError,
-    ])
+    emailFormLoading$: NonNullable<Observable<boolean>> = this.actions$.pipe(
+        loadingUpdates([accountActions.updateEmail, accountActions.updateEmailSuccess, accountActions.updateEmailError])
+    )
     emailFormErrors$ = getErrorMapUpdates({
         actions$: this.actions$,
         fields: Object.keys(this.emailFormOptions),
@@ -173,11 +172,13 @@ export class SettingsAccountComponent implements OnDestroy {
     onPasswordFormSubmit(dto: { password: string; newPassword: string }) {
         this.store.dispatch(accountActions.updatePassword(dto))
     }
-    passwordFormLoading$ = getLoadingUpdates(this.actions$, [
-        accountActions.updatePassword,
-        accountActions.updatePasswordSuccess,
-        accountActions.updatePasswordError,
-    ])
+    passwordFormLoading$ = this.actions$.pipe(
+        loadingUpdates([
+            accountActions.updatePassword,
+            accountActions.updatePasswordSuccess,
+            accountActions.updatePasswordError,
+        ])
+    )
     passwordFormErrors$ = getErrorMapUpdates({
         actions$: this.actions$,
         fields: Object.keys(this.passwordFormOptions),

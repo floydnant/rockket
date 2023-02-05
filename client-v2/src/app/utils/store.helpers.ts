@@ -1,6 +1,6 @@
 import { Actions, ofType } from '@ngrx/effects'
 import { Action, ActionCreator, Creator, ReducerTypes } from '@ngrx/store'
-import { concatMap, filter, map, merge, Observable, of, shareReplay, startWith } from 'rxjs'
+import { concatMap, filter, map, merge, Observable, of, scan, shareReplay, startWith } from 'rxjs'
 import { HttpServerErrorResponse } from '../http/types'
 
 export const getMessageFromHttpError = (err: HttpServerErrorResponse) =>
@@ -9,23 +9,20 @@ export const getMessageFromHttpError = (err: HttpServerErrorResponse) =>
         : err.error.message.replace(/^\w+:/, '')
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyActionCreator = ActionCreator<string, Creator<any[], Action & Record<string, any>>>
-export type ErrorActionCreator = ActionCreator<
+export type AnyActionCreator<T extends Record<string, any> = Record<string, any>> = ActionCreator<
     string,
-    Creator<
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        any[],
-        Action & {
-            error: {
-                message: string | string[]
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                [key: string]: any
-            }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            [key: string]: any
-        }
-    >
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Creator<any[], Action & T>
 >
+export type ErrorActionCreator = AnyActionCreator<{
+    error: {
+        message: string | string[]
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [key: string]: any
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any
+}>
 
 export type ReducerOns<State extends object> = ReducerTypes<State, readonly AnyActionCreator[]>[]
 
@@ -75,31 +72,64 @@ export const getErrorMapUpdates = ({ actions$, fields, resetAction, errorAction 
  * 
  * You can optionally specify a predicate to filter the actions that fired (e.g. only take an action with a matching id)
  */
-export const getLoadingUpdates = <T extends AnyActionCreator>(
-    actions$: Actions,
+export const loadingUpdates = <T extends AnyActionCreator>(
     actionsToListenFor: T[],
     filterPredicate?: (action: ReturnType<T>) => boolean | Observable<boolean>
-) =>
-    actions$.pipe(
-        ofType(...actionsToListenFor),
-        concatMap(action => {
-            if (!filterPredicate) return of(action)
+) => {
+    return (source: Actions) =>
+        source.pipe(
+            ofType(...actionsToListenFor),
+            concatMap(action => {
+                if (!filterPredicate) return of(action)
 
-            const predicateResult = filterPredicate(action)
+                const predicateResult = filterPredicate(action)
 
-            let shouldPass$: Observable<boolean>
-            if (typeof predicateResult == 'boolean') shouldPass$ = of(predicateResult)
-            else shouldPass$ = predicateResult
+                let shouldPass$: Observable<boolean>
+                if (typeof predicateResult == 'boolean') shouldPass$ = of(predicateResult)
+                else shouldPass$ = predicateResult
 
-            return shouldPass$.pipe(
-                filter(shouldPass => shouldPass),
-                map(() => action)
-            )
-        }),
-        map(({ type }) => {
-            if (/success|error/i.test(type)) return false
-            else return true
-        }),
-        startWith(false),
-        shareReplay({ bufferSize: 1, refCount: true })
-    )
+                return shouldPass$.pipe(
+                    filter(shouldPass => shouldPass),
+                    map(() => action)
+                )
+            }),
+            interpretLoadingStates(),
+            map(action => action.isLoading),
+            startWith(false),
+            shareReplay({ bufferSize: 1, refCount: true })
+        )
+}
+
+/** Injects `isLoading` interpreted by the action type:
+
+ * | action type matching | loading state |
+ * | ---------------------|---------------|
+ * | `/error/i`           | `false`       |
+ * | `/success/i`         | `false`       |
+ * | all other cases      | `true`        |
+ *
+ */
+export const interpretLoadingStates = <T extends Action>() =>
+    map<T, T & { isLoading: boolean }>(action => ({
+        ...action,
+        isLoading: !/success|error/i.test(action.type),
+    }))
+
+/** Maps loading states to their `id` field in the action */
+export const collectLoadingMap = <T extends Action & { id: string; isLoading: boolean }>() => {
+    return (source: Actions<T>) =>
+        source.pipe(
+            scan((acc, { id, isLoading }) => {
+                return {
+                    ...acc,
+                    [id]: isLoading,
+                }
+            }, {} as Record<string, boolean>),
+            shareReplay({ bufferSize: 1, refCount: true })
+        )
+}
+
+export const makeLoadingMap = (actionsToListenFor: AnyActionCreator<{ id: string }>[]) => {
+    return (source: Actions) =>
+        source.pipe(ofType(...actionsToListenFor), interpretLoadingStates(), collectLoadingMap())
+}

@@ -2,17 +2,15 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatest, delay, filter, first, map, switchMap, tap } from 'rxjs'
+import { BehaviorSubject, combineLatest, delay, filter, first, map, shareReplay, startWith, switchMap, tap } from 'rxjs'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { getTaskStatusMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
-import { entitiesActions } from 'src/app/store/entities/entities.actions'
-import { listActions } from 'src/app/store/entities/list/list.actions'
-import { taskActions } from 'src/app/store/entities/task/task.actions'
+import { entitiesActions, loadingStateActions } from 'src/app/store/entities/entities.actions'
 import { useTaskForActiveStatus } from 'src/app/utils/menu-item.helpers'
-import { getLoadingUpdates } from 'src/app/utils/store.helpers'
+import { loadingUpdates } from 'src/app/utils/store.helpers'
 import { EntityState } from '../../atoms/icons/icon/icons'
 
 @UntilDestroy()
@@ -38,42 +36,16 @@ export class EditableEntityTitleComponent {
 
     titleUpdates$ = new BehaviorSubject<string | null>(null)
 
-    isLoading$ = getLoadingUpdates(
-        this.actions$,
-        [
-            entitiesActions.rename,
-            entitiesActions.renameSuccess,
-            entitiesActions.renameError,
-
-            entitiesActions.delete,
-            entitiesActions.deleteSuccess,
-            entitiesActions.deleteError,
-
-            listActions.updateDescription,
-            listActions.updateDescriptionSuccess,
-            listActions.updateDescriptionError,
-
-            // taskActions.create,
-            // taskActions.createSuccess,
-            // taskActions.createError,
-
-            taskActions.updateDescription,
-            taskActions.updateDescriptionSuccess,
-            taskActions.updateDescriptionError,
-
-            taskActions.updateStatus,
-            taskActions.updateStatusSuccess,
-            taskActions.updateStatusError,
-
-            taskActions.updatePriority,
-            taskActions.updatePrioritySuccess,
-            taskActions.updatePriorityError,
-        ],
-        action =>
+    isLoading$ = this.actions$.pipe(
+        loadingUpdates(loadingStateActions, action =>
             this.entity$.pipe(
                 first(),
                 map(entity => entity?.id == action.id)
             )
+        ),
+        filter((_, i) => i !== 0), // exclude the first emission
+        startWith(true),
+        shareReplay({ bufferSize: 1, refCount: true })
     )
 
     titleUpdatesSubscription = this.titleUpdates$

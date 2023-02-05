@@ -5,19 +5,19 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { Action } from '@ngrx/store/src/models'
-import { map, tap } from 'rxjs'
+import { delay, map, tap } from 'rxjs'
 import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
-import { entitiesActions } from 'src/app/store/entities/entities.actions'
+import { entitiesActions, loadingStateActions } from 'src/app/store/entities/entities.actions'
 import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { flattenEntityTreeIncludingTasks, traceEntity } from 'src/app/store/entities/utils'
 import { moveToMacroQueue } from 'src/app/utils'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
-import { getLoadingUpdates } from 'src/app/utils/store.helpers'
+import { loadingUpdates, makeLoadingMap } from 'src/app/utils/store.helpers'
 
 export interface EntityTreeNode {
     id: string
@@ -120,11 +120,15 @@ export class HomeComponent implements OnInit {
             tap(transformed => (this.entityPreviewsTransformed = transformed))
         )
 
-    isTreeLoading$ = getLoadingUpdates(this.actions$, [
-        entitiesActions.loadPreviews,
-        entitiesActions.loadPreviewsSuccess,
-        entitiesActions.loadPreviewsError,
-    ])
+    isTreeLoading$ = this.actions$.pipe(
+        loadingUpdates([
+            entitiesActions.loadPreviews,
+            entitiesActions.loadPreviewsSuccess,
+            entitiesActions.loadPreviewsError,
+        ])
+    )
+
+    nodeLoadingMap$ = this.actions$.pipe(makeLoadingMap(loadingStateActions), delay(0))
 
     dataSource = new ArrayDataSource(this.entityPreviewsTransformed$)
     treeControl = new FlatTreeControl<EntityTreeNode>(

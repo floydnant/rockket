@@ -111,7 +111,7 @@
 
                             <app-entity-page-label
                                 [pageTitle]="node.title"
-                                [pageIcon]="node.status || node.entityType"
+                                [pageIcon]="(( nodeLoadingMap$ | async )?.[node.id] && 'Loading') || node.status || node.entityType"
                             ></app-entity-page-label>
                         </div>
 

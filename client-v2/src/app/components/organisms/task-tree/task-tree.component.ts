@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { Actions } from '@ngrx/effects'
+import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatestWith, map, merge, scan, shareReplay, switchMap, tap } from 'rxjs'
+import { BehaviorSubject, combineLatestWith, filter, map, shareReplay, switchMap, tap } from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import {
     TaskPreviewFlattend,
@@ -11,11 +11,11 @@ import {
 } from 'src/app/fullstack-shared-models/task.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
-import { entitiesActions } from 'src/app/store/entities/entities.actions'
+import { entitiesActions, loadingStateActions } from 'src/app/store/entities/entities.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { flattenTaskTree } from 'src/app/store/entities/utils'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
-import { getLoadingUpdates } from 'src/app/utils/store.helpers'
+import { collectLoadingMap, interpretLoadingStates, makeLoadingMap } from 'src/app/utils/store.helpers'
 
 export interface TaskTreeNode {
     taskPreview: TaskPreviewFlattend
@@ -149,52 +149,16 @@ export class TaskTreeComponent {
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    isLoadingMap$ = this.flattendTaskTree$.pipe(
-        switchMap(taskNodes => {
-            const entryObservables = taskNodes.map(taskNode => {
-                const id = taskNode.taskPreview.id
-
-                const isLoading$ = getLoadingUpdates(
-                    this.actions$,
-                    [
-                        entitiesActions.rename,
-                        entitiesActions.renameSuccess,
-                        entitiesActions.renameError,
-
-                        entitiesActions.delete,
-                        entitiesActions.deleteSuccess,
-                        entitiesActions.deleteError,
-
-                        // taskActions.create,
-                        // taskActions.createSuccess,
-                        // taskActions.createError,
-
-                        taskActions.updateDescription,
-                        taskActions.updateDescriptionSuccess,
-                        taskActions.updateDescriptionError,
-
-                        taskActions.updateStatus,
-                        taskActions.updateStatusSuccess,
-                        taskActions.updateStatusError,
-
-                        taskActions.updatePriority,
-                        taskActions.updatePrioritySuccess,
-                        taskActions.updatePriorityError,
-                    ],
-                    action => action.id == id
-                )
-
-                return isLoading$.pipe(map(isLoading => ({ id, isLoading })))
-            })
-            return merge(...entryObservables)
+    isLoadingMap$ = this.actions$.pipe(
+        ofType(...loadingStateActions),
+        switchMap(action => {
+            return this.flattendTaskTree$.pipe(
+                filter(tasks => tasks.some(task => task.taskPreview.id == action.id)),
+                map(() => action)
+            )
         }),
-        scan((acc, { id, isLoading }) => {
-            return {
-                ...acc,
-                [id]: isLoading,
-            }
-        }, {} as Record<string, boolean>),
-        shareReplay({ bufferSize: 1, refCount: true })
+        interpretLoadingStates(),
+        collectLoadingMap()
     )
 
     onTitleChange(id: string, title: string) {
