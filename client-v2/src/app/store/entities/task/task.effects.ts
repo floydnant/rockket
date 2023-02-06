@@ -80,10 +80,12 @@ export class TaskEffects {
 
                 const res$ = listId$.pipe(switchMap(listId => this.taskService.create({ ...dto, listId, title })))
 
+                const task = dto.parentTaskId ? 'Subtask' : 'Task'
+
                 return res$.pipe(
                     this.toast.observe({
-                        loading: 'Creating task...',
-                        success: `Created task '${dto.title}'`,
+                        loading: `Creating ${task}...`,
+                        success: `Created ${task} '${title}'`,
                         error: getMessageFromHttpError,
                     }),
                     map(createdTask => taskActions.createSuccess({ createdTask })),
