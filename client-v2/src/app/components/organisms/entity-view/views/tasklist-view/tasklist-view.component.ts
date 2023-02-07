@@ -5,21 +5,11 @@ import { BehaviorSubject, combineLatest, merge } from 'rxjs'
 import { distinctUntilChanged, first, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
-import {
-    prioritySortingMap,
-    statusSortingMap,
-    TaskPreview,
-    TaskPreviewRecursive,
-} from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
+import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
-
-type TaskSorter = (a: TaskPreview, b: TaskPreview) => number
-
-const sortByStatus: TaskSorter = (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status]
-const sortByPriority: TaskSorter = (a, b) => prioritySortingMap[a.priority] - prioritySortingMap[b.priority]
 
 @UntilDestroy()
 @Component({
@@ -54,12 +44,11 @@ export class TasklistViewComponent {
     children$ = this.listEntity$.pipe(
         map(entity => entity?.children?.filter(child => child.entityType != EntityType.TASK))
     )
-    tasks$ = combineLatest([this.store.select(state => state.entities.taskTreeMap), this.listEntity$]).pipe(
+    tasks$ = combineLatest([this.store.select(entitiesSelectors.taskTreeMap), this.listEntity$]).pipe(
         map(([taskTreeMap, entity]) => {
             if (!taskTreeMap || !entity) return null
-            const taskTree = taskTreeMap[entity.id] || []
-            const sorted = structuredClone(taskTree).sort(sortByStatus).sort(sortByPriority) as TaskPreviewRecursive[]
-            return sorted
+
+            return taskTreeMap[entity.id] || []
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )

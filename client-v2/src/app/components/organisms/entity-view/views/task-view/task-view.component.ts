@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store'
 import { combineLatest, map } from 'rxjs'
 import { TaskDetail } from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
+import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { getTaskById } from 'src/app/store/entities/utils'
 import { EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 
@@ -22,7 +23,7 @@ export class TaskViewComponent {
     detail$ = this.viewData.detail$
     options$ = this.viewData.options$
 
-    task$ = combineLatest([this.viewData.entity$, this.store.select(state => state.entities.taskTreeMap)]).pipe(
+    task$ = combineLatest([this.viewData.entity$, this.store.select(entitiesSelectors.taskTreeMap)]).pipe(
         map(([taskEntity, taskTreeMap]) => {
             if (!taskEntity || !taskTreeMap) return null
 

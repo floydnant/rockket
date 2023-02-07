@@ -5,13 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { Action } from '@ngrx/store/src/models'
-import { delay, map, tap } from 'rxjs'
+import { combineLatestWith, delay, map, tap } from 'rxjs'
 import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions, loadingStateActions } from 'src/app/store/entities/entities.actions'
+import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { flattenEntityTreeIncludingTasks, traceEntity } from 'src/app/store/entities/utils'
@@ -93,9 +94,10 @@ export class HomeComponent implements OnInit {
 
     entityPreviewsTransformed: EntityTreeNode[] = []
     entityPreviewsTransformed$ = this.store
-        .select(state => state.entities)
+        .select(state => state.entities.entityTree)
         .pipe(
-            map(({ entityTree, taskTreeMap }) => {
+            combineLatestWith(this.store.select(entitiesSelectors.taskTreeMap)),
+            map(([entityTree, taskTreeMap]) => {
                 // @TODO: come up with a better solution for this
                 // NOTE: using `ActivatedRoute` doesn't work in here either
                 const segments = location.pathname.split('/')

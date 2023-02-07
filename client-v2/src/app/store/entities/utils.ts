@@ -4,7 +4,13 @@ import {
     EntityPreviewRecursive,
     EntityType,
 } from 'src/app/fullstack-shared-models/entities.model'
-import { TaskPreview, TaskPreviewFlattend, TaskPreviewRecursive } from 'src/app/fullstack-shared-models/task.model'
+import {
+    prioritySortingMap,
+    statusSortingMap,
+    TaskPreview,
+    TaskPreviewFlattend,
+    TaskPreviewRecursive,
+} from 'src/app/fullstack-shared-models/task.model'
 import { TaskTreeMap } from './entities.state'
 
 export const buildEntityTree = (allEntities: EntityPreview[]) => {
@@ -177,6 +183,20 @@ export const getTaskById = (taskTree: TaskPreviewRecursive[], id: string) => {
     if (!res) return
 
     return res.subTree[res.index]
+}
+
+export type TaskSorter = (a: TaskPreview, b: TaskPreview) => number
+
+export const sortByStatus: TaskSorter = (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status]
+export const sortByPriority: TaskSorter = (a, b) => prioritySortingMap[a.priority] - prioritySortingMap[b.priority]
+
+export const applySorters = (taskTree: TaskPreviewRecursive[], ...sorters: TaskSorter[]): TaskPreviewRecursive[] => {
+    const mappedTree = taskTree.map(({ children, ...task }) => ({
+        ...task,
+        children: children && applySorters(children, ...sorters),
+    }))
+
+    return sorters.reduce((acc, sorter) => acc.sort(sorter), mappedTree)
 }
 
 export const traceEntityIncludingTasks = (
