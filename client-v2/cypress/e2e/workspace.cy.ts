@@ -63,7 +63,7 @@ describe('Workspace', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
 
                 const entityName = 'The testing entity'
-                cy.get(testName('editable-entity-name')).get(testName('inline-editor')).focus().type(entityName)
+                cy.get(testName('editable-entity-name')).get(testName('inline-editor')).focus().type(entityName).blur()
                 cy.get(testName('entity-tree-node')).should('contain.text', entityName)
             })
 
