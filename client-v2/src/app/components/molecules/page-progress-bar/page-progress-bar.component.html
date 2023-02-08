@@ -14,7 +14,7 @@
     </div>
     <button
         class="progress-number | text-sm text-tinted-600 transition-colors"
-        [class.!text-submit-400]="digest.closed == digest.all"
+        [class.!text-submit-400]="digest.all && digest.closed == digest.all"
         (click)="isShownAsPercentage = !isShownAsPercentage"
         [appTooltip]="isShownAsPercentage ? 'Display as fraction' : 'Display as percentage'"
         [tooltipOptions]="{ avoidPositions: ['left'] }"
