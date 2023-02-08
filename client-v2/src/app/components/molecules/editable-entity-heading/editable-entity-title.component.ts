@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatest, delay, distinctUntilChanged, filter, first, map, switchMap, tap } from 'rxjs'
+import { BehaviorSubject, distinctUntilChanged, filter, first, map, of, switchMap, tap } from 'rxjs'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
@@ -47,38 +47,37 @@ export class EditableEntityTitleComponent {
 
     titleUpdatesSubscription = this.titleUpdates$
         .pipe(
+            filter(title => title !== null),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            map(title => title!),
             switchMap(title => {
-                return combineLatest([this.entity$, this.isLoading$]).pipe(
+                return this.isLoading$.pipe(
                     first(),
-                    tap(([entity, isLoading]) => {
-                        if (!entity || !title) return
+                    switchMap(isLoading => {
+                        if (!isLoading) return of(title)
 
-                        const action = entitiesActions.rename({ id: entity.id, entityType: entity.entityType, title })
-                        if (isLoading) {
-                            this.updateQueue$.next(action)
-                            return
-                        }
-
-                        this.store.dispatch(action)
+                        return this.isLoading$.pipe(
+                            filter(isLoading => !isLoading),
+                            first(),
+                            map(() => title)
+                        )
                     })
                 )
             }),
-            untilDestroyed(this)
-        )
-        .subscribe()
+            switchMap(title => {
+                return this.entity$.pipe(
+                    first(),
+                    map(entity => {
+                        if (!entity) return
 
-    // @TODO: we should have a better buffering mechanism, so that one stream is in charge of dispatching actions
-    updateQueue$ = new BehaviorSubject<ReturnType<typeof entitiesActions.rename> | null>(null)
-    queueSubscription = this.isLoading$
-        .pipe(
-            filter(isLoading => !isLoading),
-            switchMap(() => this.updateQueue$.pipe(first())),
-            delay(0), // move to macro queue
-            map(queuedAction => {
-                if (queuedAction === null) return
+                        return entitiesActions.rename({ id: entity.id, entityType: entity.entityType, title })
+                    })
+                )
+            }),
+            tap(action => {
+                if (!action) return
 
-                this.store.dispatch(queuedAction)
-                this.updateQueue$.next(null)
+                this.store.dispatch(action)
             }),
             untilDestroyed(this)
         )
