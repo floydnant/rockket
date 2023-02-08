@@ -23,4 +23,8 @@ export interface Breadcrumb {
 })
 export class BreadcrumbsComponent {
     @Input() breadcrumbs!: Breadcrumb[]
+
+    trackByFn(_index: number, { icon, title, route }: Breadcrumb) {
+        return icon + title + route
+    }
 }
