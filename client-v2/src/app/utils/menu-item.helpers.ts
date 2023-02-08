@@ -2,6 +2,25 @@ import { interpolateParams } from '.'
 import { MenuItem } from '../components/molecules/drop-down/drop-down.component'
 import { TaskPreview } from '../fullstack-shared-models/task.model'
 
+export interface WrappedMenuItems extends Array<MenuItem> {
+    applyOperators(...operator: ((item: MenuItem) => MenuItem)[]): WrappedMenuItems
+}
+const getOperatorApplier = (items: MenuItem[]) => {
+    return (...operators: ((item: MenuItem) => MenuItem)[]): WrappedMenuItems => {
+        const result = items.map(item => {
+            return operators.reduce((prevMapperResult, operator) => operator(prevMapperResult), item)
+        })
+        return wrapMenuItems(result)
+    }
+}
+
+/** Used to apply operators sequentially per iteration, instead of iterating over all menu items for each operator.
+ * Though it is unnecessary to use `applyOperators` for only one operator.
+ */
+export const wrapMenuItems = (items: MenuItem[]): WrappedMenuItems => {
+    return Object.assign(items, { applyOperators: getOperatorApplier(items) })
+}
+
 export const interceptItem = (callback: (item: MenuItem) => Partial<Omit<MenuItem, 'children'>>) => {
     return (item: MenuItem): MenuItem => {
         if (item.isSeperator) return item

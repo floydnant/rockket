@@ -7,6 +7,7 @@ import { AppState } from '../store'
 import { entitiesActions } from '../store/entities/entities.actions'
 import { listActions } from '../store/entities/list/list.actions'
 import { taskActions } from '../store/entities/task/task.actions'
+import { wrapMenuItems, WrappedMenuItems } from '../utils/menu-item.helpers'
 
 export const getGeneralMenuItems = (store: Store<AppState>): MenuItem[] => [
     {
@@ -42,10 +43,10 @@ export const getTaskPriorityMenuItems = (store: Store<AppState>) =>
         },
     }))
 
-export type EntityMenuItemsMap = Record<EntityType, MenuItem[]>
+export type EntityMenuItemsMap = Record<EntityType, WrappedMenuItems>
 
 export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMap => ({
-    [EntityType.TASKLIST]: [
+    [EntityType.TASKLIST]: wrapMenuItems([
         ...getGeneralMenuItems(store),
         {
             title: 'New Inside',
@@ -75,8 +76,8 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
             action: (dto: EntityCrudDto) => store.dispatch(listActions.exportList(dto)),
         },
         ...getDangerMenuItems(store),
-    ],
-    [EntityType.TASK]: [
+    ]),
+    [EntityType.TASK]: wrapMenuItems([
         {
             title: 'New Subtask',
             icon: 'plus',
@@ -108,5 +109,5 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
         //     action: (dto: EntityCrudDto) => store.dispatch(listActions.exportList(dto)),
         // },
         ...getDangerMenuItems(store),
-    ],
+    ]),
 })
