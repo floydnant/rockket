@@ -1,24 +1,22 @@
 import { ArrayDataSource } from '@angular/cdk/collections'
 import { FlatTreeControl } from '@angular/cdk/tree'
 import { Component, OnInit } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
-import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { Action } from '@ngrx/store/src/models'
-import { combineLatestWith, delay, map, tap } from 'rxjs'
+import { combineLatestWith, map, tap } from 'rxjs'
 import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
+import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
-import { entitiesActions, loadingStateActions } from 'src/app/store/entities/entities.actions'
+import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { flattenEntityTreeIncludingTasks, traceEntity } from 'src/app/store/entities/utils'
 import { moveToMacroQueue } from 'src/app/utils'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
-import { loadingUpdates, makeLoadingMap } from 'src/app/utils/store.helpers'
 
 export interface EntityTreeNode {
     id: string
@@ -49,12 +47,7 @@ export const convertToEntityTreeNode = (entity: EntityPreviewFlattend): EntityTr
     styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-    constructor(
-        private store: Store<AppState>,
-        private actions$: Actions,
-        private route: ActivatedRoute,
-        private router: Router
-    ) {}
+    constructor(private store: Store<AppState>, private loadingService: LoadingStateService) {}
 
     EntityType = EntityType
 
@@ -124,15 +117,13 @@ export class HomeComponent implements OnInit {
             tap(transformed => (this.entityPreviewsTransformed = transformed))
         )
 
-    isTreeLoading$ = this.actions$.pipe(
-        loadingUpdates([
-            entitiesActions.loadPreviews,
-            entitiesActions.loadPreviewsSuccess,
-            entitiesActions.loadPreviewsError,
-        ])
-    )
+    isTreeLoading$ = this.loadingService.getLoadingState([
+        entitiesActions.loadPreviews,
+        entitiesActions.loadPreviewsSuccess,
+        entitiesActions.loadPreviewsError,
+    ])
 
-    nodeLoadingMap$ = this.actions$.pipe(makeLoadingMap(loadingStateActions), delay(0))
+    nodeLoadingMap$ = this.loadingService.getEntitiesLoadingStateMap()
 
     dataSource = new ArrayDataSource(this.entityPreviewsTransformed$)
     treeControl = new FlatTreeControl<EntityTreeNode>(

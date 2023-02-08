@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs'
+
 export type PartialRequired<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,3 +43,5 @@ export type LeavesConcatenated<T, S extends string = '.', D extends number = 10>
     : T extends object
     ? { [K in keyof T]-?: Join<K, S, LeavesConcatenated<T[K], S, Prev[D]>> }[keyof T]
     : ''
+
+export type UnwrapObservable<T> = T extends Observable<infer U> ? U : never

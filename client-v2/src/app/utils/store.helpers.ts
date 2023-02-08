@@ -1,7 +1,8 @@
 import { Actions, ofType } from '@ngrx/effects'
 import { Action, ActionCreator, Creator, ReducerTypes } from '@ngrx/store'
-import { concatMap, filter, map, merge, Observable, of, scan, shareReplay, startWith } from 'rxjs'
+import { map, merge, Observable, scan, shareReplay, startWith, tap } from 'rxjs'
 import { HttpServerErrorResponse } from '../http/types'
+import { filterWith } from './observable.helpers'
 
 export const getMessageFromHttpError = (err: HttpServerErrorResponse) =>
     err.error.message instanceof Array
@@ -79,20 +80,7 @@ export const loadingUpdates = <T extends AnyActionCreator>(
     return (source: Actions) =>
         source.pipe(
             ofType(...actionsToListenFor),
-            concatMap(action => {
-                if (!filterPredicate) return of(action)
-
-                const predicateResult = filterPredicate(action)
-
-                let shouldPass$: Observable<boolean>
-                if (typeof predicateResult == 'boolean') shouldPass$ = of(predicateResult)
-                else shouldPass$ = predicateResult
-
-                return shouldPass$.pipe(
-                    filter(shouldPass => shouldPass),
-                    map(() => action)
-                )
-            }),
+            filterPredicate ? filterWith(filterPredicate) : tap(),
             interpretLoadingStates(),
             map(action => action.isLoading),
             startWith(false),
@@ -117,19 +105,23 @@ export const interpretLoadingStates = <T extends Action>() =>
 
 /** Maps loading states to their `id` field in the action */
 export const collectLoadingMap = <T extends Action & { id: string; isLoading: boolean }>() => {
-    return (source: Actions<T>) =>
+    const operator = (source: Actions<T>) =>
         source.pipe(
-            scan((acc, { id, isLoading }) => {
-                return {
-                    ...acc,
-                    [id]: isLoading,
+            scan(
+                ({ loadingStateMap }, { type, id, isLoading }) => {
+                    loadingStateMap[id] = isLoading
+                    return { type, id, loadingStateMap }
+                },
+                {
+                    type: '' as T['type'],
+                    id: '',
+                    loadingStateMap: {} as Record<string, boolean>,
                 }
-            }, {} as Record<string, boolean>),
+            ),
             shareReplay({ bufferSize: 1, refCount: true })
         )
-}
 
-export const makeLoadingMap = (actionsToListenFor: AnyActionCreator<{ id: string }>[]) => {
-    return (source: Actions) =>
-        source.pipe(ofType(...actionsToListenFor), interpretLoadingStates(), collectLoadingMap())
+    operator.getMap = () => (source: Actions<T>) => operator(source).pipe(map(res => res.loadingStateMap))
+
+    return operator
 }

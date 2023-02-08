@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { Actions, ofType } from '@ngrx/effects'
+import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatestWith, filter, map, shareReplay, switchMap, tap } from 'rxjs'
+import { BehaviorSubject, combineLatestWith, map, shareReplay, tap } from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import {
     TaskPreviewFlattend,
@@ -9,13 +9,13 @@ import {
     TaskPriority,
     TaskStatus,
 } from 'src/app/fullstack-shared-models/task.model'
+import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
-import { entitiesActions, loadingStateActions } from 'src/app/store/entities/entities.actions'
+import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { flattenTaskTree } from 'src/app/store/entities/utils'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
-import { collectLoadingMap, interpretLoadingStates, makeLoadingMap } from 'src/app/utils/store.helpers'
 
 export interface TaskTreeNode {
     taskPreview: TaskPreviewFlattend
@@ -40,7 +40,7 @@ export const convertToTaskTreeNode = (task: TaskPreviewFlattend): TaskTreeNode =
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskTreeComponent {
-    constructor(private store: Store<AppState>, private actions$: Actions) {}
+    constructor(private store: Store<AppState>, private loadingService: LoadingStateService) {}
 
     tasks$ = new BehaviorSubject<TaskPreviewRecursive[] | null>(null)
     @Input() set tasks(tasks: TaskPreviewRecursive[]) {
@@ -154,16 +154,8 @@ export class TaskTreeComponent {
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    isLoadingMap$ = this.actions$.pipe(
-        ofType(...loadingStateActions),
-        switchMap(action => {
-            return this.flattendTaskTree$.pipe(
-                filter(tasks => tasks.some(task => task.taskPreview.id == action.id)),
-                map(() => action)
-            )
-        }),
-        interpretLoadingStates(),
-        collectLoadingMap()
+    isLoadingMap$ = this.loadingService.getEntitiesLoadingStateMap(action =>
+        this.flattendTaskTree$.pipe(map(tasks => tasks.some(task => task.taskPreview.id == action.id)))
     )
 
     onTitleChange(id: string, title: string) {

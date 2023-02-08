@@ -1,19 +1,17 @@
 import { Component } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { UntilDestroy } from '@ngneat/until-destroy'
-import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { combineLatestWith, filter, map, of, shareReplay, switchMap } from 'rxjs'
+import { combineLatestWith, map, of, shareReplay, switchMap } from 'rxjs'
 import { IconKey } from 'src/app/components/atoms/icons/icon/icons'
 import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs.component'
 import { EntityPreviewRecursive } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
+import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
-import { loadingStateActions } from 'src/app/store/entities/entities.actions'
 import { traceEntity, traceEntityIncludingTasks } from 'src/app/store/entities/utils'
 import { useDataForAction, useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
-import { collectLoadingMap, interpretLoadingStates, makeLoadingMap } from 'src/app/utils/store.helpers'
 
 @UntilDestroy()
 @Component({
@@ -22,7 +20,11 @@ import { collectLoadingMap, interpretLoadingStates, makeLoadingMap } from 'src/a
     styleUrls: ['./entity-page.component.css'],
 })
 export class EntityPageComponent {
-    constructor(private store: Store<AppState>, private route: ActivatedRoute, private actions$: Actions) {}
+    constructor(
+        private store: Store<AppState>,
+        private route: ActivatedRoute,
+        private loadingService: LoadingStateService
+    ) {}
 
     entityOptionsMap = getEntityMenuItemsMap(this.store)
     entityOptionsMap$ = of(this.entityOptionsMap)
@@ -58,16 +60,8 @@ export class EntityPageComponent {
 
     breadcrumbs$ = this.activeEntityTrace$.pipe(
         combineLatestWith(
-            this.actions$.pipe(
-                ofType(...loadingStateActions),
-                switchMap(action => {
-                    return this.activeEntityTrace$.pipe(
-                        filter(tasks => tasks?.some(task => task.id == action.id) || false),
-                        map(() => action)
-                    )
-                }),
-                interpretLoadingStates(),
-                collectLoadingMap()
+            this.loadingService.getEntitiesLoadingStateMap(action =>
+                this.activeEntityTrace$.pipe(map(tasks => tasks?.some(task => task.id == action.id) || false))
             )
         ),
         map(([trace, loadingMap]) =>

@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatest, delay, filter, first, map, shareReplay, startWith, switchMap, tap } from 'rxjs'
+import { BehaviorSubject, combineLatest, delay, distinctUntilChanged, filter, first, map, switchMap, tap } from 'rxjs'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
+import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { getTaskStatusMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
-import { entitiesActions, loadingStateActions } from 'src/app/store/entities/entities.actions'
+import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { useTaskForActiveStatus } from 'src/app/utils/menu-item.helpers'
-import { loadingUpdates } from 'src/app/utils/store.helpers'
 import { EntityState } from '../../atoms/icons/icon/icons'
 
 @UntilDestroy()
@@ -21,7 +20,7 @@ import { EntityState } from '../../atoms/icons/icon/icons'
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditableEntityTitleComponent {
-    constructor(private store: Store<AppState>, private actions$: Actions) {}
+    constructor(private store: Store<AppState>, private loadingService: LoadingStateService) {}
 
     EntityType = EntityType
     EntityState = EntityState
@@ -36,16 +35,14 @@ export class EditableEntityTitleComponent {
 
     titleUpdates$ = new BehaviorSubject<string | null>(null)
 
-    isLoading$ = this.actions$.pipe(
-        loadingUpdates(loadingStateActions, action =>
-            this.entity$.pipe(
-                first(),
-                map(entity => entity?.id == action.id)
-            )
-        ),
-        filter((_, i) => i !== 0), // exclude the first emission
-        startWith(true),
-        shareReplay({ bufferSize: 1, refCount: true })
+    isLoading$ = this.entity$.pipe(
+        filter(entity => !!entity),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        map(entity => entity!.id),
+        distinctUntilChanged(),
+        switchMap(entityId => {
+            return this.loadingService.getEntityLoadingState(action => entityId == action.id)
+        })
     )
 
     titleUpdatesSubscription = this.titleUpdates$
