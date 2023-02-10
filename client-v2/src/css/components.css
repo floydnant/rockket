@@ -56,4 +56,10 @@
         background-position: 4px 4px;
         background-size: 27px 27px;
     }
+
+    .height-screen {
+        height: 100vh;
+        height: -webkit-fill-available;
+        height: 100dvh;
+    }
 }
