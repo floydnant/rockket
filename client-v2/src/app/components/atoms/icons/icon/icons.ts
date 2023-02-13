@@ -24,6 +24,7 @@ const extraIcons = {
     eye: 'fas fa-eye',
     logout: 'fas fa-sign-out-alt',
     workspace: 'fas fa-garage',
+    loading: 'fad fa-spinner-third animate-spin',
 }
 
 export const entityStateIcons = {
