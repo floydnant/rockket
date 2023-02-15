@@ -51,7 +51,7 @@ describe('TaskTreeComponent', () => {
     it('renders the tasks', () => {
         setupComponent(taskTreeFixture)
 
-        cy.get(testName('tree-node')).should('have.length', 12)
+        cy.get(testName('task-tree-node')).should('have.length', 12)
         cy.get(`[data-test-node-level="${0}"]`).should('have.length', 4)
         cy.get(`[data-test-node-level="${1}"]`).should('have.length', 6)
         cy.get(`[data-test-node-level="${2}"]`).should('have.length', 2)
@@ -60,12 +60,12 @@ describe('TaskTreeComponent', () => {
     it('can toggle subtasks', () => {
         setupComponent(taskTreeFixture)
 
-        cy.get(testName('tree-node')).should('have.length', 12)
+        cy.get(testName('task-tree-node')).should('have.length', 12)
 
         cy.get(testName('subtask-toggle')).first().click()
-        cy.get(testName('tree-node')).should('have.length', 10)
+        cy.get(testName('task-tree-node')).should('have.length', 10)
 
         cy.get(testName('subtask-toggle')).first().click()
-        cy.get(testName('tree-node')).should('have.length', 12)
+        cy.get(testName('task-tree-node')).should('have.length', 12)
     })
 })

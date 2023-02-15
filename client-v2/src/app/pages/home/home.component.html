@@ -77,6 +77,7 @@
                         (cdkContextMenuOpened)="isHovered[node.id] = true"
                         (cdkContextMenuClosed)="isHovered[node.id] = false"
                         data-test-name="entity-tree-node"
+                        [attr.data-test-is-loading]="( nodeLoadingMap$ | async )?.[node.id]"
                         [attr.data-level]="node.path.length"
                     >
                         <ng-template #tooltip>
