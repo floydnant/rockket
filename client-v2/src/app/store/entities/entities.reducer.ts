@@ -14,8 +14,6 @@ const initialState: EntitiesState = {
     },
 
     taskTreeMap: null,
-    // taskLoadingMap: {},
-    // tasksLoadingForParentMap: {},
 }
 
 export const entitiesReducer = createReducer(
