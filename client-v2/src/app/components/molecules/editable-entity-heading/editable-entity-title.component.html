@@ -2,7 +2,7 @@
     <ng-template #icon>
         <app-icon
             class="text-2xl"
-            [iconClass]="(isLoading$ | async) ? EntityState.LOADING : entity.status || entity.entityType"
+            [icon]="(isLoading$ | async) ? EntityState.LOADING : entity.status || entity.entityType"
         >
         </app-icon>
     </ng-template>

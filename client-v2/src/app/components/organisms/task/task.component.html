@@ -31,7 +31,7 @@
                         <span [class]="statusColorMap[task.status]">{{ task.status.replace('_', ' ') }}</span>
                     </ng-template>
 
-                    <app-icon [iconClass]="loading || task.status"></app-icon>
+                    <app-icon [icon]="loading || task.status"></app-icon>
                 </button>
                 <ng-template #statusMenu>
                     <app-drop-down [items]="(statusMenuItems$ | async) || []" [data]="{ id: task.id }"></app-drop-down>
@@ -62,7 +62,7 @@
                         data-test-name="subtask-toggle"
                     >
                         <app-icon
-                            iconClass="fas fa-chevron-right"
+                            icon="fas fa-chevron-right"
                             class="mr-1 inline-block transition-transform"
                             [class.rotate-90]="nodeData.isExpanded"
                         ></app-icon>
@@ -76,7 +76,7 @@
                 <app-icon
                     *ngIf="isOverdue"
                     class="overdue-icon | animate-ping"
-                    iconClass="fas fa-exclamation-triangle text-danger-400"
+                    icon="fas fa-exclamation-triangle text-danger-400"
                     data-test-name="overdue-icon"
                 ></app-icon>
                 <div
@@ -97,7 +97,7 @@
                         <span class="text-tinted-300">Priority: </span>
                         <span>{{ task.priority }}</span>
                     </ng-template>
-                    <app-icon [iconClass]="task.priority"></app-icon>
+                    <app-icon [icon]="task.priority"></app-icon>
                 </div>
                 <ng-template #priorityMenu>
                     <app-drop-down

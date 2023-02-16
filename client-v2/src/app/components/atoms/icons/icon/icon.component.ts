@@ -3,13 +3,13 @@ import { iconClasses, IconKey, isIconKey } from './icons'
 
 @Component({
     selector: 'app-icon',
-    template: '<i [class]="icon"></i>',
+    template: '<i [class]="iconClass"></i>',
     styleUrls: [],
 })
 export class IconComponent {
-    @Input() iconClass!: IconKey | string
-    get icon() {
-        if (isIconKey(this.iconClass)) return iconClasses[this.iconClass]
-        return this.iconClass
+    @Input() icon!: IconKey | string
+    get iconClass() {
+        if (isIconKey(this.icon)) return iconClasses[this.icon]
+        return this.icon
     }
 }

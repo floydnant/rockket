@@ -46,7 +46,7 @@
             <hr class="my-2" />
             <table>
                 <tr *ngFor="let status of taskStatuses">
-                    <td class="pr-1"><app-icon [iconClass]="status"></app-icon></td>
+                    <td class="pr-1"><app-icon [icon]="status"></app-icon></td>
                     <td [class]="statusColorMap[status]">{{ status.replace('_', ' ') }}</td>
                     <td class="pl-4 text-center">{{ digest.byStatus[status] }}</td>
                     <td class="text-right text-tinted-300">
