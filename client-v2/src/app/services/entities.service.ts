@@ -3,9 +3,10 @@ import { Observable } from 'rxjs'
 import { HttpService } from '../http/http.service'
 import { HttpSuccessResponse } from '../http/types'
 import { EntityPreview, EntityType } from '../fullstack-shared-models/entities.model'
-import { TasklistPreview } from '../fullstack-shared-models/list.model'
 import { ListService } from './entity.services/list.service'
+import { TaskService } from './entity.services/task.service'
 
+// @TODO: we should contraint the dtos further
 export interface EntityService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     create(dto: Record<string, any>): Observable<Record<string, any>>
@@ -26,6 +27,7 @@ export type EntityServiceInstanceMap = {
 
 const entityServiceInjectorMap = {
     [EntityType.TASKLIST]: ListService,
+    [EntityType.TASK]: TaskService,
 } // satisfies Record<EntityType, EntityServiceConstructor> // @TODO: upgrade to typescript@4.9 => angular@15
 
 export const getEntityServiceInjector = <T extends EntityType>(entityType: T): EntityServiceInjectorMap[T] => {

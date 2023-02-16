@@ -1,6 +1,8 @@
+import { CdkMenuModule } from '@angular/cdk/menu'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { BehaviorSubject, of } from 'rxjs'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
-import { TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import { TaskPreview, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { IconsModule } from '../../atoms/icons/icons.module'
 
 import { TaskComponent } from './task.component'
@@ -11,7 +13,7 @@ describe('TaskComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [IconsModule],
+            imports: [IconsModule, CdkMenuModule],
             declarations: [TaskComponent, FocusableDirective],
         }).compileComponents()
     })
@@ -19,22 +21,23 @@ describe('TaskComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(TaskComponent)
         component = fixture.componentInstance
-        component.data = {
+        component.task$ = new BehaviorSubject({
+            id: '',
             title: 'Task title here',
             priority: TaskPriority.NONE,
             status: TaskStatus.OPEN,
             description: '',
             listId: '',
-            ownerId: '',
-            closedAt: '',
-            deadline: '',
-            openedAt: '',
-            createdAt: '',
-            subtaskIds: [],
-            blockedById: '',
+            // ownerId: '',
+            // closedAt: '',
+            // deadline: '',
+            // openedAt: '',
+            // createdAt: '',
+            // subtaskIds: [],
+            // blockedById: '',
             parentTaskId: '',
-            inProgressSince: '',
-        }
+            // inProgressSince: '',
+        } as null | TaskPreview)
         fixture.detectChanges()
     })
 

@@ -70,6 +70,7 @@ export class ListController {
 
     // the actual tasks
     @Get('list/:listId/tasks')
+    // @TODO: the response should be minimized to the TaskPreview
     getTasks(@GetUser() user: User, @Param('listId') listId: string) {
         return this.taskService.getRootLevelTasks(user.id, listId)
     }

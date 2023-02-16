@@ -1,7 +1,7 @@
 export enum TaskStatus {
-    BACKLOG = 'Backlog',
-    OPEN = 'Open',
     IN_PROGRESS = 'In_Progress',
+    OPEN = 'Open',
+    BACKLOG = 'Backlog',
     COMPLETED = 'Completed',
     NOT_PLANNED = 'Not_Planned',
 }
@@ -15,11 +15,11 @@ export const statusSortingMap: Record<TaskStatus, number> = {
 }
 
 export enum TaskPriority {
-    OPTIONAL = 'Optional',
-    NONE = 'None',
-    MEDIUM = 'Medium',
-    HIGH = 'High',
     URGENT = 'Urgent',
+    HIGH = 'High',
+    MEDIUM = 'Medium',
+    NONE = 'None',
+    OPTIONAL = 'Optional',
 }
 export const prioritySortingMap: Record<TaskPriority, number> = {
     [TaskPriority.URGENT]: 0,
@@ -30,6 +30,7 @@ export const prioritySortingMap: Record<TaskPriority, number> = {
 }
 
 export interface Task {
+    id: string
     title: string
     description: string
     status: TaskStatus
@@ -49,13 +50,24 @@ export interface Task {
     subtaskIds: string[]
 }
 
+export type TaskPreview = Pick<Task, 'id' | 'title' | 'status' | 'priority' | 'listId' | 'parentTaskId'> & {
+    description: string | null
+}
+export type TaskDetail = Task
+
+export type TaskPreviewRecursive = TaskPreview & { children: TaskPreviewRecursive[] | null }
+export type TaskPreviewFlattend = Omit<TaskPreviewRecursive, 'children'> & {
+    path: string[]
+    childrenCount: number
+}
+
 // @TODO: ITaskEvent
 
 type TaskUpdatable = Pick<
     Task,
     'title' | 'description' | 'status' | 'priority' | 'listId' | 'parentTaskId' | 'deadline' | 'blockedById'
 >
-export type CreateTaskDto = Pick<TaskUpdatable, 'title'> & Partial<TaskUpdatable>
+export type CreateTaskDto = Pick<TaskUpdatable, 'title' | 'listId'> & Partial<TaskUpdatable>
 export type UpdateTaskDto = Partial<TaskUpdatable>
 
 // Task comments

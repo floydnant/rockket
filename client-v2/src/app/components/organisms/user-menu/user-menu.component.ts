@@ -18,18 +18,25 @@ export class UserMenuComponent {
     menuItems: MenuItem[] = [
         {
             title: 'Workspace',
+            icon: 'workspace',
             route: '/home',
         },
         {
             title: 'Settings',
+            icon: 'settings',
             route: '/settings',
             children: [
-                { title: 'General', route: '/settings/general' },
-                { title: 'Account', route: '/settings/account' },
-                { title: 'Appearance', route: '/settings/appearance' },
+                { title: 'General', route: '/settings/general', icon: 'settings' },
+                { title: 'Account', route: '/settings/account', icon: 'user' },
+                { title: 'Appearance', route: '/settings/appearance', icon: 'eye' },
             ],
         },
         { isSeperator: true },
-        { title: 'Logout', action: () => this.store.dispatch(authActions.logout()), variant: MenuItemVariant.DANGER },
+        {
+            title: 'Logout',
+            icon: 'logout',
+            action: () => this.store.dispatch(authActions.logout()),
+            variant: MenuItemVariant.DANGER,
+        },
     ]
 }

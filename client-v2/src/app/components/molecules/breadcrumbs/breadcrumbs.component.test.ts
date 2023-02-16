@@ -1,5 +1,7 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { testName } from 'cypress/support/helpers'
+import { EntityPageLabelComponent } from '../../atoms/entity-page-label/entity-page-label.component'
+import { IconsModule } from '../../atoms/icons/icons.module'
 import { DropDownComponent, MenuItem } from '../drop-down/drop-down.component'
 import { Breadcrumb, BreadcrumbsComponent } from './breadcrumbs.component'
 
@@ -9,17 +11,17 @@ const setupComponent = (breadcrumbs: Breadcrumb[], template = defaultTemplate) =
         componentProperties: {
             breadcrumbs,
         },
-        imports: [CdkMenuModule],
-        declarations: [BreadcrumbsComponent, DropDownComponent],
+        imports: [CdkMenuModule, IconsModule],
+        declarations: [BreadcrumbsComponent, EntityPageLabelComponent, DropDownComponent],
     })
 }
 
 describe('BreadcrumbsComponent', () => {
     it('displays given breadcrumbs', () => {
         const breadcrumbs: Breadcrumb[] = [
-            { title: 'Root list', icon: '', route: '/' },
-            { title: 'Nested list', icon: '', route: '/nested' },
-            { title: 'Nested list', icon: '', route: '/nested/nested' },
+            { title: 'Root list', icon: 'workspace', route: '/' },
+            { title: 'Nested list', icon: 'workspace', route: '/nested' },
+            { title: 'Nested list', icon: 'workspace', route: '/nested/nested' },
         ]
         setupComponent(breadcrumbs)
 
@@ -32,9 +34,9 @@ describe('BreadcrumbsComponent', () => {
     it('can open a context menu', () => {
         const menuItems: MenuItem[] = [{ title: 'test' }]
         const breadcrumbs: Breadcrumb[] = [
-            { title: 'Root list', icon: '', route: '/', contextMenuItems: menuItems },
-            { title: 'Nested list', icon: '', route: '/nested', contextMenuItems: menuItems },
-            { title: 'Nested list', icon: '', route: '/nested/nested', contextMenuItems: menuItems },
+            { title: 'Root list', icon: 'workspace', route: '/', contextMenuItems: menuItems },
+            { title: 'Nested list', icon: 'workspace', route: '/nested', contextMenuItems: menuItems },
+            { title: 'Nested list', icon: 'workspace', route: '/nested/nested', contextMenuItems: menuItems },
         ]
         setupComponent(breadcrumbs)
 

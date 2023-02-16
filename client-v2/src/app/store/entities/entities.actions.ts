@@ -1,8 +1,9 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
-import { HttpServerErrorResponse } from 'src/app/http/types'
-import { CreateTasklistDto, TaskList } from 'src/app/fullstack-shared-models/list.model'
-import { EntityCrudDto } from 'src/app/services/entities.service'
 import { EntityPreview } from 'src/app/fullstack-shared-models/entities.model'
+import { HttpServerErrorResponse } from 'src/app/http/types'
+import { EntityCrudDto } from 'src/app/services/entities.service'
+import { listActions } from './list/list.actions'
+import { taskActions } from './task/task.actions'
 
 export type HttpServerErrorResponseWithData<T = { id: string }> = HttpServerErrorResponse & T
 
@@ -34,21 +35,36 @@ export const entitiesActions = createActionGroup({
     },
 })
 
-export const listActions = createActionGroup({
-    source: 'Entity/Lists',
-    events: {
-        'create task list': props<Partial<CreateTasklistDto>>(),
-        'create task list success': props<{ createdList: TaskList }>(),
-        'create task list error': props<HttpServerErrorResponse>(),
+export const loadingStateActions = [
+    entitiesActions.loadDetail,
+    entitiesActions.loadDetailSuccess,
+    entitiesActions.loadDetailError,
 
-        'update description': props<{ id: string; newDescription: string }>(),
-        'update description success': props<{ id: string; newDescription: string }>(),
-        'update description error': props<HttpServerErrorResponseWithData>(),
+    entitiesActions.rename,
+    entitiesActions.renameSuccess,
+    entitiesActions.renameError,
 
-        'duplicate list': props<{ id: string }>(),
-        'duplicate list success': props<{ id: string }>(),
-        'duplicate list error': props<{ id: string }>(),
+    entitiesActions.delete,
+    entitiesActions.deleteSuccess,
+    entitiesActions.deleteError,
 
-        'export list': props<{ id: string }>(),
-    },
-})
+    listActions.updateDescription,
+    listActions.updateDescriptionSuccess,
+    listActions.updateDescriptionError,
+
+    // taskActions.create,
+    // taskActions.createSuccess,
+    // taskActions.createError,
+
+    taskActions.updateDescription,
+    taskActions.updateDescriptionSuccess,
+    taskActions.updateDescriptionError,
+
+    taskActions.updateStatus,
+    taskActions.updateStatusSuccess,
+    taskActions.updateStatusError,
+
+    taskActions.updatePriority,
+    taskActions.updatePrioritySuccess,
+    taskActions.updatePriorityError,
+]

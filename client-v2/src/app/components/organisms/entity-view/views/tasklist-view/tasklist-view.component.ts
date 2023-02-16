@@ -1,13 +1,15 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatest, merge, of } from 'rxjs'
+import { BehaviorSubject, combineLatest, merge } from 'rxjs'
 import { distinctUntilChanged, first, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
 import { AppState } from 'src/app/store'
-import { listActions } from 'src/app/store/entities/entities.actions'
-import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
+import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
+import { listActions } from 'src/app/store/entities/list/list.actions'
+import { taskActions } from 'src/app/store/entities/task/task.actions'
+import { EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 
 @UntilDestroy()
 @Component({
@@ -19,15 +21,37 @@ import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../ent
 export class TasklistViewComponent {
     constructor(
         @Inject(ENTITY_VIEW_DATA) private viewData: EntityViewData<TasklistDetail>,
-        private store: Store<AppState>,
-        private entityView: EntityViewComponent // needed to update the secondary progress bar, @TODO: find a clearer way to do this
-    ) {}
+        private store: Store<AppState>
+    ) {
+        // @TODO: This will be needed again when fetching stuff lazily (not the whole tree up front)
+        // this.listEntity$
+        //     .pipe(
+        //         distinctUntilChanged((previous, current) => previous?.id == current?.id),
+        //         untilDestroyed(this)
+        //     )
+        //     .subscribe(entity => {
+        //         if (!entity) return
+        //         this.store.dispatch(taskActions.loadRootLevelTasks({ listId: entity.id }))
+        //     })
+    }
 
     EntityType = EntityType
 
-    entity$ = this.viewData.entity$
+    listEntity$ = this.viewData.entity$
     detail$ = this.viewData.detail$
     options$ = this.viewData.options$
+
+    children$ = this.listEntity$.pipe(
+        map(entity => entity?.children?.filter(child => child.entityType != EntityType.TASK))
+    )
+    tasks$ = combineLatest([this.store.select(entitiesSelectors.taskTreeMap), this.listEntity$]).pipe(
+        map(([taskTreeMap, entity]) => {
+            if (!taskTreeMap || !entity) return null
+
+            return taskTreeMap[entity.id] || []
+        }),
+        shareReplay({ bufferSize: 1, refCount: true })
+    )
 
     description$ = this.detail$.pipe(
         map(detail => detail?.description),
@@ -61,7 +85,7 @@ export class TasklistViewComponent {
 
     descriptionUpdatesSubscription = this.blurEvents$
         .pipe(
-            switchMap(() => combineLatest([this.descriptionChanges$, this.entity$]).pipe(first())),
+            switchMap(() => combineLatest([this.descriptionChanges$, this.listEntity$]).pipe(first())),
             untilDestroyed(this)
         )
         .subscribe(([newDescription, entity]) => {
@@ -71,42 +95,17 @@ export class TasklistViewComponent {
             this.store.dispatch(listActions.updateDescription({ id: entity.id, newDescription }))
         })
 
-    closedTasks = 16
-    allTasks = 37
-    progress$ = of(Math.round((this.closedTasks / this.allTasks) * 100))
-    isShownAsPercentage = true
-
-    isProgressBarHidden$ = new BehaviorSubject(false)
-    progressOutputSubscription = combineLatest([this.progress$, this.isProgressBarHidden$])
-        .pipe(
-            map(([progress, isProgressBarHidden]) => {
-                if (!isProgressBarHidden) return null
-
-                return progress
-            }),
-            untilDestroyed(this)
-        )
-        .subscribe(progress => this.entityView.progress$.next(progress))
-
-    @ViewChild('progressBar') progressBar!: ElementRef<HTMLDivElement>
-    progressBarObserver = new IntersectionObserver(
-        entries => {
-            if (entries[0].isIntersecting) this.isProgressBarHidden$.next(false)
-            else this.isProgressBarHidden$.next(true)
-        },
-        { threshold: [0.5] }
-    )
-    ngAfterViewInit(): void {
-        this.progressBarObserver.observe(this.progressBar.nativeElement)
-    }
-    ngOnDestroy(): void {
-        this.progressBarObserver.disconnect()
-    }
-
     createNewSublist() {
-        this.entity$.pipe(first()).subscribe(entity => {
+        this.listEntity$.pipe(first()).subscribe(entity => {
             if (!entity) return
             this.store.dispatch(listActions.createTaskList({ parentListId: entity.id }))
+        })
+    }
+
+    createTask() {
+        this.listEntity$.pipe(first()).subscribe(entity => {
+            if (!entity) return
+            this.store.dispatch(taskActions.create({ listId: entity.id }))
         })
     }
 }

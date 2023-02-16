@@ -9,9 +9,9 @@ import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { ListService } from 'src/app/services/entity.services/list.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
-import { AppState } from '..'
-import { appActions } from '../app.actions'
-import { listActions } from './entities.actions'
+import { AppState } from '../..'
+import { appActions } from '../../app.actions'
+import { listActions } from './list.actions'
 
 @Injectable()
 export class ListEffects {

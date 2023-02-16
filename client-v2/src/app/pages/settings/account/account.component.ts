@@ -8,11 +8,12 @@ import { Observable, tap } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator, matchSibling } from 'src/app/components/molecules/form/validators'
 import { DialogService } from 'src/app/modal/dialog.service'
+import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { AppState } from 'src/app/store'
 import { accountActions, authActions } from 'src/app/store/user/user.actions'
 import { userFeature } from 'src/app/store/user/user.selectors'
 import { moveToMacroQueue } from 'src/app/utils'
-import { getErrorMapUpdates, getLoadingUpdates } from '../../../utils/store.helpers'
+import { getErrorMapUpdates } from '../../../utils/store.helpers'
 
 @Component({
     templateUrl: './account.component.html',
@@ -23,6 +24,7 @@ export class SettingsAccountComponent implements OnDestroy {
         private store: Store<AppState>,
         private toast: HotToastService,
         private actions$: Actions,
+        private loadingService: LoadingStateService,
         private dialogService: DialogService
     ) {
         this.store.dispatch(accountActions.loadEmail({}))
@@ -108,16 +110,18 @@ export class SettingsAccountComponent implements OnDestroy {
         this.usernameControl.reset()
         this.usernameControl.patchValue(this.usernameFromStore)
     }
-    usernameFormLoading$ = getLoadingUpdates(this.actions$, [
-        accountActions.updateUsername,
-        accountActions.updateUsernameSuccess,
-        accountActions.updateUsernameError,
-    ]).pipe(
-        tap(isLoading => {
-            if (isLoading) this.usernameControl.disable()
-            else this.usernameControl.enable()
-        })
-    )
+    usernameFormLoading$ = this.loadingService
+        .getLoadingState([
+            accountActions.updateUsername,
+            accountActions.updateUsernameSuccess,
+            accountActions.updateUsernameError,
+        ])
+        .pipe(
+            tap(isLoading => {
+                if (isLoading) this.usernameControl.disable()
+                else this.usernameControl.enable()
+            })
+        )
     usernameSuccessActionSubscription = this.actions$
         .pipe(ofType(accountActions.updateUsernameSuccess))
         .subscribe(() => this.usernameControl.markAsPristine())
@@ -137,7 +141,7 @@ export class SettingsAccountComponent implements OnDestroy {
     onEmailFormSubmit(dto: { email: string; password: string }) {
         this.store.dispatch(accountActions.updateEmail(dto))
     }
-    emailFormLoading$: NonNullable<Observable<boolean>> = getLoadingUpdates(this.actions$, [
+    emailFormLoading$: NonNullable<Observable<boolean>> = this.loadingService.getLoadingState([
         accountActions.updateEmail,
         accountActions.updateEmailSuccess,
         accountActions.updateEmailError,
@@ -173,7 +177,7 @@ export class SettingsAccountComponent implements OnDestroy {
     onPasswordFormSubmit(dto: { password: string; newPassword: string }) {
         this.store.dispatch(accountActions.updatePassword(dto))
     }
-    passwordFormLoading$ = getLoadingUpdates(this.actions$, [
+    passwordFormLoading$ = this.loadingService.getLoadingState([
         accountActions.updatePassword,
         accountActions.updatePasswordSuccess,
         accountActions.updatePasswordError,

@@ -1,9 +1,10 @@
 <app-main-pane>
     <ng-container header>
         <div
+            *ngIf="progress$ | async as progress"
             class="header-progress | absolute bottom-0 left-0 h-[2px] bg-submit-500 transition-opacity"
-            [class.opacity-0]="!(progress$ | async)"
-            [style.width]="(progress$ | async) + '%'"
+            [class.opacity-0]="!progress"
+            [style.width]="progress + '%'"
         ></div>
 
         <div class="grow">
@@ -17,7 +18,7 @@
                 [cdkMenuTriggerFor]="options"
                 #trigger="cdkMenuTriggerFor"
             >
-                <app-icon iconClass="fas fa-ellipsis-v"></app-icon>
+                <app-icon icon="fas fa-ellipsis-v"></app-icon>
             </button>
 
             <ng-template #options>

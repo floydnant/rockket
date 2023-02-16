@@ -14,6 +14,7 @@ import {
     BehaviorSubject,
     combineLatest,
     combineLatestWith,
+    delay,
     distinctUntilChanged,
     map,
     Observable,
@@ -21,19 +22,23 @@ import {
     tap,
 } from 'rxjs'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
+import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 import { EntityMenuItemsMap } from '../../../shared/entity-menu-items'
 import { MenuItem } from '../../molecules/drop-down/drop-down.component'
+import { TaskViewComponent } from './views/task-view/task-view.component'
 import { TasklistViewComponent } from './views/tasklist-view/tasklist-view.component'
 
 export const entityViewComponentMap: Record<EntityType, Type<unknown>> = {
     [EntityType.TASKLIST]: TasklistViewComponent,
+    [EntityType.TASK]: TaskViewComponent,
 } as const // @TODO: satisfies
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ENTITY_VIEW_DATA = new InjectionToken<EntityViewData<any>>('app.entity.view-data')
-export interface EntityViewData<T extends Record<string, unknown>> {
+export interface EntityViewData<T extends object> {
     entity$: Observable<EntityPreviewRecursive | null | undefined>
     detail$: Observable<T>
     options$: Observable<MenuItem[] | null | undefined>
@@ -72,7 +77,9 @@ export class EntityViewComponent {
         map(([entity, optionsMap]) => {
             if (!entity) return null
 
-            return optionsMap?.[entity.entityType]
+            return optionsMap?.[entity.entityType].map(
+                useTaskForActiveItems(entity as EntityPreviewRecursive & TaskPreview)
+            )
         }),
         shareReplay({ bufferSize: 1, refCount: true })
     )
@@ -88,7 +95,7 @@ export class EntityViewComponent {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     entityViewData: EntityViewData<any> = {
-        entity$: this.entity$,
+        entity$: this.entity$.pipe(delay(0)), // move to macro queue
         detail$: this.entityDetail$,
         options$: this.entityOptionsItems$,
     }
@@ -102,6 +109,7 @@ export class EntityViewComponent {
         .pipe(
             distinctUntilChanged((previous, current) => previous?.id == current?.id),
             tap(() => this.topElement?.nativeElement?.scrollIntoView({ behavior: 'smooth' })), // lets see how the 'smooth' behaviour feels after a while
+            delay(0), // needs to be on the macro queue or else, change detection is complaining
             tap(entity => {
                 if (!entity) return
 

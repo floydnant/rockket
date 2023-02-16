@@ -1,4 +1,4 @@
-<div class="" *ngIf="entity$ | async as entity">
+<div class="" *ngIf="listEntity$ | async as entity">
     <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
     <!--     <button class="button-naked">Add Sublist</button> -->
     <!--     <button class="button-naked">Add Description</button> -->
@@ -48,7 +48,7 @@
             cdkMenuItem
             data-test-name="add-description"
         >
-            <app-icon iconClass="far fa-sticky-note" class="mr-1"></app-icon>
+            <app-icon icon="far fa-sticky-note" class="mr-1"></app-icon>
             Add description
         </button>
 
@@ -59,27 +59,27 @@
             cdkMenuItem
             data-test-name="create-children"
         >
-            <app-icon iconClass="fas fa-plus" class="mr-1"></app-icon>
+            <app-icon icon="fas fa-plus" class="mr-1"></app-icon>
             New sublist
         </button>
     </div>
 
     <div
         class="children | mt-3 flex flex-wrap gap-2"
-        *ngIf="entity.children.length"
+        *ngIf="entity.children?.length"
         cdkMenuBar
         data-test-name="entity-children"
     >
         <button
             class="child | button-m text-tinted-200"
-            *ngFor="let child of entity.children"
+            *ngFor="let child of children$ | async"
             routerLink="/home/{{ child.id }}"
             cdkMenuItem
             [cdkContextMenuTriggerFor]="options"
             #trigger="cdkContextMenuTriggerFor"
             data-test-name="entity-child"
         >
-            <app-entity-page-label [title]="child.title" [pageIcon]="child.entityType"></app-entity-page-label>
+            <app-entity-page-label [pageTitle]="child.title" [pageIcon]="child.entityType"></app-entity-page-label>
 
             <ng-template #options>
                 <!-- @TODO: Using the options$ here is wrong, since the children might be of a different entityType than the parent. -->
@@ -93,24 +93,33 @@
     </div>
 </div>
 
-<div
-    class="progress-container | group sticky -top-3 z-30 mb-5 flex items-center gap-2 bg-tinted-900 pt-4 pb-3 shadow-header"
-    *ngIf="progress$ | async as progress"
->
-    <div
-        #progressBar
-        class="progress | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
-        appTooltip="{{ progress }}% closed - {{ closedTasks }}/{{ allTasks }}"
-        [tooltipOptions]="{ closeOnHostClick: false }"
-    >
-        <div class="h-full rounded bg-submit-400 transition-shadow" [style.width]="progress + '%'"></div>
-    </div>
-    <button
-        class="text-sm text-tinted-600 transition-colors group-hover:text-submit-400"
-        (click)="isShownAsPercentage = !isShownAsPercentage"
-    >
-        {{ isShownAsPercentage ? progress + '%' : closedTasks + ' / ' + allTasks }}
-    </button>
-</div>
+<ng-container *ngIf="tasks$ | async as tasks; else loadingTasks">
+    <app-page-progress-bar [taskTree]="tasks"></app-page-progress-bar>
 
-<app-tasks-demo></app-tasks-demo>
+    <div class="options | mb-3 mt-2 flex gap-2">
+        <button
+            class="button-naked text-tinted-200 hover:text-tinted-100"
+            (click)="createTask()"
+            appTooltip="Create a new task"
+            data-test-name="create-task"
+        >
+            <app-icon icon="fas fa-plus" class="mr-1"></app-icon>
+            New task
+        </button>
+    </div>
+
+    <ng-container *ngIf="tasks.length; else noTasks">
+        <app-task-tree [tasks]="tasks"></app-task-tree>
+        <!-- <pre class="select-text">{{ tasks | json }}</pre> -->
+    </ng-container>
+
+    <ng-template #noTasks>
+        <p class="text-center text-tinted-400">No tasks yet...</p>
+    </ng-template>
+</ng-container>
+
+<ng-template #loadingTasks>
+    <p class="text-center">
+        <loading-spinner class="text-3xl"></loading-spinner>
+    </p>
+</ng-template>

@@ -1,6 +1,7 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { activatedRouteMock, storeMock } from 'src/app/utils/unit-test.mocks'
+import { LoadingStateService } from 'src/app/services/loading-state.service'
+import { actionsMock, activatedRouteMock, storeMock } from 'src/app/utils/unit-test.mocks'
 
 import { EntityPageComponent } from './entity-page.component'
 
@@ -12,7 +13,7 @@ describe('EntityPageComponent', () => {
         await TestBed.configureTestingModule({
             imports: [CdkMenuModule],
             declarations: [EntityPageComponent],
-            providers: [storeMock, activatedRouteMock],
+            providers: [storeMock, activatedRouteMock, LoadingStateService, actionsMock],
         }).compileComponents()
 
         fixture = TestBed.createComponent(EntityPageComponent)

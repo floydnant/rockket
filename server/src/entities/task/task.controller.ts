@@ -10,6 +10,11 @@ import { TaskService } from './task.service'
 export class TaskController {
     constructor(private taskService: TaskService) {}
 
+    @Get('previews')
+    getAllTaskPreviews(@GetUser() user: User) {
+        return this.taskService.getAllTaskPreviews(user.id)
+    }
+
     @Post()
     createTask(@GetUser() user: User, @Body() dto: CreateTaskDto) {
         return this.taskService.createTask(user.id, dto)
