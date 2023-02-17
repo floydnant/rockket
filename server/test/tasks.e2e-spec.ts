@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common'
-import { PrismaClient, TaskComment, TaskEvent, Tasklist } from '@prisma/client'
+import { PrismaClient, TaskComment, TaskEvent, Tasklist, TaskStatus } from '@prisma/client'
 import { DbHelper } from '../src/prisma-abstractions/db-helper'
 import { newList, users } from './fixtures'
 import { createTask, createTasklist, initApplication, request, signup, typeBearer } from './testing-utils'
@@ -79,6 +79,23 @@ describe('Task CRUD (e2e)', () => {
         expect(res.body[0].id).toEqual(createdSubTask.id)
     })
 
+    it('can delete a task with subtasks', async () => {
+        const createdParentTask = await createTask(app, authToken, {
+            title: 'This is the task title',
+            listId: createdList.id,
+        })
+        const createdSubTask = await createTask(app, authToken, {
+            title: 'This is the task title',
+            listId: createdList.id,
+            parentTaskId: createdParentTask.id,
+        })
+
+        await request(app).delete(`/task/${createdParentTask.id}`).auth(authToken, typeBearer).expect(200)
+
+        await request(app).get(`/task/${createdParentTask.id}`).auth(authToken, typeBearer).expect(404)
+        await request(app).get(`/task/${createdSubTask.id}`).auth(authToken, typeBearer).expect(404)
+    })
+
     it.todo('test blocking tasks')
 
     describe('TaskEvents', () => {
@@ -109,6 +126,23 @@ describe('Task CRUD (e2e)', () => {
             expect(taskEvents[0].updatedField).toBe(key)
             expect(taskEvents[0].newValue).toBe(value)
         })
+
+        it('can delete a task that has events', async () => {
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList.id,
+            })
+
+            await request(app)
+                .patch(`/task/${createdTask.id}`)
+                .auth(authToken, typeBearer)
+                .send({ status: TaskStatus.Completed })
+                .expect(200)
+
+            await request(app).delete(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(200)
+
+            await request(app).get(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(404)
+        })
     })
 
     describe('TaskComments', () => {
@@ -132,6 +166,23 @@ describe('Task CRUD (e2e)', () => {
 
             expect(comments.length).toEqual(1)
             expect(comments[0].text).toEqual('This is the comment text')
+        })
+
+        it('can delete a task that has comments', async () => {
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList.id,
+            })
+
+            await request(app)
+                .post(`/task/${createdTask.id}/comment`)
+                .auth(authToken, typeBearer)
+                .send({ text: 'This is the comment text' })
+                .expect(201)
+
+            await request(app).delete(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(200)
+
+            await request(app).get(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(404)
         })
 
         it('cannot comment on a task without comment permissions', async () => {

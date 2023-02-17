@@ -10,9 +10,9 @@ import { MenuService } from '../menu.service'
             data-test-name="menu-toggle"
             [attr.data-test-name]="'menu-toggle-' + index"
         >
-            <app-icon *ngIf="isMenuOpen$ | async; else elseBlock" iconClass="fas fa-times"></app-icon>
+            <app-icon *ngIf="isMenuOpen$ | async; else elseBlock" icon="fas fa-times"></app-icon>
             <ng-template #elseBlock>
-                <app-icon iconClass="far fa-bars"></app-icon>
+                <app-icon icon="far fa-bars"></app-icon>
             </ng-template>
         </button>
     `,

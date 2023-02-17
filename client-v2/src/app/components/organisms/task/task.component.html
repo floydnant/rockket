@@ -1,66 +1,141 @@
 <li
+    *ngIf="task$ | async as task"
     class="task | flex w-full max-w-full list-none flex-col rounded-xl bg-tinted-800 py-2 px-1 pb-1 transition-colors duration-75"
     [class]="{
-        'bg-submit-800': data.status == TaskStatus.COMPLETED,
-        'text-submit-200': data.status == TaskStatus.COMPLETED,
-        completed: data.status == TaskStatus.COMPLETED,
-        titleHasFocus: titleFocusable.isFocused,
-        notesHasFocus: notesFocusable.isFocused
+        'bg-submit-800': task.status == TaskStatus.COMPLETED,
+        'text-submit-200': task.status == TaskStatus.COMPLETED,
+        completed: task.status == TaskStatus.COMPLETED,
+        titleHasFocus: inlineEditor.isFocused,
+        isHovered
     }"
+    [cdkContextMenuTriggerFor]="menu"
+    (cdkContextMenuOpened)="isHovered = true"
+    (cdkContextMenuClosed)="isHovered = false"
 >
-    <div class="mb-1 box-border flex max-w-full items-center justify-between gap-2 px-2">
+    <!-- @TODO: Fix this -->
+    <!-- notesHasFocus: notesFocusable.isFocused -->
+    <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
         <div class="max-w-[calc(100%-1.7rem)]">
-            <span
-                class="status | mr-2 text-lg"
-                [appTooltip]="blocked || data.status"
-                [tooltipOptions]="{ avoidPositions: ['right'] }"
-            >
-                <page-entity-icon [icon]="loading || blocked || data.status"></page-entity-icon>
-            </span>
-            <span
-                focusable
-                #titleFocusable="focusable"
-                class="title | outline-none"
-                [class]="{
-                    'line-through': data.status == TaskStatus.NOT_PLANNED,
-                    'decoration-danger-400': data.status == TaskStatus.NOT_PLANNED
-                }"
-                contenteditable
-            >
-                {{ data.title }}
-            </span>
+            <div class="first-row | flex items-center">
+                <button
+                    class="status-btn | icon-btn"
+                    [appTooltip]="statusTooltip"
+                    [tooltipOptions]="{ avoidPositions: ['right'] }"
+                    [cdkMenuTriggerFor]="statusMenu"
+                    (cdkMenuOpened)="isHovered = true"
+                    (cdkMenuClosed)="isHovered = false"
+                    data-test-name="task-status-button"
+                >
+                    <ng-template #statusTooltip>
+                        <span class="text-tinted-300">Status: </span>
+                        <span [class]="statusColorMap[task.status]">{{ task.status.replace('_', ' ') }}</span>
+                    </ng-template>
+
+                    <app-icon [icon]="loading || task.status"></app-icon>
+                </button>
+                <ng-template #statusMenu>
+                    <app-drop-down [items]="(statusMenuItems$ | async) || []" [data]="{ id: task.id }"></app-drop-down>
+                </ng-template>
+
+                <app-inline-editor
+                    #inlineEditor
+                    [textInput]="task.title"
+                    [placeholder]="PLACEHOLDER"
+                    [placeholderColor]="placeholderColorMap[task.status]"
+                    [editorClass]="{
+                        'line-through': task.status == TaskStatus.NOT_PLANNED,
+                        'decoration-tinted-200': task.status == TaskStatus.NOT_PLANNED,
+                        'pr-20': true
+                    }"
+                    [enableDebouncedUpdates]="false"
+                    (update)="titleChange.emit($event || '')"
+                    data-test-name="task-title"
+                ></app-inline-editor>
+            </div>
+
+            <div class="second-row | ml-0.5 flex gap-2" [class]="{ 'mt-1': (nodeData$ | async)?.hasChildren }">
+                <ng-container *ngIf="nodeData$ | async as nodeData">
+                    <button
+                        class="subtask-toggle"
+                        *ngIf="nodeData.hasChildren"
+                        (click)="expansionChange.emit(!nodeData.isExpanded)"
+                        data-test-name="subtask-toggle"
+                    >
+                        <app-icon
+                            icon="fas fa-chevron-right"
+                            class="mr-1 inline-block transition-transform"
+                            [class.rotate-90]="nodeData.isExpanded"
+                        ></app-icon>
+                        Subtasks
+                    </button>
+                </ng-container>
+            </div>
         </div>
-        <div class="relative mr-0.5 max-w-max">
+        <div class="relative -mr-1 max-w-max">
             <div class="icon-group | flex max-w-max flex-wrap items-center justify-end gap-3 transition-transform">
                 <app-icon
                     *ngIf="isOverdue"
                     class="overdue-icon | animate-ping"
-                    iconClass="fas fa-exclamation-triangle text-danger-400"
+                    icon="fas fa-exclamation-triangle text-danger-400"
+                    data-test-name="overdue-icon"
                 ></app-icon>
-                <priority-icon
+                <div
+                    class="priority-button | icon-btn"
                     *ngIf="
-                        data.status != TaskStatus.COMPLETED &&
-                        data.status != TaskStatus.NOT_PLANNED &&
-                        data.priority != TaskPriority.NONE
+                        task.status != TaskStatus.COMPLETED &&
+                        task.status != TaskStatus.NOT_PLANNED &&
+                        task.priority != TaskPriority.NONE
                     "
-                    [priority]="data.priority"
-                    [appTooltip]="data.priority"
+                    [appTooltip]="priorityTooltip"
                     [tooltipOptions]="{ avoidPositions: ['left'] }"
-                ></priority-icon>
+                    [cdkMenuTriggerFor]="priorityMenu"
+                    (cdkMenuOpened)="isHovered = true"
+                    (cdkMenuClosed)="isHovered = false"
+                    data-test-name="task-priority-button"
+                >
+                    <ng-template #priorityTooltip>
+                        <span class="text-tinted-300">Priority: </span>
+                        <span>{{ task.priority }}</span>
+                    </ng-template>
+                    <app-icon [icon]="task.priority"></app-icon>
+                </div>
+                <ng-template #priorityMenu>
+                    <app-drop-down
+                        [items]="(priorityMenuItems$ | async) || []"
+                        [data]="{ id: task.id }"
+                    ></app-drop-down>
+                </ng-template>
             </div>
-            <double-ellipsis-icon
-                class="absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
-            ></double-ellipsis-icon>
+            <button
+                class="| icon-btn | absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
+                [cdkMenuTriggerFor]="menu"
+                (cdkMenuOpened)="isHovered = true"
+                (cdkMenuClosed)="isHovered = false"
+                #trigger="cdkMenuTriggerFor"
+                data-test-name="task-menu-button"
+            >
+                <double-ellipsis-icon></double-ellipsis-icon>
+            </button>
+
+            <ng-template #menu>
+                <app-drop-down
+                    [items]="(menuItems$ | async) || []"
+                    [rootTrigger]="trigger"
+                    [data]="{ id: task.id, entityType: EntityType.TASK }"
+                ></app-drop-down>
+            </ng-template>
         </div>
     </div>
 
     <div
+        *ngIf="task.description"
         focusable
         #notesFocusable="focusable"
-        [class]="{ hidden: !data.description && !notesFocusable.isFocused }"
+        [class]="{ hidden: !task.description && !notesFocusable.isFocused }"
         class="notes | mt-1 rounded-lg bg-tinted-900 py-1 px-2 text-tinted-300 outline-none ring-primary-400 transition-all duration-75 focus:ring-2"
         contenteditable
+        data-test-name="task-description"
     >
-        {{ this.loading || data.description }}
+        {{ this.loading || task.description }}
     </div>
 </li>

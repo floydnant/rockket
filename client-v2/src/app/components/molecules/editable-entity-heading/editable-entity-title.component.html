@@ -1,26 +1,36 @@
 <div class="inline-flex items-center" *ngIf="entity$ | async as entity">
-    <span>
-        <page-entity-icon
-            class="mr-2.5 inline-block -translate-y-0.5 text-2xl"
-            [icon]="(isLoading$ | async) ? PageEntityState.LOADING : entity.entityType"
+    <ng-template #icon>
+        <app-icon
+            class="text-2xl"
+            [icon]="(isLoading$ | async) ? EntityState.LOADING : entity.status || entity.entityType"
         >
-        </page-entity-icon>
-    </span>
+        </app-icon>
+    </ng-template>
 
-    <span
-        class="title | inline-block min-w-[2rem] cursor-text outline-none"
-        [innerText]="entityTitle$ | async"
-        [class.show-placeholder]="!(entityTitleDomState$ | async)"
-        [attr.data-placeholder]="ENTITY_TITLE_DEFAULTS[entity.entityType]"
-        #editableEntityTitle
-        contenteditable
-        focusable
-        #entityTitleFocusable="focusable"
-        [spellcheck]="entityTitleFocusable.isFocused"
-        (textChanges)="entityTitleChanges$.next($event)"
-        [mutationOptions]="{ plainOnly: true, observe: entityTitleFocusable.isFocused }"
-        (keydown)="keydownEvents$.next($event)"
-        (blur)="blurEvents$.next($event)"
+    <div class="mr-2.5 inline-block -translate-y-0.5">
+        <button
+            *ngIf="taskStatusMenuItems$ | async as statusItems; else elseBlock"
+            [cdkMenuTriggerFor]="statusMenu"
+            class="icon-btn"
+        >
+            <ng-container *ngTemplateOutlet="icon"></ng-container>
+            <ng-template #statusMenu>
+                <app-drop-down [items]="statusItems" [data]="{ id: entity.id }"></app-drop-down>
+            </ng-template>
+        </button>
+
+        <ng-template #elseBlock>
+            <ng-container *ngTemplateOutlet="icon"></ng-container>
+        </ng-template>
+    </div>
+
+    <app-inline-editor
+        class="title"
+        [textInput]="(entity$ | async)?.title || ''"
+        [placeholder]="ENTITY_TITLE_DEFAULTS[entity.entityType]"
+        [enableDebouncedUpdates]="false"
+        (update)="titleUpdates$.next($event)"
+        editorClass="pr-14"
         data-test-name="editable-entity-name"
-    ></span>
+    ></app-inline-editor>
 </div>

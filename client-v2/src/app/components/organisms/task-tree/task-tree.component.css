@@ -1,0 +1,41 @@
+/* Indent line gradients */
+.indent-line {
+    /* --line-color: theme(colors.tinted.700); */
+    --line-color: hsl(262.79999999999995, 19.8%, 22%);
+    @apply relative mr-6;
+}
+.indent-line::before {
+    content: '';
+    @apply top-0
+        block
+        h-full
+        w-px
+        bg-transparent
+        bg-gradient-to-b
+        from-[var(--line-color)]
+        to-[var(--line-color)];
+}
+.indent-line.first-after-higher-level::before {
+    @apply mt-2
+        h-[calc(100%-0.5rem)]
+        from-transparent
+        to-[var(--line-color)];
+}
+.indent-line.last-before-higher-level::before {
+    @apply to-transparent;
+}
+.indent-line.last-before-higher-level.first-after-higher-level::before {
+    @apply h-1/2
+        to-[var(--line-color)];
+}
+.indent-line.last-before-higher-level.first-after-higher-level::after {
+    content: '';
+    @apply bottom-0
+        block
+        h-1/2
+        w-px
+        bg-transparent
+        bg-gradient-to-b
+        from-[var(--line-color)]
+        to-transparent;
+}

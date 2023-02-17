@@ -7,8 +7,9 @@ import { UserState } from './user/user.state'
 import { userReducer } from './user/user.reducer'
 import { entitiesReducer } from './entities/entities.reducer'
 import { EntitiesState } from './entities/entities.state'
-import { ListEffects } from './entities/list.effects'
+import { ListEffects } from './entities/list/list.effects'
 import { EntitiesEffects } from './entities/entities.effects'
+import { TaskEffects } from './entities/task/task.effects'
 
 export interface AppState {
     user: UserState
@@ -19,11 +20,12 @@ export const reducers: ActionReducerMap<AppState> = {
     entities: entitiesReducer,
 }
 
-export const effects = [AppEffects, AuthEffects, AccountEffects, ListEffects, EntitiesEffects]
+export const effects = [AppEffects, AuthEffects, AccountEffects, ListEffects, EntitiesEffects, TaskEffects]
 
 const actionLogger: MetaReducer<AppState> = reducer => (state, action) => {
+    const isProd = environment.CONTEXT == 'Production' || environment.CONTEXT == 'Staging'
     const isErrorAction = /error/i.test(action.type)
-    if (environment.production && !isErrorAction) return reducer(state, action)
+    if (isProd && !isErrorAction) return reducer(state, action)
 
     const actionColor = isErrorAction ? 'color: hsl(345, 100%, 52%);' : 'color: hsl(155, 100%, 50%);'
     console.info('%caction: %c' + action.type, 'color: hsl(130, 0%, 50%);', actionColor)

@@ -8,7 +8,7 @@
                 appTooltip="Search for tasks and lists"
                 [tooltipOptions]="{ preferredPosition: 'right' }"
             >
-                <app-icon iconClass="fas fa-search"></app-icon> Search
+                <app-icon icon="fas fa-search"></app-icon> Search
             </button>
             <button
                 cdkMenuItem
@@ -16,7 +16,7 @@
                 appTooltip="Import one or more lists"
                 [tooltipOptions]="{ preferredPosition: 'right' }"
             >
-                <app-icon iconClass="fas fa-file-import"></app-icon> Import
+                <app-icon icon="fas fa-file-import"></app-icon> Import
             </button>
             <button
                 cdkMenuItem
@@ -24,7 +24,7 @@
                 appTooltip="Deleted content stays here for 30 days"
                 [tooltipOptions]="{ preferredPosition: 'right' }"
             >
-                <app-icon iconClass="fas fa-trash"></app-icon> Garbage
+                <app-icon icon="fas fa-trash"></app-icon> Garbage
             </button>
             <button
                 cdkMenuItem
@@ -34,7 +34,7 @@
                 [tooltipOptions]="{ preferredPosition: 'right' }"
                 data-test-name="settings-link"
             >
-                <app-icon iconClass="fas fa-cog"></app-icon> Settings
+                <app-icon icon="fas fa-cog"></app-icon> Settings
             </button>
         </div>
     </ng-container>
@@ -44,12 +44,12 @@
         <p class="flex items-center justify-between px-3 text-sm text-tinted-400">
             Tasklists
             <button
-                class="rounded px-1.5 py-0.5 transition-colors duration-75 hover:bg-tinted-700"
+                class="icon-btn text-base hover:bg-tinted-700"
                 appTooltip="Create new list"
                 (click)="createNewList()"
                 data-test-name="sidebar-create-new-list"
             >
-                <app-icon iconClass="fas fa-plus"></app-icon>
+                <app-icon icon="plus"></app-icon>
             </button>
         </p>
 
@@ -66,16 +66,25 @@
                 <cdk-tree-node *cdkTreeNodeDef="let node" [class.hidden]="!shouldRender(node)">
                     <button
                         class="tree-node"
+                        [class.isHovered]="isHovered[node.id]"
                         [class.nested]="node.path.length > 0"
-                        [appTooltip]="label"
+                        [appTooltip]="tooltip"
                         [tooltipOptions]="{ preferredPosition: 'right' }"
                         routerLink="/home/{{ node.id }}"
                         routerLinkActive="active"
                         #nodeTooltip="appTooltip"
                         [cdkContextMenuTriggerFor]="nodeDropDown"
+                        (cdkContextMenuOpened)="isHovered[node.id] = true"
+                        (cdkContextMenuClosed)="isHovered[node.id] = false"
                         data-test-name="entity-tree-node"
+                        [attr.data-test-is-loading]="( nodeLoadingMap$ | async )?.[node.id]"
                         [attr.data-level]="node.path.length"
                     >
+                        <ng-template #tooltip>
+                            <app-icon [icon]="node.status || node.entityType"></app-icon>
+                            {{ node.title }}
+                        </ng-template>
+
                         <div class="indent-line" *ngFor="let line of range(node.path.length)">&nbsp;</div>
 
                         <div class="content">
@@ -87,7 +96,7 @@
                                 (click)="node.isExpanded = !node.isExpanded"
                             >
                                 <app-icon
-                                    iconClass="fas fa-chevron-right"
+                                    icon="fas fa-chevron-right"
                                     class="block transition-transform"
                                     [class.rotate-90]="node.isExpanded"
                                 ></app-icon>
@@ -95,32 +104,30 @@
                             <ng-template #noToggleIcon>
                                 <div class="node-toggle no-toggle-icon">
                                     <app-icon
-                                        iconClass="fas fa-genderless translate-y-0.5 translate-x-[0.5px]"
+                                        icon="fas fa-genderless translate-y-0.5 translate-x-[0.5px]"
                                         class="pr-px"
                                     ></app-icon>
                                 </div>
                             </ng-template>
 
-                            <ng-template #label>
-                                <app-entity-page-label
-                                    [title]="node.title"
-                                    [pageIcon]="node.entityType"
-                                ></app-entity-page-label>
-                            </ng-template>
-                            <ng-container *ngTemplateOutlet="label"></ng-container>
+                            <app-entity-page-label
+                                [pageTitle]="node.title"
+                                [pageIcon]="(( nodeLoadingMap$ | async )?.[node.id] && 'Loading') || node.status || node.entityType"
+                            ></app-entity-page-label>
                         </div>
 
                         <div class="btn-group">
                             <button
-                                class=""
-                                (click)="createNewList(node.id); $event.stopPropagation()"
+                                (click)="createChild(node.id, node.entityType); $event.stopPropagation()"
                                 data-test-name="create-child"
                             >
-                                <app-icon iconClass="far fa-plus"></app-icon>
+                                <app-icon icon="plus"></app-icon>
                             </button>
                             <button
                                 (click)="$event.stopPropagation(); nodeTooltip.hideTooltip()"
                                 [cdkMenuTriggerFor]="nodeDropDown"
+                                (cdkMenuOpened)="isHovered[node.id] = true"
+                                (cdkMenuClosed)="isHovered[node.id] = false"
                                 data-test-name="open-menu"
                             >
                                 <double-ellipsis-icon></double-ellipsis-icon>

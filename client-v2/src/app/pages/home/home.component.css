@@ -1,16 +1,17 @@
 .tree-node {
-    @apply flex 
+    @apply flex
         w-full
-        items-center
+        items-stretch
         justify-start
-        rounded
+        rounded-md
         text-tinted-300
         transition-colors
-        duration-75
-        hover:bg-tinted-700
-        hover:text-tinted-100;
+        duration-75;
 
     line-height: 1.7;
+}
+.tree-node:is(:hover, .isHovered) {
+    @apply bg-tinted-700 text-tinted-100;
 }
 .tree-node.nested {
     @apply pl-2.5;
@@ -25,8 +26,6 @@
 
 .indent-line {
     @apply ml-3.5
-        inline-block
-        h-full
         border-l
         border-tinted-700;
 }
@@ -39,6 +38,7 @@
         grow
         gap-1
         truncate
+        py-0.5
         pr-1;
 }
 
@@ -53,14 +53,14 @@
         hover:text-tinted-400;
 }
 
-.no-toggle-icon  app-icon {
+.no-toggle-icon app-icon {
     @apply text-tinted-700 transition-colors duration-75;
 }
-.tree-node:is(:hover, :active, :focus-visible, :focus-within, .active) .no-toggle-icon app-icon {
+.tree-node:is(:hover, .isHovered, :active, :focus-visible, .active) .no-toggle-icon app-icon {
     @apply text-tinted-600;
 }
 
-.tree-node:not(:hover, :active, :focus-visible, :focus-within) .btn-group {
+.tree-node:not(:hover, .isHovered, :active, :focus-visible, :focus-within) .btn-group {
     @apply hidden animate-none;
 }
 .btn-group {
@@ -73,5 +73,5 @@
     }
 }
 .btn-group button {
-    @apply rounded px-1.5 transition-colors hover:bg-tinted-600 duration-75;
+    @apply rounded-lg px-1.5 transition-colors duration-75 hover:bg-tinted-600;
 }

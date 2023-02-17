@@ -1,28 +1,16 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import {
-    BehaviorSubject,
-    combineLatest,
-    debounceTime,
-    delay,
-    distinctUntilChanged,
-    filter,
-    first,
-    map,
-    merge,
-    of,
-    shareReplay,
-    switchMap,
-    tap,
-} from 'rxjs'
-import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
+import { BehaviorSubject, distinctUntilChanged, filter, first, map, of, switchMap, tap } from 'rxjs'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
+import { LoadingStateService } from 'src/app/services/loading-state.service'
+import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
+import { getTaskStatusMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
-import { getLoadingUpdates } from 'src/app/utils/store.helpers'
-import { PageEntityState } from '../../atoms/icons/page-entity-icon/page-entity-icon.component'
+import { useTaskForActiveStatus } from 'src/app/utils/menu-item.helpers'
+import { EntityState } from '../../atoms/icons/icon/icons'
 
 @UntilDestroy()
 @Component({
@@ -32,152 +20,75 @@ import { PageEntityState } from '../../atoms/icons/page-entity-icon/page-entity-
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditableEntityTitleComponent {
-    constructor(private store: Store<AppState>, private actions$: Actions) {}
+    constructor(private store: Store<AppState>, private loadingService: LoadingStateService) {}
 
     EntityType = EntityType
-    PageEntityState = PageEntityState
+    EntityState = EntityState
     ENTITY_TITLE_DEFAULTS = ENTITY_TITLE_DEFAULTS
 
-    @ViewChild('editableEntityTitle') editableEntityTitle!: ElementRef<HTMLSpanElement>
-
+    entity$ = new BehaviorSubject<
+        (EntityPreviewRecursive & Pick<TaskPreview, 'status' | 'priority'>) | undefined | null
+    >(null)
     @Input() set entity(activeEntity: EntityPreviewRecursive | undefined | null) {
-        this.entity$.next(activeEntity)
+        this.entity$.next(activeEntity as EntityPreviewRecursive & Pick<TaskPreview, 'status' | 'priority'>)
     }
-    entity$ = new BehaviorSubject<EntityPreviewRecursive | undefined | null>(null)
 
-    entityTitle$ = this.entity$.pipe(
-        filter(entity => entity?.title != this.lastSentStoreUpdate),
-        tap(() => (this.lastSentStoreUpdate = null)),
-        map(entity => {
-            if (!entity) return null
-            if (entity.title == ENTITY_TITLE_DEFAULTS[entity.entityType]) return ''
+    titleUpdates$ = new BehaviorSubject<string | null>(null)
 
-            return entity.title
-        }),
-        distinctUntilChanged((prev, currEntityTitle) => {
-            if (prev === '' && currEntityTitle === '') return false
-
-            return currEntityTitle == prev
-        }),
-        switchMap(entityTitle => {
-            return this.entityTitleChanges$.pipe(
-                first(),
-                filter(newEntityTitle => {
-                    if (!newEntityTitle) return true
-
-                    return entityTitle != newEntityTitle
-                }),
-                map(() => entityTitle)
-            )
-        }),
-        tap(entityTitle => {
-            /*  This is necessary in case of updating the entity title from empty to also empty.
-                Because apparently, angular does not do the update, which is bad when the entity title was edited before,
-                meaning, the edited entity title won't be overwritten. So we have to do that manually.
-
-                We could narrow this down even further with comparing to the previous entity title (`pairwise()` operator),
-                and only update if both are empty, but this should suffice for now. */
-            if (entityTitle === '' && this.editableEntityTitle?.nativeElement) {
-                this.editableEntityTitle.nativeElement.innerText = ''
-            }
-        }),
-        shareReplay({ bufferSize: 1, refCount: true })
+    isLoading$ = this.entity$.pipe(
+        filter(entity => !!entity),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        map(entity => entity!.id),
+        distinctUntilChanged(),
+        switchMap(entityId => {
+            return this.loadingService.getEntityLoadingState(action => entityId == action.id)
+        })
     )
 
-    keydownEvents$ = new BehaviorSubject<KeyboardEvent | null>(null)
-    blurEvents$ = new BehaviorSubject<FocusEvent | null>(null)
-    entityTitleChanges$ = new BehaviorSubject<string | null>(null)
-
-    entityTitleDomState$ = merge(
-        this.entityTitleChanges$,
-        this.entityTitle$.pipe(
-            tap(() => {
-                if (this.entityTitleChanges$.value !== null) this.entityTitleChanges$.next(null)
-            })
-        )
-    ).pipe(shareReplay({ bufferSize: 1, refCount: true }))
-
-    entityTitleUpdateEvents$ = merge(
-        this.keydownEvents$.pipe(
-            filter(event => {
-                if (event?.code == 'Enter') {
-                    event.preventDefault()
-                    return true
-                }
-                return false
-            }),
-            switchMap(() => this.entityTitleChanges$.pipe(first()))
-        ),
-        this.blurEvents$.pipe(
-            filter(e => !!e),
-            switchMap(() => this.entityTitleChanges$.pipe(first()))
-        ),
-        this.entityTitleChanges$.pipe(debounceTime(600))
-    ).pipe(
-        switchMap(newEntityTitle => {
-            if (newEntityTitle === null) return of(null)
-
-            return this.entity$.pipe(
-                first(),
-                map(entity => {
-                    if (!entity) return null
-                    return newEntityTitle || ENTITY_TITLE_DEFAULTS[entity.entityType]
-                })
-            )
-        }),
-        shareReplay({ bufferSize: 1, refCount: true })
-    )
-
-    entityTitleUpdatesSubscription = this.entityTitleUpdateEvents$
+    titleUpdatesSubscription = this.titleUpdates$
         .pipe(
-            distinctUntilChanged(),
+            filter(title => title !== null),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            map(title => title!),
             switchMap(title => {
-                return combineLatest([this.entity$, this.isLoading$]).pipe(
+                return this.isLoading$.pipe(
                     first(),
-                    tap(([entity, isLoading]) => {
-                        if (!entity || !title) return
+                    switchMap(isLoading => {
+                        if (!isLoading) return of(title)
 
-                        const action = entitiesActions.rename({ id: entity.id, entityType: entity.entityType, title })
-                        if (isLoading) {
-                            this.updateQueue$.next(action)
-                            return
-                        }
-
-                        this.lastSentStoreUpdate = title
-                        this.store.dispatch(action)
+                        return this.isLoading$.pipe(
+                            filter(isLoading => !isLoading),
+                            first(),
+                            map(() => title)
+                        )
                     })
                 )
             }),
-            untilDestroyed(this)
-        )
-        .subscribe()
+            switchMap(title => {
+                return this.entity$.pipe(
+                    first(),
+                    map(entity => {
+                        if (!entity) return
 
-    isLoading$ = getLoadingUpdates(
-        this.actions$,
-        [entitiesActions.rename, entitiesActions.renameSuccess, entitiesActions.renameError],
-        action =>
-            this.entity$.pipe(
-                first(),
-                map(entity => entity?.id == action.id)
-            )
-    )
+                        return entitiesActions.rename({ id: entity.id, entityType: entity.entityType, title })
+                    })
+                )
+            }),
+            tap(action => {
+                if (!action) return
 
-    lastSentStoreUpdate: string | null = null
-
-    updateQueue$ = new BehaviorSubject<ReturnType<typeof entitiesActions.rename> | null>(null)
-    queueSubscription = this.isLoading$
-        .pipe(
-            filter(isLoading => !isLoading),
-            switchMap(() => this.updateQueue$.pipe(first())),
-            delay(0), // move to macro queue
-            map(queuedAction => {
-                if (queuedAction === null) return
-
-                this.lastSentStoreUpdate = queuedAction.title
-                this.store.dispatch(queuedAction)
-                this.updateQueue$.next(null)
+                this.store.dispatch(action)
             }),
             untilDestroyed(this)
         )
         .subscribe()
+
+    private readonly taskStatusMenuItems = getTaskStatusMenuItems(this.store)
+    taskStatusMenuItems$ = this.entity$.pipe(
+        map(entity => {
+            if (!entity || !('status' in entity)) return null
+
+            return this.taskStatusMenuItems.map(useTaskForActiveStatus(entity))
+        })
+    )
 }

@@ -3,14 +3,16 @@ import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { catchError, concatMap, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
-import { DialogService } from 'src/app/modal/dialog.service'
+import { catchError, concatMap, first, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { TaskList } from 'src/app/fullstack-shared-models/list.model'
+import { Task } from 'src/app/fullstack-shared-models/task.model'
+import { DialogService } from 'src/app/modal/dialog.service'
 import { EntitiesService } from 'src/app/services/entities.service'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
 import { entitiesActions } from './entities.actions'
-import { getEntityById, traceEntity } from './utils'
+import { getEntityByIdIncludingTasks, traceEntityIncludingTasks } from './utils'
 
 @Injectable()
 export class EntitiesEffects {
@@ -24,17 +26,17 @@ export class EntitiesEffects {
     ) {}
 
     activeEntityTrace$ = this.store
-        .select(state => state.entities.entityTree)
+        .select(state => state.entities)
         .pipe(
-            map(entityTree => {
+            map(({ entityTree, taskTreeMap }) => {
                 // @TODO: come up with a better solution for this
                 // NOTE: using `ActivatedRoute` doesn't work in effects
                 const segments = location.pathname.split('/')
                 const activeId = segments[segments.length - 1]
 
-                if (!entityTree || !activeId) return null
+                if (!entityTree || !taskTreeMap || !activeId) return null
 
-                return traceEntity(entityTree, activeId)
+                return traceEntityIncludingTasks(entityTree, taskTreeMap, activeId)
             })
         )
 
@@ -80,13 +82,14 @@ export class EntitiesEffects {
             ofType(entitiesActions.openRenameDialog),
             switchMap(({ id, entityType }) => {
                 return this.store
-                    .select(state => state.entities.entityTree)
+                    .select(state => state.entities)
                     .pipe(
                         first(),
-                        map(entityTree => {
-                            if (!entityTree) return entitiesActions.abortRenameDialog()
+                        map(({ entityTree, taskTreeMap }) => {
+                            if (!entityTree || !taskTreeMap) return entitiesActions.abortRenameDialog()
 
-                            const entity = getEntityById(entityTree, id)
+                            // @TODO: We can optimize this by checking the entityType and calling the appropriate function accordingly
+                            const entity = getEntityByIdIncludingTasks(entityTree, taskTreeMap, id)
                             if (!entity) return entitiesActions.abortRenameDialog()
 
                             const title = prompt(`Rename the ${entityType}`, entity.title)?.trim()
@@ -103,7 +106,7 @@ export class EntitiesEffects {
         return this.actions$.pipe(
             ofType(entitiesActions.rename),
             mergeMap(({ id, entityType, title, showToast }) => {
-                const res$ = this.entitiesService.rename({ entityType, id, title })
+                const res$ = this.entitiesService.rename({ entityType, id, title }) as Observable<Task | TaskList>
 
                 return res$.pipe(
                     showToast
@@ -129,18 +132,29 @@ export class EntitiesEffects {
             ofType(entitiesActions.openDeleteDialog),
             switchMap(({ id, entityType }) => {
                 return this.store
-                    .select(state => state.entities.entityTree)
+                    .select(state => state.entities)
                     .pipe(
                         first(),
-                        concatMap(entityTree => {
-                            if (!entityTree) return of(entitiesActions.abortDeleteDialog())
+                        concatMap(({ entityTree, taskTreeMap }) => {
+                            if (!entityTree || !taskTreeMap) return of(entitiesActions.abortDeleteDialog())
 
-                            const entity = getEntityById(entityTree, id)
+                            // @TODO: We can optimize this by checking the entityType and calling the appropriate function accordingly
+                            const entity = getEntityByIdIncludingTasks(entityTree, taskTreeMap, id)
                             if (!entity) return of(entitiesActions.abortDeleteDialog())
+
+                            const hasChildren = (entity.children?.length || 0) > 0
+
+                            const messages = {
+                                [EntityType.TASK]: `Are you sure you want to delete '${entity.title}'${
+                                    hasChildren ? ' and all its subtasks' : ''
+                                }?`,
+                            } as Record<EntityType, string>
 
                             const closed$ = this.dialogService.confirm({
                                 title: `Delete this ${entityType}?`,
-                                text: `Are you sure you want to delete the ${entityType} '${entity.title}'?`,
+                                text:
+                                    messages[entityType] ||
+                                    `Are you sure you want to delete the ${entityType} '${entity.title}'?`,
                                 buttons: [{ text: 'Cancel' }, { text: 'Delete', className: 'button--danger' }],
                             }).closed
 
@@ -164,7 +178,7 @@ export class EntitiesEffects {
 
                 return res$.pipe(
                     this.toast.observe({
-                        loading: 'Deleting tasklist...',
+                        loading: `Deleting ${entityType}...`,
                         success: res => res.successMessage,
                         error: getMessageFromHttpError,
                     }),
@@ -175,7 +189,7 @@ export class EntitiesEffects {
                                 if (!trace) return
 
                                 const activeEntity = trace[trace.length - 1]
-                                if (activeEntity.id != id) return
+                                if (activeEntity?.id != id) return
 
                                 const parentEntity = trace[trace.length - 2]
 

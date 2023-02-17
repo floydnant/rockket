@@ -5,10 +5,10 @@
                 cdkMenuItem
                 *ngFor="let page of settingsPages"
                 class="menu-item | w-full text-left"
-                routerLink="/settings/{{ page.route }}"
+                [routerLink]="page.route"
                 routerLinkActive="text-primary-300"
             >
-                <app-icon [iconClass]="page.iconClass"></app-icon>{{ page.title }}
+                <app-icon [icon]="page.icon"></app-icon>{{ page.title }}
             </button>
         </div>
     </ng-container>

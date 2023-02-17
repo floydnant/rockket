@@ -1,12 +1,7 @@
 import { Component } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { map, switchMap } from 'rxjs'
-
-interface SettingsPageItem {
-    route: string
-    iconClass: string
-    title: string
-}
+import { map, Observable, switchMap } from 'rxjs'
+import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs.component'
 
 @Component({
     selector: 'app-settings',
@@ -16,31 +11,14 @@ interface SettingsPageItem {
 export class SettingsComponent {
     constructor(private route: ActivatedRoute) {}
 
-    settingsPages: SettingsPageItem[] = [
-        {
-            route: 'general',
-            iconClass: 'fas fa-cog',
-            title: 'General',
-        },
-        {
-            route: 'account',
-            iconClass: 'fas fa-user',
-            title: 'Account',
-        },
-        {
-            route: 'appearance',
-            iconClass: 'fas fa-eye',
-            title: 'Appearance',
-        },
-    ]
-
-    pathBreadcrumbMap = {
-        general: { title: 'General', route: '/settings/general', icon: 'fas fa-cog' },
-        account: { title: 'Account', route: '/settings/account', icon: 'fas fa-user' },
-        appearance: { title: 'Appearance', route: '/settings/appearance', icon: 'fas fa-eye' },
+    pathBreadcrumbMap: Record<string, Breadcrumb> = {
+        general: { title: 'General', route: '/settings/general', icon: 'settings' },
+        account: { title: 'Account', route: '/settings/account', icon: 'user' },
+        appearance: { title: 'Appearance', route: '/settings/appearance', icon: 'eye' },
     }
+    settingsPages = Object.values(this.pathBreadcrumbMap)
 
-    breadcrumbs$ = this.route.url.pipe(
+    breadcrumbs$: Observable<Breadcrumb[]> = this.route.url.pipe(
         switchMap(() => {
             const routes = this.route.pathFromRoot
             const lastChild = routes[routes.length - 1].children[0]
@@ -51,7 +29,7 @@ export class SettingsComponent {
             const path = segments[segments.length - 1].path as keyof typeof this.pathBreadcrumbMap
             const breadcrumb = this.pathBreadcrumbMap[path]
 
-            return [{ title: 'Settings', route: '/settings', icon: 'fas fa-cog' }, breadcrumb]
+            return [{ title: 'Settings', route: '/settings', icon: 'settings' }, breadcrumb]
         })
     )
 }

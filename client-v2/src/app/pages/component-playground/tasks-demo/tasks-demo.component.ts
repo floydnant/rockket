@@ -1,20 +1,22 @@
 import { Component } from '@angular/core'
+import { convertToTaskTreeNode, TaskTreeNode } from 'src/app/components/organisms/task-tree/task-tree.component'
 import {
     prioritySortingMap,
     statusSortingMap,
-    Task,
+    TaskPreview,
+    TaskPreviewFlattend,
     TaskPriority,
     TaskStatus,
 } from '../../../fullstack-shared-models/task.model'
 
-type TaskSorter = (a: Task, b: Task) => number
+type TaskSorter = (a: TaskPreview, b: TaskPreview) => number
 
 const sortByStatus: TaskSorter = (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status]
 const sortByPriority: TaskSorter = (a, b) => prioritySortingMap[a.priority] - prioritySortingMap[b.priority]
 
 const tasklist = Object.values(TaskStatus)
     .map(status =>
-        Object.values(TaskPriority).map<Partial<Task>>((priority, i) => ({
+        Object.values(TaskPriority).map<TaskPreview>((priority, i) => ({
             title: `This is a task (${status}, ${priority})`,
             description:
                 i % 2 == 0
@@ -22,11 +24,14 @@ const tasklist = Object.values(TaskStatus)
                     : 'Here could be notes. Or even multiline notes? fhsdjkalf hasjksldhjafksldf hasjkdlfjkasldhfjkas ldhfjka lsdhfjklashdjfk lashdfjklas dhfjk',
             status,
             priority,
+            id: '',
+            listId: '',
+            parentTaskId: '',
         }))
     )
     .flat()
 
-const sortTasklist = (tasklist: Task[]) => {
+const sortTasklist = (tasklist: TaskPreview[]) => {
     const openTasks = tasklist
         .filter(
             // prettier-ignore
@@ -48,5 +53,11 @@ const sortTasklist = (tasklist: Task[]) => {
     styleUrls: [],
 })
 export class TasksDemoComponent {
-    tasks: Task[] = sortTasklist(tasklist as unknown as Task[])
+    tasks: TaskTreeNode[] = sortTasklist(tasklist)
+        .map<TaskPreviewFlattend>(task => ({
+            ...task,
+            path: [],
+            childrenCount: 0,
+        }))
+        .map(convertToTaskTreeNode)
 }

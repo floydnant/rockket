@@ -6,6 +6,7 @@ beforeEach(() => {
     signup()
 
     cy.intercept('POST', '/list').as('createEntity')
+    cy.intercept('POST', '/task').as('createTask')
 })
 
 describe('Workspace', () => {
@@ -28,10 +29,11 @@ describe('Workspace', () => {
             cy.get(testName('entity-tree-node')).should('have.attr', 'data-level', 0)
         })
 
-        describe('Tree nodes', () => {
+        describe('Sidebar tree', () => {
             it('can add children', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
 
+                cy.get('[data-test-is-loading="false"]') // wait for loading to finish
                 cy.get(testName('entity-tree-node'))
                     .first()
                     .focus()
@@ -45,6 +47,7 @@ describe('Workspace', () => {
             it('can open the options menu', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
 
+                cy.get('[data-test-is-loading="false"]') // wait for loading to finish
                 cy.get(testName('entity-tree-node'))
                     .first()
                     .focus()
@@ -63,7 +66,7 @@ describe('Workspace', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
 
                 const entityName = 'The testing entity'
-                cy.get(testName('editable-entity-name')).focus().type(entityName)
+                cy.get(testName('editable-entity-name')).get(testName('inline-editor')).focus().type(entityName).blur()
                 cy.get(testName('entity-tree-node')).should('contain.text', entityName)
             })
 
@@ -76,6 +79,7 @@ describe('Workspace', () => {
                 cy.get(testName('add-description')).click()
                 cy.get(testName('description-editor')).type(description).blur()
                 cy.wait('@updateEntity').its('response.statusCode').should('equal', 200) // we currently don't have any other way to verify if updating the description has succeeded
+                // maybe it is not a bad idea to assert on the request, but we could take this a step further and verify that the db record was updated
             })
 
             it('can add children', () => {
@@ -84,6 +88,91 @@ describe('Workspace', () => {
                 cy.get(testName('create-children')).click()
                 cy.get(testName('entity-tree-node')).should('have.length', 2)
                 cy.get(testName('entity-tree-node')).last().should('have.attr', 'data-level', 1)
+            })
+
+            it('can add tasks', () => {
+                cy.get(testName('sidebar-create-new-list')).click()
+
+                cy.get(testName('create-task')).click()
+                cy.get(testName('task-tree-node')).should('exist')
+                // cy.get(testName('entity-tree-node')).last().should('have.attr', 'data-level', 1)
+            })
+        })
+
+        describe('Task view', () => {
+            it('can open a task as page', () => {
+                cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('create-task')).click()
+
+                cy.get(testName('task-tree-node')).within(() => {
+                    cy.get(testName('task-menu-button')).click()
+                })
+
+                // task menu
+                cy.get(testName('drop-down-menu')).within(() => {
+                    cy.get(testName('menu-item')).contains(/Open/).click()
+                })
+
+                cy.get('app-task-view').contains('Untitled task')
+            })
+        })
+
+        describe('Tasks', () => {
+            beforeEach(() => {
+                cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('create-task')).click()
+            })
+
+            it("can update a task's status", () => {
+                cy.get(testName('task-tree-node')).within(() => {
+                    cy.get(testName(`task-status-button`)).click()
+                })
+                cy.get(testName('drop-down-menu')).within(() => {
+                    cy.intercept('PATCH', '/task/*').as('updateTask')
+                    cy.get(testName('menu-item')).first().click()
+                    cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
+                })
+            })
+
+            it("can update a task's priority", () => {
+                cy.get(testName('task-tree-node')).within(() => {
+                    cy.get(testName('task-menu-button')).click()
+                })
+
+                // task menu
+                cy.get(testName('drop-down-menu')).within(() => {
+                    cy.contains(/Priority/)
+                        .closest(testName('menu-item'))
+                        .focus()
+                        .type('{rightArrow}')
+                })
+
+                // priority menu
+                cy.get(testName('drop-down-menu'))
+                    .last()
+                    .within(() => {
+                        cy.intercept('PATCH', '/task/*').as('updateTask')
+                        cy.get(testName('menu-item'))
+                            .contains(/Urgent/)
+                            .click()
+                        cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
+                    })
+            })
+
+            it('can add a subtask', () => {
+                cy.get(testName('task-tree-node')).within(() => {
+                    cy.get(testName('task-menu-button')).click()
+                })
+
+                // task menu
+                cy.get(testName('drop-down-menu')).within(() => {
+                    cy.contains(/Subtask/)
+                        .closest(testName('menu-item'))
+                        .click()
+                })
+
+                cy.get(testName('task-tree-node')).should('have.length', 2)
+                cy.get(testName('task-tree-node')).last().should('have.attr', 'data-test-node-level', 1)
             })
         })
     })

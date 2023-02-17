@@ -4,16 +4,20 @@
         @apply text-submit-500 hover:text-submit-400 hover:underline;
     }
 
+    pre {
+        @apply select-text whitespace-pre-wrap text-submit-400;
+    }
+
     .button-m {
         @apply rounded-md bg-tinted-800 px-2 py-0.5 text-tinted-300 transition-colors hover:bg-tinted-700 hover:text-tinted-100;
     }
     /*  This should be button-lg */
     .button {
-        @apply rounded-md bg-tinted-500 py-2 px-5 font-semibold text-tinted-100 transition-colors hover:bg-tinted-600;
+        @apply rounded-lg bg-tinted-500 py-2 px-5 font-semibold text-tinted-100 transition-colors hover:bg-tinted-600;
     }
 
     .button-naked {
-        @apply rounded-md py-0.5 px-2 transition-colors hover:bg-tinted-700;
+        @apply rounded-md py-1 px-2 transition-colors hover:bg-tinted-700;
         /* hover:text-tinted-100 */
     }
     .button-naked i {
@@ -27,6 +31,9 @@
     .button-icon-naked i {
         @apply m-0 inline-block aspect-square rounded py-0.5 px-2.5 text-base transition-colors hover:bg-tinted-700;
     }
+    .icon-btn {
+        @apply inline-flex aspect-square min-w-[1.75rem] items-center justify-center rounded-lg px-1 transition-colors hover:bg-tinted-500;
+    }
 
     .button--submit {
         @apply bg-submit-400 text-tinted-900 hover:bg-submit-600;
@@ -36,7 +43,7 @@
     }
 
     .input {
-        @apply rounded bg-tinted-700 py-2 px-3 outline-none ring-primary-400 focus:ring-2;
+        @apply rounded-lg bg-tinted-700 py-2 px-3 outline-none ring-primary-400 focus:ring-2;
     }
     .input::placeholder {
         @apply text-tinted-300;
@@ -44,7 +51,7 @@
 
     .show-placeholder::before {
         content: attr(data-placeholder);
-        @apply text-tinted-400;
+        color: var(--placeholder-color, theme('colors.tinted.400'));
     }
 
     :is(.input, .button)[disabled] {
