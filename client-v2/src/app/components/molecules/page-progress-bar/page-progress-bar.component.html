@@ -4,7 +4,7 @@
     [class.sticky]="digest.progress != 0"
     [class.glow]="isProgressBarIncreasing$ | async"
     [appTooltip]="progressTooltip"
-    [tooltipOptions]="{ closeOnHostClick: false, preferredPosition: 'bottom' }"
+    [tooltipOptions]="{ closeOnHostClick: false, preferredPosition: 'bottom', enableOnTouchDevice: true }"
 >
     <div
         #progressBar
@@ -13,7 +13,7 @@
         <div class="progress | h-full rounded bg-submit-400" [style.width]="digest.progress + '%'"></div>
     </div>
     <button
-        class="progress-number | text-sm text-tinted-600 transition-colors"
+        class="progress-number | font-bold text-tinted-600 transition-colors"
         [class.!text-submit-400]="digest.all && digest.closed == digest.all"
         (click)="isShownAsPercentage = !isShownAsPercentage"
         [appTooltip]="isShownAsPercentage ? 'Display as fraction' : 'Display as percentage'"
