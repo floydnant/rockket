@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store'
 import { AppState } from 'src/app/store'
 import { authActions } from 'src/app/store/user/user.actions'
 import { userFeature } from 'src/app/store/user/user.selectors'
+import { IconKey } from '../../atoms/icons/icon/icons'
 import { MenuItem, MenuItemVariant } from '../../molecules/drop-down/drop-down.component'
 
 @Component({
@@ -31,6 +32,14 @@ export class UserMenuComponent {
                 { title: 'Appearance', route: '/settings/appearance', icon: 'eye' },
             ],
         },
+        // {
+        //     title: 'Import',
+        //     icon: 'fas fa-file-import' as IconKey,
+        // },
+        // {
+        //     title: 'Garbage',
+        //     icon: 'fas fa-trash' as IconKey,
+        // },
         { isSeperator: true },
         {
             title: 'Logout',

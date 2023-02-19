@@ -7,6 +7,7 @@ import { combineLatestWith, map, tap } from 'rxjs'
 import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
+import { DeviceService } from 'src/app/services/device.service'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
@@ -47,7 +48,11 @@ export const convertToEntityTreeNode = (entity: EntityPreviewFlattend): EntityTr
     styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-    constructor(private store: Store<AppState>, private loadingService: LoadingStateService) {}
+    constructor(
+        private store: Store<AppState>,
+        private loadingService: LoadingStateService,
+        private deviceService: DeviceService,
+    ) {}
 
     EntityType = EntityType
 
@@ -55,6 +60,8 @@ export class HomeComponent implements OnInit {
         moveToMacroQueue(() => this.store.dispatch(entitiesActions.loadPreviews()))
         moveToMacroQueue(() => this.store.dispatch(taskActions.loadTaskPreviews()))
     }
+
+    isMobileScreen$ = this.deviceService.isMobileScreen$
 
     getParentNode(node: EntityTreeNode) {
         const nodeIndex = this.entityPreviewsTransformed.indexOf(node)
