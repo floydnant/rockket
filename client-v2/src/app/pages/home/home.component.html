@@ -75,6 +75,7 @@
                         [appTooltip]="tooltip"
                         [tooltipOptions]="{ preferredPosition: 'right' }"
                         routerLink="/home/{{ node.id }}"
+                        (click)="closeMobileMenu()"
                         routerLinkActive="active"
                         #nodeTooltip="appTooltip"
                         [cdkContextMenuTriggerFor]="nodeDropDown"
