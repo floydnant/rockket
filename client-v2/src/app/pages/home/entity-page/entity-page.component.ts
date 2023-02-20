@@ -1,3 +1,4 @@
+import { Location } from '@angular/common'
 import { Component } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { UntilDestroy } from '@ngneat/until-destroy'
@@ -23,7 +24,8 @@ export class EntityPageComponent {
     constructor(
         private store: Store<AppState>,
         private route: ActivatedRoute,
-        private loadingService: LoadingStateService
+        private loadingService: LoadingStateService,
+        private location: Location
     ) {}
 
     entityOptionsMap = getEntityMenuItemsMap(this.store)
@@ -84,4 +86,8 @@ export class EntityPageComponent {
             })
         )
     )
+
+    goBack() {
+        this.location.back()
+    }
 }

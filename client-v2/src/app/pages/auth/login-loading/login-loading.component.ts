@@ -27,10 +27,10 @@ export class LoginLoadingComponent implements OnDestroy {
             .subscribe(({ isLoading, isLoggedIn }) => {
                 if (isLoading) return
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                if (isLoggedIn) this.router.navigateByUrl(this.callbackUrl!)
+                if (isLoggedIn) this.router.navigateByUrl(this.callbackUrl!, { replaceUrl: true })
                 else {
                     // this.toast.error('Invalid session, please login again.')
-                    this.router.navigateByUrl('/auth')
+                    this.router.navigateByUrl('/auth', { replaceUrl: true })
                 }
             })
 
@@ -38,7 +38,7 @@ export class LoginLoadingComponent implements OnDestroy {
             .pipe(ofType(authActions.confirmLoginError, authActions.loginOrSignupSuccess), take(1))
             .subscribe(({ type }) => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                if (/success/.test(type)) this.router.navigateByUrl(this.callbackUrl!)
+                if (/success/.test(type)) this.router.navigateByUrl(this.callbackUrl!, { replaceUrl: true })
                 else {
                     this.toast.error('Invalid session, please login again.')
                     this.router.navigateByUrl('/auth')
