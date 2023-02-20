@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core'
+import { DeviceService } from 'src/app/services/device.service'
 import { MenuService } from './menu.service'
 
 @Component({
@@ -7,11 +8,15 @@ import { MenuService } from './menu.service'
     styleUrls: ['./sidebar-layout.component.css'],
 })
 export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
-    constructor(private menuService: MenuService) {}
+    constructor(private menuService: MenuService, private deviceService: DeviceService) {}
 
     @Input() enableResize = true
 
     isMenuOpen$ = this.menuService.isMenuOpen$
+
+    isBottomNavBorderVisible$ = this.menuService.isBottomNavBorderVisible$
+
+    isMobileScreen$ = this.deviceService.isMobileScreen$
 
     @ViewChild('resizeHandle') resizeHandle!: ElementRef<HTMLDivElement>
 

@@ -12,6 +12,8 @@
             <div #scrollSpy></div>
 
             <ng-content select="[main]"></ng-content>
+
+            <div class="bottom-scroll-spy" (intersectionChange)="setBottomSpyIntersecting($event)"></div>
         </div>
     </main>
 </div>

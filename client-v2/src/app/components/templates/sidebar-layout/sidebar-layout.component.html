@@ -1,43 +1,56 @@
-<div class="height-screen flex w-full" data-test-name="app-container">
-    <aside
-        class="sidebar | sidebar--mobile | relative flex h-full flex-col border-tinted-700 bg-tinted-800 md:w-56 md:min-w-[10rem] md:max-w-[25rem] md:border-r md:text-md"
-        [class.hide]="!(isMenuOpen$ | async)"
-        [hidden]="!(isMenuOpen$ | async)"
-        data-test-name="sidebar"
-    >
-        <div
-            *ngIf="enableResize"
-            #resizeHandle
-            class="resize-handle | group absolute -right-1 h-full w-2 cursor-col-resize"
-            data-test-name="resize-handle"
-            [appTooltip]="resizeHandleTooltip"
+<div class="height-screen flex w-full flex-col" data-test-name="app-container" style="--bottom-nav-height: 3.5rem">
+    <div class="relative flex h-[calc(100%-var(--bottom-nav-height))] md:h-full">
+        <aside
+            class="sidebar | sidebar--mobile | relative flex h-full flex-col border-tinted-700 bg-tinted-800 md:w-56 md:min-w-[10rem] md:max-w-[25rem] md:border-r md:text-md"
+            [class.hide]="!(isMenuOpen$ | async)"
+            [hidden]="!(isMenuOpen$ | async)"
+            data-test-name="sidebar"
         >
-            <ng-template #resizeHandleTooltip
-                >Drag <span class="text-tinted-300">to resize the sidebar</span></ng-template
-            >
             <div
-                class="relative left-[50%] h-full w-0.5 -translate-x-[50%] transition-colors delay-75 group-hover:bg-tinted-400"
-            ></div>
-        </div>
-
-        <header
-            class="sidebar-header | border-b border-transparent transition-colors"
-            [class.!border-tinted-700]="isSidebarScrolled"
-            data-test-name="sidebar-header"
-        >
-            <div class="flex">
-                <user-menu class="block w-full"></user-menu>
-                <app-menu-toggle index="2"></app-menu-toggle>
+                *ngIf="enableResize"
+                #resizeHandle
+                class="resize-handle | group absolute -right-1 h-full w-2 cursor-col-resize"
+                data-test-name="resize-handle"
+                [appTooltip]="resizeHandleTooltip"
+            >
+                <ng-template #resizeHandleTooltip
+                    >Drag <span class="text-tinted-300">to resize the sidebar</span></ng-template
+                >
+                <div
+                    class="relative left-[50%] h-full w-0.5 -translate-x-[50%] transition-colors delay-75 group-hover:bg-tinted-400"
+                ></div>
             </div>
-
-            <ng-content select="[sidebarHeader]"></ng-content>
-        </header>
-
-        <div class="sidebar-content | overflow-y-auto overscroll-contain py-2" data-test-name="sidebar-content">
-            <div #sidebarScrollSpy></div>
-            <ng-content select="[sidebarContent]"></ng-content>
-        </div>
-    </aside>
-
-    <ng-content></ng-content>
+            <header
+                class="sidebar-header | border-b border-transparent transition-colors"
+                [class.!border-tinted-700]="isSidebarScrolled"
+                data-test-name="sidebar-header"
+            >
+                <div class="flex">
+                    <user-menu class="block w-full"></user-menu>
+                    <app-menu-toggle index="2"></app-menu-toggle>
+                </div>
+                <ng-content select="[sidebarHeader]"></ng-content>
+            </header>
+            <div class="sidebar-content | overflow-y-auto overscroll-contain py-2" data-test-name="sidebar-content">
+                <div #sidebarScrollSpy></div>
+                <ng-content select="[sidebarContent]"></ng-content>
+            </div>
+        </aside>
+        <ng-content></ng-content>
+    </div>
+    <div
+        *ngIf="isMobileScreen$ | async"
+        class="bottom-nav | z-[1] flex h-[var(--bottom-nav-height)] items-center justify-evenly border-t border-transparent text-xl text-tinted-300 shadow-footer transition-colors"
+        [class.!border-tinted-700]="(isBottomNavBorderVisible$ | async) || (isMenuOpen$ | async)"
+    >
+        <!-- style="box-shadow: 0 -10px 10px red" -->
+        <button class="py-2 px-4" routerLink="/settings" routerLinkActive="text-primary-300">
+            <app-icon icon="fas fa-cog"></app-icon>
+        </button>
+        <button class="py-2 px-4" routerLink="/home" routerLinkActive="text-primary-300">
+            <app-icon icon="fas fa-user"></app-icon>
+        </button>
+        <button class="py-2 px-4"><app-icon icon="fas fa-search"></app-icon></button>
+        <app-menu-toggle></app-menu-toggle>
+    </div>
 </div>

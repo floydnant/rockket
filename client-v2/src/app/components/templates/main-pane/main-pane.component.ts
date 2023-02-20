@@ -8,6 +8,7 @@ import {
     OnDestroy,
     ViewChild,
 } from '@angular/core'
+import { MenuService } from '../sidebar-layout/menu.service'
 
 @Component({
     selector: 'app-main-pane',
@@ -31,7 +32,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainPaneComponent implements AfterViewInit, OnDestroy {
-    constructor(private changeDetector: ChangeDetectorRef) {}
+    constructor(private changeDetector: ChangeDetectorRef, private menuService: MenuService) {}
     // @TODO: Make the prose width adjustable with a drag, or have a couple presets
     @Input() prose = true
 
@@ -54,5 +55,9 @@ export class MainPaneComponent implements AfterViewInit, OnDestroy {
     }
     ngOnDestroy(): void {
         this.observer.disconnect()
+    }
+
+    setBottomSpyIntersecting(value: boolean) {
+        this.menuService.isBottomNavBorderVisible$.next(!value)
     }
 }

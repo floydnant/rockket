@@ -100,7 +100,13 @@ describe('Routing', () => {
         })
         it('does not redirect when visiting /settings with valid login', () => {
             signup()
-            cy.get(testName('settings-link')).click()
+
+            cy.get(testName('user-menu-toggle')).click()
+            cy.get(testName('drop-down-menu')).within(() => {
+                cy.contains(/Settings/)
+                    .closest(testName('menu-item'))
+                    .click()
+            })
 
             cy.url().should('contain', '/settings')
             cy.get(testName('settings-page')).should('exist')
