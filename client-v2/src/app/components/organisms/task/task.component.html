@@ -1,19 +1,18 @@
 <li
     *ngIf="task$ | async as task"
-    class="task | flex w-full max-w-full list-none flex-col rounded-xl bg-tinted-800 py-2 px-1 pb-1 transition-colors duration-75"
+    class="task | flex w-full max-w-full list-none flex-col rounded-xl bg-tinted-800 py-2 px-1 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
     [class]="{
         'bg-submit-800': task.status == TaskStatus.COMPLETED,
         'text-submit-200': task.status == TaskStatus.COMPLETED,
         completed: task.status == TaskStatus.COMPLETED,
         titleHasFocus: inlineEditor.isFocused,
-        isHovered
+        isHovered,
+        descriptionHasFocus: descriptionFocusable.isFocused
     }"
     [cdkContextMenuTriggerFor]="menu"
     (cdkContextMenuOpened)="isHovered = true"
     (cdkContextMenuClosed)="isHovered = false"
 >
-    <!-- @TODO: Fix this -->
-    <!-- notesHasFocus: notesFocusable.isFocused -->
     <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
         <div class="max-w-[calc(100%-1.7rem)]">
             <div class="first-row | flex items-center">
@@ -45,7 +44,7 @@
                     [editorClass]="{
                         'line-through': task.status == TaskStatus.NOT_PLANNED,
                         'decoration-tinted-200': task.status == TaskStatus.NOT_PLANNED,
-                        'pr-20': true
+                        'pr-12': true
                     }"
                     [enableDebouncedUpdates]="false"
                     (update)="titleChange.emit($event || '')"
@@ -128,11 +127,10 @@
     </div>
 
     <div
-        *ngIf="task.description"
         focusable
-        #notesFocusable="focusable"
-        [class]="{ hidden: !task.description && !notesFocusable.isFocused }"
-        class="notes | mt-1 rounded-lg bg-tinted-900 py-1 px-2 text-tinted-300 outline-none ring-primary-400 transition-all duration-75 focus:ring-2"
+        #descriptionFocusable="focusable"
+        [class.hidden]="!task.description && !descriptionFocusable.isFocused"
+        class="description | mt-1 rounded-lg bg-tinted-900 py-1.5 px-2.5 text-tinted-300 outline-none ring-primary-400 transition-all duration-75 focus:ring-2"
         contenteditable
         data-test-name="task-description"
     >

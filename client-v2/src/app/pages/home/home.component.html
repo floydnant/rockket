@@ -122,12 +122,14 @@
 
                         <div class="btn-group">
                             <button
+                                class="icon-btn"
                                 (click)="createChild(node.id, node.entityType); $event.stopPropagation()"
                                 data-test-name="create-child"
                             >
                                 <app-icon icon="plus"></app-icon>
                             </button>
                             <button
+                                class="icon-btn"
                                 (click)="$event.stopPropagation(); nodeTooltip.hideTooltip()"
                                 [cdkMenuTriggerFor]="nodeDropDown"
                                 (cdkMenuOpened)="isHovered[node.id] = true"

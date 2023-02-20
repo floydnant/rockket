@@ -1,3 +1,4 @@
+const plugin = require('tailwindcss/plugin')
 const colors = require('./colors.json')
 
 /** @type {import('tailwindcss').Config} */
@@ -21,5 +22,12 @@ module.exports = {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        plugin(({ addVariant }) => {
+            addVariant('hover', '@media (hover: hover) { &:is( :hover, :focus-visible ) }')
+            addVariant('not-hover', '@media (hover: hover) { &:not( :hover, :focus-visible ) }')
+            addVariant('hoverable', '@media (hover: hover)')
+            addVariant('not-hoverable', '@media (hover: none)')
+        }),
+    ],
 }

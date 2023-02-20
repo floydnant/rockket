@@ -6,31 +6,23 @@
         rounded-md
         text-tinted-300
         transition-colors
-        duration-75;
+        duration-75
+        hover:bg-tinted-700
+        hover:text-tinted-100
+        hover:outline-none
+        [&.isHovered]:bg-tinted-700
+        [&.isHovered]:text-tinted-100
+        [&.nested]:pl-2.5
+        [&.active]:bg-tinted-700;
 
     line-height: 1.7;
-}
-.tree-node:is(:hover, .isHovered) {
-    @apply bg-tinted-700 text-tinted-100;
-}
-.tree-node.nested {
-    @apply pl-2.5;
-}
-
-.tree-node.active {
-    @apply bg-tinted-700;
-}
-.tree-node.active .content {
-    @apply text-primary-300;
 }
 
 .indent-line {
     @apply ml-3.5
         border-l
-        border-tinted-700;
-}
-.indent-line:first-child {
-    @apply ml-1;
+        border-tinted-700
+        first:ml-1;
 }
 
 .content {
@@ -39,7 +31,8 @@
         gap-1
         truncate
         py-0.5
-        pr-1;
+        pr-1
+        [.active_&]:text-primary-300;
 }
 
 .node-toggle {
@@ -54,24 +47,25 @@
 }
 
 .no-toggle-icon app-icon {
-    @apply text-tinted-700 transition-colors duration-75;
+    @apply text-tinted-700
+        transition-colors
+        duration-75;
 }
-.tree-node:is(:hover, .isHovered, :active, :focus-visible, .active) .no-toggle-icon app-icon {
-    @apply text-tinted-600;
+.tree-node {
+    @apply [&.isHovered_.no-toggle-icon_app-icon]:text-tinted-600
+        [&_.no-toggle-icon_app-icon]:hover:text-tinted-600
+        [&.active_.no-toggle-icon_app-icon]:text-tinted-600;
 }
 
-.tree-node:not(:hover, .isHovered, :active, :focus-visible, :focus-within) .btn-group {
-    @apply hidden animate-none;
-}
 .btn-group {
-    @apply flex gap-0.5;
-    animation: reveal 75ms forwards;
+    @apply flex
+        gap-0.5;
 }
-@keyframes reveal {
-    100% {
-        @apply opacity-100;
-    }
+.tree-node:not(:hover, .isHovered, :focus-visible, :focus-within) .btn-group {
+    @apply hoverable:hidden hoverable:animate-none;
 }
 .btn-group button {
-    @apply rounded-lg px-1.5 transition-colors duration-75 hover:bg-tinted-600;
+    @apply active:text-tinted-100
+        hover:bg-tinted-600
+        not-hoverable:text-tinted-600;
 }

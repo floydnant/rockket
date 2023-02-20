@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
     constructor(
         private store: Store<AppState>,
         private loadingService: LoadingStateService,
-        private deviceService: DeviceService,
+        private deviceService: DeviceService
     ) {}
 
     EntityType = EntityType
