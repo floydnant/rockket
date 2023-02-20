@@ -20,7 +20,8 @@ env:
 
 jobs:
     create-new-db:
-        if: ${{ !contains(github.event.pull_request.labels.*.name, 'dependencies') }}
+        # Skip workflow if PR has 'dependencies' label or is opened by 'dependabot[bot]'
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'dependencies') && github.event.pull_request.user.login != 'dependabot[bot]' }}
         runs-on: ubuntu-latest
         steps:
             - name: Tell neon to create a new database

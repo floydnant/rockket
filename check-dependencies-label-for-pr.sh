@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+author=$(git log -1 --pretty=format:"%an")
+
+# Check if the author is "dependabot[bot]"
+if [ "$author" == "dependabot[bot]" ]; then
+    echo "Author is dependabot[bot]. Exiting with code 1."
+    exit 1
+fi
+
 # Set the owner and repository name
 owner="dein-ding"
 repo="todo-app"
@@ -15,6 +23,7 @@ output=$(echo "$response" | jq '.labels | map(select(.name == "dependencies")) |
 
 # Check the output and exit with the appropriate exit code
 if [ "$output" -eq 0 ]; then
+    echo "PR has dependencies label. Exiting with code 1."
     exit 1
 else
     exit 0
