@@ -11,6 +11,7 @@ export const entitiesActions = createActionGroup({
     source: 'Entities',
     events: {
         'load previews': emptyProps(),
+        'reload previews': emptyProps(),
         'load previews success': props<{ previews: EntityPreview[] }>(),
         'load previews error': props<HttpServerErrorResponse>(),
 

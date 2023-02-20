@@ -1,9 +1,10 @@
 import { ArrayDataSource } from '@angular/cdk/collections'
 import { FlatTreeControl } from '@angular/cdk/tree'
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { Action } from '@ngrx/store/src/models'
-import { combineLatestWith, map, tap } from 'rxjs'
+import { combineLatestWith, delay, map, tap } from 'rxjs'
 import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { MenuService } from 'src/app/components/templates/sidebar-layout/menu.service'
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
@@ -17,7 +18,6 @@ import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { flattenEntityTreeIncludingTasks, traceEntity } from 'src/app/store/entities/utils'
-import { moveToMacroQueue } from 'src/app/utils'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 
 export interface EntityTreeNode {
@@ -43,12 +43,13 @@ export const convertToEntityTreeNode = (entity: EntityPreviewFlattend): EntityTr
     return node
 }
 
+@UntilDestroy()
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
     constructor(
         private store: Store<AppState>,
         private loadingService: LoadingStateService,
@@ -58,10 +59,22 @@ export class HomeComponent implements OnInit {
 
     EntityType = EntityType
 
-    ngOnInit(): void {
-        moveToMacroQueue(() => this.store.dispatch(entitiesActions.loadPreviews()))
-        moveToMacroQueue(() => this.store.dispatch(taskActions.loadTaskPreviews()))
-    }
+    // @TODO: lets have a look at this again when socket integration is ready
+    shouldFetchSubcription = this.deviceService.shouldFetch$
+        .pipe(
+            delay(0), // move to macro queue
+            untilDestroyed(this)
+        )
+        .subscribe(index => {
+            if (index == 0) {
+                this.store.dispatch(entitiesActions.loadPreviews())
+                this.store.dispatch(taskActions.loadTaskPreviews())
+                return
+            }
+
+            this.store.dispatch(entitiesActions.reloadPreviews())
+            this.store.dispatch(taskActions.reloadTaskPreviews())
+        })
 
     isMobileScreen$ = this.deviceService.isMobileScreen$
 

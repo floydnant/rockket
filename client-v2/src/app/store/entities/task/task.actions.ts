@@ -7,6 +7,7 @@ export const taskActions = createActionGroup({
     source: 'Entity/Tasks',
     events: {
         'load task previews': emptyProps(),
+        'reload task previews': emptyProps(),
         'load task previews success': props<{ previews: TaskPreview[] }>(),
         'load task previews error': props<HttpServerErrorResponse>(),
 
