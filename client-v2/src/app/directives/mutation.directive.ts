@@ -11,6 +11,12 @@ export class MutationDirective implements OnDestroy, OnChanges {
             mutations.forEach(mutation => {
                 if (this.mutationOptions.plainOnly && element.childNodes.length > 1) {
                     element.innerHTML = element.innerText.trim()
+
+                    try {
+                        window.getSelection()?.setPosition(element, 1) // restore cursor position
+                    } catch (err) {
+                        console.log('Error restoring cursor position', err)
+                    }
                     return
                 }
 
