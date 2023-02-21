@@ -14,7 +14,7 @@ const mediaQueries = {
 export class DeviceService {
     constructor(private mediaObserver: BreakpointObserver) {}
 
-    queryChanges$ = this.mediaObserver.observe(Object.values(mediaQueries)).pipe(
+    private queryChanges$ = this.mediaObserver.observe(Object.values(mediaQueries)).pipe(
         map(({ breakpoints }) => breakpoints),
         shareReplay({ bufferSize: 1, refCount: true })
     )

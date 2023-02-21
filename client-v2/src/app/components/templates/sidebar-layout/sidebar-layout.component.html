@@ -43,7 +43,6 @@
         class="bottom-nav | z-[1] flex h-[var(--bottom-nav-height)] items-center justify-evenly border-t border-transparent text-xl text-tinted-300 shadow-footer transition-colors"
         [class.!border-tinted-700]="(isBottomNavBorderVisible$ | async) || (isMenuOpen$ | async)"
     >
-        <!-- style="box-shadow: 0 -10px 10px red" -->
         <button class="py-2 px-4" routerLink="/settings" routerLinkActive="text-primary-300">
             <app-icon icon="fas fa-cog"></app-icon>
         </button>
