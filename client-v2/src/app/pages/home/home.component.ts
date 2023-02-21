@@ -1,12 +1,15 @@
 import { ArrayDataSource } from '@angular/cdk/collections'
 import { FlatTreeControl } from '@angular/cdk/tree'
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { Action } from '@ngrx/store/src/models'
-import { combineLatestWith, map, tap } from 'rxjs'
+import { combineLatestWith, delay, map, tap } from 'rxjs'
 import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.component'
+import { MenuService } from 'src/app/components/templates/sidebar-layout/menu.service'
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
+import { DeviceService } from 'src/app/services/device.service'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
@@ -15,7 +18,6 @@ import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { flattenEntityTreeIncludingTasks, traceEntity } from 'src/app/store/entities/utils'
-import { moveToMacroQueue } from 'src/app/utils'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 
 export interface EntityTreeNode {
@@ -41,20 +43,40 @@ export const convertToEntityTreeNode = (entity: EntityPreviewFlattend): EntityTr
     return node
 }
 
+@UntilDestroy()
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
-    constructor(private store: Store<AppState>, private loadingService: LoadingStateService) {}
+export class HomeComponent {
+    constructor(
+        private store: Store<AppState>,
+        private loadingService: LoadingStateService,
+        private deviceService: DeviceService,
+        private menuService: MenuService
+    ) {}
 
     EntityType = EntityType
 
-    ngOnInit(): void {
-        moveToMacroQueue(() => this.store.dispatch(entitiesActions.loadPreviews()))
-        moveToMacroQueue(() => this.store.dispatch(taskActions.loadTaskPreviews()))
-    }
+    // @TODO: lets have a look at this again when socket integration is ready
+    shouldFetchSubcription = this.deviceService.shouldFetch$
+        .pipe(
+            delay(0), // move to macro queue
+            untilDestroyed(this)
+        )
+        .subscribe(index => {
+            if (index == 0) {
+                this.store.dispatch(entitiesActions.loadPreviews())
+                this.store.dispatch(taskActions.loadTaskPreviews())
+                return
+            }
+
+            this.store.dispatch(entitiesActions.reloadPreviews())
+            this.store.dispatch(taskActions.reloadTaskPreviews())
+        })
+
+    isMobileScreen$ = this.deviceService.isMobileScreen$
 
     getParentNode(node: EntityTreeNode) {
         const nodeIndex = this.entityPreviewsTransformed.indexOf(node)
@@ -116,6 +138,7 @@ export class HomeComponent implements OnInit {
             }),
             tap(transformed => (this.entityPreviewsTransformed = transformed))
         )
+    private readonly nodeMenuItemsMap = getEntityMenuItemsMap(this.store)
 
     isTreeLoading$ = this.loadingService.getLoadingState([
         entitiesActions.loadPreviews,
@@ -123,6 +146,7 @@ export class HomeComponent implements OnInit {
         entitiesActions.loadPreviewsError,
     ])
 
+    isHovered: Record<string, boolean> = {}
     nodeLoadingMap$ = this.loadingService.getEntitiesLoadingStateMap()
 
     dataSource = new ArrayDataSource(this.entityPreviewsTransformed$)
@@ -142,7 +166,7 @@ export class HomeComponent implements OnInit {
         this.store.dispatch(machine[entityType])
     }
 
-    private readonly nodeMenuItemsMap = getEntityMenuItemsMap(this.store)
-
-    isHovered: Record<string, boolean> = {}
+    closeMobileMenu() {
+        this.menuService.isMenuOpen$.next(false)
+    }
 }

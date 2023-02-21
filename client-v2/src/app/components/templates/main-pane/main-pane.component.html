@@ -1,4 +1,4 @@
-<div class="flex h-screen grow flex-col" data-test-name="main-pane">
+<div class="flex h-full grow flex-col" data-test-name="main-pane">
     <header
         class="main-header | main-header--mobile | relative flex border-b border-tinted-700 border-transparent transition-all"
         [class.!border-tinted-700]="isScrolled"
@@ -9,9 +9,11 @@
     </header>
     <main class="bg-dotted flex grow flex-col items-center overflow-y-scroll overscroll-contain px-4 pt-2 pb-56">
         <div class="content" [class]="{ 'w-[min(100%,55rem)]': prose, 'w-full': !prose }" data-test-name="main-content">
-            <div #scrollSpy></div>
+            <div class="top-scroll-spy" (intersectionChange)="setTopSpyIntersecting($event)"></div>
 
             <ng-content select="[main]"></ng-content>
+
+            <div class="bottom-scroll-spy" (intersectionChange)="setBottomSpyIntersecting($event)"></div>
         </div>
     </main>
 </div>

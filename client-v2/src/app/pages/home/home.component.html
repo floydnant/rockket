@@ -1,7 +1,11 @@
 <app-sidebar-layout data-test-name="workspace-page">
     <!-- SIDEBAR HEADER -->
     <ng-container sidebarHeader>
-        <div class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300" cdkMenu>
+        <div
+            *ngIf="!(isMobileScreen$ | async)"
+            class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300"
+            cdkMenu
+        >
             <button
                 cdkMenuItem
                 class="menu-item | w-full text-left"
@@ -10,7 +14,7 @@
             >
                 <app-icon icon="fas fa-search"></app-icon> Search
             </button>
-            <button
+            <!-- <button
                 cdkMenuItem
                 class="menu-item | w-full text-left"
                 appTooltip="Import one or more lists"
@@ -25,8 +29,8 @@
                 [tooltipOptions]="{ preferredPosition: 'right' }"
             >
                 <app-icon icon="fas fa-trash"></app-icon> Garbage
-            </button>
-            <button
+            </button> -->
+            <!-- <button
                 cdkMenuItem
                 class="menu-item | w-full text-left"
                 routerLink="/settings"
@@ -35,7 +39,7 @@
                 data-test-name="settings-link"
             >
                 <app-icon icon="fas fa-cog"></app-icon> Settings
-            </button>
+            </button> -->
         </div>
     </ng-container>
 
@@ -71,6 +75,7 @@
                         [appTooltip]="tooltip"
                         [tooltipOptions]="{ preferredPosition: 'right' }"
                         routerLink="/home/{{ node.id }}"
+                        (click)="closeMobileMenu()"
                         routerLinkActive="active"
                         #nodeTooltip="appTooltip"
                         [cdkContextMenuTriggerFor]="nodeDropDown"
@@ -118,12 +123,14 @@
 
                         <div class="btn-group">
                             <button
+                                class="icon-btn"
                                 (click)="createChild(node.id, node.entityType); $event.stopPropagation()"
                                 data-test-name="create-child"
                             >
                                 <app-icon icon="plus"></app-icon>
                             </button>
                             <button
+                                class="icon-btn"
                                 (click)="$event.stopPropagation(); nodeTooltip.hideTooltip()"
                                 [cdkMenuTriggerFor]="nodeDropDown"
                                 (cdkMenuOpened)="isHovered[node.id] = true"

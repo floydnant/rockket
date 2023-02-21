@@ -75,7 +75,7 @@ describe('TaskComponent', () => {
         cy.get(testName('task-title')).contains(taskFixture.title)
         cy.get(testName('task-priority-button')).should('not.exist')
         cy.get(testName('subtask-toggle')).should('not.exist')
-        cy.get(testName('task-description')).should('not.exist')
+        cy.get(testName('task-description')).should('not.be.visible')
     })
 
     describe('Title', () => {

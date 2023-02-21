@@ -94,7 +94,7 @@ export class AuthEffects {
                     tap(() => {
                         const isOnAuthPage =
                             this.router.url.includes('auth') && !this.router.url.includes('/login-loading')
-                        if (isOnAuthPage) this.router.navigateByUrl('/home')
+                        if (isOnAuthPage) this.router.navigateByUrl('/home', { replaceUrl: true })
                     }),
                     map(res => authActions.loginOrSignupSuccess(res.user)),
                     catchError(() => of(authActions.confirmLoginError()))

@@ -17,4 +17,6 @@ export class MenuService {
     toggleIsOpen() {
         this._isMenuOpen.next(!this._isMenuOpen.value)
     }
+
+    isBottomNavBorderVisible$ = new BehaviorSubject(false)
 }

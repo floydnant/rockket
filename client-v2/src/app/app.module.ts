@@ -54,6 +54,8 @@ import { TaskTreeComponent } from './components/organisms/task-tree/task-tree.co
 import { TaskViewComponent } from './components/organisms/entity-view/views/task-view/task-view.component'
 import { InlineEditorComponent } from './components/atoms/inline-editor/inline-editor.component'
 import { PageProgressBarComponent } from './components/molecules/page-progress-bar/page-progress-bar.component'
+import { LayoutModule } from '@angular/cdk/layout'
+import { IntersectionDirective } from './directives/intersection.directive'
 
 @NgModule({
     declarations: [
@@ -96,6 +98,7 @@ import { PageProgressBarComponent } from './components/molecules/page-progress-b
         TaskViewComponent,
         InlineEditorComponent,
         PageProgressBarComponent,
+        IntersectionDirective,
     ],
     imports: [
         BrowserModule,
@@ -134,6 +137,7 @@ import { PageProgressBarComponent } from './components/molecules/page-progress-b
         ModalModule,
         OverlayModule,
         CdkTreeModule,
+        LayoutModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

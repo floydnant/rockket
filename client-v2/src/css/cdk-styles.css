@@ -6,25 +6,19 @@
     }
 
     .menu-item {
-        @apply button-naked text-left;
+        @apply button-naked text-left outline-none;
     }
 
-    .menu-item:is(:hover, :active, :focus-visible):is(.menu-item--default, :not([class*='menu-item--'])) {
-        @apply bg-tinted-700 outline-none;
+    .menu-item:is(.menu-item--default, :not([class*='menu-item--'])) {
+        @apply hover:bg-tinted-700;
     }
 
     .menu-item.menu-item--danger {
-        @apply text-danger-400 outline-none;
-    }
-    .menu-item.menu-item--danger:is(:hover, :active, :focus-visible) {
-        @apply bg-danger-400 text-danger-900;
+        @apply text-danger-400 hover:bg-danger-400 hover:text-danger-900;
     }
 
     .menu-item.menu-item--submit {
-        @apply text-submit-500 outline-none;
-    }
-    .menu-item.menu-item--submit:is(:hover, :active, :focus-visible) {
-        @apply bg-submit-400 text-submit-900;
+        @apply text-submit-500 hover:bg-submit-400 hover:text-submit-900;
     }
 
     /* .standalone-item {

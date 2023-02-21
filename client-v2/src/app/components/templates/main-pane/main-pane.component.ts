@@ -1,13 +1,5 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Input,
-    OnDestroy,
-    ViewChild,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { MenuService } from '../sidebar-layout/menu.service'
 
 @Component({
     selector: 'app-main-pane',
@@ -30,29 +22,16 @@ import {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainPaneComponent implements AfterViewInit, OnDestroy {
-    constructor(private changeDetector: ChangeDetectorRef) {}
+export class MainPaneComponent {
+    constructor(private menuService: MenuService) {}
     // @TODO: Make the prose width adjustable with a drag, or have a couple presets
     @Input() prose = true
 
     isScrolled = false
-    @ViewChild('scrollSpy') scrollSpy!: ElementRef<HTMLDivElement>
-
-    observer = new IntersectionObserver(
-        entries => {
-            entries.forEach(entry => {
-                if (entry.target == this.scrollSpy.nativeElement) {
-                    this.isScrolled = !entry.isIntersecting
-                    this.changeDetector.markForCheck()
-                }
-            })
-        },
-        { threshold: [1] }
-    )
-    ngAfterViewInit(): void {
-        this.observer.observe(this.scrollSpy.nativeElement)
+    setTopSpyIntersecting(isIntersecting: boolean) {
+        this.isScrolled = !isIntersecting
     }
-    ngOnDestroy(): void {
-        this.observer.disconnect()
+    setBottomSpyIntersecting(isIntersecting: boolean) {
+        this.menuService.isBottomNavBorderVisible$.next(!isIntersecting)
     }
 }

@@ -24,7 +24,7 @@ export class TaskEffects {
 
     loadTaskPreviews = createEffect(() => {
         return this.actions$.pipe(
-            ofType(taskActions.loadTaskPreviews),
+            ofType(taskActions.loadTaskPreviews, taskActions.reloadTaskPreviews),
             mergeMap(() => {
                 const res$ = this.taskService.loadAllTaskPreviews()
 

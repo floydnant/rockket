@@ -1,7 +1,9 @@
 import { OverlayRef, Overlay, PositionStrategy, ConnectedPosition } from '@angular/cdk/overlay'
 import { ComponentPortal } from '@angular/cdk/portal'
 import { Directive, ElementRef, HostListener, Injector, Input, TemplateRef, ViewContainerRef } from '@angular/core'
+import { first } from 'rxjs'
 import { TooltipComponent, TOOLTIP_DATA } from '../components/atoms/tooltip/tooltip.component'
+import { DeviceService } from '../services/device.service'
 
 const positions = {
     top: {
@@ -42,7 +44,8 @@ export class TooltipDirective {
     constructor(
         private element: ElementRef<HTMLElement>,
         private overlay: Overlay,
-        private viewContainer: ViewContainerRef
+        private viewContainer: ViewContainerRef,
+        private deviceService: DeviceService
     ) {}
 
     private overlayRef: OverlayRef | null = null
@@ -52,6 +55,7 @@ export class TooltipDirective {
         preferredPosition?: keyof typeof positions
         closeOnHostClick?: boolean
         avoidPositions?: (keyof typeof positions)[]
+        enableOnTouchDevice?: boolean
     }
 
     @HostListener('mouseenter')
@@ -59,8 +63,11 @@ export class TooltipDirective {
     showTooltip(): void {
         if (this.overlayRef?.hasAttached()) return
 
-        // @TODO: skip this on mobile
-        this.attachTooltip()
+        this.deviceService.isTouchPrimary$.pipe(first()).subscribe(isTouchPrimary => {
+            if (isTouchPrimary && !this.tooltipOptions?.enableOnTouchDevice) return
+
+            this.attachTooltip()
+        })
     }
 
     @HostListener('mouseleave')

@@ -1,31 +1,35 @@
 @supports not selector(A:has(B)) {
     /* [task] */
-    .task:is(:hover, .isHovered):not(.titleHasFocus) {
-        @apply bg-tinted-700;
+    .task:not(.titleHasFocus) {
+        @apply hover:bg-tinted-700
+            [&.isHovered]:bg-tinted-700;
     }
-    /* same as above */
-    .task.completed:is(:hover, .isHovered):not(.titleHasFocus) {
-        @apply bg-submit-700;
+    /* same as above, but different color */
+    .task.completed:not(.titleHasFocus) {
+        @apply hover:bg-submit-700
+            [&.isHovered]:bg-submit-700;
     }
 
-    /* [notes] highlight if not focused */
-    .task:is(.task, .titleHasFocus) .notes:hover:not(:focus) {
-        @apply bg-tinted-800;
+    /* [description] highlight if not focused */
+    .task:is(.task, .titleHasFocus) .description:not(:focus) {
+        @apply hover:bg-tinted-800;
     }
 }
 @supports selector(A:has(B)) {
-    /* [task] highlight only if notes are NOT hovered */
-    .task:is(:hover, .isHovered):not(.titleHasFocus, :has(.notes:hover)) {
-        @apply bg-tinted-700;
+    /* [task] highlight only if description are NOT hovered */
+    .task:not(.titleHasFocus, :has(.description:hover)) {
+        @apply hover:bg-tinted-700
+            [&.isHovered]:bg-tinted-700;
     }
-    /* same as above */
-    .task.completed:is(:hover, .isHovered):not(.titleHasFocus, :has(.notes:hover)) {
-        @apply bg-submit-700;
+    /* same as above, but different color */
+    .task.completed:not(.titleHasFocus, :has(.description:hover)) {
+        @apply hover:bg-submit-700
+            [&.isHovered]:bg-submit-700;
     }
 
-    /* [notes] highlight if not focused */
-    .task:is(.task, .titleHasFocus, .isHovered) .notes:hover:not(:focus) {
-        @apply bg-tinted-700;
+    /* [description] highlight if not focused */
+    .task:is(.task, .titleHasFocus, .isHovered) .description:not(:focus) {
+        @apply hover:bg-tinted-700;
     }
 }
 
@@ -34,17 +38,21 @@
     @apply ring-2 ring-primary-400;
 }
 
-/* [icon-group] */
-.task:is(:hover, .isHovered, .titleHasFocus, .notesHasFocus) .icon-group {
-    @apply -translate-x-8;
-}
-
-/* [ellipsis] */
-.task:not(:hover, .isHovered, .titleHasFocus, .notesHasFocus) double-ellipsis-icon {
-    @apply opacity-0;
+/* [ellipsis] opacity-0 */
+.task {
+    @apply [&:not(.isHovered,.titleHasFocus,.descriptionHasFocus)_double-ellipsis-icon]:not-hover:opacity-0;
 }
 .task.completed double-ellipsis-icon {
     @apply text-submit-300;
+}
+
+.icon-group {
+    @apply not-hoverable:-translate-x-8;
+}
+/* [icon-group] -translate-x-8 */
+.task {
+    @apply [&:is(.isHovered,.titleHasFocus,.descriptionHasFocus)_.icon-group]:-translate-x-8
+        [&_.icon-group]:hover:-translate-x-8;
 }
 
 .subtask-toggle {

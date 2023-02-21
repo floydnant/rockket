@@ -42,7 +42,7 @@ export class EntitiesEffects {
 
     loadPreviews = createEffect(() => {
         return this.actions$.pipe(
-            ofType(entitiesActions.loadPreviews),
+            ofType(entitiesActions.loadPreviews, entitiesActions.reloadPreviews),
             mergeMap(() => {
                 const res$ = this.entitiesService.getEntityPreviews()
 
