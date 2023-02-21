@@ -32,7 +32,7 @@
                 <ng-content select="[sidebarHeader]"></ng-content>
             </header>
             <div class="sidebar-content | overflow-y-auto overscroll-contain py-2" data-test-name="sidebar-content">
-                <div #sidebarScrollSpy></div>
+                <div class="sidebar-scroll-spy" (intersectionChange)="setScrollSpyIntersecting($event)"></div>
                 <ng-content select="[sidebarContent]"></ng-content>
             </div>
         </aside>

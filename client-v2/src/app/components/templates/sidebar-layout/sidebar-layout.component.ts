@@ -12,11 +12,15 @@ export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
 
     @Input() enableResize = true
 
-    isMenuOpen$ = this.menuService.isMenuOpen$
+    isMobileScreen$ = this.deviceService.isMobileScreen$
 
+    isMenuOpen$ = this.menuService.isMenuOpen$
     isBottomNavBorderVisible$ = this.menuService.isBottomNavBorderVisible$
 
-    isMobileScreen$ = this.deviceService.isMobileScreen$
+    isSidebarScrolled = false
+    setScrollSpyIntersecting(isIntersecting: boolean) {
+        this.isSidebarScrolled = !isIntersecting
+    }
 
     @ViewChild('resizeHandle') resizeHandle!: ElementRef<HTMLDivElement>
 
@@ -25,16 +29,12 @@ export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
             this.resizeHandle.nativeElement.addEventListener('mousedown', this.onMouseDown)
             document.addEventListener('mouseup', this.onMouseUp)
         }
-
-        this.observer.observe(this.sidebarScrollSpy.nativeElement)
     }
     ngOnDestroy(): void {
         if (this.enableResize) {
             this.resizeHandle.nativeElement.removeEventListener('mousedown', this.onMouseDown)
             document.removeEventListener('mouseup', this.onMouseUp)
         }
-
-        this.observer.disconnect()
     }
 
     // in case: https://stackoverflow.com/questions/26233180/resize-a-div-on-border-drag-and-drop-without-adding-extra-markup
@@ -48,16 +48,4 @@ export class SidebarLayoutComponent implements AfterViewInit, OnDestroy {
         const newWidth = currMouseX + 'px'
         sidebar.style.width = newWidth
     }).bind(this)
-
-    isSidebarScrolled = false
-    @ViewChild('sidebarScrollSpy') sidebarScrollSpy!: ElementRef<HTMLDivElement>
-
-    observer = new IntersectionObserver(
-        entries => {
-            entries.forEach(entry => {
-                if (entry.target == this.sidebarScrollSpy.nativeElement) this.isSidebarScrolled = !entry.isIntersecting
-            })
-        },
-        { threshold: [1] }
-    )
 }

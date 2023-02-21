@@ -1,12 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    Input,
-    OnDestroy,
-    ViewChild,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import {
     BehaviorSubject,
@@ -20,7 +12,7 @@ import {
     switchMap,
     timer,
 } from 'rxjs'
-import { TaskPreview, TaskStatus, TaskPreviewRecursive } from 'src/app/fullstack-shared-models/task.model'
+import { TaskPreview, TaskPreviewRecursive, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { taskStatusColorMap, TwColorClass } from 'src/app/shared/colors'
 import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
 
@@ -62,7 +54,7 @@ const getStatusCountMapRecursive = (taskTree: TaskPreviewRecursive[]): Record<Ta
     styleUrls: ['./page-progress-bar.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PageProgressBarComponent implements AfterViewInit, OnDestroy {
+export class PageProgressBarComponent {
     constructor(
         private entityView: EntityViewComponent // needed to update the secondary progress bar, @TODO: find a clearer way to do this
     ) {}
@@ -123,33 +115,18 @@ export class PageProgressBarComponent implements AfterViewInit, OnDestroy {
         })
     )
 
-    isProgressBarHidden$ = new BehaviorSubject(false)
+    isProgressBarVisible$ = new BehaviorSubject(true)
     progressOutputSubscription = combineLatest([
         this.digest$.pipe(map(digest => digest?.progress)),
-        this.isProgressBarHidden$,
+        this.isProgressBarVisible$,
     ])
         .pipe(
-            map(([progress, isProgressBarHidden]) => {
-                if (!isProgressBarHidden || !progress) return null
+            map(([progress, isProgressBarVisible]) => {
+                if (isProgressBarVisible || !progress) return null
 
                 return progress
             }),
             untilDestroyed(this)
         )
         .subscribe(progress => this.entityView.progress$.next(progress))
-
-    @ViewChild('progressBar') progressBar!: ElementRef<HTMLDivElement>
-    progressBarObserver = new IntersectionObserver(
-        entries => {
-            if (entries[0].isIntersecting) this.isProgressBarHidden$.next(false)
-            else this.isProgressBarHidden$.next(true)
-        },
-        { threshold: [0.5] }
-    )
-    ngAfterViewInit(): void {
-        this.progressBarObserver.observe(this.progressBar.nativeElement)
-    }
-    ngOnDestroy(): void {
-        this.progressBarObserver.disconnect()
-    }
 }
