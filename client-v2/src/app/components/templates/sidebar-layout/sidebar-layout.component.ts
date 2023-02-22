@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core'
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { fromEvent, switchMap, takeUntil, tap } from 'rxjs'
 import { DeviceService } from 'src/app/services/device.service'

@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { BehaviorSubject, of } from 'rxjs'
+import { BehaviorSubject } from 'rxjs'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { TaskPreview, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { IconsModule } from '../../atoms/icons/icons.module'

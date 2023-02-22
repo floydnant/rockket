@@ -11,6 +11,7 @@ describe('TaskViewComponent', () => {
     let fixture: ComponentFixture<TaskViewComponent>
 
     beforeEach(async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const entityViewDataMock: EntityViewData<any> = {
             detail$: new BehaviorSubject(null),
             entity$: new BehaviorSubject(null),
