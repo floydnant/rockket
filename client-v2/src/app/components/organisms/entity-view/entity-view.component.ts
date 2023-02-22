@@ -113,6 +113,7 @@ export class EntityViewComponent {
             tap(entity => {
                 if (!entity) return
 
+                // @TODO: Maybe we should refresh the data here too
                 this.store.dispatch(entitiesActions.loadDetail({ entityType: entity.entityType, id: entity.id }))
             }),
             untilDestroyed(this)
