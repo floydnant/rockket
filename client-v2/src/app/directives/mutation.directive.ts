@@ -41,9 +41,10 @@ export class MutationDirective implements OnDestroy {
     private observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
             const element = this.elementRef.nativeElement
+            const trimmedText = element.innerText.trim()
 
             if (this.mutationOptions.plainOnly && element.childNodes.length > 1) {
-                element.innerHTML = element.innerText.trim()
+                element.innerHTML = trimmedText
 
                 try {
                     window.getSelection()?.setPosition(element, 1) // restore cursor position
@@ -54,8 +55,13 @@ export class MutationDirective implements OnDestroy {
             }
 
             this.domChanges.emit(mutation)
-            if (this.mutationOptions.plainOnly) this.textChanges.emit(element.innerText.trim())
-            else this.textChanges.emit(element.innerText.trim() ? element.innerHTML.trim() : '')
+
+            if (this.mutationOptions.plainOnly) {
+                this.textChanges.emit(trimmedText)
+                return
+            }
+
+            this.textChanges.emit(trimmedText ? element.innerHTML.trim() : '')
         })
     })
 }

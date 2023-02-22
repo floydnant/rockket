@@ -31,6 +31,7 @@ export class LoginLoadingComponent {
         .pipe(first(), untilDestroyed(this))
         .subscribe(({ isLoading, isLoggedIn }) => {
             if (isLoading) return
+
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (isLoggedIn) this.router.navigateByUrl(this.callbackUrl!, { replaceUrl: true })
             else {
