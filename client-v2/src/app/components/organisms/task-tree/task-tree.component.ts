@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { BehaviorSubject, combineLatestWith, map, shareReplay, tap } from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'

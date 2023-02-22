@@ -16,7 +16,7 @@ import { TaskPreview, TaskPreviewRecursive, TaskStatus } from 'src/app/fullstack
 import { taskStatusColorMap, TwColorClass } from 'src/app/shared/colors'
 import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
 
-export const filterByStatus = <T extends TaskPreview>(taskTree: T[]) => {
+export const mapByStatus = <T extends TaskPreview>(taskTree: T[]) => {
     const statusCountMap = Object.values(TaskStatus).reduce(
         (acc, status) => ({
             ...acc,
@@ -29,7 +29,7 @@ export const filterByStatus = <T extends TaskPreview>(taskTree: T[]) => {
 
 const getStatusCountMapRecursive = (taskTree: TaskPreviewRecursive[]): Record<TaskStatus, number> => {
     const map = Object.fromEntries(
-        Object.entries(filterByStatus(taskTree)).map(([status, tasks]) => [status, tasks.length])
+        Object.entries(mapByStatus(taskTree)).map(([status, tasks]) => [status, tasks.length])
     ) as Record<TaskStatus, number>
 
     const mapRecursive = taskTree.reduce<Record<TaskStatus, number>>((acc, task) => {

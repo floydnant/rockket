@@ -108,11 +108,12 @@ export class EntityViewComponent {
     entitySubscription = this.entity$
         .pipe(
             distinctUntilChanged((previous, current) => previous?.id == current?.id),
-            tap(() => this.topElement?.nativeElement?.scrollIntoView({ behavior: 'smooth' })), // lets see how the 'smooth' behaviour feels after a while
+            tap(() => this.topElement?.nativeElement?.scrollIntoView({ behavior: 'smooth' })),
             delay(0), // needs to be on the macro queue or else, change detection is complaining
             tap(entity => {
                 if (!entity) return
 
+                // @TODO: Maybe we should refresh the data here too
                 this.store.dispatch(entitiesActions.loadDetail({ entityType: entity.entityType, id: entity.id }))
             }),
             untilDestroyed(this)
