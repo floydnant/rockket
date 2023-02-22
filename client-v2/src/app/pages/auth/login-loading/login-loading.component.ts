@@ -4,7 +4,7 @@ import { HotToastService } from '@ngneat/hot-toast'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { take } from 'rxjs'
+import { first } from 'rxjs'
 import { AppState } from 'src/app/store'
 import { authActions } from 'src/app/store/user/user.actions'
 import { userSelectors } from 'src/app/store/user/user.selectors'
@@ -28,7 +28,7 @@ export class LoginLoadingComponent {
 
     storeSubscription = this.store
         .select(userSelectors.selectLoginState)
-        .pipe(take(1), untilDestroyed(this))
+        .pipe(first(), untilDestroyed(this))
         .subscribe(({ isLoading, isLoggedIn }) => {
             if (isLoading) return
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -40,7 +40,7 @@ export class LoginLoadingComponent {
         })
 
     actionsSubscription = this.actions$
-        .pipe(ofType(authActions.confirmLoginError, authActions.loginOrSignupSuccess), take(1), untilDestroyed(this))
+        .pipe(ofType(authActions.confirmLoginError, authActions.loginOrSignupSuccess), first(), untilDestroyed(this))
         .subscribe(({ type }) => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (/success/.test(type)) this.router.navigateByUrl(this.callbackUrl!, { replaceUrl: true })
