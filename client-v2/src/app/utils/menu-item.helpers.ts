@@ -21,6 +21,7 @@ export const wrapMenuItems = (items: MenuItem[]): WrappedMenuItems => {
     return Object.assign(items, { applyOperators: getOperatorApplier(items) })
 }
 
+/** Used to update items on the fly. The callback is also recursively applied to children. */
 export const interceptItem = (callback: (item: MenuItem) => Partial<Omit<MenuItem, 'children'>>) => {
     return (item: MenuItem): MenuItem => {
         if (item.isSeperator) return item
@@ -33,24 +34,51 @@ export const interceptItem = (callback: (item: MenuItem) => Partial<Omit<MenuIte
     }
 }
 
+/** Used to inject parameters into actions.
+ *
+ * **NOTE:** If there is a parameter given later, that will be used instead. see example below.
+ *
+ * For example, if your action accepts a parameter like this:
+ * ```ts
+ * action: (data: { id: string }) => ...
+ * ```
+ * you can inject parameters like this:
+ * ```ts
+ * items.map(useDataForAction({ id: 'foo' }))
+ * ```
+ * But when the action is later called with a parameter like this, that will be used instead.
+ * ```ts
+ * action({ id: 'bar' }) // will take precedence over injected parameters
+ * ```
+ */
 export const useDataForAction = (data: unknown) => {
     return interceptItem(({ action }) => ({
         action: action && ((localData: unknown) => action(localData || data)),
     }))
 }
 
+/** Used to transform the data when the action is called. */
 export const interceptDataForAction = (callback: (data: unknown) => unknown) => {
     return interceptItem(({ action }) => ({
         action: action && ((localData: unknown) => action(callback(localData))),
     }))
 }
 
+/** Use this to inject parameters into routes.
+ *
+ * For example, if your route is `/route/to/:id`, you can use it like this:
+ * ```ts
+ * items.map(useParamsForRoute({ id: 'foo' }))
+ * ```
+ * and the resulting route will look like this `/route/to/foo`
+ */
 export const useParamsForRoute = (params: Record<string, string | number>) => {
     return interceptItem(({ route }) => ({
         route: route && interpolateParams(route, params),
     }))
 }
 
+/** Used to take a tasks status and set the respective status-item as `isActive` */
 export const useTaskForActiveStatus = (task: Pick<TaskPreview, 'status'>) => {
     return (taskStatusItem: MenuItem): MenuItem => ({
         ...taskStatusItem,
@@ -58,6 +86,7 @@ export const useTaskForActiveStatus = (task: Pick<TaskPreview, 'status'>) => {
         isActive: task.status == taskStatusItem.icon,
     })
 }
+/** Used to take a tasks priority and set the respective priority-item as `isActive` */
 export const useTaskForActivePriority = (task: Pick<TaskPreview, 'priority'>) => {
     return (taskPriorityItem: MenuItem): MenuItem => ({
         ...taskPriorityItem,
@@ -65,6 +94,7 @@ export const useTaskForActivePriority = (task: Pick<TaskPreview, 'priority'>) =>
         isActive: task.priority == taskPriorityItem.icon,
     })
 }
+/** Used to take a tasks status and priority and set the respective status/priority-items as `isActive` */
 export const useTaskForActiveItems = (task: Pick<TaskPreview, 'status' | 'priority'>) => {
     return (item: MenuItem): MenuItem => {
         // define mappers for the children of specific items
