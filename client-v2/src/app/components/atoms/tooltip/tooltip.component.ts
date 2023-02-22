@@ -14,6 +14,8 @@ export const TOOLTIP_DATA = new InjectionToken<TooltipData>('tooltip.data')
     },
 })
 export class TooltipComponent {
+    constructor(@Inject(TOOLTIP_DATA) public tooltipData: TooltipData) {}
+
     get asString(): string | false {
         return typeof this.tooltipData === 'string' ? this.tooltipData : false
     }
@@ -21,6 +23,4 @@ export class TooltipComponent {
     get asTemplate(): TemplateRef<void> | false {
         return this.tooltipData instanceof TemplateRef ? this.tooltipData : false
     }
-
-    constructor(@Inject(TOOLTIP_DATA) public tooltipData: TooltipData) {}
 }
