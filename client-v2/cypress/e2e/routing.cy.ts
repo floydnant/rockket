@@ -6,6 +6,8 @@ import {
 } from 'cypress/support/auth-helpers'
 import { testName } from 'cypress/support/helpers'
 
+const AUTH_TOKEN_KEY = 'rockket-auth-token'
+
 beforeEach(() => {
     cy.clearDb()
 })
@@ -80,11 +82,11 @@ describe('Routing', () => {
             cy.get(testName('workspace-page'))
             cy.window().then(() => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                const token = window.localStorage.getItem('todo-authToken')!
+                const token = window.localStorage.getItem(AUTH_TOKEN_KEY)!
 
                 cy.clearLocalStorage()
 
-                cy.setLocalStorage('todo-authToken', token)
+                cy.setLocalStorage(AUTH_TOKEN_KEY, token)
                 cy.visit('/home')
 
                 cy.get(testName('workspace-page')).should('exist')
