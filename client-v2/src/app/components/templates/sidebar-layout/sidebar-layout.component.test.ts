@@ -1,7 +1,8 @@
 import { CdkMenuTrigger } from '@angular/cdk/menu'
 import { OverlayModule } from '@angular/cdk/overlay'
-import { Store } from '@ngrx/store'
 import { testName } from 'cypress/support/helpers'
+import { UiStateService } from 'src/app/services/ui-state.service'
+import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { IconComponent } from '../../atoms/icons/icon/icon.component'
 import { LoadingSpinnerComponent } from '../../atoms/icons/loading-spinner/loading-spinner.component'
 import { UserMenuComponent } from '../../organisms/user-menu/user-menu.component'
@@ -12,10 +13,7 @@ import { SidebarLayoutComponent } from './sidebar-layout.component'
 const setupComponent = (template: string) => {
     cy.mount(template, {
         componentProperties: {},
-        providers: [
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            { provide: Store, useValue: { subscribe() {}, select() {} } },
-        ],
+        providers: [storeMock, UiStateService, actionsMock],
         imports: [OverlayModule],
         declarations: [
             SidebarLayoutComponent,
