@@ -18,7 +18,7 @@ import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
-import { flattenEntityTreeIncludingTasks, traceEntity, traceEntityIncludingTasks } from 'src/app/store/entities/utils'
+import { flattenEntityTreeIncludingTasks, traceEntityIncludingTasks } from 'src/app/store/entities/utils'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 
 export interface EntityTreeNode {
