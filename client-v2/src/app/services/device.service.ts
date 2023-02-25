@@ -48,6 +48,7 @@ export class DeviceService {
 
     shouldFetch$ = merge(this.isOnline$, this.isAppVisible$).pipe(
         distinctUntilChanged(),
+        startWith(true),
         throttleTime(15000),
         filter(event => event == true),
         map((_, index) => index),
