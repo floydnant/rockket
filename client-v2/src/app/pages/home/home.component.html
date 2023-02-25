@@ -98,7 +98,7 @@
                                 class="node-toggle"
                                 cdkTreeNodeToggle
                                 [attr.aria-label]="'Toggle ' + node.title"
-                                (click)="node.isExpanded = !node.isExpanded"
+                                (click)="toggleExpansion(node)"
                             >
                                 <app-icon
                                     icon="fas fa-chevron-right"

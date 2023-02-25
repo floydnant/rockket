@@ -1,10 +1,11 @@
 <div class="height-screen flex w-full flex-col" data-test-name="app-container" style="--bottom-nav-height: 3.5rem">
     <div class="relative flex h-[calc(100%-var(--bottom-nav-height))] md:h-full">
         <aside
-            class="sidebar | sidebar--mobile | relative flex h-full flex-col border-tinted-700 bg-tinted-800 md:w-56 md:min-w-[10rem] md:max-w-[25rem] md:border-r md:text-md"
+            class="sidebar | sidebar--mobile | relative flex h-full flex-col border-tinted-700 bg-tinted-800 md:w-[var(--sidebar-width,14rem)] md:min-w-[10rem] md:max-w-[25rem] md:border-r md:text-md"
             [class.hide]="!(isMenuOpen$ | async)"
             [hidden]="!(isMenuOpen$ | async)"
             data-test-name="sidebar"
+            [style.--sidebar-width]="uiState.width"
         >
             <div
                 *ngIf="enableResize"
