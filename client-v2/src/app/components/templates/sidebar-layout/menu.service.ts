@@ -1,21 +1,28 @@
 import { Injectable } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
+import { UiStateService } from 'src/app/services/ui-state.service'
 
 @Injectable({
     providedIn: 'root',
 })
 export class MenuService {
-    private _isMenuOpen = new BehaviorSubject(true)
+    constructor(private uiStateService: UiStateService) {
+        this.isMenuOpen$_.subscribe(isOpen => {
+            this.uiStateService.toggleMobileMenu(isOpen)
+        })
+    }
+
+    private isMenuOpen$_ = new BehaviorSubject(this.uiStateService.sidebarUiState.isMobileMenuOpen)
     get isMenuOpen$() {
-        return this._isMenuOpen
+        return this.isMenuOpen$_
     }
 
     setIsOpen(isOpen: boolean) {
-        this._isMenuOpen.next(isOpen)
+        this.isMenuOpen$_.next(isOpen)
     }
 
     toggleIsOpen() {
-        this._isMenuOpen.next(!this._isMenuOpen.value)
+        this.isMenuOpen$_.next(!this.isMenuOpen$_.value)
     }
 
     isBottomNavBorderVisible$ = new BehaviorSubject(false)
