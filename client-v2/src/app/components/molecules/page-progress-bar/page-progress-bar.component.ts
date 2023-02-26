@@ -13,6 +13,7 @@ import {
     timer,
 } from 'rxjs'
 import { TaskPreview, TaskPreviewRecursive, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import { UiStateService } from 'src/app/services/ui-state.service'
 import { taskStatusColorMap, TwColorClass } from 'src/app/shared/colors'
 import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
 
@@ -56,7 +57,8 @@ const getStatusCountMapRecursive = (taskTree: TaskPreviewRecursive[]): Record<Ta
 })
 export class PageProgressBarComponent {
     constructor(
-        private entityView: EntityViewComponent // needed to update the secondary progress bar, @TODO: find a clearer way to do this
+        private entityView: EntityViewComponent, // needed to update the secondary progress bar, @TODO: find a clearer way to do this
+        private uiStateService: UiStateService
     ) {}
 
     taskStatuses = Object.values(TaskStatus)
@@ -71,7 +73,11 @@ export class PageProgressBarComponent {
         this.taskTree$.next(tasks)
     }
 
-    isShownAsPercentage = true
+    isShownAsPercentage = this.uiStateService.mainViewUiState.isProgressShownAsPercentage
+    toggleShownAsPercentage() {
+        this.isShownAsPercentage = !this.isShownAsPercentage
+        this.uiStateService.updateShownAsPercentage(this.isShownAsPercentage)
+    }
 
     digest$ = this.taskTree$.pipe(
         map(tasks => {

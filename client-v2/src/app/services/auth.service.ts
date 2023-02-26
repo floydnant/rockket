@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 import { HttpService } from '../http/http.service'
 import { SignupCredentialsDto, LoginCredentialsDto } from '../fullstack-shared-models/auth.model'
 import { AuthSuccessResponse } from '../shared/models'
+import { StorageItem } from '../utils/storage.helpers'
 
 @Injectable({
     providedIn: 'root',
@@ -19,13 +20,14 @@ export class AuthService {
         return this.http.get<AuthSuccessResponse>('/auth/me')
     }
 
+    private token = new StorageItem<string>('rockket-auth-token', { oldKey: 'todo-authToken' })
     getToken() {
-        return localStorage.getItem('todo-authToken')
+        return this.token.value
     }
     saveToken(authToken: string) {
-        localStorage.setItem('todo-authToken', authToken)
+        this.token.value = authToken
     }
     deleteToken() {
-        localStorage.removeItem('todo-authToken')
+        this.token.remove()
     }
 }

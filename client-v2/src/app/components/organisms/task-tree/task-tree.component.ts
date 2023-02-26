@@ -9,6 +9,7 @@ import {
     TaskStatus,
 } from 'src/app/fullstack-shared-models/task.model'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
+import { UiStateService } from 'src/app/services/ui-state.service'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
@@ -39,7 +40,11 @@ export const convertToTaskTreeNode = (task: TaskPreviewFlattend): TaskTreeNode =
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskTreeComponent {
-    constructor(private store: Store<AppState>, private loadingService: LoadingStateService) {}
+    constructor(
+        private store: Store<AppState>,
+        private loadingService: LoadingStateService,
+        private uiStateService: UiStateService
+    ) {}
 
     tasks$ = new BehaviorSubject<TaskPreviewRecursive[] | null>(null)
     @Input() set tasks(tasks: TaskPreviewRecursive[]) {
@@ -49,14 +54,24 @@ export class TaskTreeComponent {
     flattendTaskTree$ = this.tasks$.pipe(
         map(tasks => {
             if (!tasks) return []
-            const treeNodes = flattenTaskTree(tasks).map(convertToTaskTreeNode)
+            const treeNodes = flattenTaskTree(tasks).map(task => {
+                const treeNode = convertToTaskTreeNode(task)
+
+                treeNode.isExpanded = this.entityExpandedMap.get(task.id) ?? true
+
+                return treeNode
+            })
             return treeNodes
         })
     )
 
+    entityExpandedMap = this.uiStateService.mainViewUiState.entityExpandedMap
+
     uiChangeEvents = new BehaviorSubject<{ id: string; isExpanded: boolean } | null>(null)
     toggleExpansion(node: TaskTreeNode, isExpanded: boolean) {
         this.uiChangeEvents.next({ id: node.taskPreview.id, isExpanded })
+
+        this.uiStateService.toggleMainViewEntity(node.taskPreview.id, isExpanded)
     }
 
     treeWithUiChanges!: TaskTreeNode[]
