@@ -8,9 +8,11 @@ export const typeSignupCredentialsAndSubmit = (creds: Credentials = credentials[
     cy.get(testName('input-confirmPassword')).type(creds.password)
     cy.get(testName('submit-button')).click()
 }
-export const signup = (creds: Credentials = credentials['jonathan']) => {
+export const signupProcedure = (creds: Credentials = credentials['jonathan']) => {
     cy.visit('/auth/signup')
     cy.get(testName('signup-page'))
+
+    cy.intercept('POST', '/auth/signup').as('signup')
     typeSignupCredentialsAndSubmit(creds)
 }
 
@@ -19,8 +21,9 @@ export const typeLoginCredentialsAndSubmit = (creds: Credentials = credentials['
     cy.get(testName('input-password')).type(creds.password)
     cy.get(testName('submit-button')).click()
 }
-export const login = (creds: Credentials = credentials['jonathan']) => {
+export const loginProcedure = (creds: Credentials = credentials['jonathan']) => {
     cy.visit('/auth/login')
     cy.get(testName('login-page'))
+    cy.intercept('POST', '/auth/login').as('login')
     typeLoginCredentialsAndSubmit(creds)
 }

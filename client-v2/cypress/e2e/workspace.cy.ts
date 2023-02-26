@@ -1,9 +1,9 @@
-import { signup } from 'cypress/support/auth-helpers'
 import { testName } from 'cypress/support/helpers'
 
 beforeEach(() => {
     cy.clearDb()
-    signup()
+    cy.signup()
+    cy.visit('/home')
 
     cy.intercept('POST', '/list').as('createEntity')
     cy.intercept('POST', '/task').as('createTask')
