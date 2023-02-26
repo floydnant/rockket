@@ -25,7 +25,8 @@
         "unit:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "e2e": "sh run-e2e.sh '--watch --config ./test/jest-e2e.json'",
         "e2e:ci": "sh run-e2e.sh '--config ./test/jest-e2e.json'",
-        "db:reset": "prisma db push --force-reset --accept-data-loss --skip-generate"
+        "db:reset": "prisma db push --force-reset --accept-data-loss --skip-generate",
+        "db-testing:reset": "DATABASE_URL=$(bash ./get-testing-db-url.sh) npm run db:reset"
     },
     "dependencies": {
         "@nestjs/common": "^9.0.11",
