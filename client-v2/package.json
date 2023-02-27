@@ -53,7 +53,7 @@
         "@total-typescript/ts-reset": "^0.3.7",
         "@types/jasmine": "~4.3.1",
         "@types/node": "^12.20.55",
-        "@typescript-eslint/eslint-plugin": "^5.52.0",
+        "@typescript-eslint/eslint-plugin": "^5.53.0",
         "@typescript-eslint/parser": "^5.49.0",
         "autoprefixer": "^10.4.13",
         "cypress": "latest",
