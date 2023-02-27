@@ -37,7 +37,7 @@
         "@ngneat/overview": "^3.0.0",
         "@ngneat/until-destroy": "^9.2.3",
         "@ngrx/effects": "^14.3.2",
-        "@ngrx/store": "^14.3.2",
+        "@ngrx/store": "^14.3.3",
         "@ngrx/store-devtools": "^14.3.2",
         "rxjs": "~7.8.0",
         "tslib": "^2.5.0",
