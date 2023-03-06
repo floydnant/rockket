@@ -28,7 +28,7 @@
         "db:reset": "prisma db push --force-reset --accept-data-loss --skip-generate"
     },
     "dependencies": {
-        "@nestjs/common": "^9.0.11",
+        "@nestjs/common": "^9.3.9",
         "@nestjs/config": "^2.2.0",
         "@nestjs/core": "^9.2.1",
         "@nestjs/jwt": "^10.0.2",
