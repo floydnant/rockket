@@ -9,6 +9,7 @@ import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
+import { RxModule } from 'src/app/rx/rx.module'
 import { TaskTreeMap } from 'src/app/store/entities/entities.state'
 import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
@@ -26,7 +27,7 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
     }
     cy.mount(`<app-tasklist-view></app-tasklist-view> `, {
         componentProperties: {},
-        imports: [CdkMenuModule],
+        imports: [CdkMenuModule, RxModule],
         declarations: [
             TasklistViewComponent,
             MutationDirective,

@@ -2,7 +2,7 @@
     <!-- SIDEBAR HEADER -->
     <ng-container sidebarHeader>
         <div
-            *ngIf="!(isMobileScreen$ | async)"
+            *rxIf="!(isMobileScreen$ | async)"
             class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300"
             cdkMenu
         >
@@ -57,12 +57,12 @@
             </button>
         </p>
 
-        <div class="pt-10 text-center" *ngIf="isTreeLoading$ | async; else tree">
+        <div class="pt-10 text-center" *rxIf="isTreeLoading$; else tree">
             <loading-spinner class="text-xl"></loading-spinner>
         </div>
 
         <ng-template #tree>
-            <p *ngIf="(entityPreviewsTransformed$ | async)?.length == 0" class="text-center text-tinted-400">
+            <p *rxIf="(entityPreviewsTransformed$ | async)?.length == 0" class="text-center text-tinted-400">
                 No lists so far...
             </p>
 
@@ -82,19 +82,17 @@
                         (cdkContextMenuOpened)="isHovered[node.id] = true"
                         (cdkContextMenuClosed)="isHovered[node.id] = false"
                         data-test-name="entity-tree-node"
-                        [attr.data-test-is-loading]="( nodeLoadingMap$ | async )?.[node.id]"
+                        [attr.data-test-is-loading]="(nodeLoadingMap$ | push)?.[node.id]"
                         [attr.data-level]="node.path.length"
                     >
                         <ng-template #tooltip>
                             <app-icon [icon]="node.status || node.entityType"></app-icon>
                             {{ node.title }}
                         </ng-template>
-
-                        <div class="indent-line" *ngFor="let line of range(node.path.length)">&nbsp;</div>
-
+                        <div class="indent-line" *rxFor="let line of range(node.path.length)">&nbsp;</div>
                         <div class="content">
                             <button
-                                *ngIf="node.expandable; else noToggleIcon"
+                                *rxIf="node.expandable; else noToggleIcon"
                                 class="node-toggle"
                                 cdkTreeNodeToggle
                                 [attr.aria-label]="'Toggle ' + node.title"
@@ -114,13 +112,11 @@
                                     ></app-icon>
                                 </div>
                             </ng-template>
-
                             <app-entity-page-label
                                 [pageTitle]="node.title"
-                                [pageIcon]="(( nodeLoadingMap$ | async )?.[node.id] && 'Loading') || node.status || node.entityType"
+                                [pageIcon]="((nodeLoadingMap$ | push)?.[node.id] && 'Loading') || node.status || node.entityType"
                             ></app-entity-page-label>
                         </div>
-
                         <div class="btn-group">
                             <button
                                 class="icon-btn"

@@ -1,6 +1,7 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { OverlayModule } from '@angular/cdk/overlay'
 import { testName } from 'cypress/support/helpers'
+import { RxModule } from 'src/app/rx/rx.module'
 import { DropDownComponent, MenuItem, MenuItemVariant } from './drop-down.component'
 
 const getMenuItems = (logoutAction: MenuItem['action'] = () => ''): MenuItem[] => [
@@ -39,7 +40,7 @@ const setupComponent = (template = defaultTemplate, menuItems = getMenuItems()) 
         componentProperties: {
             menuItems,
         },
-        imports: [OverlayModule, CdkMenuModule],
+        imports: [OverlayModule, CdkMenuModule, RxModule],
         declarations: [DropDownComponent],
     })
 }

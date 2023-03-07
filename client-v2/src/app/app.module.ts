@@ -56,6 +56,7 @@ import { InlineEditorComponent } from './components/atoms/inline-editor/inline-e
 import { PageProgressBarComponent } from './components/molecules/page-progress-bar/page-progress-bar.component'
 import { LayoutModule } from '@angular/cdk/layout'
 import { IntersectionDirective } from './directives/intersection.directive'
+import { RxModule } from './rx/rx.module'
 
 @NgModule({
     declarations: [
@@ -138,6 +139,7 @@ import { IntersectionDirective } from './directives/intersection.directive'
         OverlayModule,
         CdkTreeModule,
         LayoutModule,
+        RxModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

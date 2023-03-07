@@ -1,4 +1,4 @@
-<ng-container *ngIf="taskEntity$ | async as entity">
+<ng-container *rxIf="taskEntity$; let entity">
     <h1 class="heading | mt-4">
         <app-editable-entity-title [entity]="entity"></app-editable-entity-title>
     </h1>
@@ -6,8 +6,8 @@
     <pre> {{ detail$ | async | json }} </pre>
 </ng-container>
 
-<ng-container *ngIf="task$ | async as task">
+<ng-container *rxIf="task$; let task">
     <app-page-progress-bar [taskTree]="task.children || []"></app-page-progress-bar>
 
-    <app-task-tree *ngIf="task.children" [tasks]="task.children"></app-task-tree>
+    <app-task-tree *rxIf="task.children" [tasks]="task.children"></app-task-tree>
 </ng-container>

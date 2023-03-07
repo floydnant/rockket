@@ -1,4 +1,5 @@
 import { ReactiveFormsModule, Validators } from '@angular/forms'
+import { RxModule } from 'src/app/rx/rx.module'
 import { InputComponent } from '../../atoms/input/input.component'
 import { FormComponent } from './form.component'
 import { FormBuilderOptions } from './types'
@@ -28,7 +29,7 @@ const setupComponent = (formOptions: FormBuilderOptions, options?: SetupComponen
                 isLoading: options?.isLoading || false,
             },
             declarations: [FormComponent, InputComponent],
-            imports: [ReactiveFormsModule],
+            imports: [ReactiveFormsModule, RxModule],
         }
     )
 

@@ -1,5 +1,5 @@
 <div class="menu | dropdown-menu" cdkMenu data-test-name="drop-down-menu">
-    <ng-container *ngFor="let menuItem of items$ | async">
+    <ng-container *rxFor="let menuItem of items$ | async">
         <ng-template #chevron>
             <app-icon class="chevron | translate-x-2 text-tinted-500" icon="fas fa-chevron-right"></app-icon>
         </ng-template>
@@ -9,7 +9,7 @@
 
         <ng-template #icon>
             <app-icon
-                *ngIf="menuItem.icon"
+                *rxIf="menuItem.icon"
                 [icon]="menuItem.icon"
                 class="mr-1 inline-block scale-[1.3]"
                 [class.text-tinted-400]="!menuItem.variant || menuItem.variant == MenuItemVariant.DEFAULT"
@@ -52,7 +52,7 @@
         </a>
 
         <button
-            *ngIf="!menuItem.isSeperator && !menuItem.route && !menuItem.children?.length"
+            *rxIf="!menuItem.isSeperator && !menuItem.route && !menuItem.children?.length"
             class="menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }}"
             [class.bg-tinted-600]="menuItem.isActive"
             cdkMenuItem
@@ -64,7 +64,7 @@
         </button>
 
         <button
-            *ngIf="!menuItem.isSeperator && !menuItem.route && menuItem.children?.length"
+            *rxIf="!menuItem.isSeperator && !menuItem.route && menuItem.children?.length"
             class="menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }} | inline-flex justify-between"
             [class.bg-tinted-600]="menuItem.isActive"
             cdkMenuItem
@@ -79,6 +79,6 @@
             <ng-container *ngTemplateOutlet="chevron"></ng-container>
         </button>
 
-        <hr *ngIf="menuItem.isSeperator" class="mx-2 my-1 border-tinted-700" />
+        <hr *rxIf="menuItem.isSeperator" class="mx-2 my-1 border-tinted-700" />
     </ng-container>
 </div>

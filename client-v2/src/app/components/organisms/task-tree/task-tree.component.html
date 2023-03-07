@@ -1,15 +1,15 @@
 <div class="flex w-full flex-col gap-2">
     <div class="tree-container | flex flex-col">
-        <ng-container *ngFor="let taskNode of treeWithUiChanges$ | async; let nodeIndex = index; trackBy: trackByFn">
+        <ng-container *rxFor="let taskNode of treeWithUiChanges$ | async; let nodeIndex = index; trackBy: trackByFn">
             <div
-                *ngIf="shouldRender(taskNode)"
+                *rxIf="shouldRender(taskNode)"
                 class="tree-node | flex h-fit"
                 data-test-name="task-tree-node"
                 [attr.data-test-node-level]="taskNode.path.length"
             >
                 <div
                     class="indent-line"
-                    *ngFor="let lineIndex of range(taskNode.path.length).reverse(); let isMostInnerIndentLine = last"
+                    *rxFor="let lineIndex of range(taskNode.path.length).reverse(); let isMostInnerIndentLine = last"
                     [class.first-after-higher-level]="
                         isPreviousLineSpotATask(nodeIndex, lineIndex, taskNode.path.length)
                     "

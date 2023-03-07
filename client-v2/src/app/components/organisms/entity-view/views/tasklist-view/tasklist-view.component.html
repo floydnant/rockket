@@ -1,4 +1,4 @@
-<div class="" *ngIf="listEntity$ | async as entity">
+<div class="" *rxIf="listEntity$; let entity">
     <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
     <!--     <button class="button-naked">Add Sublist</button> -->
     <!--     <button class="button-naked">Add Description</button> -->
@@ -11,7 +11,7 @@
         <app-editable-entity-title [entity]="entity"></app-editable-entity-title>
     </h1>
 
-    <!-- <div class="created-at | test-md text-tinted-400" *ngIf="detail$ | async as detail">
+    <!-- <div class="created-at | test-md text-tinted-400" *rxIf="detail$ | async as detail">
         <span class="text-tinted-500">Created at</span> {{ detail?.createdAt | date }},
         {{ detail?.createdAt | date : 'shortTime' }}
     </div> -->
@@ -41,7 +41,7 @@
 
     <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
         <button
-            *ngIf="!(isDescriptionShown$ | async)"
+            *rxIf="!(isDescriptionShown$ | async)"
             class="button-naked text-tinted-200 hover:text-tinted-100"
             appTooltip="Add a description to this list"
             (click)="isDescriptionShown$.next(true); descriptionFocusable.focus()"
@@ -66,13 +66,13 @@
 
     <div
         class="children | mt-3 flex flex-wrap gap-2"
-        *ngIf="entity.children?.length"
+        *rxIf="entity.children?.length"
         cdkMenuBar
         data-test-name="entity-children"
     >
         <button
             class="child | button-m text-tinted-200"
-            *ngFor="let child of children$ | async"
+            *rxFor="let child of children$ | async"
             routerLink="/home/{{ child.id }}"
             cdkMenuItem
             [cdkContextMenuTriggerFor]="options"
@@ -93,7 +93,7 @@
     </div>
 </div>
 
-<ng-container *ngIf="tasks$ | async as tasks; else loadingTasks">
+<ng-container *rxIf="tasks$; let tasks; else: loadingTasks">
     <app-page-progress-bar [taskTree]="tasks"></app-page-progress-bar>
 
     <div class="options | mb-3 mt-2 flex gap-2">
@@ -108,7 +108,7 @@
         </button>
     </div>
 
-    <ng-container *ngIf="tasks.length; else noTasks">
+    <ng-container *rxIf="tasks.length; else noTasks">
         <app-task-tree [tasks]="tasks"></app-task-tree>
         <!-- <pre class="select-text">{{ tasks | json }}</pre> -->
     </ng-container>

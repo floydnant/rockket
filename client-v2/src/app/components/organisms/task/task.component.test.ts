@@ -5,6 +5,7 @@ import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreviewFlattend, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import { RxModule } from 'src/app/rx/rx.module'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { IconsModule } from '../../atoms/icons/icons.module'
@@ -38,7 +39,7 @@ const setupComponent = (
                 ...listeners,
                 menuItems: taskMenuItems.map(useStubsForActions(menuItemStubsMap)),
             },
-            imports: [CdkMenuModule, IconsModule],
+            imports: [CdkMenuModule, IconsModule, RxModule],
             declarations: [
                 TaskComponent,
                 DropDownComponent,

@@ -1,5 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { testName } from 'cypress/support/helpers'
+import { RxModule } from 'src/app/rx/rx.module'
 import { EntityPageLabelComponent } from '../../atoms/entity-page-label/entity-page-label.component'
 import { IconsModule } from '../../atoms/icons/icons.module'
 import { DropDownComponent, MenuItem } from '../drop-down/drop-down.component'
@@ -11,7 +12,7 @@ const setupComponent = (breadcrumbs: Breadcrumb[], template = defaultTemplate) =
         componentProperties: {
             breadcrumbs,
         },
-        imports: [CdkMenuModule, IconsModule],
+        imports: [CdkMenuModule, IconsModule, RxModule],
         declarations: [BreadcrumbsComponent, EntityPageLabelComponent, DropDownComponent],
     })
 }

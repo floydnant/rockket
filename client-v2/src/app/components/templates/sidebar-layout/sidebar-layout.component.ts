@@ -1,6 +1,17 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { debounceTime, fromEvent, map, switchMap, takeUntil, tap } from 'rxjs'
+import { coalesceWith } from '@rx-angular/cdk/coalescing'
+import {
+    animationFrames,
+    debounceTime,
+    distinctUntilChanged,
+    fromEvent,
+    map,
+    switchMap,
+    takeUntil,
+    tap,
+    timer,
+} from 'rxjs'
 import { DeviceService } from 'src/app/services/device.service'
 import { UiStateService } from 'src/app/services/ui-state.service'
 import { MenuService } from './menu.service'
@@ -47,7 +58,11 @@ export class SidebarLayoutComponent implements AfterViewInit {
                     fromEvent<MouseEvent>(document, 'mousemove').pipe(takeUntil(fromEvent(document, 'mouseup')))
                 ),
                 map(e => e.clientX + 'px'), // just take the x coordinate as the new width
+                // coalesceWith(animationFrames()),
+                coalesceWith(timer(3)),
+                distinctUntilChanged(),
                 tap(width => {
+                    console.log('updating width')
                     const sidebar = this.resizeHandle.nativeElement.parentElement as HTMLDivElement
                     sidebar.style.width = width
                 }),

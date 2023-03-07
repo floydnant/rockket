@@ -3,7 +3,7 @@
         <div class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300" cdkMenu>
             <button
                 cdkMenuItem
-                *ngFor="let page of settingsPages"
+                *rxFor="let page of settingsPages"
                 class="menu-item | w-full text-left"
                 [routerLink]="page.route"
                 routerLinkActive="text-primary-300"

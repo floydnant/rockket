@@ -9,7 +9,7 @@
     </label>
 </ng-template>
 
-<div class="relative block" [class.mt-7]="enableLabel" *ngIf="!controlName && !parentControl">
+<div class="relative block" [class.mt-7]="enableLabel" *rxIf="!controlName && !parentControl">
     <input
         #input
         [id]="id"
@@ -44,14 +44,13 @@
 
 <div
     class="errors | mt-1 text-sm text-danger-400"
-    *ngIf="(control.invalid && control.dirty) || extraErrorMessages?.length"
+    *rxIf="(control.invalid && control.dirty) || extraErrorMessages?.length"
     data-test-name="validation-errors"
 >
-    <div *ngFor="let err of errors">
-        <span
-            *ngIf="control.errors?.[err] || control.errors?.[err.toLowerCase()]"
-            >{{ getErrorMessage(err, control.errors?.[err] || control.errors?.[err.toLowerCase()]) }}</span
-        >
+    <div *rxFor="let err of errors">
+        <span *rxIf="control.errors?.[err] || control.errors?.[err.toLowerCase()]; let errValue">{{
+            getErrorMessage(err, errValue)
+        }}</span>
     </div>
-    <div *ngFor="let err of extraErrorMessages">{{ err.replace('$name', name) }}</div>
+    <div *rxFor="let err of extraErrorMessages">{{ err.replace('$name', name) }}</div>
 </div>

@@ -1,5 +1,5 @@
 <li
-    *ngIf="task$ | async as task"
+    *rxIf="task$; let task"
     class="task | flex w-full max-w-full list-none flex-col rounded-xl bg-tinted-800 py-2 px-1 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
     [class]="{
         'bg-submit-800': task.status == TaskStatus.COMPLETED,
@@ -53,10 +53,10 @@
             </div>
 
             <div class="second-row | ml-0.5 flex gap-2" [class]="{ 'mt-1': (nodeData$ | async)?.hasChildren }">
-                <ng-container *ngIf="nodeData$ | async as nodeData">
+                <ng-container *rxIf="nodeData$; let nodeData">
                     <button
                         class="subtask-toggle"
-                        *ngIf="nodeData.hasChildren"
+                        *rxIf="nodeData.hasChildren"
                         (click)="expansionChange.emit(!nodeData.isExpanded)"
                         data-test-name="subtask-toggle"
                     >
@@ -73,14 +73,14 @@
         <div class="relative -mr-1 max-w-max">
             <div class="icon-group | flex max-w-max flex-wrap items-center justify-end gap-3 transition-transform">
                 <app-icon
-                    *ngIf="isOverdue"
+                    *rxIf="isOverdue"
                     class="overdue-icon | animate-ping"
                     icon="fas fa-exclamation-triangle text-danger-400"
                     data-test-name="overdue-icon"
                 ></app-icon>
                 <div
                     class="priority-button | icon-btn"
-                    *ngIf="
+                    *rxIf="
                         task.status != TaskStatus.COMPLETED &&
                         task.status != TaskStatus.NOT_PLANNED &&
                         task.priority != TaskPriority.NONE

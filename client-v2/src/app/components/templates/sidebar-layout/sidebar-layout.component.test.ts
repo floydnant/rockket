@@ -1,6 +1,7 @@
 import { CdkMenuTrigger } from '@angular/cdk/menu'
 import { OverlayModule } from '@angular/cdk/overlay'
 import { testName } from 'cypress/support/helpers'
+import { RxModule } from 'src/app/rx/rx.module'
 import { UiStateService } from 'src/app/services/ui-state.service'
 import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { IconComponent } from '../../atoms/icons/icon/icon.component'
@@ -14,7 +15,7 @@ const setupComponent = (template: string) => {
     cy.mount(template, {
         componentProperties: {},
         providers: [storeMock, UiStateService, actionsMock],
-        imports: [OverlayModule],
+        imports: [OverlayModule, RxModule],
         declarations: [
             SidebarLayoutComponent,
             UserMenuComponent,

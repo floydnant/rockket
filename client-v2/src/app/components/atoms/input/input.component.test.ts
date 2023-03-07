@@ -1,4 +1,5 @@
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
+import { RxModule } from 'src/app/rx/rx.module'
 import { InputComponent } from './input.component'
 
 describe('InputComponent', () => {
@@ -21,7 +22,7 @@ describe('InputComponent', () => {
                     },
                 },
                 declarations: [InputComponent],
-                imports: [ReactiveFormsModule],
+                imports: [ReactiveFormsModule, RxModule],
             }
         )
     })

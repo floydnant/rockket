@@ -1,7 +1,7 @@
 <app-main-pane>
     <ng-container header>
         <div
-            *ngIf="progress$ | async as progress"
+            *rxIf="progress$; let progress"
             class="header-progress | absolute bottom-0 left-0 h-[2px] bg-submit-500 transition-opacity"
             [class.opacity-0]="!progress"
             [style.width]="progress + '%'"
@@ -23,7 +23,7 @@
 
             <ng-template #options>
                 <app-drop-down
-                    *ngIf="entity$ | async as entity"
+                    *rxIf="entity$; let entity"
                     [items]="(entityOptionsItems$ | async) || []"
                     [rootTrigger]="trigger"
                     [data]="{ id: entity.id, entityType: entity.entityType }"

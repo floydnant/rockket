@@ -2,6 +2,6 @@
     {{ string }}
 </ng-container>
 
-<ng-container *ngIf="asTemplate as template">
+<ng-container *rxIf="asTemplate; let template">
     <ng-template [ngTemplateOutlet]="template"></ng-template>
 </ng-container>
