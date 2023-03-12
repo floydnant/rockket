@@ -113,7 +113,7 @@ describe('Workspace', () => {
                     cy.get(testName('menu-item')).contains(/Open/).click()
                 })
 
-                cy.get('app-task-view').contains('Untitled task')
+                cy.contains('Untitled task')
             })
         })
 
