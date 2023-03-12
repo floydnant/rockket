@@ -56,6 +56,7 @@ import { InlineEditorComponent } from './components/atoms/inline-editor/inline-e
 import { PageProgressBarComponent } from './components/molecules/page-progress-bar/page-progress-bar.component'
 import { LayoutModule } from '@angular/cdk/layout'
 import { IntersectionDirective } from './directives/intersection.directive'
+import { EntityDescriptionComponent } from './components/molecules/entity-description/entity-description.component'
 
 @NgModule({
     declarations: [
@@ -99,6 +100,7 @@ import { IntersectionDirective } from './directives/intersection.directive'
         InlineEditorComponent,
         PageProgressBarComponent,
         IntersectionDirective,
+        EntityDescriptionComponent,
     ],
     imports: [
         BrowserModule,

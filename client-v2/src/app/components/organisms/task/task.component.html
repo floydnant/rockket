@@ -1,8 +1,10 @@
 <li
     *ngIf="task$ | async as task"
-    class="task | flex w-full max-w-full list-none flex-col rounded-xl bg-tinted-800 py-2 px-1 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
+    class="task | flex w-full max-w-full list-none flex-col rounded-xl border border-tinted-700 border-opacity-75 bg-tinted-800 py-2 px-1 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
     [class]="{
         'bg-submit-800': task.status == TaskStatus.COMPLETED,
+        'border-submit-700': task.status == TaskStatus.COMPLETED,
+        'border-opacity-60': task.status == TaskStatus.COMPLETED,
         'text-submit-200': task.status == TaskStatus.COMPLETED,
         completed: task.status == TaskStatus.COMPLETED,
         titleHasFocus: inlineEditor.isFocused,
@@ -17,7 +19,7 @@
         <div class="max-w-[calc(100%-1.7rem)]">
             <div class="first-row | flex items-center">
                 <button
-                    class="status-btn | icon-btn"
+                    class="status-btn | icon-btn | -ml-1 mr-2.5 text-lg"
                     [appTooltip]="statusTooltip"
                     [tooltipOptions]="{ avoidPositions: ['right'] }"
                     [cdkMenuTriggerFor]="statusMenu"
@@ -26,7 +28,7 @@
                     data-test-name="task-status-button"
                 >
                     <ng-template #statusTooltip>
-                        <span class="text-tinted-300">Status: </span>
+                        <span class="text-tinted-300 decoration-[3px]">Status: </span>
                         <span [class]="statusColorMap[task.status]">{{ task.status.replace('_', ' ') }}</span>
                     </ng-template>
 
@@ -43,7 +45,8 @@
                     [placeholderColor]="placeholderColorMap[task.status]"
                     [editorClass]="{
                         'line-through': task.status == TaskStatus.NOT_PLANNED,
-                        'decoration-tinted-200': task.status == TaskStatus.NOT_PLANNED,
+                        'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED,
+                        'decoration-[3px]': task.status == TaskStatus.NOT_PLANNED,
                         'pr-12': true
                     }"
                     [enableDebouncedUpdates]="false"
@@ -52,21 +55,42 @@
                 ></app-inline-editor>
             </div>
 
-            <div class="second-row | ml-0.5 flex gap-2" [class]="{ 'mt-1': (nodeData$ | async)?.hasChildren }">
+            <div
+                class="second-row | ml-0.5 flex flex-wrap gap-2"
+                [class.mt-1]="(nodeData$ | async)?.hasChildren || task.description || (isDescriptionExpanded$ | async)"
+            >
                 <ng-container *ngIf="nodeData$ | async as nodeData">
-                    <button
-                        class="subtask-toggle"
-                        *ngIf="nodeData.hasChildren"
-                        (click)="expansionChange.emit(!nodeData.isExpanded)"
-                        data-test-name="subtask-toggle"
-                    >
-                        <app-icon
-                            icon="fas fa-chevron-right"
-                            class="mr-1 inline-block transition-transform"
-                            [class.rotate-90]="nodeData.isExpanded"
-                        ></app-icon>
-                        Subtasks
-                    </button>
+                    <ng-container *ngIf="nodeData.hasChildren">
+                        <button
+                            class="subtask-toggle"
+                            (click)="expansionChange.emit(!nodeData.isExpanded)"
+                            data-test-name="subtask-toggle"
+                        >
+                            <app-icon
+                                icon="chevronRight"
+                                class="mr-1 inline-block transition-transform"
+                                [class.rotate-90]="nodeData.isExpanded"
+                            ></app-icon>
+                            {{ task.childrenCount }} Subtask{{ task.childrenCount == 1 ? '' : 's' }}
+                        </button>
+
+                        <div *ngIf="task.description || (isDescriptionExpanded$ | async)" class="separator"></div>
+                    </ng-container>
+
+                    <ng-container *ngIf="task.description || (isDescriptionExpanded$ | async)">
+                        <button class="description-toggle" (click)="toggleDescription()">
+                            <app-icon
+                                icon="chevronRight"
+                                class="mr-1 inline-block transition-transform"
+                                [class.rotate-90]="isDescriptionExpanded$ | async"
+                            ></app-icon>
+                            <!-- <app-icon icon="description" class="mx-1"></app-icon> -->
+                            Description
+                        </button>
+                        <!-- <button class="expand-description">
+                            <app-icon icon="expand"></app-icon>
+                        </button> -->
+                    </ng-container>
                 </ng-container>
             </div>
         </div>
@@ -126,14 +150,40 @@
         </div>
     </div>
 
-    <div
-        focusable
-        #descriptionFocusable="focusable"
-        [class.hidden]="!task.description && !descriptionFocusable.isFocused"
-        class="description | mt-1 rounded-lg bg-tinted-900 py-1.5 px-2.5 text-tinted-300 outline-none ring-primary-400 transition-all duration-75 focus:ring-2"
-        contenteditable
-        data-test-name="task-description"
-    >
-        {{ this.loading || task.description }}
+    <div class="relative">
+        <!-- This will become relevant when the rich text editor is implemented -->
+        <div
+            *ngIf="false"
+            class="description-toolbar | absolute left-1/2 bottom-full flex -translate-x-1/2 -translate-y-2 items-center gap-1 rounded-lg border border-tinted-600 bg-tinted-700 p-1 shadow-lg shadow-tinted-900"
+            [class.hidden]="!descriptionFocusable.isFocused"
+        >
+            <!-- <button class="button-m | bg-tinted-700 hover:bg-tinted-600" (click)="resetDescription()">Cancel</button> -->
+
+            <!-- <div class="separator"></div> -->
+            <!-- <button class="expand-description | icon-btn">
+                <app-icon icon="expand"></app-icon>
+            </button> -->
+
+            <!-- <div class="separator"></div> -->
+            <button class="button-m | bg-tinted-700 hover:bg-tinted-600">
+                <app-icon icon="expand" class="mr-1"></app-icon>
+                Open
+            </button>
+        </div>
+        <div
+            #description
+            (blur)="descriptionBlurEvents$.next($event)"
+            focusable
+            #descriptionFocusable="focusable"
+            [class.hidden]="!(isDescriptionExpanded$ | async) && !descriptionFocusable.isFocused"
+            class="description | mt-1 max-h-72 overflow-y-auto break-words rounded-lg bg-tinted-900 py-1.5 px-2.5 pb-6 text-tinted-300 outline-none ring-1 ring-tinted-700 transition-all duration-75 focus:ring-2 focus:ring-primary-400"
+            [class]="{
+                'not-hover:ring-submit-700': task.status == TaskStatus.COMPLETED,
+                'not-hover:ring-opacity-50': task.status == TaskStatus.COMPLETED
+            }"
+            contenteditable
+            data-test-name="task-description"
+            [innerHTML]="task.description"
+        ></div>
     </div>
 </li>

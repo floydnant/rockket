@@ -41,3 +41,23 @@ export const concatMatchingKeys = (
     const entries = Object.entries(obj1).map(([key, value]) => [key, `${value} ${obj2[key]}`])
     return Object.fromEntries(entries)
 }
+
+/** Insert an element after a given position.
+ *
+ * **Note:** This function mutates the original array.
+ */
+export const insertElementAfter = <T>(arr: Array<T>, position: number, elem: T) => {
+    arr.splice(position + 1, 0, elem)
+
+    return arr
+}
+
+/** Move an element at a given position to a specified position in the array.
+ *
+ * **Note:** This function mutates the original array.
+ */
+export const moveElement = <T>(arr: Array<T>, fromIndex: number, toIndex: number) => {
+    const elem = arr.splice(fromIndex, 1)[0]
+    insertElementAfter(arr, toIndex, elem)
+    return arr
+}
