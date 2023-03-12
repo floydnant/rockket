@@ -1,4 +1,5 @@
-import { Observable, switchMap, of, first, filter, map } from 'rxjs'
+import { EventEmitter } from '@angular/core'
+import { Observable, switchMap, of, first, filter, map, tap, takeUntil } from 'rxjs'
 
 /** Wraps the `filter()` operator to enable predicates with Observable results. */
 export const filterWith = <T>(predicate: (value: T) => boolean | Observable<boolean>) => {
@@ -15,4 +16,18 @@ export const filterWith = <T>(predicate: (value: T) => boolean | Observable<bool
                 )
             })
         )
+}
+
+export const createEventEmitter = <T>(
+    value$: Observable<T>,
+    options?: {
+        until$?: Observable<unknown>
+        isAsync?: boolean
+    }
+): EventEmitter<T> => {
+    const emitter = new EventEmitter<T>(options?.isAsync === true)
+
+    value$.pipe(options?.until$ ? takeUntil(options.until$) : tap()).subscribe(value => emitter.emit(value))
+
+    return emitter
 }

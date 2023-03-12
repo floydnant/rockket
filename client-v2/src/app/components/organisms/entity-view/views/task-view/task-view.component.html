@@ -3,11 +3,47 @@
         <app-editable-entity-title [entity]="entity"></app-editable-entity-title>
     </h1>
 
-    <pre> {{ detail$ | async | json }} </pre>
+    <app-entity-description
+        #descriptionEditor
+        [hidden]="!(isDescriptionShown$ | async)"
+        [description]="description$ | async"
+        (descriptionChange)="onDescriptionUpdate($event)"
+        (blur)="descriptionBlurEvents$.next($event)"
+    ></app-entity-description>
+
+    <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
+        <button
+            *ngIf="!(isDescriptionShown$ | async)"
+            class="button-naked text-tinted-200 hover:text-tinted-100"
+            appTooltip="Add a description to this task"
+            (click)="isDescriptionShown$.next(true); descriptionEditor.focusable.focus()"
+            cdkMenuItem
+            data-test-name="add-description"
+        >
+            <app-icon icon="description" class="mr-1"></app-icon>
+            Add description
+        </button>
+    </div>
 </ng-container>
 
 <ng-container *ngIf="task$ | async as task">
     <app-page-progress-bar [taskTree]="task.children || []"></app-page-progress-bar>
 
-    <app-task-tree *ngIf="task.children" [tasks]="task.children"></app-task-tree>
+    <div class="options | mb-3 mt-2 flex gap-2">
+        <button
+            class="button-naked text-tinted-200 hover:text-tinted-100"
+            (click)="createSubtask()"
+            appTooltip="Create a new subtask"
+            data-test-name="create-task"
+        >
+            <app-icon icon="fas fa-plus" class="mr-1"></app-icon>
+            New subtask
+        </button>
+    </div>
+
+    <app-task-tree *ngIf="task.children && task.children.length; else noTasks" [tasks]="task.children"></app-task-tree>
+
+    <ng-template #noTasks>
+        <p class="text-center text-tinted-400">No subtasks yet...</p>
+    </ng-template>
 </ng-container>

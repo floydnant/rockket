@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatest, merge } from 'rxjs'
-import { distinctUntilChanged, first, map, shareReplay, switchMap, tap } from 'rxjs/operators'
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs'
+import { distinctUntilChanged, first, map, mergeWith, shareReplay, startWith, tap } from 'rxjs/operators'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
 import { AppState } from 'src/app/store'
@@ -58,42 +58,26 @@ export class TasklistViewComponent {
         distinctUntilChanged()
     )
     isDescriptionShown$ = new BehaviorSubject(false)
-
-    descriptionChanges$ = new BehaviorSubject<string | null>(null)
-    blurEvents$ = new BehaviorSubject<FocusEvent | null>(null)
-
-    descriptionSubscription = combineLatest([this.blurEvents$, this.description$])
+    descriptionChanges$ = new Subject<string>()
+    descriptionBlurEvents$ = new Subject<FocusEvent>()
+    descriptionSubscription = combineLatest([this.description$, this.descriptionBlurEvents$.pipe(startWith(null))])
         .pipe(
-            tap(([blurEvent, description]) => {
-                if (blurEvent) {
-                    if (!description) this.isDescriptionShown$.next(false)
-                }
-                this.isDescriptionShown$.next(!!description)
-            }),
+            map(([description]) => description),
+            mergeWith(this.descriptionChanges$),
+            tap(description => this.isDescriptionShown$.next(!!description)),
             untilDestroyed(this)
         )
         .subscribe()
 
-    descriptionDomState$ = merge(
-        this.descriptionChanges$,
-        this.description$.pipe(
-            tap(() => {
-                if (this.descriptionChanges$.value !== null) this.descriptionChanges$.next(null)
-            })
-        )
-    ).pipe(shareReplay({ bufferSize: 1, refCount: true }))
-
-    descriptionUpdatesSubscription = this.blurEvents$
-        .pipe(
-            switchMap(() => combineLatest([this.descriptionChanges$, this.listEntity$]).pipe(first())),
-            untilDestroyed(this)
-        )
-        .subscribe(([newDescription, entity]) => {
-            // @TODO: Throttled updates should only be sent to the server and not update the store yet.
-            // The store should only be updated when the editor is blurred.
-            if (!entity || newDescription === null) return
+    onDescriptionUpdate(newDescription: string) {
+        // @TODO: Throttled updates should only be sent to the server and not update the store yet.
+        // The store should only be updated when the editor is blurred.
+        this.listEntity$.pipe(first()).subscribe(entity => {
+            if (!entity) return
             this.store.dispatch(listActions.updateDescription({ id: entity.id, newDescription }))
         })
+        this.descriptionChanges$.next(newDescription)
+    }
 
     createNewSublist() {
         this.listEntity$.pipe(first()).subscribe(entity => {
