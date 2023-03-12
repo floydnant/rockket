@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { FocusableDirective } from 'src/app/directives/focusable.directive'
 
 import { EntityDescriptionComponent } from './entity-description.component'
 
@@ -8,7 +9,7 @@ describe('EntityDescriptionComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EntityDescriptionComponent],
+            declarations: [EntityDescriptionComponent, FocusableDirective],
         }).compileComponents()
 
         fixture = TestBed.createComponent(EntityDescriptionComponent)
