@@ -15,10 +15,10 @@ export class AppService {
         return 'Hello World!'
     }
 
-    clearDb() {
+    async clearDb() {
         if (this.configService.get('TESTING_ENV') != 'true') throw new ForbiddenException()
 
-        this.dbHelper.clearDb()
+        await this.dbHelper.clearDb()
         this.logger.verbose('Cleared database')
         return { message: 'Database cleared.' }
     }
