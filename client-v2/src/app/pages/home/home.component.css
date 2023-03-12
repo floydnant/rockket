@@ -32,7 +32,10 @@
         truncate
         py-0.5
         pr-1
-        [.active_&]:text-primary-300;
+        transition-colors
+        duration-[40ms]
+        [.active_&]:text-primary-300
+        [.active_&]:hover:text-primary-200;
 }
 
 .node-toggle {
