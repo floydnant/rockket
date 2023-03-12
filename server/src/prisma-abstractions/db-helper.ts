@@ -41,17 +41,14 @@ export class DbHelper {
         let names = await tableNames
         names ||= await this.getTables()
 
-        names.forEach(async (tableName) => {
+        console.time(`CLEARED DATABASE`)
+        for (const tableName of names) {
+            console.time(`TRUNCATE table ${tableName}`)
             await this.prisma.$executeRawUnsafe(`TRUNCATE TABLE "public"."${tableName}" CASCADE;`)
-        })
+            console.timeEnd(`TRUNCATE table ${tableName}`)
+        }
+        console.timeEnd(`CLEARED DATABASE`)
 
-        // Reset the autoincrement I guess (we're using uuids anyway)
-        // const relnames = await this.prisma
-        //     .$queryRaw`SELECT c.relname FROM pg_class AS c JOIN pg_namespace AS n ON c.relnamespace = n.oid WHERE c.relkind='S' AND n.nspname='${this.dbSchemaName}';`
-        // for (const { relname } of relnames as { relname: string }[]) {
-        //     await this.prisma
-        //         .$queryRaw`ALTER SEQUENCE \"${this.dbSchemaName}\".\"${relname}\" RESTART WITH 1;`
-        // }
         return this.disconnect
     }
 }
