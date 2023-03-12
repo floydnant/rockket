@@ -64,6 +64,7 @@ const taskFixture: TaskPreviewFlattend = {
 const taskTreeNodeFixture: TaskTreeNode = {
     hasChildren: false,
     isExpanded: false,
+    isDescriptionExpanded: false,
     path: [],
     taskPreview: taskFixture,
 }
