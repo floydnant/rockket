@@ -11,6 +11,7 @@ export enum EntityState {
 
 const extraIcons = {
     blocking: 'far fa-ban text-tinted-300',
+    description: 'far fa-sticky-note',
     plus: 'far fa-plus',
     trash: 'far fa-trash',
     edit: 'far fa-pencil-alt',
@@ -25,6 +26,8 @@ const extraIcons = {
     logout: 'fas fa-sign-out-alt',
     workspace: 'fas fa-garage',
     loading: 'fad fa-spinner-third animate-spin',
+    chevronRight: 'fas fa-chevron-right',
+    chevronLeft: 'fas fa-chevron-left',
 }
 
 export const entityStateIcons = {
