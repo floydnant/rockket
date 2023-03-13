@@ -2,7 +2,7 @@ import { CdkMenuModule } from '@angular/cdk/menu'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { BehaviorSubject } from 'rxjs'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
-import { TaskPreview, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import { TaskPreviewFlattend, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { IconsModule } from '../../atoms/icons/icons.module'
 
 import { TaskComponent } from './task.component'
@@ -37,7 +37,7 @@ describe('TaskComponent', () => {
             // blockedById: '',
             parentTaskId: '',
             // inProgressSince: '',
-        } as null | TaskPreview)
+        } as null | TaskPreviewFlattend)
         fixture.detectChanges()
     })
 

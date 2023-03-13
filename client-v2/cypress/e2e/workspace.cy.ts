@@ -5,8 +5,11 @@ beforeEach(() => {
     cy.signup()
     cy.visit('/home')
 
-    cy.intercept('POST', '/list').as('createEntity')
+    cy.intercept('POST', '/list').as('createList')
     cy.intercept('POST', '/task').as('createTask')
+
+    cy.intercept('PATCH', '/list/*').as('updateList')
+    cy.intercept('PATCH', '/task/*').as('updateTask')
 })
 
 describe('Workspace', () => {
@@ -21,7 +24,7 @@ describe('Workspace', () => {
         it('can add entities', () => {
             cy.get(testName('entity-tree-node')).should('have.length', 0)
             cy.get(testName('sidebar-create-new-list')).click()
-            cy.wait('@createEntity').its('response.statusCode').should('equal', 201)
+            cy.wait('@createList').its('response.statusCode').should('equal', 201)
 
             cy.get(testName('dashboard-page')).should('not.exist')
             cy.get(testName('entity-page')).should('exist')
@@ -73,12 +76,11 @@ describe('Workspace', () => {
             it('can edit the description', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
 
-                cy.intercept('PATCH', '/list/*').as('updateEntity')
                 const description = 'The testing entity description'
 
                 cy.get(testName('add-description')).click()
                 cy.get(testName('description-editor')).type(description).blur()
-                cy.wait('@updateEntity').its('response.statusCode').should('equal', 200) // we currently don't have any other way to verify if updating the description has succeeded
+                cy.wait('@updateList').its('response.statusCode').should('equal', 200) // we currently don't have any other way to verify if updating the description has succeeded
                 // maybe it is not a bad idea to assert on the request, but we could take this a step further and verify that the db record was updated
             })
 
@@ -99,21 +101,59 @@ describe('Workspace', () => {
             })
         })
 
-        describe('Task view', () => {
+        const openTaskAsPage = () => {
+            cy.get(testName('task-tree-node')).within(() => {
+                cy.get(testName('task-menu-button')).click()
+            })
+
+            // task menu
+            cy.get(testName('drop-down-menu')).within(() => {
+                cy.get(testName('menu-item')).contains(/Open/).click()
+            })
+        }
+
+        describe.only('Task view', () => {
             it('can open a task as page', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
                 cy.get(testName('create-task')).click()
 
-                cy.get(testName('task-tree-node')).within(() => {
-                    cy.get(testName('task-menu-button')).click()
-                })
+                openTaskAsPage()
 
-                // task menu
-                cy.get(testName('drop-down-menu')).within(() => {
-                    cy.get(testName('menu-item')).contains(/Open/).click()
-                })
+                cy.contains('Untitled task')
+            })
 
-                cy.get('app-task-view').contains('Untitled task')
+            it('can edit the entity name', () => {
+                cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('create-task')).click()
+                openTaskAsPage()
+
+                const entityName = 'The testing entity'
+                cy.get(testName('editable-entity-name')).get(testName('inline-editor')).focus().type(entityName).blur()
+                cy.get(testName('entity-tree-node')).last().should('contain.text', entityName)
+                cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
+                // @TODO: assert that task-tree has changed
+            })
+
+            it('can edit the description', () => {
+                cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('create-task')).click()
+                openTaskAsPage()
+
+                const description = 'The testing entity description'
+
+                cy.get(testName('add-description')).click()
+                cy.get(testName('description-editor')).type(description).blur()
+                cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
+            })
+
+            it('can add tasks', () => {
+                cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('create-task')).click()
+                openTaskAsPage()
+
+                cy.get(testName('create-subtask')).click()
+                cy.get(testName('task-tree-node')).should('exist')
+                cy.wait('@createTask').its('response.statusCode').should('equal', 201)
             })
         })
 
@@ -128,7 +168,6 @@ describe('Workspace', () => {
                     cy.get(testName(`task-status-button`)).click()
                 })
                 cy.get(testName('drop-down-menu')).within(() => {
-                    cy.intercept('PATCH', '/task/*').as('updateTask')
                     cy.get(testName('menu-item')).first().click()
                     cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
                 })

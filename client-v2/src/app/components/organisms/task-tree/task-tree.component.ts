@@ -10,6 +10,7 @@ import {
 } from 'src/app/fullstack-shared-models/task.model'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { UiStateService } from 'src/app/services/ui-state.service'
+import { uiDefaults } from 'src/app/shared/defaults'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
@@ -21,6 +22,7 @@ export interface TaskTreeNode {
     taskPreview: TaskPreviewFlattend
     hasChildren: boolean
     isExpanded: boolean
+    isDescriptionExpanded: boolean
     path: string[]
 }
 
@@ -28,7 +30,8 @@ export const convertToTaskTreeNode = (task: TaskPreviewFlattend): TaskTreeNode =
     return {
         taskPreview: task,
         hasChildren: task.childrenCount > 0,
-        isExpanded: true,
+        isExpanded: uiDefaults.mainView.IS_TASK_EXPANDED,
+        isDescriptionExpanded: uiDefaults.mainView.IS_TASK_DESCRIPTION_EXPANDED,
         path: task.path,
     }
 }
@@ -57,7 +60,9 @@ export class TaskTreeComponent {
             const treeNodes = flattenTaskTree(tasks).map(task => {
                 const treeNode = convertToTaskTreeNode(task)
 
-                treeNode.isExpanded = this.entityExpandedMap.get(task.id) ?? true
+                treeNode.isExpanded = this.entityExpandedMap.get(task.id) ?? uiDefaults.mainView.IS_TASK_EXPANDED
+                treeNode.isDescriptionExpanded =
+                    this.descriptionExpandedMap.get(task.id) ?? uiDefaults.mainView.IS_TASK_DESCRIPTION_EXPANDED
 
                 return treeNode
             })
@@ -65,11 +70,26 @@ export class TaskTreeComponent {
         })
     )
 
-    entityExpandedMap = this.uiStateService.mainViewUiState.entityExpandedMap
+    uiChangeEvents = new BehaviorSubject<{
+        id: string
+        key: 'isExpanded' | 'isDescriptionExpanded'
+        value: boolean
+    } | null>(null)
 
-    uiChangeEvents = new BehaviorSubject<{ id: string; isExpanded: boolean } | null>(null)
+    descriptionExpandedMap = this.uiStateService.mainViewUiState.taskTreeDescriptionExpandedMap
+    toggleDescriptionExpansion(node: TaskTreeNode, isDescriptionExpanded: boolean) {
+        this.uiChangeEvents.next({
+            id: node.taskPreview.id,
+            key: 'isDescriptionExpanded',
+            value: isDescriptionExpanded,
+        })
+
+        this.uiStateService.toggleTaskDescription(node.taskPreview.id, isDescriptionExpanded)
+    }
+
+    entityExpandedMap = this.uiStateService.mainViewUiState.entityExpandedMap
     toggleExpansion(node: TaskTreeNode, isExpanded: boolean) {
-        this.uiChangeEvents.next({ id: node.taskPreview.id, isExpanded })
+        this.uiChangeEvents.next({ id: node.taskPreview.id, key: 'isExpanded', value: isExpanded })
 
         this.uiStateService.toggleMainViewEntity(node.taskPreview.id, isExpanded)
     }
@@ -86,7 +106,7 @@ export class TaskTreeComponent {
             if (taskNode) {
                 // @TODO: Can we find a better solution for this? Perhaps force angular to rerender?
                 // Create a new object reference for change detection to kick in
-                taskNodes[taskNodeIndex] = { ...taskNode, isExpanded: changeEvent.isExpanded }
+                taskNodes[taskNodeIndex] = { ...taskNode, [changeEvent.key]: changeEvent.value }
             }
 
             return taskNodes
@@ -118,8 +138,8 @@ export class TaskTreeComponent {
         return true
     }
 
-    trackByFn(_index: number, { taskPreview: { id, title, status, priority, description }, isExpanded }: TaskTreeNode) {
-        return id + title + status + priority + description + isExpanded
+    trackByFn(_index: number, { taskPreview: { id } }: TaskTreeNode) {
+        return id
     }
 
     range(number: number) {

@@ -16,21 +16,14 @@
         {{ detail?.createdAt | date : 'shortTime' }}
     </div> -->
 
-    <div
+    <app-entity-description
+        #descriptionEditor
         [hidden]="!(isDescriptionShown$ | async)"
-        class="description | text-tinted-300 outline-none"
-        [innerHTML]="description$ | async"
-        [class.show-placeholder]="!(descriptionDomState$ | async)"
-        [attr.data-placeholder]="'Description or notes'"
-        focusable
-        #descriptionFocusable="focusable"
-        contenteditable
-        [spellcheck]="descriptionFocusable.isFocused"
-        (textChanges)="descriptionChanges$.next($event)"
-        [mutationOptions]="{ observe: descriptionFocusable.isFocused }"
-        (blur)="blurEvents$.next($event)"
-        data-test-name="description-editor"
-    ></div>
+        [description]="description$ | async"
+        (descriptionChange)="onDescriptionUpdate($event)"
+        (blur)="descriptionBlurEvents$.next($event)"
+    ></app-entity-description>
+
     <!-- <p>And this is the part for the description</p>
             <p>Where you can</p>
             <ul>
@@ -44,11 +37,11 @@
             *ngIf="!(isDescriptionShown$ | async)"
             class="button-naked text-tinted-200 hover:text-tinted-100"
             appTooltip="Add a description to this list"
-            (click)="isDescriptionShown$.next(true); descriptionFocusable.focus()"
+            (click)="isDescriptionShown$.next(true); descriptionEditor.focusable.focus()"
             cdkMenuItem
             data-test-name="add-description"
         >
-            <app-icon icon="far fa-sticky-note" class="mr-1"></app-icon>
+            <app-icon icon="description" class="mr-1"></app-icon>
             Add description
         </button>
 

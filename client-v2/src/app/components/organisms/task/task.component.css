@@ -35,7 +35,7 @@
 
 /* [task] */
 .task.titleHasFocus {
-    @apply ring-2 ring-primary-400;
+    @apply ring-2 ring-primary-400 border-transparent;
 }
 
 /* [ellipsis] opacity-0 */
@@ -55,17 +55,17 @@
         [&_.icon-group]:hover:-translate-x-8;
 }
 
-.subtask-toggle {
+.second-row > * {
     @apply text-md text-tinted-400 transition-colors hover:text-tinted-300;
 }
-.task.completed .subtask-toggle {
+.task.completed .second-row > * {
     @apply text-submit-500 hover:text-submit-300;
 }
-
-.status-btn {
-    @apply -ml-1 mr-2.5 text-lg;
+.separator {
+    @apply mx-1 h-3.5 w-px translate-y-[5px] bg-current brightness-75;
 }
 
 .task.completed .icon-btn {
     @apply hover:bg-submit-600;
 }
+

@@ -21,6 +21,7 @@
                     class="mt-2 grow"
                     [menuItems]="(menuItemsMap$ | async)?.[taskNode.taskPreview.id] || []"
                     [isLoading]="(isLoadingMap$ | async)?.[taskNode.taskPreview.id] || false"
+                    (descriptionExpansionChange)="toggleDescriptionExpansion(taskNode, $event)"
                     (expansionChange)="toggleExpansion(taskNode, $event)"
                     (titleChange)="onTitleChange(taskNode.taskPreview.id, $event)"
                     (descriptionChange)="onDescriptionChange(taskNode.taskPreview.id, $event)"

@@ -5,6 +5,7 @@ import { EntityPageLabelComponent } from 'src/app/components/atoms/entity-page-l
 import { InlineEditorComponent } from 'src/app/components/atoms/inline-editor/inline-editor.component'
 import { DropDownComponent } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EditableEntityTitleComponent } from 'src/app/components/molecules/editable-entity-heading/editable-entity-title.component'
+import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
@@ -35,6 +36,7 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
             EntityPageLabelComponent,
             DropDownComponent,
             InlineEditorComponent,
+            EntityDescriptionComponent,
         ],
         providers: [
             { provide: ENTITY_VIEW_DATA, useValue: viewData },
