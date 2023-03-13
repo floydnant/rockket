@@ -112,7 +112,7 @@ describe('Workspace', () => {
             })
         }
 
-        describe.only('Task view', () => {
+        describe('Task view', () => {
             it('can open a task as page', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
                 cy.get(testName('create-task')).click()
