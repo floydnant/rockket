@@ -1,12 +1,10 @@
 import {
-    signup,
-    login,
+    signupProcedure,
+    loginProcedure,
     typeLoginCredentialsAndSubmit,
     typeSignupCredentialsAndSubmit,
 } from 'cypress/support/auth-helpers'
 import { testName } from 'cypress/support/helpers'
-
-const AUTH_TOKEN_KEY = 'rockket-auth-token'
 
 beforeEach(() => {
     cy.clearDb()
@@ -42,21 +40,28 @@ describe('Routing', () => {
         })
 
         it('signing up redirects to the workspace', () => {
-            signup()
+            signupProcedure()
 
             cy.get(testName('workspace-page')).should('exist')
         })
         it('logging in redirects to the workspace', () => {
-            signup()
-            cy.visit('about:blank')
+            cy.signup()
+            cy.clearLocalStorage()
 
-            login()
+            loginProcedure()
 
             cy.get(testName('workspace-page')).should('exist')
         })
     })
 
     describe('Workspace page', () => {
+        it('can visit with stored token', () => {
+            cy.signup()
+            cy.visit('/home')
+
+            cy.get(testName('workspace-page')).should('exist')
+        })
+
         it('redirects to /login when visiting /home without valid login', () => {
             cy.visit('/home')
             cy.get(testName('workspace-page')).should('not.exist')
@@ -64,10 +69,10 @@ describe('Routing', () => {
         })
 
         it('successful login after redirect, redirects back to /home', () => {
-            signup()
+            cy.signup()
             cy.clearLocalStorage()
-
             cy.visit('/home')
+
             cy.get(testName('workspace-page')).should('not.exist')
             cy.get(testName('login-page')).should('exist')
 
@@ -75,22 +80,6 @@ describe('Routing', () => {
 
             cy.get(testName('workspace-page')).should('exist')
             cy.url().should('contain', '/home')
-        })
-
-        it('can visit with stored token', () => {
-            signup()
-            cy.get(testName('workspace-page'))
-            cy.window().then(() => {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                const token = window.localStorage.getItem(AUTH_TOKEN_KEY)!
-
-                cy.clearLocalStorage()
-
-                cy.setLocalStorage(AUTH_TOKEN_KEY, token)
-                cy.visit('/home')
-
-                cy.get(testName('workspace-page')).should('exist')
-            })
         })
     })
 
@@ -101,17 +90,11 @@ describe('Routing', () => {
             cy.url().should('contain', '/login')
         })
         it('does not redirect when visiting /settings with valid login', () => {
-            signup()
+            cy.signup()
+            cy.visit('/settings')
 
-            cy.get(testName('user-menu-toggle')).click()
-            cy.get(testName('drop-down-menu')).within(() => {
-                cy.contains(/Settings/)
-                    .closest(testName('menu-item'))
-                    .click()
-            })
-
-            cy.url().should('contain', '/settings')
             cy.get(testName('settings-page')).should('exist')
+            cy.url().should('contain', '/settings')
         })
 
         it('successful signup after redirect, redirects back to /settings', () => {
@@ -129,7 +112,7 @@ describe('Routing', () => {
         })
 
         it('successful login after redirect, redirects back to /settings', () => {
-            signup()
+            cy.signup()
             cy.clearLocalStorage()
 
             cy.visit('/settings')

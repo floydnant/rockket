@@ -1,5 +1,5 @@
 import { credentials } from 'cypress/fixtures/user-credentials'
-import { login, signup } from 'cypress/support/auth-helpers'
+import { loginProcedure, signupProcedure } from 'cypress/support/auth-helpers'
 import { testName } from 'cypress/support/helpers'
 
 beforeEach(() => {
@@ -9,14 +9,14 @@ beforeEach(() => {
 describe('Authentication', () => {
     describe('Signup', () => {
         it('can sign up', () => {
-            signup()
+            signupProcedure()
             cy.get(testName('user-menu-toggle')).invoke('attr', 'data-logged-in').should('eq', 'true')
         })
         it('cannot signup up with the same email twice', () => {
-            signup()
-            cy.visit('about:blank')
+            cy.signup()
+            cy.clearLocalStorage()
 
-            signup()
+            signupProcedure()
             cy.get(testName('signup-page'))
             cy.get(testName('workspace-page')).should('not.exist')
             cy.get(testName('user-menu-toggle')).should('not.exist')
@@ -25,25 +25,28 @@ describe('Authentication', () => {
 
     describe('Login', () => {
         it('can login', () => {
-            signup()
-            cy.visit('about:blank')
+            // this should not be necessary, but somehow a previous `signup` call from within `beforeEach` prevents the following signup
+            cy.clearDb()
 
-            login()
+            cy.signup()
+            cy.clearLocalStorage()
+
+            loginProcedure()
             cy.get(testName('user-menu-toggle')).invoke('attr', 'data-logged-in').should('eq', 'true')
         })
         it('cannot login with the wrong email', () => {
-            signup()
-            cy.visit('about:blank')
+            cy.signup()
+            cy.clearLocalStorage()
 
-            login({ ...credentials['jonathan'], email: 'some.other@email.com' })
+            loginProcedure({ ...credentials['jonathan'], email: 'some.other@email.com' })
             cy.get(testName('workspace-page')).should('not.exist')
             cy.get(testName('user-menu-toggle')).should('not.exist')
         })
         it('cannot login with the wrong password', () => {
-            signup()
-            cy.visit('about:blank')
+            cy.signup()
+            cy.clearLocalStorage()
 
-            login({ ...credentials['jonathan'], password: 'someOtherPwd-123' })
+            loginProcedure({ ...credentials['jonathan'], password: 'someOtherPwd-123' })
             cy.get(testName('workspace-page')).should('not.exist')
             cy.get(testName('user-menu-toggle')).should('not.exist')
         })

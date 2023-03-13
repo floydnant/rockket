@@ -10,6 +10,7 @@ declare namespace Cypress {
     interface Chainable<Subject = any> {
         setLocalStorage: typeof setLocalStorage
         clearDb: typeof clearDb
+        signup: typeof signup
     }
 }
 
@@ -22,9 +23,24 @@ function setLocalStorage(itemName: string, itemValue: string) {
 Cypress.Commands.add('setLocalStorage', setLocalStorage)
 
 function clearDb() {
-    cy.request('http://localhost:3001/clear-db')
+    cy.request('http://localhost:3001/clear-db').as('clearDb')
 }
 Cypress.Commands.add('clearDb', clearDb)
+
+function signup() {
+    const signupDto = {
+        email: 'jonathan.butler@cy.com',
+        username: 'Jonathan Butler',
+        password: 'Password-123',
+    }
+    cy.request({ method: 'POST', url: 'http://localhost:3001/auth/signup', body: signupDto })
+        .as('shadow-signup')
+        .then(res => {
+            // token needs to be JSON parsable
+            cy.setLocalStorage('rockket-auth-token', `${JSON.stringify(res.body.user.authToken)}`)
+        })
+}
+Cypress.Commands.add('signup', signup)
 
 //
 // ***********************************************
