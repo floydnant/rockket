@@ -29,5 +29,17 @@ module.exports = {
             addVariant('hoverable', '@media (hover: hover)')
             addVariant('not-hoverable', '@media (hover: none)')
         }),
+        plugin(({ addUtilities }) => {
+            addUtilities({
+                '.glass': {
+                    '@supports (backdrop-filter: blur(10px))': {
+                        '--tw-bg-opacity': '0.5',
+                        '--tw-backdrop-blur': 'blur(16px)',
+                        'backdrop-filter':
+                            'var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)',
+                    },
+                },
+            })
+        }),
     ],
 }

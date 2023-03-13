@@ -2,7 +2,7 @@
     .dropdown-menu {
         min-width: 180px;
         max-width: 280px;
-        @apply mx-2 flex flex-col gap-0.5 rounded-xl border border-tinted-800 bg-tinted-900 p-2 shadow-lg;
+        @apply mx-2 flex flex-col gap-0.5 rounded-xl border border-tinted-800 bg-tinted-900 glass p-2 shadow-lg;
     }
 
     .menu-item {
