@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core'
     styles: [
         `
             :host {
-                @apply flex h-full flex-col justify-start rounded-xl border border-tinted-700 bg-tinted-800 shadow-header;
+                @apply flex h-full flex-col justify-start rounded-xl border border-tinted-700 bg-tinted-800 shadow-header !backdrop-blur-sm glass;
             }
         `,
     ],

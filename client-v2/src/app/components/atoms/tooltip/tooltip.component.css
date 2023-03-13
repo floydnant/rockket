@@ -1,5 +1,5 @@
 :host {
-    @apply box-border block max-w-xs rounded-lg border border-tinted-600 bg-tinted-700 py-1 px-2 text-sm text-tinted-100 shadow-xl;
+    @apply box-border block max-w-xs rounded-lg border border-tinted-600/60 bg-tinted-700 glass py-1 px-2 text-sm text-tinted-100 shadow-xl;
 
     animation: reveal 130ms 280ms forwards;
     scale: 0.8;
