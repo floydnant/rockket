@@ -42,6 +42,7 @@ describe('List CRUD (e2e)', () => {
         it('can delete a list', async () => {
             const createdList: Tasklist = await createTasklist(app, authToken, newList)
 
+            // @TODO: test for list participants
             await request(app).delete(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(200)
 
             await request(app).get(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(404)
@@ -59,6 +60,7 @@ describe('List CRUD (e2e)', () => {
                 .send({ status: TaskStatus.Completed })
                 .auth(authToken, typeBearer)
                 .expect(200)
+            // @TODO: test for task comments
 
             await request(app).delete(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(200)
 
