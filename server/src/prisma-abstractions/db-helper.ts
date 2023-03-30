@@ -43,9 +43,9 @@ export class DbHelper {
 
         console.time(`CLEARED DATABASE`)
         for (const tableName of names) {
-            console.time(`TRUNCATE table ${tableName}`)
+            // console.time(`TRUNCATE table ${tableName}`)
             await this.prisma.$executeRawUnsafe(`TRUNCATE TABLE "public"."${tableName}" CASCADE;`)
-            console.timeEnd(`TRUNCATE table ${tableName}`)
+            // console.timeEnd(`TRUNCATE table ${tableName}`)
         }
         console.timeEnd(`CLEARED DATABASE`)
 

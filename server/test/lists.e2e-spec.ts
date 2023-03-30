@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common'
-import { PrismaClient, Tasklist } from '@prisma/client'
+import { PrismaClient, Tasklist, TaskStatus } from '@prisma/client'
 import { UpdateTasklistDto } from '../src/entities/list/list.dto'
 import { DbHelper } from '../src/prisma-abstractions/db-helper'
 import { newList, users } from './fixtures'
-import { initApplication, signup, createTasklist, typeBearer, request } from './testing-utils'
+import { initApplication, signup, createTasklist, typeBearer, request, createTask } from './testing-utils'
 
 const dbHelper = new DbHelper(new PrismaClient(), { cacheTableNames: true })
 
@@ -37,10 +37,54 @@ describe('List CRUD (e2e)', () => {
         const updatedList = res.body as Tasklist
         expect(updatedList.description).toEqual(updatedListData.description)
     })
-    it('can delete a tasklist', async () => {
-        const createdList: Tasklist = await createTasklist(app, authToken, newList)
 
-        await request(app).delete(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(200)
+    describe('Deletion', () => {
+        it('can delete a list', async () => {
+            const createdList: Tasklist = await createTasklist(app, authToken, newList)
+
+            // @TODO: test for list participants
+            await request(app).delete(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(200)
+
+            await request(app).get(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(404)
+        })
+
+        it('can delete a list with tasks in it', async () => {
+            const createdList: Tasklist = await createTasklist(app, authToken, newList)
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList.id,
+            })
+            // updating a task, will create a `TaskEvent` which needs to be deleted as well
+            await request(app)
+                .patch(`/task/${createdTask.id}`)
+                .send({ status: TaskStatus.Completed })
+                .auth(authToken, typeBearer)
+                .expect(200)
+            // @TODO: test for task comments
+
+            await request(app).delete(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(200)
+
+            await request(app).get(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(404)
+            await request(app).get(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(404)
+        })
+
+        it('can delete a list with lists and tasks in it', async () => {
+            const createdList1: Tasklist = await createTasklist(app, authToken, newList)
+            const createdList2: Tasklist = await createTasklist(app, authToken, {
+                title: 'new List',
+                parentListId: createdList1.id,
+            })
+            const createdTask = await createTask(app, authToken, {
+                title: 'This is the task title',
+                listId: createdList2.id,
+            })
+
+            await request(app).delete(`/list/${createdList1.id}`).auth(authToken, typeBearer).expect(200)
+
+            await request(app).get(`/list/${createdList1.id}`).auth(authToken, typeBearer).expect(404)
+            await request(app).get(`/list/${createdList2.id}`).auth(authToken, typeBearer).expect(404)
+            await request(app).get(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(404)
+        })
     })
 
     it('can add a child-tasklist', async () => {

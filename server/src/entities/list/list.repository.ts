@@ -57,8 +57,46 @@ export class ListRepository {
     }
 
     async deleteTasklist(listId: string) {
-        await this.prisma.listParticipant.deleteMany({ where: { listId } })
-        return this.prisma.tasklist.delete({ where: { id: listId } })
+        // @SCHEMA_CHANGE requires updating this query
+        const lists: { id: string; parentListId: string }[] = await this.prisma.$queryRaw`
+            WITH RECURSIVE all_lists_cte AS (
+                SELECT id, "parentListId"
+                FROM public."Tasklist"
+                WHERE id = ${listId}
+
+                UNION
+
+                SELECT l.id, l."parentListId"
+                FROM public."Tasklist" l
+                    INNER JOIN all_lists_cte a ON a.id = l."parentListId"
+            )
+            SELECT * FROM all_lists_cte
+        `
+        const listIds = lists.map((l) => l.id)
+
+        const tasks = await this.prisma.task.findMany({
+            where: { listId: { in: listIds } },
+            select: { id: true, title: true, parentTaskId: true },
+        })
+        const taskIds = tasks.map((t) => t.id)
+
+        const transactionResult = await this.prisma.$transaction([
+            this.prisma.taskEvent.deleteMany({ where: { taskId: { in: taskIds } } }),
+            this.prisma.taskComment.deleteMany({ where: { taskId: { in: taskIds } } }),
+            this.prisma.task.deleteMany({ where: { id: { in: taskIds } } }),
+            this.prisma.listParticipant.deleteMany({ where: { listId: { in: listIds } } }),
+            this.prisma.tasklist.deleteMany({ where: { id: { in: listIds } } }),
+        ])
+
+        return {
+            tasks: transactionResult[2].count,
+            taskEvents: transactionResult[0].count,
+            taskComments: transactionResult[1].count,
+
+            lists: transactionResult[4].count,
+            listParticipants: transactionResult[3].count,
+            listComments: 0,
+        }
     }
 
     async getRootLevelTasklists(userId: string) {
