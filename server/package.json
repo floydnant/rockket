@@ -29,7 +29,7 @@
         "db-testing:reset": "DATABASE_URL=$(bash ./get-testing-db-url.sh) npm run db:reset"
     },
     "dependencies": {
-        "@nestjs/common": "^9.3.9",
+        "@nestjs/common": "^9.3.12",
         "@nestjs/config": "^2.3.1",
         "@nestjs/core": "^9.2.1",
         "@nestjs/jwt": "^10.0.2",
