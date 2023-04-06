@@ -1,5 +1,5 @@
 <div align=center>
-<img src="./client/src/assets/todo-app-logo/todo-app-logo.png" height="100px">
+<img src="./client-v2/src/assets/rockket-logo.png" height="100px">
 
 # Rockket
 
@@ -7,8 +7,6 @@
 [![Build, Run linter and tests](https://github.com/dein-ding/rockket/actions/workflows/tests.yml/badge.svg)](https://github.com/dein-ding/rockket/actions/workflows/tests.yml)
     
 A small, carefully crafted todo app with a focus on user experience, built with ❤️ and angular.
-
-(App icon changing soon)
 </div>
 
 ## Concept
