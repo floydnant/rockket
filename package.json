@@ -8,12 +8,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/dein-ding/todo-app.git"
+        "url": "git+https://github.com/dein-ding/rockket.git"
     },
     "author": "Floyd Haremsa",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/dein-ding/todo-app/issues"
+        "url": "https://github.com/dein-ding/rockket/issues"
     },
     "homepage": "https://rockket.netlify.app"
 }

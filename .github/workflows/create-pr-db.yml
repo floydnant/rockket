@@ -48,7 +48,6 @@ jobs:
             - name: Checkout branch
               uses: actions/checkout@v2
               with:
-                #   repository: dein-ding/todo-app # this will be obsolete when the workflow is located in the respective repo
                   ref: ${{ env.migration_source_branch }}
 
             - name: Setup Node.js environment

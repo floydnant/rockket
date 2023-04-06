@@ -4,7 +4,7 @@
 # Rockket
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/f010880f-6648-4146-9d82-b7e050e637ce/deploy-status?branch=main)](https://app.netlify.com/sites/rockket/deploys)
-[![Build, Run linter and tests](https://github.com/dein-ding/todo-app/actions/workflows/tests.yml/badge.svg)](https://github.com/dein-ding/todo-app/actions/workflows/tests.yml)
+[![Build, Run linter and tests](https://github.com/dein-ding/rockket/actions/workflows/tests.yml/badge.svg)](https://github.com/dein-ding/rockket/actions/workflows/tests.yml)
     
 A small, carefully crafted todo app with a focus on user experience, built with ❤️ and angular.
 
@@ -28,7 +28,7 @@ The old project (`client`) is still in production, but I stopped maintaining it 
 Start using the [stable production version](https://rockket.netlify.app) or the [development branch](https://main--rockket.netlify.app) and [install it as a PWA](https://medium.com/progressivewebapps/how-to-install-a-pwa-to-your-device-68a8d37fadc1) on a desktop or mobile device.
 (native builds on the AppStore and PlayStore are on the roadmap)
 
-Or, if you're curious, check out [what I'm currently working on](https://github.com/dein-ding/todo-app/pulls) or [what I'm planning to work on](https://github.com/dein-ding/todo-app/issues).
+Or, if you're curious, check out [what I'm currently working on](https://github.com/dein-ding/rockket/pulls) or [what I'm planning to work on](https://github.com/dein-ding/rockket/issues).
 
 ## Contributing
 If you want your changes to be merged, [fork this repository and file a Pull-Request](https://www.youtube.com/watch?v=CML6vfKjQss) when you're ready.
@@ -41,7 +41,7 @@ If you want your changes to be merged, [fork this repository and file a Pull-Req
 ### Installation & Preperation
 0. Clone the repo with 
     ```sh
-    git clone git@github.com:dein-ding/todo-app.git
+    git clone git@github.com:dein-ding/rockket.git
     ```
 
 1. Install the dependencies
@@ -52,12 +52,12 @@ If you want your changes to be merged, [fork this repository and file a Pull-Req
     npm i
     ```
 
-2. Create 2 databases with the names `todo-app` and `todo-app-testing` with the default credentials 
+2. Create 2 databases with the names `rockket` and `rockket-testing` with the default credentials 
 
 3. Fill in the environment variables in `server/.env`
     ```env
-    DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app?schema=public"
-    TESTING_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todo-app-testing?schema=public"
+    DATABASE_URL="postgresql://postgres:postgres@localhost:5432/rockket?schema=public"
+    TESTING_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/rockket-testing?schema=public"
 
     JWT_SECRET="This is the mysterious secret"
     ```
