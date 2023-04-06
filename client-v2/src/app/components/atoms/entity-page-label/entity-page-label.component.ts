@@ -12,7 +12,7 @@ import { IconKey } from '../icons/icon/icons'
     styles: [
         `
             :host {
-                @apply truncate;
+                @apply pointer-events-none truncate text-left;
             }
         `,
     ],
