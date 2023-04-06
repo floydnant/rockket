@@ -6,8 +6,8 @@
             "previewLimit": 50,
             "server": "localhost",
             "driver": "PostgreSQL",
-            "name": "todo-app",
-            "connectString": "postgresql://postgres:postgres@localhost:5432/todo-app?schema=public"
+            "name": "rockket",
+            "connectString": "postgresql://postgres:postgres@localhost:5432/rockket?schema=public"
         }
     ]
 }

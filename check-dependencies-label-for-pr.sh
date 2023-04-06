@@ -9,14 +9,13 @@ if [ "$author" == "dependabot[bot]" ]; then
 fi
 
 # Set the owner and repository name
-owner="dein-ding"
-repo="todo-app"
+repo="dein-ding/rockket"
 
 # Get the pull request number from the command line argument
 pull_number=$1
 
 # Send the GET request to the GitHub API
-response=$(curl -s -X GET https://api.github.com/repos/$owner/$repo/pulls/$pull_number -H "Accept: application/vnd.github+json")
+response=$(curl -s -X GET "https://api.github.com/repos/$repo/pulls/$pull_number" -H "Accept: application/vnd.github+json")
 
 # Use a jq filter to check if the 'dependencies' label exists
 output=$(echo "$response" | jq '.labels | map(select(.name == "dependencies")) | length')

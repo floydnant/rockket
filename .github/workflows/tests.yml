@@ -47,8 +47,8 @@ jobs:
         env:
             DB_USER: app
             DB_PWD: develop
-            DB_NAME: todo-app-testing
-            TESTING_DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app-testing?schema=public
+            DB_NAME: rockket-testing
+            TESTING_DATABASE_URL: postgresql://app:develop@localhost:5432/rockket-testing?schema=public
             JWT_SECRET: this is the secret that nobody should know
 
         steps:
@@ -96,8 +96,8 @@ jobs:
         env:
             DB_USER: app
             DB_PWD: develop
-            DB_NAME: todo-app-testing
-            TESTING_DATABASE_URL: postgresql://app:develop@localhost:5432/todo-app-testing?schema=public
+            DB_NAME: rockket-testing
+            TESTING_DATABASE_URL: postgresql://app:develop@localhost:5432/rockket-testing?schema=public
             JWT_SECRET: this is the secret that nobody should know
 
         steps:
