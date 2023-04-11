@@ -7,8 +7,10 @@ import * as appInsights from 'applicationinsights'
 async function bootstrap(configService: ConfigService) {
     const APP_CONTEXT = configService.get('RAILWAY_ENVIRONMENT')
     const isTestingEnv = configService.get('TESTING_ENV') == 'true'
+    const enableInsights =
+        (APP_CONTEXT != 'Development' && !isTestingEnv) || configService.get('ENABLE_DEV_INSIGHTS') == 'true'
 
-    if (!isTestingEnv) {
+    if (enableInsights) {
         appInsights.setup().setSendLiveMetrics(true)
         appInsights.defaultClient.context.tags[appInsights.defaultClient.context.keys.cloudRole] = APP_CONTEXT
         appInsights.start()
@@ -32,12 +34,12 @@ async function bootstrap(configService: ConfigService) {
     const beforeStartup = Date.now()
     await app.listen(port, () => {
         const startupTime = Date.now() - beforeStartup
-        if (!isTestingEnv) appInsights.defaultClient.trackMetric({ name: 'StartupTime', value: startupTime })
+        if (enableInsights) appInsights.defaultClient.trackMetric({ name: 'StartupTime', value: startupTime })
 
         logger.log(
-            `Listening on port ${port}, Context: ${
+            `Port: ${port}, Startup: ${startupTime}ms, Context: ${
                 isTestingEnv ? '[TESTING] ' : ''
-            }${APP_CONTEXT}, Startup: ${startupTime}ms`,
+            }${APP_CONTEXT}, Insights: ${enableInsights}`,
         )
     })
 }
