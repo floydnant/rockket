@@ -10,7 +10,7 @@ import { EntitiesModule } from './entities/entities.module'
 @Module({
     imports: [
         ConfigModule.forRoot({
-            envFilePath: [`.env`, `.env.${process.env.STAGE}`],
+            envFilePath: [`.env`, `.env.${process.env.RAILWAY_ENVIRONMENT?.toLowerCase()}`],
             validationSchema: configValidationSchema,
         }),
         PrismaModule,
