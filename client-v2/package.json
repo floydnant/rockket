@@ -33,6 +33,8 @@
         "@angular/platform-browser": "^14.2.12",
         "@angular/platform-browser-dynamic": "^14.2.12",
         "@angular/router": "^14.2.12",
+        "@microsoft/applicationinsights-angularplugin-js": "^3.0.1",
+        "@microsoft/applicationinsights-web": "^2.8.11",
         "@ngneat/hot-toast": "^4.1.0",
         "@ngneat/overview": "^3.0.0",
         "@ngneat/until-destroy": "^9.2.3",

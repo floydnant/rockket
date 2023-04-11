@@ -61,11 +61,15 @@ export const serverBaseUrls: Record<NetlifyContext | 'testing', string> = {
     testing: 'http://localhost:3001',
 }
 
+export const APP_INSIGHTS_CONNECTION_STRING =
+    'InstrumentationKey=b312ca81-6062-4700-a2cf-6d91a1e3f602;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/'
+
 export interface AppEnvironment {
     production: boolean
     PACKAGE_VERSION: string
     SERVER_BASE_URL: string
     CONTEXT: AppContext
+    APP_INSIGHTS_CONNECTION_STRING: string
     /** DEPLOYMENT ONLY */
     REVIEW_ID: string | undefined
 }
