@@ -9,7 +9,7 @@ async function bootstrap(configService: ConfigService) {
     const isTestingEnv = configService.get('TESTING_ENV') == 'true'
 
     if (!isTestingEnv) {
-        appInsights.setup()
+        appInsights.setup().setSendLiveMetrics(true)
         appInsights.defaultClient.context.tags[appInsights.defaultClient.context.keys.cloudRole] = APP_CONTEXT
         appInsights.start()
     }
