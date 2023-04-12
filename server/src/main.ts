@@ -2,21 +2,12 @@ import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { defaultClient, setup as setupInsights, start as startInsights } from 'applicationinsights'
+import { InsightsService, setupInsights } from './insights.service'
 
 async function bootstrap(configService: ConfigService) {
     const beforeStartup = Date.now()
 
-    const APP_CONTEXT = configService.get('RAILWAY_ENVIRONMENT')
-    const isTestingEnv = configService.get('TESTING_ENV') == 'true'
-    const enableInsights =
-        (APP_CONTEXT != 'Development' && !isTestingEnv) || configService.get('ENABLE_DEV_INSIGHTS') == 'true'
-
-    if (enableInsights) {
-        setupInsights().setSendLiveMetrics(true)
-        defaultClient.context.tags[defaultClient.context.keys.cloudRole] = APP_CONTEXT
-        startInsights()
-    }
+    setupInsights(configService)
 
     const app = await NestFactory.create(AppModule, { cors: true })
 
@@ -35,12 +26,16 @@ async function bootstrap(configService: ConfigService) {
 
     await app.listen(port, () => {
         const startupTime = Date.now() - beforeStartup
-        if (enableInsights) defaultClient.trackMetric({ name: 'StartupTime', value: startupTime })
+        const insightsService = app.get(InsightsService)
+        insightsService.trackMetric({ name: 'StartupTime', value: startupTime })
+
+        const APP_CONTEXT = configService.get('RAILWAY_ENVIRONMENT')
+        const isTestingEnv = configService.get('TESTING_ENV') == 'true'
 
         logger.log(
             `Port: ${port}, Startup: ${startupTime}ms, Context: ${
                 isTestingEnv ? '[TESTING] ' : ''
-            }${APP_CONTEXT}, Insights: ${enableInsights}`,
+            }${APP_CONTEXT}, Insights: ${insightsService.isEnabled}`,
         )
     })
 }

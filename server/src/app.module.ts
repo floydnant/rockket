@@ -6,6 +6,7 @@ import { configValidationSchema } from './config.schema'
 import { PrismaModule } from './prisma-abstractions/prisma.module'
 import { UserModule } from './user/user.module'
 import { EntitiesModule } from './entities/entities.module'
+import { InsightsService } from './insights.service'
 
 @Module({
     imports: [
@@ -18,7 +19,7 @@ import { EntitiesModule } from './entities/entities.module'
         EntitiesModule,
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [AppService, InsightsService],
     exports: [ConfigModule],
 })
 export class AppModule {}
