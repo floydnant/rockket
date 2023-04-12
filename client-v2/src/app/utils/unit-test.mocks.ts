@@ -4,6 +4,7 @@ import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs'
 import { HttpService } from '../http/http.service'
+import { InsightsService } from '../services/insights.service'
 
 export const storeMock = {
     provide: Store,
@@ -52,4 +53,9 @@ export const actionsMock = {
             return new Observable()
         },
     },
+}
+
+export const insightsMock = {
+    provide: InsightsService,
+    useValue: {},
 }
