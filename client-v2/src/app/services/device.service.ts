@@ -1,6 +1,18 @@
 import { BreakpointObserver } from '@angular/cdk/layout'
 import { Injectable } from '@angular/core'
-import { distinctUntilChanged, filter, fromEvent, map, merge, share, shareReplay, startWith, throttleTime } from 'rxjs'
+import { coalesceWith } from '@rx-angular/cdk/coalescing'
+import {
+    distinctUntilChanged,
+    filter,
+    fromEvent,
+    map,
+    merge,
+    share,
+    shareReplay,
+    startWith,
+    throttleTime,
+    timer,
+} from 'rxjs'
 
 const mediaQueries = {
     mobileScreen: '(max-width: 768px)',
@@ -16,6 +28,14 @@ export class DeviceService {
 
     private queryChanges$ = this.mediaObserver.observe(Object.values(mediaQueries)).pipe(
         map(({ breakpoints }) => breakpoints),
+        shareReplay({ bufferSize: 1, refCount: true })
+    )
+
+    screenWidth$ = fromEvent(window, 'resize').pipe(
+        coalesceWith(timer(100)),
+        map(() => window.innerWidth),
+        startWith(window.innerWidth),
+        distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: true })
     )
 

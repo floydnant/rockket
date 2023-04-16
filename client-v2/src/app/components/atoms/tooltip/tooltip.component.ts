@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, TemplateRef } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, Optional, TemplateRef } from '@angular/core'
 import { InjectionToken } from '@angular/core'
 
 export type TooltipData = TemplateRef<void> | string
@@ -14,7 +14,7 @@ export const TOOLTIP_DATA = new InjectionToken<TooltipData>('tooltip.data')
     },
 })
 export class TooltipComponent {
-    constructor(@Inject(TOOLTIP_DATA) public tooltipData: TooltipData) {}
+    constructor(@Optional() @Inject(TOOLTIP_DATA) public tooltipData?: TooltipData) {}
 
     get asString(): string | false {
         return typeof this.tooltipData === 'string' ? this.tooltipData : false

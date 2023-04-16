@@ -2,9 +2,10 @@
 import { ActivatedRoute } from '@angular/router'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { Observable } from 'rxjs'
+import { BehaviorSubject, Observable } from 'rxjs'
 import { HttpService } from '../http/http.service'
 import { InsightsService } from '../services/insights.service'
+import { MenuService } from '../components/templates/sidebar-layout/menu.service'
 
 export const storeMock = {
     provide: Store,
@@ -58,4 +59,9 @@ export const actionsMock = {
 export const insightsMock = {
     provide: InsightsService,
     useValue: {},
+}
+
+export const menuServiceMock = {
+    provide: MenuService,
+    useValue: { sidebarWidth$: new BehaviorSubject(180) } as MenuService,
 }

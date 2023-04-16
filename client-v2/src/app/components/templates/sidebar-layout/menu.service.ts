@@ -26,4 +26,6 @@ export class MenuService {
     }
 
     isBottomNavBorderVisible$ = new BehaviorSubject(false)
+
+    sidebarWidth$ = new BehaviorSubject<number>(parseFloat(this.uiStateService.sidebarUiState.width || '0'))
 }
