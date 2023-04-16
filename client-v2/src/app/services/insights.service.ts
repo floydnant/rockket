@@ -18,9 +18,9 @@ export class InsightsService {
         if (environment.CONTEXT != 'Production')
             console.info('Insights enabled:', enableInsights, enableInsights ? `with role: ${role}` : '')
 
-        if (!enableInsights) return
+        this.appInsights.loadAppInsights() // insights need to be loaded, in order to display errors correctly
 
-        this.appInsights.loadAppInsights()
+        if (!enableInsights) return
 
         this.appInsights.addTelemetryInitializer(envelope => {
             if (envelope.tags) envelope.tags['ai.cloud.role'] = role
