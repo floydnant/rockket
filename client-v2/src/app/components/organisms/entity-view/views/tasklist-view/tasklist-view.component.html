@@ -1,4 +1,4 @@
-<div class="" *ngIf="listEntity$ | async as entity">
+<ng-container *ngIf="listEntity$ | async as entity">
     <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
     <!--     <button class="button-naked">Add Sublist</button> -->
     <!--     <button class="button-naked">Add Description</button> -->
@@ -84,7 +84,7 @@
             </ng-template>
         </button>
     </div>
-</div>
+</ng-container>
 
 <ng-container *ngIf="tasks$ | async as tasks; else loadingTasks">
     <app-page-progress-bar [taskTree]="tasks"></app-page-progress-bar>
