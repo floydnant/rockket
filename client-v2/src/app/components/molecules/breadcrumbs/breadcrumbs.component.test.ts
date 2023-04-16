@@ -7,16 +7,16 @@ import { Breadcrumb, BreadcrumbsComponent } from './breadcrumbs.component'
 import { OverlayModule } from '@angular/cdk/overlay'
 import { DeviceService } from 'src/app/services/device.service'
 import { TooltipComponent } from '../../atoms/tooltip/tooltip.component'
+import { ForModule } from '@rx-angular/template/for'
+import { menuServiceMock } from 'src/app/utils/unit-test.mocks'
 
 const defaultTemplate = `<app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>`
 const setupComponent = (breadcrumbs: Breadcrumb[], template = defaultTemplate) => {
     cy.mount(template, {
-        componentProperties: {
-            breadcrumbs,
-        },
-        imports: [CdkMenuModule, IconsModule, OverlayModule],
+        componentProperties: { breadcrumbs },
+        imports: [CdkMenuModule, IconsModule, OverlayModule, ForModule],
         declarations: [BreadcrumbsComponent, EntityPageLabelComponent, DropDownComponent, TooltipComponent],
-        providers: [DeviceService],
+        providers: [DeviceService, menuServiceMock],
     })
 }
 
@@ -63,16 +63,23 @@ describe('BreadcrumbsComponent', () => {
             { title: '6. Nested list', icon: 'workspace', route: '/ne/ne/ne/ne/ne/ne', contextMenuItems: menuItems },
         ]
 
-        it('truncates breadcrumbs on desktop', () => {
-            cy.viewport('macbook-13')
-
+        it('truncates breadcrumbs on tablets', () => {
+            cy.viewport('ipad-mini')
             setupComponent(breadcrumbs)
 
             cy.get(testName('breadcrumb')).should('have.length', 4)
             cy.get(testName('truncation-breadcrumb')).should('exist')
         })
+        it('truncates breadcrumbs on desktops', () => {
+            cy.viewport('macbook-13')
+            setupComponent(breadcrumbs)
+
+            cy.get(testName('breadcrumb')).should('have.length', 7)
+            cy.get(testName('truncation-breadcrumb')).should('not.exist')
+        })
 
         it('truncates breadcrumbs on mobile', () => {
+            cy.viewport('iphone-6')
             setupComponent(breadcrumbs)
 
             cy.get(testName('breadcrumb')).should('have.length', 1)
@@ -84,7 +91,7 @@ describe('BreadcrumbsComponent', () => {
 
             cy.get(testName('truncation-breadcrumb')).click()
             cy.get(testName('truncated-breadcrumbs-container')).within(() => {
-                cy.get(testName('breadcrumb')).should('have.length', 6)
+                cy.get(testName('breadcrumb')).should('have.length', 5)
             })
         })
 

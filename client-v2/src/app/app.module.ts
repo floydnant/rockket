@@ -58,6 +58,10 @@ import { LayoutModule } from '@angular/cdk/layout'
 import { IntersectionDirective } from './directives/intersection.directive'
 import { EntityDescriptionComponent } from './components/molecules/entity-description/entity-description.component'
 import { ApplicationinsightsAngularpluginErrorService } from '@microsoft/applicationinsights-angularplugin-js'
+import { LetModule } from '@rx-angular/template/let'
+import { IfModule } from '@rx-angular/template/if'
+import { ForModule } from '@rx-angular/template/for'
+import { PushModule } from '@rx-angular/template/push'
 
 @NgModule({
     declarations: [
@@ -141,6 +145,10 @@ import { ApplicationinsightsAngularpluginErrorService } from '@microsoft/applica
         OverlayModule,
         CdkTreeModule,
         LayoutModule,
+        LetModule,
+        IfModule,
+        ForModule,
+        PushModule,
     ],
     providers: [
         {
