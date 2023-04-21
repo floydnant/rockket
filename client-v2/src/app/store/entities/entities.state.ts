@@ -13,4 +13,6 @@ export interface EntitiesState {
 
     /** Mapped to their tasklist */
     taskTreeMap: TaskTreeMap | null
+
+    search: { query: string } | null
 }

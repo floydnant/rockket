@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
-import { EntityPreview } from 'src/app/fullstack-shared-models/entities.model'
+import { EntitiesSearchResultDto, EntityPreview } from 'src/app/fullstack-shared-models/entities.model'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { EntityCrudDto } from 'src/app/services/entities.service'
 import { listActions } from './list/list.actions'
@@ -33,6 +33,10 @@ export const entitiesActions = createActionGroup({
         delete: props<EntityCrudDto>(),
         'delete success': props<EntityCrudDto>(),
         'delete error': props<HttpServerErrorResponseWithData>(),
+
+        search: props<{ query: string }>(),
+        'search success': props<EntitiesSearchResultDto>(),
+        'search error': props<{ query: string; error: HttpServerErrorResponse }>(),
     },
 })
 
