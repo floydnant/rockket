@@ -1,8 +1,12 @@
-import { Directive, ElementRef, EventEmitter, Output } from '@angular/core'
+import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core'
 import { moveToMacroQueue } from '../utils'
 
 export class FocusableContext {
     constructor(public focusable: { focus: () => void; blur: () => void }) {}
+}
+
+export const canSelect = <T extends HTMLElement>(elem: T): elem is T & { select(): void } => {
+    return 'select' in elem && typeof (elem as unknown as HTMLInputElement).select == 'function'
 }
 
 @Directive({
@@ -14,14 +18,27 @@ export class FocusableContext {
     },
     exportAs: 'focusable',
 })
-export class FocusableDirective {
+export class FocusableDirective implements AfterViewInit {
     constructor(private elemRef: ElementRef<HTMLElement>) {}
 
+    ngAfterViewInit() {
+        if (this.autoFocus) this.focus()
+        else if (this.autoSelect) this.focus(true)
+    }
+
+    @Input() autoFocus = false
+    @Input() autoSelect = false
+
     isFocused = false
-    focus() {
+    focus(select = false) {
         this.isFocused = true
         // add a delay in case the call originated from a mouse click
-        moveToMacroQueue(() => this.elemRef.nativeElement.focus())
+        moveToMacroQueue(() => {
+            const elem = this.elemRef.nativeElement
+
+            if (select && canSelect(elem)) elem.select()
+            else elem.focus()
+        })
     }
     blur() {
         this.isFocused = false

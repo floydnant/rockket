@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common'
+import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { User } from '@prisma/client'
 import { GetUser } from '../decorators/get-user.decorator'
@@ -12,5 +12,10 @@ export class EntitiesController {
     @Get()
     getAllTasklists(@GetUser() user: User) {
         return this.entitiesService.getEntityPreviews(user.id)
+    }
+
+    @Get('search')
+    search(@GetUser() user: User, @Query('q') query: string) {
+        return this.entitiesService.search(user.id, query)
     }
 }

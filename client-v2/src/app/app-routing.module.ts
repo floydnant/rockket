@@ -19,6 +19,7 @@ import { SettingsGeneralComponent } from './pages/settings/general/general.compo
 import { SettingsComponent } from './pages/settings/settings.component'
 import { AppState } from './store'
 import { getEntityById } from './store/entities/utils'
+import { SearchComponent } from './pages/home/search/search.component'
 
 const ENVIRONMENT_HINT = `[${environment.REVIEW_ID ? environment.REVIEW_ID + '-' : ''}${environment.CONTEXT}]`
 const APP_TITLE = `Rockket ${environment.CONTEXT == 'Production' ? '' : ENVIRONMENT_HINT}`
@@ -62,6 +63,7 @@ const routes: Routes = [
         component: HomeComponent,
         canActivate: [AuthGuard],
         children: [
+            { path: 'search', component: SearchComponent, title: `Search ${APP_TITLE_SUFFIX}` },
             {
                 path: ':id',
                 component: EntityPageComponent,

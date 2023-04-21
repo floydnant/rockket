@@ -37,6 +37,11 @@ export class TaskComponent {
         [TaskStatus.COMPLETED]: colors.submit[600],
     }
 
+    highlightQuery$ = new BehaviorSubject<string | null>(null)
+    @Input() set highlightQuery(value: string) {
+        this.highlightQuery$.next(value)
+    }
+
     task$ = new BehaviorSubject<TaskPreviewFlattend | null>(null)
     nodeData$ = new BehaviorSubject<Omit<TaskTreeNode, 'taskPreview'> | null>(null)
     @Input() set data({ taskPreview, ...data }: TaskTreeNode) {

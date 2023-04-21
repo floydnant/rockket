@@ -43,6 +43,7 @@
                     [textInput]="task.title"
                     [placeholder]="PLACEHOLDER"
                     [placeholderColor]="placeholderColorMap[task.status]"
+                    [highlight]="highlightQuery$ | push"
                     [editorClass]="{
                         'line-through': task.status == TaskStatus.NOT_PLANNED,
                         'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED,
@@ -173,6 +174,7 @@
         <div
             #description
             (blur)="descriptionBlurEvents$.next($event)"
+            (focus)="highlightQuery$.next(null)"
             focusable
             #descriptionFocusable="focusable"
             [class.hidden]="!(isDescriptionExpanded$ | async) && !descriptionFocusable.isFocused"
@@ -183,7 +185,7 @@
             }"
             contenteditable
             data-test-name="task-description"
-            [innerHTML]="task.description"
+            [innerHTML]="task.description | highlight : (highlightQuery$ | push)"
         ></div>
     </div>
 </li>

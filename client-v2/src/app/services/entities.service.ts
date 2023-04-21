@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 import { HttpService } from '../http/http.service'
 import { HttpSuccessResponse } from '../http/types'
-import { EntityPreview, EntityType } from '../fullstack-shared-models/entities.model'
+import { EntitiesSearchResultDto, EntityPreview, EntityType } from '../fullstack-shared-models/entities.model'
 import { ListService } from './entity.services/list.service'
 import { TaskService } from './entity.services/task.service'
 
@@ -68,5 +68,9 @@ export class EntitiesService {
     }
     delete({ entityType, id }: EntityCrudDto) {
         return this.injectEntityService(entityType).delete(id)
+    }
+
+    search(query: string) {
+        return this.http.get<EntitiesSearchResultDto>(`/entities/search?q=${query}`)
     }
 }

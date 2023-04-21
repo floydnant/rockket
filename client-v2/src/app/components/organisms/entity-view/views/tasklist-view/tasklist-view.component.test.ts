@@ -14,6 +14,8 @@ import { TaskTreeMap } from 'src/app/store/entities/entities.state'
 import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 import { TasklistViewComponent } from './tasklist-view.component'
+import { PushModule } from '@rx-angular/template/push'
+import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
 
 const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: TaskTreeMap = {}) => {
     const store = {
@@ -27,7 +29,7 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
     }
     cy.mount(`<app-tasklist-view></app-tasklist-view> `, {
         componentProperties: {},
-        imports: [CdkMenuModule],
+        imports: [CdkMenuModule, PushModule],
         declarations: [
             TasklistViewComponent,
             MutationDirective,
@@ -37,6 +39,7 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
             DropDownComponent,
             InlineEditorComponent,
             EntityDescriptionComponent,
+            HighlightPipe,
         ],
         providers: [
             { provide: ENTITY_VIEW_DATA, useValue: viewData },

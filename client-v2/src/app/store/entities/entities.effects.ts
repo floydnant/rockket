@@ -13,6 +13,7 @@ import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '..'
 import { entitiesActions } from './entities.actions'
 import { getEntityByIdIncludingTasks, traceEntityIncludingTasks } from './utils'
+import { HttpServerErrorResponse } from 'src/app/http/types'
 
 @Injectable()
 export class EntitiesEffects {
@@ -199,6 +200,21 @@ export class EntitiesEffects {
                         )
                     }),
                     catchError(err => of(entitiesActions.deleteError({ ...err, id })))
+                )
+            })
+        )
+    })
+
+    search = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(entitiesActions.search),
+            // should be switchMap, because we want to cancel the previous search, when a new one is triggered
+            switchMap(({ query }) => {
+                const res$ = this.entitiesService.search(query)
+
+                return res$.pipe(
+                    map(searchResults => entitiesActions.searchSuccess(searchResults)),
+                    catchError((error: HttpServerErrorResponse) => of(entitiesActions.searchError({ query, error })))
                 )
             })
         )

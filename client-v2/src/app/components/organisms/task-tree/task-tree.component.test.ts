@@ -8,12 +8,21 @@ import { IconsModule } from '../../atoms/icons/icons.module'
 import { InlineEditorComponent } from '../../atoms/inline-editor/inline-editor.component'
 import { TaskComponent } from '../task/task.component'
 import { TaskTreeComponent } from './task-tree.component'
+import { PushModule } from '@rx-angular/template/push'
+import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
 
 const setupComponent = (taskTree: TaskPreviewRecursive[]) => {
     cy.mount(`<app-task-tree [tasks]="taskTree"></app-task-tree>`, {
         componentProperties: { taskTree },
-        imports: [IconsModule, CdkMenuModule],
-        declarations: [TaskTreeComponent, TaskComponent, InlineEditorComponent, FocusableDirective, MutationDirective],
+        imports: [IconsModule, CdkMenuModule, PushModule],
+        declarations: [
+            TaskTreeComponent,
+            TaskComponent,
+            InlineEditorComponent,
+            FocusableDirective,
+            MutationDirective,
+            HighlightPipe,
+        ],
         providers: [storeMock, actionsMock],
     })
 }

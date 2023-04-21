@@ -157,4 +157,17 @@ export class TaskRepository {
             where: { listId, parentTaskId: null },
         })
     }
+
+    async search(userId: string, query: string) {
+        // @TODO: search for comments as well
+        return this.prisma.task.findMany({
+            where: {
+                list: { participants: { some: { userId } } },
+                OR: [
+                    { title: { contains: query, mode: 'insensitive' } },
+                    { description: { contains: query, mode: 'insensitive' } },
+                ],
+            },
+        })
+    }
 }
