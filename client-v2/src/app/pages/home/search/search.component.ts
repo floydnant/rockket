@@ -11,30 +11,13 @@ import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { entitiesFeature } from 'src/app/store/entities/entities.selectors'
 import { EntitiesState } from 'src/app/store/entities/entities.state'
 import { loadingUpdates } from 'src/app/utils/store.helpers'
+import { filterTree } from 'src/app/utils/tree.helpers'
 
 const matchQuery = (query: string) => {
     return <T extends { title: string; description: string | null }>(entity: T) => {
         const regex = new RegExp(query, 'i')
         return Boolean(regex.test(entity.title) || (entity.description && regex.test(entity.description)))
     }
-}
-
-export const filterTree = <T extends { children?: T[] | null }>(
-    taskTree: T[],
-    predicate: (elem: T) => boolean,
-    /** This will be mutated */
-    predicateMatches = { matches: 0 }
-): T[] => {
-    return taskTree
-        .map(elem => {
-            const matches = predicate(elem)
-            if (matches) predicateMatches.matches++
-
-            const children = elem.children?.length ? filterTree(elem.children, predicate, predicateMatches) : []
-
-            return matches || children.length ? { ...elem, children, matches } : null
-        })
-        .filter(Boolean)
 }
 
 @UntilDestroy()
