@@ -64,7 +64,7 @@
         data-test-name="entity-children"
     >
         <button
-            class="child | button-m text-tinted-200 truncate"
+            class="child | button-m truncate text-tinted-200"
             *ngFor="let child of children$ | async"
             routerLink="/home/{{ child.id }}"
             cdkMenuItem
