@@ -34,9 +34,10 @@ export class SidebarLayoutComponent implements AfterViewInit {
     uiState = this.uiStateService.sidebarUiState
 
     @ViewChild('resizeHandle') resizeHandle!: ElementRef<HTMLDivElement>
+    @ViewChild('sidebar') sidebar!: ElementRef<HTMLDivElement>
 
     ngAfterViewInit(): void {
-        const sidebar = this.resizeHandle.nativeElement.parentElement
+        const sidebar = this.sidebar.nativeElement
         if (sidebar) this.menuService.sidebarWidth$.next(parseFloat(getComputedStyle(sidebar).width))
 
         if (!this.enableResize) return
@@ -53,7 +54,7 @@ export class SidebarLayoutComponent implements AfterViewInit {
                 coalesceWith(animationFrames()),
                 map(e => {
                     const width = e.clientX // just take the x coordinate as the new width
-                    const sidebar = this.resizeHandle.nativeElement.parentElement as HTMLDivElement
+                    const sidebar = this.sidebar.nativeElement
 
                     sidebar.style.width = width + 'px'
 
