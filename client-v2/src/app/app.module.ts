@@ -62,6 +62,7 @@ import { LetModule } from '@rx-angular/template/let'
 import { IfModule } from '@rx-angular/template/if'
 import { ForModule } from '@rx-angular/template/for'
 import { PushModule } from '@rx-angular/template/push'
+import { HighlightPipe } from './pipes/highlight.pipe'
 
 @NgModule({
     declarations: [
@@ -106,6 +107,7 @@ import { PushModule } from '@rx-angular/template/push'
         PageProgressBarComponent,
         IntersectionDirective,
         EntityDescriptionComponent,
+        HighlightPipe,
     ],
     imports: [
         BrowserModule,

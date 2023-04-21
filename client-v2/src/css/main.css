@@ -92,3 +92,7 @@ h4 {
 h5 {
     font-size: 1.1rem;
 }
+
+.highlight {
+    @apply bg-secondary-400 text-tinted-900 rounded;
+}

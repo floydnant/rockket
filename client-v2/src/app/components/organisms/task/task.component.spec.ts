@@ -6,6 +6,8 @@ import { TaskPreviewFlattend, TaskPriority, TaskStatus } from 'src/app/fullstack
 import { IconsModule } from '../../atoms/icons/icons.module'
 
 import { TaskComponent } from './task.component'
+import { PushModule } from '@rx-angular/template/push'
+import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
 
 describe('TaskComponent', () => {
     let component: TaskComponent
@@ -13,8 +15,8 @@ describe('TaskComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [IconsModule, CdkMenuModule],
-            declarations: [TaskComponent, FocusableDirective],
+            imports: [IconsModule, CdkMenuModule, PushModule],
+            declarations: [TaskComponent, FocusableDirective, HighlightPipe],
         }).compileComponents()
     })
 

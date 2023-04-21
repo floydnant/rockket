@@ -53,6 +53,7 @@ export class TaskTreeComponent {
     @Input() set tasks(tasks: TaskPreviewRecursive[]) {
         this.tasks$.next(tasks)
     }
+    @Input() highlightQuery = ''
 
     flattendTaskTree$ = this.tasks$.pipe(
         map(tasks => {
