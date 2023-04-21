@@ -103,4 +103,8 @@ export class TaskService {
 
         return this.taskRepository.getRootLevelTasks(listId)
     }
+
+    async search(userId: string, query: string) {
+        return this.taskRepository.search(userId, query)
+    }
 }

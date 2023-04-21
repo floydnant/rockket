@@ -104,4 +104,8 @@ export class ListService {
 
         return this.listRepository.removeParticipant(listId, participantUserId)
     }
+
+    async search(userId: string, query: string) {
+        return this.listRepository.search(userId, query)
+    }
 }

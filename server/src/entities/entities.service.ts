@@ -20,4 +20,16 @@ export class EntitiesService {
 
         return entityPreviews
     }
+
+    async search(userId: string, query: string) {
+        const [lists, tasks] = await Promise.all([
+            this.listService.search(userId, query),
+            this.taskService.search(userId, query),
+        ])
+
+        return {
+            [EntityType.TASKLIST]: lists,
+            [EntityType.TASK]: tasks,
+        }
+    }
 }
