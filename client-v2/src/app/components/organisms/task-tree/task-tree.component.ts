@@ -26,12 +26,12 @@ export interface TaskTreeNode {
     path: string[]
 }
 
-export const convertToTaskTreeNode = (task: TaskPreviewFlattend): TaskTreeNode => {
+export const convertToTaskTreeNode = (task: TaskPreviewFlattend, expand?: boolean): TaskTreeNode => {
     return {
         taskPreview: task,
         hasChildren: task.childrenCount > 0,
-        isExpanded: uiDefaults.mainView.IS_TASK_EXPANDED,
-        isDescriptionExpanded: uiDefaults.mainView.IS_TASK_DESCRIPTION_EXPANDED,
+        isExpanded: expand ?? uiDefaults.mainView.IS_TASK_EXPANDED,
+        isDescriptionExpanded: expand ?? uiDefaults.mainView.IS_TASK_DESCRIPTION_EXPANDED,
         path: task.path,
     }
 }
@@ -53,16 +53,21 @@ export class TaskTreeComponent {
     @Input() set tasks(tasks: TaskPreviewRecursive[]) {
         this.tasks$.next(tasks)
     }
+    @Input() highlightQuery = ''
+    @Input() expandAll?: boolean
 
     flattendTaskTree$ = this.tasks$.pipe(
         map(tasks => {
             if (!tasks) return []
             const treeNodes = flattenTaskTree(tasks).map(task => {
-                const treeNode = convertToTaskTreeNode(task)
+                const treeNode = convertToTaskTreeNode(task, this.expandAll)
 
-                treeNode.isExpanded = this.entityExpandedMap.get(task.id) ?? uiDefaults.mainView.IS_TASK_EXPANDED
+                treeNode.isExpanded =
+                    this.expandAll ?? this.entityExpandedMap.get(task.id) ?? uiDefaults.mainView.IS_TASK_EXPANDED
                 treeNode.isDescriptionExpanded =
-                    this.descriptionExpandedMap.get(task.id) ?? uiDefaults.mainView.IS_TASK_DESCRIPTION_EXPANDED
+                    (task.description ? this.expandAll : null) ??
+                    this.descriptionExpandedMap.get(task.id) ??
+                    uiDefaults.mainView.IS_TASK_DESCRIPTION_EXPANDED
 
                 return treeNode
             })
@@ -161,12 +166,14 @@ export class TaskTreeComponent {
 
         return node
     }
+    // is first elem in the current hierarchy
     isPreviousLineSpotATask(nodeIndex: number, lineIndex: number, nodeLevel: number) {
         const previousNode = this.getNodeAt(nodeIndex - 1)
         const previousNodeLevel = previousNode?.path?.length || 0
 
         return previousNodeLevel + lineIndex < nodeLevel
     }
+    // is last elem in the current hierarchy
     isNextLineSpotATask(nodeIndex: number, lineIndex: number, nodeLevel: number) {
         const nextNode = this.getNodeAt(nodeIndex + 1, true)
         const nextNodeLevel = nextNode?.path?.length || 0

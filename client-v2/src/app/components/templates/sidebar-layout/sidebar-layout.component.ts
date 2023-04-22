@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { debounceTime, fromEvent, map, switchMap, takeUntil, tap } from 'rxjs'
+import { animationFrames, debounceTime, distinctUntilChanged, fromEvent, map, switchMap, takeUntil, tap } from 'rxjs'
 import { DeviceService } from 'src/app/services/device.service'
 import { UiStateService } from 'src/app/services/ui-state.service'
 import { MenuService } from './menu.service'
+import { coalesceWith } from '@rx-angular/cdk/coalescing'
 
 @UntilDestroy()
 @Component({
@@ -33,8 +34,12 @@ export class SidebarLayoutComponent implements AfterViewInit {
     uiState = this.uiStateService.sidebarUiState
 
     @ViewChild('resizeHandle') resizeHandle!: ElementRef<HTMLDivElement>
+    @ViewChild('sidebar') sidebar!: ElementRef<HTMLDivElement>
 
     ngAfterViewInit(): void {
+        const sidebar = this.sidebar.nativeElement
+        if (sidebar) this.menuService.sidebarWidth$.next(parseFloat(getComputedStyle(sidebar).width))
+
         if (!this.enableResize) return
 
         this.setupResize()
@@ -46,11 +51,18 @@ export class SidebarLayoutComponent implements AfterViewInit {
                 switchMap(() =>
                     fromEvent<MouseEvent>(document, 'mousemove').pipe(takeUntil(fromEvent(document, 'mouseup')))
                 ),
-                map(e => e.clientX + 'px'), // just take the x coordinate as the new width
-                tap(width => {
-                    const sidebar = this.resizeHandle.nativeElement.parentElement as HTMLDivElement
-                    sidebar.style.width = width
+                coalesceWith(animationFrames()),
+                map(e => {
+                    const width = e.clientX // just take the x coordinate as the new width
+                    const sidebar = this.sidebar.nativeElement
+
+                    sidebar.style.width = width + 'px'
+
+                    const actualWidth = getComputedStyle(sidebar).width
+                    return actualWidth
                 }),
+                distinctUntilChanged(),
+                tap(width => this.menuService.sidebarWidth$.next(parseFloat(width))),
                 debounceTime(600),
                 tap(width => this.uiStateService.updateSidebarWidth(width)),
                 untilDestroyed(this)

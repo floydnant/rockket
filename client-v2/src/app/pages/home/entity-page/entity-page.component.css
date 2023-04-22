@@ -1,3 +1,3 @@
 :host {
-    @apply block grow;
+    @apply block grow overflow-x-auto;
 }

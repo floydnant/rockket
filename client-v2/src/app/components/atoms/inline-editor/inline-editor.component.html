@@ -1,19 +1,21 @@
+<!-- @TODO: verify switching from `innerText` to `innerHTML` didn't break anything -->
 <span
-    class="inline-block cursor-text outline-none"
-    [innerText]="text$ | async"
+    class="inline-block cursor-text overflow-x-auto outline-none"
+    [innerHTML]="text$ | push | highlight : (highlight$ | push)"
     [class.show-placeholder]="!(textDomState$ | async)"
     [class]="editorClass"
     [attr.data-placeholder]="placeholder"
     [style.--placeholder-color]="placeholderColor"
     #inlineEditor
-    contenteditable
+    [contentEditable]="!this.disabled"
     focusable
-    (focusChange)="isFocused = $event"
     #editorFocusable="focusable"
     [spellcheck]="editorFocusable.isFocused"
+    [mutationOptions]="{ plainOnly: true, observe: editorFocusable.isFocused && !this.disabled }"
     (textChanges)="textChanges$.next($event)"
-    [mutationOptions]="{ plainOnly: true, observe: editorFocusable.isFocused }"
     (keydown)="keydownEvents$.next($event)"
+    (focusChange)="isFocused = $event"
+    (focus)="this.highlight$.next(null)"
     (blur)="blurEvents$.next($event)"
     enterKeyHint="Done"
     data-test-name="inline-editor"

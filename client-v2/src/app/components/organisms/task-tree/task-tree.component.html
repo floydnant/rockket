@@ -19,6 +19,7 @@
                 <app-task
                     [data]="taskNode"
                     class="mt-2 grow"
+                    [highlightQuery]="highlightQuery"
                     [menuItems]="(menuItemsMap$ | async)?.[taskNode.taskPreview.id] || []"
                     [isLoading]="(isLoadingMap$ | async)?.[taskNode.taskPreview.id] || false"
                     (descriptionExpansionChange)="toggleDescriptionExpansion(taskNode, $event)"

@@ -59,5 +59,5 @@ export class TasksDemoComponent {
             path: [],
             childrenCount: 0,
         }))
-        .map(convertToTaskTreeNode)
+        .map(node => convertToTaskTreeNode(node))
 }

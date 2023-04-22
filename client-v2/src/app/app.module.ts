@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core'
+import { ErrorHandler, NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 
 import { AppRoutingModule } from './app-routing.module'
@@ -57,6 +57,13 @@ import { PageProgressBarComponent } from './components/molecules/page-progress-b
 import { LayoutModule } from '@angular/cdk/layout'
 import { IntersectionDirective } from './directives/intersection.directive'
 import { EntityDescriptionComponent } from './components/molecules/entity-description/entity-description.component'
+import { ApplicationinsightsAngularpluginErrorService } from '@microsoft/applicationinsights-angularplugin-js'
+import { LetModule } from '@rx-angular/template/let'
+import { IfModule } from '@rx-angular/template/if'
+import { ForModule } from '@rx-angular/template/for'
+import { PushModule } from '@rx-angular/template/push'
+import { SearchComponent } from './pages/home/search/search.component'
+import { HighlightPipe } from './pipes/highlight.pipe'
 
 @NgModule({
     declarations: [
@@ -101,6 +108,8 @@ import { EntityDescriptionComponent } from './components/molecules/entity-descri
         PageProgressBarComponent,
         IntersectionDirective,
         EntityDescriptionComponent,
+        SearchComponent,
+        HighlightPipe,
     ],
     imports: [
         BrowserModule,
@@ -140,8 +149,17 @@ import { EntityDescriptionComponent } from './components/molecules/entity-descri
         OverlayModule,
         CdkTreeModule,
         LayoutModule,
+        LetModule,
+        IfModule,
+        ForModule,
+        PushModule,
     ],
-    providers: [],
+    providers: [
+        {
+            provide: ErrorHandler,
+            useClass: ApplicationinsightsAngularpluginErrorService,
+        },
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

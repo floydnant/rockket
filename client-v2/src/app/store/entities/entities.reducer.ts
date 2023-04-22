@@ -1,10 +1,13 @@
 import { createReducer, on } from '@ngrx/store'
-import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { entitiesActions } from './entities.actions'
 import { EntitiesState, TaskTreeMap } from './entities.state'
 import { taskReducerOns } from './task/task.reducer'
 import { tasklistReducerOns } from './list/list.reducer'
 import { buildEntityTree, getEntityById, getParentEntityByChildIdIncludingTasks, getTaskById } from './utils'
+import { authActions } from '../user/user.actions'
+import { Task, TaskPreviewRecursive } from 'src/app/fullstack-shared-models/task.model'
+import { TaskList } from 'src/app/fullstack-shared-models/list.model'
 
 const initialState: EntitiesState = {
     entityTree: null,
@@ -14,10 +17,13 @@ const initialState: EntitiesState = {
     },
 
     taskTreeMap: null,
+
+    search: null,
 }
 
 export const entitiesReducer = createReducer(
     initialState,
+    on(authActions.logoutProceed, (): EntitiesState => initialState),
 
     ...tasklistReducerOns,
     ...taskReducerOns,
@@ -82,6 +88,94 @@ export const entitiesReducer = createReducer(
 
         return {
             ...state,
+            entityTree: entityTreeCopy,
+            taskTreeMap: taskTreeMapCopy,
+        }
+    }),
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    on(entitiesActions.search, (state, { type, ...search }): EntitiesState => {
+        return { ...state, search }
+    }),
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    on(entitiesActions.searchSuccess, (state, { type, ...result }): EntitiesState => {
+        const entityDetailsCopy = structuredClone(state.entityDetails)
+        const entityTreeCopy = structuredClone(state.entityTree || [])
+        const taskTreeMapCopy = structuredClone(state.taskTreeMap || {})
+
+        for (const entityType_ in result) {
+            const entityType = entityType_ as EntityType
+            const entities = result[entityType]
+
+            for (const entity of entities) {
+                // update details
+                entityDetailsCopy[entityType][entity.id] = {
+                    ...(entityDetailsCopy[entityType][entity.id] || {}),
+                    ...entity,
+                }
+
+                // @FIXME: we actually do need to build the trees here, because the entities are not guaranteed to be in the correct order
+
+                // update task tree
+                if (entityType == EntityType.TASK) {
+                    const task = entity as Task
+                    let containingArr: TaskPreviewRecursive[]
+
+                    if (!task.parentTaskId) {
+                        taskTreeMapCopy[task.listId] ??= []
+                        containingArr = taskTreeMapCopy[task.listId]
+                    } else {
+                        const parentTask = getTaskById(taskTreeMapCopy[task.listId] || [], task.parentTaskId)
+                        if (!parentTask) continue
+
+                        parentTask.children ??= []
+                        containingArr = parentTask.children
+                    }
+
+                    const index = containingArr.findIndex(child => child.id == task.id)
+                    if (index == -1) containingArr.push({ ...task, children: null })
+                    else containingArr[index] = { ...containingArr[index], ...task }
+                }
+
+                // update list tree
+                if (entityType == EntityType.TASKLIST) {
+                    const list = entity as TaskList
+                    const listEntity: EntityPreviewRecursive = {
+                        id: list.id,
+                        title: list.title,
+                        entityType: EntityType.TASKLIST,
+                        parentId: list.parentListId,
+                        children: [],
+                    }
+
+                    let containingArr: EntityPreviewRecursive[]
+
+                    if (!list.parentListId) containingArr = entityTreeCopy
+                    else {
+                        const parentList = getEntityById(entityTreeCopy, list.parentListId)
+                        if (!parentList) continue
+
+                        parentList.children ??= []
+                        containingArr = parentList.children
+                    }
+
+                    const index = containingArr.findIndex(child => child.id == list.id)
+                    if (index == -1) containingArr.push(listEntity)
+                    else {
+                        const prevListEntity = containingArr[index]
+                        containingArr[index] = {
+                            ...prevListEntity,
+                            ...listEntity,
+                            children: prevListEntity.children,
+                        }
+                    }
+                }
+            }
+        }
+
+        return {
+            ...state,
+            entityDetails: entityDetailsCopy,
             entityTree: entityTreeCopy,
             taskTreeMap: taskTreeMapCopy,
         }

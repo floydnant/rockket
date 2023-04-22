@@ -170,4 +170,16 @@ export class ListRepository {
 
         return this.prisma.listParticipant.delete({ where: { id: listParticipant.id } })
     }
+
+    async search(userId: string, query: string) {
+        return this.prisma.tasklist.findMany({
+            where: {
+                participants: { some: { userId } },
+                OR: [
+                    { title: { contains: query, mode: 'insensitive' } },
+                    { description: { contains: query, mode: 'insensitive' } },
+                ],
+            },
+        })
+    }
 }

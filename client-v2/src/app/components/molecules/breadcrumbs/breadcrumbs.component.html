@@ -1,30 +1,80 @@
-<!-- @TODO: Fix the header width issue (breadcrumbs taking more than allowed) -->
 <div
-    class="breadcrumbs | flex w-full flex-wrap py-2 px-4 text-tinted-300"
+    class="breadcrumbs | flex w-full overflow-x-auto py-2 px-4 text-tinted-300"
     cdkMenuBar
     data-test-name="breadcrumbs-container"
+    #breadcrumbsContainer
 >
-    <div *ngFor="let breadcrumb of breadcrumbs; let isLast = last; trackBy: trackByFn" class="flex max-w-[80%]">
-        <button
-            class="breadcrumb | menu-item | max-w-[20ch] truncate py-0.5 px-1.5"
-            [class.text-tinted-100]="isLast"
-            cdkMenuItem
-            [cdkContextMenuTriggerFor]="menu"
-            [routerLink]="breadcrumb.route"
-            #trigger="cdkContextMenuTriggerFor"
-            data-test-name="breadcrumb"
-        >
-            <!-- appTooltip="Here will be more information" -->
-            <ng-template #menu>
-                <app-drop-down
-                    *ngIf="breadcrumb.contextMenuItems?.length"
-                    [items]="breadcrumb.contextMenuItems!"
-                    [rootTrigger]="trigger"
-                ></app-drop-down>
-            </ng-template>
+    <div *rxFor="let breadcrumb of breadcrumbs$; let isLast = last; trackBy: trackByFn" class="flex max-w-[80%]">
+        <!-- @TODO: some fuckery is going on here with the cdkMenuItem, destroying the menu bar flow and not acting like a proper menu item -->
+        <ng-container *ngIf="isTruncationBreadcrumb(breadcrumb)">
+            <button
+                class="truncation-breadcrumb | menu-item | truncate py-0.5 px-1.5 font-bold"
+                cdkMenuItem
+                cdkOverlayOrigin
+                #trigger="cdkOverlayOrigin"
+                (click)="isOverlayOpen$.next(!isOverlayOpen$.value)"
+                data-test-name="truncation-breadcrumb"
+            >
+                ...
+            </button>
 
-            <app-entity-page-label [pageTitle]="breadcrumb.title" [pageIcon]="breadcrumb.icon"></app-entity-page-label>
-        </button>
-        <span class="seperator | mx-0.5 text-tinted-500" *ngIf="!isLast">/</span>
+            <ng-template
+                cdkConnectedOverlay
+                [cdkConnectedOverlayOrigin]="trigger"
+                [cdkConnectedOverlayOpen]="(isOverlayOpen$ | async) ?? false"
+                (overlayOutsideClick)="closeOverlayDelayed()"
+            >
+                <app-tooltip class="bottom no-delay !border-tinted-800 !bg-tinted-900/70 !px-1">
+                    <div class="flex flex-col text-base" cdkMenu data-test-name="truncated-breadcrumbs-container">
+                        <div
+                            *rxFor="
+                                let truncatedBreadcrumb of breadcrumb.truncated;
+                                let index = index;
+                                trackBy: trackByFn
+                            "
+                            [style]="{ marginLeft: 0.5 * index + 'rem' }"
+                        >
+                            <ng-container
+                                *ngTemplateOutlet="
+                                    breadcrumbTemplate;
+                                    context: { breadcrumb: truncatedBreadcrumb, isLast: false }
+                                "
+                            ></ng-container>
+                        </div>
+                    </div>
+                </app-tooltip>
+            </ng-template>
+        </ng-container>
+
+        <ng-container *ngIf="!isTruncationBreadcrumb(breadcrumb)">
+            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { breadcrumb, isLast }"></ng-container>
+        </ng-container>
+
+        <span class="separator | mx-0.5 text-tinted-500" *ngIf="!isLast">/</span>
     </div>
 </div>
+
+<ng-template #breadcrumbTemplate let-breadcrumb="breadcrumb" let-isLast="isLast">
+    <button
+        *ngIf="!isTruncationBreadcrumb(breadcrumb)"
+        class="breadcrumb | menu-item | max-w-[20ch] truncate py-0.5 px-1.5"
+        [class.text-tinted-100]="isLast"
+        cdkMenuItem
+        [cdkContextMenuTriggerFor]="menu"
+        [routerLink]="breadcrumb.route"
+        (click)="closeOverlayDelayed()"
+        #trigger="cdkContextMenuTriggerFor"
+        data-test-name="breadcrumb"
+    >
+        <!-- appTooltip="Here will be more information" -->
+        <ng-template #menu>
+            <app-drop-down
+                *ngIf="breadcrumb.contextMenuItems?.length"
+                [items]="breadcrumb.contextMenuItems!"
+                [rootTrigger]="trigger"
+            ></app-drop-down>
+        </ng-template>
+
+        <app-entity-page-label [pageTitle]="breadcrumb.title" [pageIcon]="breadcrumb.icon"></app-entity-page-label>
+    </button>
+</ng-template>

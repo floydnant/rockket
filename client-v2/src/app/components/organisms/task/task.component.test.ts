@@ -12,6 +12,8 @@ import { InlineEditorComponent } from '../../atoms/inline-editor/inline-editor.c
 import { DropDownComponent } from '../../molecules/drop-down/drop-down.component'
 import { TaskTreeNode } from '../task-tree/task-tree.component'
 import { TaskComponent } from './task.component'
+import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
+import { PushModule } from '@rx-angular/template/push'
 
 const taskMenuItems = getEntityMenuItemsMap({} as unknown as Store<AppState>)[EntityType.TASK]
 
@@ -38,13 +40,14 @@ const setupComponent = (
                 ...listeners,
                 menuItems: taskMenuItems.map(useStubsForActions(menuItemStubsMap)),
             },
-            imports: [CdkMenuModule, IconsModule],
+            imports: [CdkMenuModule, IconsModule, PushModule],
             declarations: [
                 TaskComponent,
                 DropDownComponent,
                 InlineEditorComponent,
                 FocusableDirective,
                 MutationDirective,
+                HighlightPipe,
             ],
         }
     )

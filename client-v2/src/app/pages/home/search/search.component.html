@@ -1,0 +1,90 @@
+<app-main-pane>
+    <ng-container main>
+        <h1>Search</h1>
+        <div class="sticky -top-2 z-40 -mt-3 flex w-full gap-2 rounded-b-lg bg-tinted-900 pt-3 shadow-header glass">
+            <input
+                #input
+                type="text"
+                class="input w-full"
+                placeholder="Search for tasks and lists"
+                focusable
+                [autoSelect]="true"
+                (keydown.enter)="searchFor(input.value)"
+                [value]="(routeQuery$ | push) || ''"
+            />
+            <button class="button button--submit inline-flex gap-2" (click)="searchFor(input.value)">
+                <loading-spinner *rxIf="isLoading$"></loading-spinner>
+                Search
+            </button>
+        </div>
+
+        <ng-container *rxIf="search$; let search">
+            <!-- @TODO: maybe add something, that the user can open tasks more quickly -->
+            <ng-container *rxIf="search.result.tasks.length">
+                <h2 id="tasks">{{ search.result.taskMatches }} Task{{ search.result.taskMatches == 1 ? '' : 's' }}</h2>
+                <app-task-tree
+                    [tasks]="search.result.tasks"
+                    [highlightQuery]="search.query"
+                    [expandAll]="true"
+                ></app-task-tree>
+            </ng-container>
+
+            <ng-container *rxIf="search.result.entities.length">
+                <h2 id="lists">
+                    {{ search.result.entityMatches }} List{{ search.result.entityMatches == 1 ? '' : 's' }}
+                </h2>
+
+                <!-- @TODO: this should be a component, OR `task-tree` more generic? -->
+                <!-- @TODO: add menu options -->
+                <div class="flex flex-col gap-2" *rxLet="entitiesState$; let entitiesState">
+                    <ng-template #entityTemplate let-entities="entities" let-level="level">
+                        <ng-container *rxFor="let entity of entities">
+                            <button
+                                class="list-preview | m-0 flex cursor-pointer flex-col items-start rounded-xl border border-tinted-700 bg-tinted-800 p-1 text-left transition-colors hover:bg-tinted-700"
+                                routerLink="/home/{{ entity.id }}"
+                                [style]="{ 'margin-left': level * 1.5 + 'rem' }"
+                            >
+                                <div class="px-2 py-1">
+                                    <app-icon [icon]="entity.entityType" class="mr-3"></app-icon>
+                                    <span class="title" [innerHTML]="entity.title | highlight : search.query"></span>
+                                </div>
+                                <div
+                                    *rxIf="
+                                        getEntityDetail(entitiesState, entity.entityType, entity.id)?.description;
+                                        let desc
+                                    "
+                                    class="description | mt-1 h-full max-h-40 w-full overflow-y-auto rounded-lg bg-tinted-900 px-2 py-1"
+                                    [innerHTML]="desc | highlight : search.query"
+                                ></div>
+                            </button>
+                            <div class="flex flex-col gap-2" *rxIf="entity.children?.length">
+                                <ng-container
+                                    *ngTemplateOutlet="
+                                        entityTemplate;
+                                        context: { entities: entity.children || [], level: level + 1 }
+                                    "
+                                ></ng-container>
+                            </div>
+                        </ng-container>
+                    </ng-template>
+
+                    <ng-container
+                        *ngTemplateOutlet="entityTemplate; context: { entities: search.result.entities, level: 0 }"
+                    ></ng-container>
+                </div>
+            </ng-container>
+
+            <p
+                *rxIf="
+                    !!search.query &&
+                    search.result.entities.length == 0 &&
+                    search.result.tasks.length == 0 &&
+                    !(isLoading$ | push)
+                "
+                class="mt-3 text-center text-danger-400"
+            >
+                No matches found
+            </p>
+        </ng-container>
+    </ng-container>
+</app-main-pane>

@@ -36,6 +36,13 @@ export class InlineEditorComponent {
     @Input() editorClass?: string | Record<string, boolean>
     @Input() enableDebouncedUpdates = true
 
+    @Input() disabled = false
+
+    highlight$ = new BehaviorSubject<string | null>(null)
+    @Input() set highlight(value: string | null) {
+        this.highlight$.next(value)
+    }
+
     @Output() update = new EventEmitter<string | null>()
 
     text$ = this.textInput$.pipe(
