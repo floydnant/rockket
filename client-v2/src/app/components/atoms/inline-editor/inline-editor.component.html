@@ -7,11 +7,11 @@
     [attr.data-placeholder]="placeholder"
     [style.--placeholder-color]="placeholderColor"
     #inlineEditor
-    [contentEditable]="!this.disabled"
+    [contentEditable]="!this.readonly"
     focusable
     #editorFocusable="focusable"
     [spellcheck]="editorFocusable.isFocused"
-    [mutationOptions]="{ plainOnly: true, observe: editorFocusable.isFocused && !this.disabled }"
+    [mutationOptions]="{ plainOnly: true, observe: editorFocusable.isFocused && !this.readonly }"
     (textChanges)="textChanges$.next($event)"
     (keydown)="keydownEvents$.next($event)"
     (focusChange)="isFocused = $event"

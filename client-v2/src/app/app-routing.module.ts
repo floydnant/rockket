@@ -20,6 +20,9 @@ import { SettingsComponent } from './pages/settings/settings.component'
 import { AppState } from './store'
 import { getEntityById } from './store/entities/utils'
 import { SearchComponent } from './pages/home/search/search.component'
+import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-service.component'
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component'
+import { ContactComponent } from './pages/contact/contact.component'
 
 const ENVIRONMENT_HINT = `[${environment.REVIEW_ID ? environment.REVIEW_ID + '-' : ''}${environment.CONTEXT}]`
 const APP_TITLE = `Rockket ${environment.CONTEXT == 'Production' ? '' : ENVIRONMENT_HINT}`
@@ -95,6 +98,21 @@ const routes: Routes = [
                 title: `Appearance Settings ${APP_TITLE_SUFFIX}`,
             },
         ],
+    },
+    {
+        path: 'terms-of-service',
+        component: TermsOfServiceComponent,
+        title: `Terms of Service ${APP_TITLE_SUFFIX}`,
+    },
+    {
+        path: 'privacy-policy',
+        component: PrivacyPolicyComponent,
+        title: `Privacy Policy ${APP_TITLE_SUFFIX}`,
+    },
+    {
+        path: 'contact',
+        component: ContactComponent,
+        title: `Contact ${APP_TITLE_SUFFIX}`,
     },
     {
         path: 'playground',

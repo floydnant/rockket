@@ -13,7 +13,7 @@ import { MenuItem, MenuItemVariant } from '../../molecules/drop-down/drop-down.c
 export class UserMenuComponent {
     constructor(private store: Store<AppState>) {}
 
-    userState = this.store.select(userFeature)
+    userState$ = this.store.select(userFeature)
 
     menuItems: MenuItem[] = [
         {

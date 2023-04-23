@@ -56,6 +56,8 @@ export class TaskTreeComponent {
     @Input() highlightQuery = ''
     @Input() expandAll?: boolean
 
+    @Input() readonly = false
+
     flattendTaskTree$ = this.tasks$.pipe(
         map(tasks => {
             if (!tasks) return []
@@ -181,8 +183,8 @@ export class TaskTreeComponent {
         return nextNodeLevel + lineIndex < nodeLevel
     }
 
+    // @OUTSOURCE
     private readonly taskMenuItems = getEntityMenuItemsMap(this.store)[EntityType.TASK]
-
     menuItemsMap$ = this.flattendTaskTree$.pipe(
         map(flattendTree => {
             const menuItemEntries = flattendTree.map(({ taskPreview }) => {
@@ -195,6 +197,7 @@ export class TaskTreeComponent {
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
+    // @OUTSOURCE
     isLoadingMap$ = this.loadingService.getEntitiesLoadingStateMap(action =>
         this.flattendTaskTree$.pipe(map(tasks => tasks.some(task => task.taskPreview.id == action.id)))
     )

@@ -1,12 +1,9 @@
 <li
     *ngIf="task$ | async as task"
     class="task | flex w-full max-w-full list-none flex-col rounded-xl border border-tinted-700 border-opacity-75 bg-tinted-800 py-2 px-1 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
-    [class]="{
-        'bg-submit-800': task.status == TaskStatus.COMPLETED,
-        'border-submit-700': task.status == TaskStatus.COMPLETED,
-        'border-opacity-60': task.status == TaskStatus.COMPLETED,
-        'text-submit-200': task.status == TaskStatus.COMPLETED,
-        completed: task.status == TaskStatus.COMPLETED,
+    [ngClass]="{
+        'completed border-submit-700 border-opacity-60 bg-submit-800 text-submit-200':
+            task.status == TaskStatus.COMPLETED,
         titleHasFocus: inlineEditor.isFocused,
         isHovered,
         descriptionHasFocus: descriptionFocusable.isFocused
@@ -35,7 +32,11 @@
                     <app-icon [icon]="loading || task.status"></app-icon>
                 </button>
                 <ng-template #statusMenu>
-                    <app-drop-down [items]="(statusMenuItems$ | async) || []" [data]="{ id: task.id }"></app-drop-down>
+                    <app-drop-down
+                        *rxIf="statusMenuItems$; let items"
+                        [items]="items"
+                        [data]="{ id: task.id }"
+                    ></app-drop-down>
                 </ng-template>
 
                 <app-inline-editor
@@ -52,6 +53,7 @@
                     }"
                     [enableDebouncedUpdates]="false"
                     (update)="titleChange.emit($event || '')"
+                    [readonly]="readonly"
                     data-test-name="task-title"
                 ></app-inline-editor>
             </div>
@@ -125,7 +127,8 @@
                 </div>
                 <ng-template #priorityMenu>
                     <app-drop-down
-                        [items]="(priorityMenuItems$ | async) || []"
+                        *rxIf="priorityMenuItems$; let items"
+                        [items]="items"
                         [data]="{ id: task.id }"
                     ></app-drop-down>
                 </ng-template>
@@ -143,7 +146,8 @@
 
             <ng-template #menu>
                 <app-drop-down
-                    [items]="(menuItems$ | async) || []"
+                    *rxIf="menuItems$; let items"
+                    [items]="items"
                     [rootTrigger]="trigger"
                     [data]="{ id: task.id, entityType: EntityType.TASK }"
                 ></app-drop-down>
@@ -183,7 +187,7 @@
                 'not-hover:ring-submit-700': task.status == TaskStatus.COMPLETED,
                 'not-hover:ring-opacity-50': task.status == TaskStatus.COMPLETED
             }"
-            contenteditable
+            [contentEditable]="!readonly"
             data-test-name="task-description"
             [innerHTML]="task.description | highlight : (highlightQuery$ | push)"
         ></div>

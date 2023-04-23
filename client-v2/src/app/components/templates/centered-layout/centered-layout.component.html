@@ -1,5 +1,12 @@
-<div class="bg-dotted height-screen flex w-full justify-center p-4" data-test-name="app-container">
-    <div class="w-full max-w-prose">
+<div
+    class="relative flex w-full justify-center p-4"
+    [class.min-height-screen]="fullHeight"
+    [class]="containerClasses"
+    data-test-name="app-container"
+>
+    <div *ngIf="enableBackground" class="background | bg-dotted fade-in-out-y absolute inset-0 -z-[1]"></div>
+
+    <div class="w-full" [class]="widthClasses[width]">
         <ng-content></ng-content>
     </div>
 </div>

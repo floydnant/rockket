@@ -1,7 +1,7 @@
 @layer components {
-    a:not([class|='button'], .skip-default-a-styles),
+    a:not([class*='button'], .skip-default-a-styles),
     .link {
-        @apply text-submit-500 hover:text-submit-400 hover:underline;
+        @apply text-primary-400 hover:text-primary-300 hover:underline;
     }
 
     pre {
@@ -17,7 +17,7 @@
     }
 
     .button-naked {
-        @apply rounded-md py-1 px-2 transition-colors hover:bg-tinted-700;
+        @apply rounded-lg py-1 px-2 transition-colors hover:bg-tinted-700;
         /* hover:text-tinted-100 */
     }
     .button-naked i {
@@ -60,13 +60,26 @@
 
     .bg-dotted {
         background-image: radial-gradient(theme('colors.tinted.800') 8%, transparent 8%);
-        background-position: 4px 4px;
+        background-position: .7rem .6rem;
         background-size: 27px 27px;
+    }
+    .fade-in-out-y {
+        image-rendering: pixelated;
+        mask-image: linear-gradient(transparent, 200px, white, calc(100% - 200px), transparent);
+    }
+    .fade-in-out-x {
+        image-rendering: pixelated;
+        mask-image: linear-gradient(to right, transparent, 10%, white, 90%, transparent);
     }
 
     .height-screen {
         height: 100vh;
         height: -webkit-fill-available;
         height: 100dvh;
+    }
+    .min-height-screen {
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+        min-height: 100dvh;
     }
 }

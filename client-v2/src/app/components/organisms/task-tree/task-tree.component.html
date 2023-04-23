@@ -22,6 +22,7 @@
                     [highlightQuery]="highlightQuery"
                     [menuItems]="(menuItemsMap$ | async)?.[taskNode.taskPreview.id] || []"
                     [isLoading]="(isLoadingMap$ | async)?.[taskNode.taskPreview.id] || false"
+                    [readonly]="readonly"
                     (descriptionExpansionChange)="toggleDescriptionExpansion(taskNode, $event)"
                     (expansionChange)="toggleExpansion(taskNode, $event)"
                     (titleChange)="onTitleChange(taskNode.taskPreview.id, $event)"
