@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 
 @Component({
     selector: 'app-terms-of-service',
@@ -6,8 +6,4 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
     styleUrls: ['./terms-of-service.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TermsOfServiceComponent implements OnInit {
-    constructor() {}
-
-    ngOnInit(): void {}
-}
+export class TermsOfServiceComponent {}

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 
 @Component({
     selector: 'app-privacy-policy',
@@ -6,8 +6,4 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
     styleUrls: ['./privacy-policy.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PrivacyPolicyComponent implements OnInit {
-    constructor() {}
-
-    ngOnInit(): void {}
-}
+export class PrivacyPolicyComponent {}
