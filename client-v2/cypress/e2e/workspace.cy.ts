@@ -111,7 +111,7 @@ describe('Workspace', () => {
 
             // task menu
             cy.get(testName('drop-down-menu')).within(() => {
-                cy.get(testName('menu-item')).contains(/Open/).click({ force: true })
+                cy.get(testName('menu-item')).contains(/Open/).click()
             })
         }
 
@@ -165,7 +165,7 @@ describe('Workspace', () => {
                     cy.get(testName(`task-status-button`)).click()
                 })
                 cy.get(testName('drop-down-menu')).within(() => {
-                    cy.get(testName('menu-item')).first().click({ force: true })
+                    cy.get(testName('menu-item')).first().click()
                     cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
                 })
             })
@@ -180,7 +180,7 @@ describe('Workspace', () => {
                     cy.contains(/Priority/)
                         .closest(testName('menu-item'))
                         .focus()
-                        .type('{rightArrow}', { force: true })
+                        .type('{rightArrow}')
                 })
 
                 // priority menu
@@ -190,7 +190,7 @@ describe('Workspace', () => {
                         cy.intercept('PATCH', '/task/*').as('updateTask')
                         cy.get(testName('menu-item'))
                             .contains(/Urgent/)
-                            .click({ force: true })
+                            .click()
                         cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
                     })
             })
@@ -204,7 +204,7 @@ describe('Workspace', () => {
                 cy.get(testName('drop-down-menu')).within(() => {
                     cy.contains(/Subtask/)
                         .closest(testName('menu-item'))
-                        .click({ force: true })
+                        .click()
                 })
 
                 cy.get(testName('task-tree-node')).should('have.length', 2)

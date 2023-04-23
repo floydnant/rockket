@@ -33,7 +33,7 @@
                 </button>
                 <ng-template #statusMenu>
                     <app-drop-down
-                        *rxIf="statusMenuItems$; let items"
+                        *ngIf="statusMenuItems$ | push as items"
                         [items]="items"
                         [data]="{ id: task.id }"
                     ></app-drop-down>
@@ -127,7 +127,7 @@
                 </div>
                 <ng-template #priorityMenu>
                     <app-drop-down
-                        *rxIf="priorityMenuItems$; let items"
+                        *ngIf="priorityMenuItems$ | push as items"
                         [items]="items"
                         [data]="{ id: task.id }"
                     ></app-drop-down>
@@ -146,7 +146,7 @@
 
             <ng-template #menu>
                 <app-drop-down
-                    *rxIf="menuItems$; let items"
+                    *ngIf="menuItems$ | push as items"
                     [items]="items"
                     [rootTrigger]="trigger"
                     [data]="{ id: task.id, entityType: EntityType.TASK }"
