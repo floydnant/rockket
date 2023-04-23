@@ -18,10 +18,6 @@ Rockket is designed to _reward the user_ when he completes a task with satisfyin
 - Take notes or write descriptions in rich text
 - Link tasks that are related to each other e.g. by blocking them based on another task's status
 
-## Note
-I am completely rebuilding the app, so the new project (`client-v2`) is currently only in demo phase and if not yet, those features will arrive shortly.
-The old project (`client`) is still in production, but I stopped maintaining it a while ago.
-
 ## Usage
 Start using the [stable production version](https://rockket.netlify.app) or the [development branch](https://main--rockket.netlify.app) and [install it as a PWA](https://medium.com/progressivewebapps/how-to-install-a-pwa-to-your-device-68a8d37fadc1) on a desktop or mobile device.
 (native builds on the AppStore and PlayStore are on the roadmap)
