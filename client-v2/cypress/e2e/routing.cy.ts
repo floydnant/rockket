@@ -19,12 +19,14 @@ describe('Routing', () => {
     describe('Auth pages', () => {
         it('can visit the the login page', () => {
             cy.visit('/')
-            cy.get(testName('login-link')).click()
+            cy.get(testName('mobile-menu-toggle')).click()
+            cy.get(testName('login-link')).last().click()
             cy.url().should('contain', '/login')
         })
         it('can visit the the signup page', () => {
             cy.visit('/')
-            cy.get(testName('signup-link')).click()
+            cy.get(testName('mobile-menu-toggle')).click()
+            cy.get(testName('signup-link')).last().click()
             cy.url().should('contain', '/signup')
         })
 

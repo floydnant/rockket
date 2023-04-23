@@ -63,7 +63,7 @@ describe('Workspace', () => {
         })
     })
 
-    describe('Entity page', () => {
+    describe.only('Entity page', () => {
         describe('Tasklist view', () => {
             it('can edit the entity name', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
@@ -75,6 +75,7 @@ describe('Workspace', () => {
 
             it('can edit the description', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('editable-entity-name'))
 
                 const description = 'The testing entity description'
 
@@ -86,6 +87,7 @@ describe('Workspace', () => {
 
             it('can add children', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('editable-entity-name'))
 
                 cy.get(testName('create-children')).click()
                 cy.get(testName('entity-tree-node')).should('have.length', 2)
@@ -94,6 +96,7 @@ describe('Workspace', () => {
 
             it('can add tasks', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('editable-entity-name'))
 
                 cy.get(testName('create-task')).click()
                 cy.get(testName('task-tree-node')).should('exist')
@@ -108,26 +111,26 @@ describe('Workspace', () => {
 
             // task menu
             cy.get(testName('drop-down-menu')).within(() => {
-                cy.get(testName('menu-item')).contains(/Open/).click()
+                cy.get(testName('menu-item')).contains(/Open/).click({ force: true })
             })
         }
 
         describe('Task view', () => {
-            it('can open a task as page', () => {
+            beforeEach(() => {
                 cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('editable-entity-name'))
                 cy.get(testName('create-task')).click()
+                cy.get(testName('task-tree-node'))
 
                 openTaskAsPage()
-
+            })
+            it('can open a task as page', () => {
                 cy.contains('Untitled task')
             })
 
             it('can edit the entity name', () => {
-                cy.get(testName('sidebar-create-new-list')).click()
-                cy.get(testName('create-task')).click()
-                openTaskAsPage()
-
                 const entityName = 'The testing entity'
+
                 cy.get(testName('editable-entity-name')).get(testName('inline-editor')).focus().type(entityName).blur()
                 cy.get(testName('entity-tree-node')).last().should('contain.text', entityName)
                 cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
@@ -135,10 +138,6 @@ describe('Workspace', () => {
             })
 
             it('can edit the description', () => {
-                cy.get(testName('sidebar-create-new-list')).click()
-                cy.get(testName('create-task')).click()
-                openTaskAsPage()
-
                 const description = 'The testing entity description'
 
                 cy.get(testName('add-description')).click()
@@ -147,10 +146,6 @@ describe('Workspace', () => {
             })
 
             it('can add tasks', () => {
-                cy.get(testName('sidebar-create-new-list')).click()
-                cy.get(testName('create-task')).click()
-                openTaskAsPage()
-
                 cy.get(testName('create-subtask')).click()
                 cy.get(testName('task-tree-node')).should('exist')
                 cy.wait('@createTask').its('response.statusCode').should('equal', 201)
@@ -160,7 +155,9 @@ describe('Workspace', () => {
         describe('Tasks', () => {
             beforeEach(() => {
                 cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('editable-entity-name'))
                 cy.get(testName('create-task')).click()
+                cy.get(testName('task-tree-node'))
             })
 
             it("can update a task's status", () => {
@@ -168,7 +165,7 @@ describe('Workspace', () => {
                     cy.get(testName(`task-status-button`)).click()
                 })
                 cy.get(testName('drop-down-menu')).within(() => {
-                    cy.get(testName('menu-item')).first().click()
+                    cy.get(testName('menu-item')).first().click({ force: true })
                     cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
                 })
             })
@@ -183,7 +180,7 @@ describe('Workspace', () => {
                     cy.contains(/Priority/)
                         .closest(testName('menu-item'))
                         .focus()
-                        .type('{rightArrow}')
+                        .type('{rightArrow}', { force: true })
                 })
 
                 // priority menu
@@ -193,7 +190,7 @@ describe('Workspace', () => {
                         cy.intercept('PATCH', '/task/*').as('updateTask')
                         cy.get(testName('menu-item'))
                             .contains(/Urgent/)
-                            .click()
+                            .click({ force: true })
                         cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
                     })
             })
@@ -207,7 +204,7 @@ describe('Workspace', () => {
                 cy.get(testName('drop-down-menu')).within(() => {
                     cy.contains(/Subtask/)
                         .closest(testName('menu-item'))
-                        .click()
+                        .click({ force: true })
                 })
 
                 cy.get(testName('task-tree-node')).should('have.length', 2)

@@ -1,8 +1,16 @@
 <ng-template #signupOrLogin>
     <user-menu>
         <div class="flex items-center gap-4">
-            <a routerLink="/auth/signup" class="button bg-tinted-800 text-sm font-semibold leading-6">Signup</a>
-            <a routerLink="/auth/login" class="text-sm font-semibold leading-6 !text-tinted-100"
+            <a
+                routerLink="/auth/signup"
+                class="button bg-tinted-800 text-sm font-semibold leading-6"
+                data-test-name="signup-link"
+                >Signup</a
+            >
+            <a
+                routerLink="/auth/login"
+                class="text-sm font-semibold leading-6 !text-tinted-100"
+                data-test-name="login-link"
                 >Log in <span aria-hidden="true">&rarr;</span></a
             >
         </div>
@@ -22,6 +30,7 @@
                 type="button"
                 class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-2xl text-tinted-500"
                 (click)="isMobileMenuOpen = !isMobileMenuOpen"
+                data-test-name="mobile-menu-toggle"
             >
                 <span class="sr-only">Open main menu</span>
                 <!-- <svg
