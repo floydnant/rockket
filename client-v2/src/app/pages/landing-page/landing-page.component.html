@@ -1,13 +1,460 @@
-<app-centered-layout data-test-name="landing-page">
-    <h1>Rockket</h1>
-    <p>
-        Alright this is the Landing page. Yes its rediculously empty, but I don't care for now, so why don't you just
-        <a routerLink="/auth/login" data-test-name="login-link">Login</a> /
-        <a routerLink="/auth/signup" data-test-name="signup-link">Signup</a>?
-    </p>
-    <p>Or go directly to the <a routerLink="/home">workspace</a>.</p>
-    <p>
-        If you're curious to find out more about rockket, go check out the
-        <a href="https://github.com/dein-ding/rockket#readme" target="_blank">README.md</a>.
-    </p>
+<ng-template #signupOrLogin>
+    <user-menu>
+        <div class="flex items-center gap-4">
+            <a
+                routerLink="/auth/signup"
+                class="button bg-tinted-800 text-sm font-semibold leading-6"
+                data-test-name="signup-link"
+                >Signup</a
+            >
+            <a
+                routerLink="/auth/login"
+                class="text-sm font-semibold leading-6 !text-tinted-100"
+                data-test-name="login-link"
+                >Log in <span aria-hidden="true">&rarr;</span></a
+            >
+        </div>
+    </user-menu>
+</ng-template>
+
+<header class="sticky top-0 z-50 w-full bg-tinted-900 shadow-header glass">
+    <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+        <div class="flex lg:flex-1">
+            <a routerLink="/" class="-m-1.5 flex items-center gap-4 p-1.5 decoration-transparent">
+                <img class="h-8 w-auto" src="assets/rockket-logo.png" alt="Rockket logo" />
+                <span class="font-bold text-tinted-100">Rockket</span>
+            </a>
+        </div>
+        <div class="flex lg:hidden">
+            <button
+                type="button"
+                class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-2xl text-tinted-500"
+                (click)="isMobileMenuOpen = !isMobileMenuOpen"
+                data-test-name="mobile-menu-toggle"
+            >
+                <span class="sr-only">Open main menu</span>
+                <!-- <svg
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                        />
+                    </svg> -->
+                <app-icon icon="far fa-bars"></app-icon>
+            </button>
+        </div>
+        <div class="hidden lg:flex lg:gap-x-12">
+            <a
+                *ngFor="let link of mainNavLinks"
+                [href]="link.route"
+                class="text-sm font-semibold leading-6 text-tinted-900"
+                >{{ link.title }}</a
+            >
+        </div>
+        <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+            <ng-container *ngTemplateOutlet="signupOrLogin"></ng-container>
+        </div>
+    </nav>
+</header>
+
+<!-- Mobile menu, show/hide based on menu open state. -->
+<div class="mobile-menu | lg:hidden" *ngIf="isMobileMenuOpen" role="dialog" aria-modal="true">
+    <!-- Background backdrop, show/hide based on slide-over state. -->
+    <div class="fixed inset-0 z-50"></div>
+    <div
+        class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-tinted-900 !bg-opacity-80 px-6 py-6 glass sm:max-w-sm sm:ring-1 sm:ring-tinted-900/10"
+    >
+        <div class="flex items-center justify-between">
+            <a routerLink="#" class="-m-1.5 p-1.5">
+                <span class="sr-only">Rockket</span>
+                <img class="h-8 w-auto" src="assets/rockket-logo.png" alt="" />
+            </a>
+            <button
+                type="button"
+                class="-m-2.5 rounded-md p-2.5 text-2xl text-tinted-700"
+                (click)="isMobileMenuOpen = !isMobileMenuOpen"
+            >
+                <span class="sr-only">Close menu</span>
+                <!-- <svg
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg> -->
+                <app-icon icon="fas fa-times"></app-icon>
+            </button>
+        </div>
+        <div class="mt-6 flow-root">
+            <div class="-my-6 divide-y divide-tinted-500/10">
+                <div class="space-y-2 py-6">
+                    <a
+                        *ngFor="let link of mainNavLinks"
+                        [href]="link.route"
+                        class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-tinted-700"
+                        >{{ link.title }}</a
+                    >
+                </div>
+                <div class="py-6">
+                    <ng-container *ngTemplateOutlet="signupOrLogin"></ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="relative">
+    <div class="background | bg-dotted fade-in-out-y absolute inset-0 -z-[1]"></div>
+
+    <app-centered-layout [enableBackground]="false" width="lg" data-test-name="landing-page" class="select-text">
+        <section class="hero | relative isolate px-6 lg:px-8">
+            <div
+                class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+                aria-hidden="true"
+            >
+                <div
+                    class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-primary-500 to-submit-500 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                    style="
+                        clip-path: polygon(
+                            74.1% 44.1%,
+                            100% 61.6%,
+                            97.5% 26.9%,
+                            85.5% 0.1%,
+                            80.7% 2%,
+                            72.5% 32.5%,
+                            60.2% 62.4%,
+                            52.4% 68.1%,
+                            47.5% 58.3%,
+                            45.2% 34.5%,
+                            27.5% 76.7%,
+                            0.1% 64.9%,
+                            17.9% 100%,
+                            27.6% 76.8%,
+                            76.1% 97.7%,
+                            74.1% 44.1%
+                        );
+                    "
+                ></div>
+            </div>
+            <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+                <div class="hidden sm:mb-8 sm:flex sm:justify-center">
+                    <div
+                        class="anouncement | relative rounded-full bg-tinted-900 px-3 py-1 text-sm leading-6 text-tinted-500 ring-1 ring-tinted-300/10 transition-colors glass hover:ring-tinted-300/20"
+                    >
+                        We just launched! 🎉 Be one of the first to try out rockket.
+                        <a href="#cta" class="font-semibold"
+                            ><span class="absolute inset-0" aria-hidden="true"></span>Read more
+                            <span aria-hidden="true">&rarr;</span></a
+                        >
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h1 class="main-heading | text-4xl font-bold tracking-tight sm:text-6xl">
+                        Stay motivated with every
+                        <app-icon icon="Completed" class="text-3xl sm:text-5xl"></app-icon> task!
+                    </h1>
+                    <p class="subline | mt-6 text-lg leading-8 text-tinted-500">
+                        Say goodbye to procrastination, Rockket is the task manager that keeps you on track and rewards
+                        you for your hard work.
+                    </p>
+                    <div class="mt-10 flex items-center justify-center gap-x-6">
+                        <a routerLink="/auth/signup" class="get-started | button button--submit skip-default-a-styles"
+                            >Get started</a
+                        >
+                        <a href="#features" class="learn-more | text-sm font-semibold leading-6 text-tinted-900"
+                            >Learn more <span aria-hidden="true">→</span></a
+                        >
+                    </div>
+                </div>
+            </div>
+            <div
+                class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+                aria-hidden="true"
+            >
+                <div
+                    class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-submit-400 to-primary-400 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+                    style="
+                        clip-path: polygon(
+                            74.1% 44.1%,
+                            100% 61.6%,
+                            97.5% 26.9%,
+                            85.5% 0.1%,
+                            80.7% 2%,
+                            72.5% 32.5%,
+                            60.2% 62.4%,
+                            52.4% 68.1%,
+                            47.5% 58.3%,
+                            45.2% 34.5%,
+                            27.5% 76.7%,
+                            0.1% 64.9%,
+                            17.9% 100%,
+                            27.6% 76.8%,
+                            76.1% 97.7%,
+                            74.1% 44.1%
+                        );
+                    "
+                ></div>
+            </div>
+        </section>
+
+        <!--
+            # Content layout ideas:
+            - Intro - What is rockket?
+            - Why should I use rockket?
+            - Features
+            - Roadmap
+            - Motivation behind Rockket
+            - Contact
+            - FAQ
+                - How does rockket work?
+                - What are the benefits of using rockket?
+                - How can I contribute to rockket?
+                - How can I support rockket?
+        -->
+
+        <section>
+            <h2>Why should I use Rockket?</h2>
+            <p>
+                If you feel like stuff just requires you to get it done or you struggle with motivating yourself to
+                overcome the barrier, Rockket is for you. Levering gamified elements, our task manager helps you stay
+                motivated.
+            </p>
+            <p>
+                Though task managers can often get complex and overwhelming, making it difficult to see through the
+                mess. Productivity tools should provide their users with all features they could think of, but shouldn't
+                get in the way when they don’t need them. A task manager should be opinionated, but flexible enough to
+                not let the users feel like they are fighting against the tool.
+            </p>
+            <p>
+                Rockket attempts to solve these problems. Whether you’re a busy professional, a student juggling classes
+                and extracurriculars, or anyone looking to get done more in less time, Rockket has everything you need
+                to stay on track.
+            </p>
+            <p></p>
+        </section>
+
+        <section class="mt-20">
+            <h2 id="features">Key features</h2>
+
+            <p>
+                At Rockket, we know that productivity is about more than just ticking checkboxes. That’s why we’ve built
+                a task manager that provides you with a rich feature set, but lets you decide how to use it.
+            </p>
+            <p></p>
+            <p>Here is a rundown of some of the core features that make Rockket so effective.</p>
+
+            <div class="my-16">
+                <h3>Progressbar</h3>
+                <div
+                    class="progress-container | group top-[6.3rem] z-30 m-2 flex items-center gap-2 rounded-[12.5px] bg-tinted-900 py-2 px-3.5 shadow-header glass"
+                    [class.sticky]="false"
+                    appTooltip="Tells you how much you've accomplished so far."
+                    [tooltipOptions]="{
+                        closeOnHostClick: false,
+                        enableOnTouchDevice: true
+                    }"
+                >
+                    <div
+                        class="progress-bar | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
+                    >
+                        <div class="progress | h-full rounded bg-submit-400" [style.width]="progress + '%'"></div>
+                    </div>
+                    <span
+                        class="progress-number | font-bold text-tinted-400 transition-colors"
+                        [class.!text-submit-400]="progress == 100"
+                    >
+                        {{ progress + ' %' }}
+                    </span>
+                </div>
+                <p>
+                    The progress bar provides a quick and easy way to see how far along you are in your work and how
+                    much remains to be done. Track individual tasks or subtasks, as well as the overall progress of a
+                    project. As you complete tasks, the progress bar will fill up, giving you a sense of accomplishment
+                    and motivation to keep going.
+                </p>
+            </div>
+
+            <div class="showcase | flex flex-col gap-20">
+                <div
+                    class="showcase-item | flex flex-col items-center gap-8 md:flex-row md:justify-center"
+                    [class.md:flex-row-reverse]="odd"
+                    *ngFor="let item of showcaseItems; let odd = odd"
+                >
+                    <div [class.md:text-right]="!odd" class="md:w-1/2">
+                        <h3>{{ item.title }}</h3>
+                        <p *ngFor="let paragraph of item.text">{{ paragraph }}</p>
+                    </div>
+                    <div class="showcase-item-image | md:w-1/2">
+                        <ng-container *ngIf="item.component; else elseBlock">
+                            <ng-container *ngComponentOutlet="item.component"></ng-container>
+                        </ng-container>
+
+                        <ng-template #elseBlock>
+                            <ng-template #comingSoon>
+                                <div
+                                    class="flex aspect-video w-full items-center rounded-lg border border-dashed border-tinted-600 bg-gradient-to-br from-transparent to-tinted-900 px-8 text-center text-tinted-400"
+                                >
+                                    This feature will arrive over the course of the next few months.
+                                </div>
+                            </ng-template>
+                            <img
+                                *ngIf="item.image; else comingSoon"
+                                [src]="item.image"
+                                class="image | block aspect-video w-full rounded-lg object-cover"
+                                alt=""
+                            />
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-20">
+            <h2>How we recommend to use rockket</h2>
+            <p>
+                Rockket is designed to <i>reward you</i> when you <app-icon icon="Completed"></app-icon> complete a task
+                with satisfying behaviour and gamified elements to create a <i>positive feedback loop</i> and
+                <i>increase motivation</i>. So, the more tasks you complete, the better you feel. It's therefor
+                encouraged to break down a task into smaller sub-tasks so that you can cross of tasks more often and
+                stay motivated.
+            </p>
+        </section>
+    </app-centered-layout>
+
+    <app-centered-layout containerClasses="bg-primary-500 shadow-footer mt-10 mt-20" width="lg" [fullHeight]="false">
+        <section class="py-36 px-10 text-center" id="cta">
+            <div
+                class="overlap | bg-dotted absolute inset-x-0 top-0 h-8 rounded-b-2xl bg-tinted-900 shadow-header [background-position:.7rem_.3rem]"
+            ></div>
+
+            <h2 class="text-4xl">Ready to take control of your to-do list?</h2>
+            <p>Sign up for Rockket today and start getting things done!</p>
+            <p class="mt-6"><a routerLink="/auth/signup" class="button button--submit px-8">Signup</a></p>
+
+            <div
+                class="overlap | bg-dotted absolute inset-x-0 bottom-0 h-8 rounded-t-2xl bg-tinted-900 shadow-footer [background-position:.7rem_.9rem]"
+            ></div>
+        </section>
+    </app-centered-layout>
+
+    <app-centered-layout [enableBackground]="false" width="lg" [fullHeight]="false">
+        <section class="roadmap | flex flex-col gap-4" id="roadmap">
+            <div class="">
+                <h2>Roadmap</h2>
+                <p>
+                    At Rockket, we are always looking for ways to innovate and improve our app to provide our users with
+                    the best possible experience. Here’s a sneak peek at what we have planned for the future of Rockket
+                    and how we plan to keep our users ahead of the productivity curve. 🚀
+                </p>
+            </div>
+            <ul
+                class="flex flex-col gap-2 marker:text-tinted-400 [&_app-icon]:text-tinted-400 [&_ul]:mt-1 [&>li]:list-none"
+            >
+                <li>
+                    <app-icon icon="far fa-code-commit rotate-90" class=""></app-icon> Filtering and Sorting options
+                </li>
+                <li><app-icon icon="far fa-code-commit rotate-90"></app-icon> Labels</li>
+                <li><app-icon icon="far fa-code-commit rotate-90"></app-icon> Keyboard navigation and hotkeys</li>
+                <li>
+                    <app-icon icon="far fa-code-commit rotate-90"></app-icon> Collaboration features like
+                    <ul>
+                        <li>Realtime Sync</li>
+                        <li>Profile pictures</li>
+                        <li>Commenting</li>
+                        <li>Assignees</li>
+                    </ul>
+                </li>
+                <li><app-icon icon="far fa-code-commit rotate-90"></app-icon> Better support for mobile devices</li>
+                <li><app-icon icon="far fa-code-commit rotate-90"></app-icon> Task dependencies and references</li>
+                <li><app-icon icon="far fa-code-commit rotate-90"></app-icon> Task history (what was changed when)</li>
+                <li><app-icon icon="far fa-code-commit rotate-90"></app-icon> Documents (similar to google docs)</li>
+                <li>
+                    <app-icon icon="far fa-code-commit rotate-90"></app-icon> Attachments to tasks, lists and Documents
+                    (files like images .pdfs and many more)
+                </li>
+                <li><app-icon icon="far fa-code-commit rotate-90"></app-icon> Dedicated team features</li>
+            </ul>
+        </section>
+
+        <section class="testimonials | mt-20 flex snap-x snap-mandatory gap-3 overflow-x-auto py-8" *rxIf="false">
+            <div
+                class="testimonial | group w-1/4 flex-shrink-0 select-none snap-start rounded-lg bg-tinted-800 p-4 transition-colors hover:bg-tinted-700"
+                *ngFor="let person of testimonials"
+            >
+                <div class="transition-transform group-hover:-translate-y-9">
+                    <div class="testimonial-header | mb-2 flex items-start gap-2">
+                        <div class="profile-image | mt-1.5 aspect-square h-8 rounded-full bg-tinted-500"></div>
+
+                        <div
+                            class="relative grow rounded-tl-lg pl-1 transition-colors after:absolute after:top-0 after:-right-4 after:block after:h-full after:w-4 after:rounded-tr-lg after:transition-colors group-hover:bg-tinted-700 after:group-hover:bg-tinted-700"
+                        >
+                            <div class="person | font-bold transition-transform group-hover:translate-x-1">
+                                {{ person.name }}
+                            </div>
+                            <div class="role | text-sm text-tinted-400 transition-transform group-hover:translate-x-1">
+                                {{ person.role }}
+                            </div>
+                        </div>
+                    </div>
+                    <p>{{ person.comment }}</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="repo | mt-20">
+            <h2>Open Source</h2>
+            <p>
+                Rockket is an open source project. If you're interested in contributing or just tech savyy and curious
+                of how Rockket is built, go check out the
+                <a href="https://github.com/dein-ding/rockket" target="_blank">GitHub repository</a> and give it a star
+                🙃.
+            </p>
+            <p>
+                If you have ideas on new or existing features, or perhaps you found a bug, file an issue or
+                <a routerLink="/contact">contact me</a>.
+            </p>
+        </section>
+    </app-centered-layout>
+</div>
+
+<app-centered-layout containerClasses="bg-tinted-800 mt-10" width="lg" [fullHeight]="false">
+    <footer class="pt-28 pb-20">
+        <div class="overlap | absolute inset-x-0 top-0 h-8 rounded-b-2xl bg-tinted-900 shadow-header"></div>
+        <div class="flex flex-col items-center sm:flex-row sm:items-start [&_li]:list-none">
+            <div class="flex-1">
+                <h3>Rockket</h3>
+                <ul>
+                    <!-- <li><a href="#">About</a></li> -->
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#roadmap">Roadmap</a></li>
+                </ul>
+            </div>
+            <div class="flex-1">
+                <h3>Community</h3>
+                <ul>
+                    <li><a href="https://github.com/dein-ding/rockket">GitHub</a></li>
+                    <!-- <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Discord</a></li> -->
+                </ul>
+            </div>
+            <div class="flex-1">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a routerLink="/contact">Contact</a></li>
+                    <li><a routerLink="/privacy-policy">Privacy Policy</a></li>
+                    <li><a routerLink="/terms-of-service">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
 </app-centered-layout>

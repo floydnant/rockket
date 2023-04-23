@@ -1,7 +1,7 @@
 <app-main-pane>
     <ng-container main>
         <h1>Search</h1>
-        <div class="sticky -top-2 z-40 -mt-3 flex w-full gap-2 rounded-b-lg bg-tinted-900 pt-3 shadow-header glass">
+        <div class="sticky top-0 z-40 -mt-3 flex w-full gap-2 rounded-b-lg bg-tinted-900 pt-3 shadow-header glass">
             <input
                 #input
                 type="text"
@@ -53,7 +53,7 @@
                                         getEntityDetail(entitiesState, entity.entityType, entity.id)?.description;
                                         let desc
                                     "
-                                    class="description | mt-1 h-full max-h-40 w-full overflow-y-auto rounded-lg bg-tinted-900 px-2 py-1"
+                                    class="description | mt-1 h-full max-h-40 w-full overflow-y-auto rounded-lg bg-tinted-900 px-2 py-1 text-tinted-300"
                                     [innerHTML]="desc | highlight : search.query"
                                 ></div>
                             </button>

@@ -36,7 +36,7 @@ export class InlineEditorComponent {
     @Input() editorClass?: string | Record<string, boolean>
     @Input() enableDebouncedUpdates = true
 
-    @Input() disabled = false
+    @Input() readonly = false
 
     highlight$ = new BehaviorSubject<string | null>(null)
     @Input() set highlight(value: string | null) {

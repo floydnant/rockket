@@ -55,6 +55,7 @@ export class TaskComponent {
     menuItems_$ = new BehaviorSubject<MenuItem[] | null>(null)
     menuItems$ = this.menuItems_$.pipe(
         map(items => {
+            if (this.readonly) return null
             if (!items || this.task$.value?.description) return items
 
             const descriptionItem: MenuItem = {
@@ -73,10 +74,16 @@ export class TaskComponent {
     )
 
     statusMenuItems$ = this.menuItems_$.pipe(
-        map(items => items?.find(({ title }) => title == 'Status')?.children || [])
+        map(items => {
+            if (this.readonly) return null
+            return items?.find(({ title }) => title == 'Status')?.children
+        })
     )
     priorityMenuItems$ = this.menuItems_$.pipe(
-        map(items => items?.find(({ title }) => title == 'Priority')?.children || [])
+        map(items => {
+            if (this.readonly) return null
+            return items?.find(({ title }) => title == 'Priority')?.children
+        })
     )
 
     @Output() expansionChange = new EventEmitter<boolean>()
@@ -93,6 +100,8 @@ export class TaskComponent {
         return this.isLoading ? EntityState.LOADING : false
     }
     blocked = false // disabled for now
+
+    @Input() readonly = false
 
     isHovered = false
 

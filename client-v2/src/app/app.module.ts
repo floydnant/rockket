@@ -64,6 +64,13 @@ import { ForModule } from '@rx-angular/template/for'
 import { PushModule } from '@rx-angular/template/push'
 import { SearchComponent } from './pages/home/search/search.component'
 import { HighlightPipe } from './pipes/highlight.pipe'
+import { TaskNestingDemoComponent } from './pages/landing-page/demos/task-nesting-demo.component'
+import { TaskPriorityDemoComponent } from './pages/landing-page/demos/task-priority-demo.component'
+import { TaskStatusDemoComponent } from './pages/landing-page/demos/task-status-demo.component'
+import { TaskDescriptionDemoComponent } from './pages/landing-page/demos/task-description-demo.component'
+import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-service.component'
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component'
+import { ContactComponent } from './pages/contact/contact.component'
 
 @NgModule({
     declarations: [
@@ -110,6 +117,13 @@ import { HighlightPipe } from './pipes/highlight.pipe'
         EntityDescriptionComponent,
         SearchComponent,
         HighlightPipe,
+        TaskNestingDemoComponent,
+        TaskPriorityDemoComponent,
+        TaskStatusDemoComponent,
+        TaskDescriptionDemoComponent,
+        TermsOfServiceComponent,
+        PrivacyPolicyComponent,
+        ContactComponent,
     ],
     imports: [
         BrowserModule,
