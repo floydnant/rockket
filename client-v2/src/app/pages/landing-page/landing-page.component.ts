@@ -23,9 +23,9 @@ export class LandingPageComponent {
     isMobileMenuOpen = false
 
     mainNavLinks: { title: string; route: string }[] = [
+        { title: 'Why Rockket?', route: '#why-rockket' },
         { title: 'Features', route: '#features' },
         { title: 'Roadmap', route: '#roadmap' },
-        { title: 'Method', route: '#method' },
     ]
 
     progress = 77
