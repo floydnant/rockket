@@ -1,6 +1,17 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { BehaviorSubject, distinctUntilChanged, filter, first, map, merge, shareReplay, Subject, tap } from 'rxjs'
+import {
+    BehaviorSubject,
+    distinctUntilChanged,
+    filter,
+    first,
+    map,
+    merge,
+    shareReplay,
+    Subject,
+    switchMap,
+    tap,
+} from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { colors, taskStatusColorMap } from 'src/app/shared/colors'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
@@ -9,6 +20,7 @@ import { TaskPreviewFlattend, TaskPriority, TaskStatus } from '../../../fullstac
 import { EntityState } from '../../atoms/icons/icon/icons'
 import { MenuItem } from '../../../dropdown/drop-down/drop-down.component'
 import { TaskTreeNode } from '../task-tree/task-tree.component'
+import { RtEditorComponent } from '../../../rich-text-editor/rt-editor/rt-editor.component'
 
 @UntilDestroy()
 @Component({
@@ -105,6 +117,8 @@ export class TaskComponent {
 
     isHovered = false
 
+    descriptionChanges$ = new BehaviorSubject<{ html: string; text: string } | null>(null)
+
     descriptionExpansionChanges$ = new Subject<{ emit: boolean; isExpanded: boolean }>()
     isDescriptionExpanded$ = merge(
         this.nodeData$.pipe(map(nodeData => ({ emit: false, isExpanded: nodeData?.isDescriptionExpanded ?? false }))),
@@ -124,15 +138,15 @@ export class TaskComponent {
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    @ViewChild('description') descriptionRef!: ElementRef<HTMLDivElement>
+    @ViewChild('descriptionEditor') descriptionEditor!: RtEditorComponent
     addDescription() {
         this.descriptionExpansionChanges$.next({ emit: false, isExpanded: true })
         moveToMacroQueue(() => {
-            this.descriptionRef.nativeElement.focus()
+            this.descriptionEditor.editor.commands.focus()
         })
     }
     resetDescription() {
-        this.descriptionRef.nativeElement.innerHTML = this.task$.value?.description || ''
+        this.descriptionEditor.editor.commands.setContent(this.task$.value?.description || '')
     }
     toggleDescription() {
         this.isDescriptionExpanded$.pipe(first()).subscribe(isExpanded => {
@@ -140,15 +154,13 @@ export class TaskComponent {
         })
     }
 
+    isDescriptionFocused$ = new BehaviorSubject<boolean>(false)
     descriptionBlurEvents$ = new Subject()
     descriptionUpdatesSub = this.descriptionBlurEvents$
         .pipe(
-            map(() => ({
-                html: this.descriptionRef.nativeElement.innerHTML.trim(),
-                text: this.descriptionRef.nativeElement.innerText.trim(),
-            })),
+            switchMap(() => this.descriptionChanges$.pipe(first())),
+            filter(Boolean),
             tap(({ text }) => {
-                this.deselectEditor()
                 if (!text) this.descriptionExpansionChanges$.next({ emit: true, isExpanded: false })
             }),
             filter(({ text, html }) => {
@@ -158,11 +170,6 @@ export class TaskComponent {
 
                 return true
             }),
-            // distinctUntilChanged((prev, curr) => {
-            //     const isTextSame = prev.text == curr.text
-            //     const isHtmlSame = prev.html == curr.html
-            //     return isTextSame && isHtmlSame
-            // }),
             tap(({ text, html }) => {
                 this.descriptionChange.emit(text ? html : '')
 
@@ -171,8 +178,4 @@ export class TaskComponent {
             untilDestroyed(this)
         )
         .subscribe()
-
-    deselectEditor() {
-        window.getSelection()?.removeAllRanges()
-    }
 }

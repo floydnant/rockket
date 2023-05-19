@@ -21,7 +21,7 @@ export class EntityDescriptionComponent {
 
     descriptionChanges$ = new BehaviorSubject<string | null>(null)
     blurEvents$ = new Subject<FocusEvent>()
-    @Output() blur = createEventEmitter(this.blurEvents$.pipe(tap(this.deselectEditor), untilDestroyed(this)))
+    @Output() blur = createEventEmitter(this.blurEvents$.pipe(untilDestroyed(this)))
 
     descriptionDomState$ = merge(
         this.descriptionChanges$,
@@ -46,8 +46,4 @@ export class EntityDescriptionComponent {
             untilDestroyed(this)
         )
     )
-
-    deselectEditor() {
-        window.getSelection()?.removeAllRanges()
-    }
 }

@@ -11,9 +11,9 @@
     }
 
     /* [description] highlight if not focused */
-    .task:is(.task, .titleHasFocus) .description:not(:focus) {
+    /* .task:is(.task, .titleHasFocus) .description:not(:focus, .hasFocus) {
         @apply hover:bg-tinted-800;
-    }
+    } */
 }
 @supports selector(A:has(B)) {
     /* [task] highlight only if description are NOT hovered */
@@ -28,9 +28,9 @@
     }
 
     /* [description] highlight if not focused */
-    .task:is(.task, .titleHasFocus, .isHovered) .description:not(:focus) {
+    /* .task:is(.task, .titleHasFocus, .isHovered) .description:not(:focus, .hasFocus) {
         @apply hover:bg-tinted-700;
-    }
+    } */
 }
 
 /* [task] */
@@ -65,7 +65,7 @@
     @apply mx-1 h-3.5 w-px translate-y-[5px] bg-current brightness-75;
 }
 
-.task.completed .icon-btn {
+.task.completed .icon-btn:not(app-toolbar .icon-btn) {
     @apply hover:bg-submit-600;
 }
 

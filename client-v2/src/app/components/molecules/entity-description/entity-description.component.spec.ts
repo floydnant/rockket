@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { FocusableDirective } from 'src/app/directives/focusable.directive'
 
 import { EntityDescriptionComponent } from './entity-description.component'
+import { RichTextEditorModule } from 'src/app/rich-text-editor/rich-text-editor.module'
+import { RxModule } from 'src/app/rx/rx.module'
 
 describe('EntityDescriptionComponent', () => {
     let component: EntityDescriptionComponent
@@ -9,7 +10,8 @@ describe('EntityDescriptionComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EntityDescriptionComponent, FocusableDirective],
+            imports: [RichTextEditorModule, RxModule],
+            declarations: [EntityDescriptionComponent],
         }).compileComponents()
 
         fixture = TestBed.createComponent(EntityDescriptionComponent)

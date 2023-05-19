@@ -1,12 +1,12 @@
 <li
     *ngIf="task$ | async as task"
-    class="task | flex w-full max-w-full list-none flex-col rounded-xl border border-tinted-700 border-opacity-75 bg-tinted-800 py-2 px-1 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
+    class="task | relative flex w-full max-w-full list-none flex-col rounded-xl border border-tinted-700 border-opacity-75 bg-tinted-800 py-2 px-1 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
     [ngClass]="{
         'completed border-submit-700 border-opacity-60 bg-submit-800 text-submit-200':
             task.status == TaskStatus.COMPLETED,
         titleHasFocus: inlineEditor.isFocused,
         isHovered,
-        descriptionHasFocus: descriptionFocusable.isFocused
+        descriptionHasFocus: isDescriptionFocused$ | push
     }"
     [cdkContextMenuTriggerFor]="menu"
     (cdkContextMenuOpened)="isHovered = true"
@@ -105,33 +105,16 @@
                     icon="fas fa-exclamation-triangle text-danger-400"
                     data-test-name="overdue-icon"
                 ></app-icon>
-                <div
-                    class="priority-button | icon-btn"
+
+                <ng-container
                     *ngIf="
                         task.status != TaskStatus.COMPLETED &&
                         task.status != TaskStatus.NOT_PLANNED &&
                         task.priority != TaskPriority.NONE
                     "
-                    [appTooltip]="priorityTooltip"
-                    [tooltipOptions]="{ avoidPositions: ['left'] }"
-                    [cdkMenuTriggerFor]="priorityMenu"
-                    (cdkMenuOpened)="isHovered = true"
-                    (cdkMenuClosed)="isHovered = false"
-                    data-test-name="task-priority-button"
                 >
-                    <ng-template #priorityTooltip>
-                        <span class="text-tinted-300">Priority: </span>
-                        <span>{{ task.priority }}</span>
-                    </ng-template>
-                    <app-icon [icon]="task.priority"></app-icon>
-                </div>
-                <ng-template #priorityMenu>
-                    <app-drop-down
-                        *ngIf="priorityMenuItems$ | push as items"
-                        [items]="items"
-                        [data]="{ id: task.id }"
-                    ></app-drop-down>
-                </ng-template>
+                    <ng-container *ngTemplateOutlet="priorityButton"></ng-container>
+                </ng-container>
             </div>
             <button
                 class="| icon-btn | absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
@@ -155,41 +138,72 @@
         </div>
     </div>
 
-    <div class="relative">
-        <!-- This will become relevant when the rich text editor is implemented -->
-        <div
-            *ngIf="false"
-            class="description-toolbar | absolute left-1/2 bottom-full flex -translate-x-1/2 -translate-y-2 items-center gap-1 rounded-lg border border-tinted-600 bg-tinted-700 p-1 shadow-lg shadow-tinted-900"
-            [class.hidden]="!descriptionFocusable.isFocused"
+    <ng-template #priorityButton>
+        <button
+            class="priority-button | icon-btn keep-editor-focus"
+            [appTooltip]="priorityTooltip"
+            [tooltipOptions]="{ avoidPositions: ['left'] }"
+            [cdkMenuTriggerFor]="priorityMenu"
+            (cdkMenuOpened)="isHovered = true"
+            (cdkMenuClosed)="isHovered = false"
+            data-test-name="task-priority-button"
         >
-            <!-- <button class="button-m | bg-tinted-700 hover:bg-tinted-600" (click)="resetDescription()">Cancel</button> -->
+            <app-icon [icon]="task.priority"></app-icon>
+        </button>
+    </ng-template>
+    <ng-template #priorityTooltip>
+        <span class="text-tinted-300">Priority: </span>
+        <span>{{ task.priority }}</span>
+    </ng-template>
+    <ng-template #priorityMenu>
+        <app-drop-down
+            *ngIf="priorityMenuItems$ | push as items"
+            [items]="items"
+            [data]="{ id: task.id }"
+        ></app-drop-down>
+    </ng-template>
 
-            <!-- <div class="separator"></div> -->
-            <!-- <button class="expand-description | icon-btn">
-                <app-icon icon="expand"></app-icon>
-            </button> -->
+    <ng-container
+        *rxLet="{ isExpanded: isDescriptionExpanded$ | push, isFocused: isDescriptionFocused$ | push }; let props"
+    >
+        <!-- <div [class.relative]="descriptionEditor.isFocused$ | push"> -->
+        <div *ngIf="props.isExpanded || props.isFocused" [class.relative]="false">
+            <div class="absolute inset-x-0 bottom-[calc(100%-.5rem)] z-20 flex justify-center px-4">
+                <!-- <app-toolbar [hide]="!inlineEditor.isFocused && !(descriptionEditor.isFocused$ | push)"> -->
+                <app-toolbar [hide]="!props.isFocused">
+                    <!-- <button class="button-m">Cancel</button>
+                        <button class="button-m button--submit">Create</button>
+                        <div class="toolbar-separator"></div> -->
+                    <!-- <div class="toolbar-separator"></div> -->
+                    <!-- <ng-container *ngTemplateOutlet="priorityButton"></ng-container> -->
+                    <a
+                        class="open-as-page | skip-default-a-styles keep-editor-focus | icon-btn"
+                        appTooltip="Open task as page"
+                        routerLink="/home/{{ task.id }}"
+                        (click)="descriptionEditor.editor.commands.blur()"
+                    >
+                        <app-icon icon="expand"></app-icon>
+                    </a>
 
-            <!-- <div class="separator"></div> -->
-            <button class="button-m | bg-tinted-700 hover:bg-tinted-600">
-                <app-icon icon="expand" class="mr-1"></app-icon>
-                Open
-            </button>
+                    <!-- <ng-container *ngIf="props.isFocused"> -->
+                    <div class="toolbar-separator"></div>
+                    <app-rt-editor-toolbar [editor]="descriptionEditor.editor"></app-rt-editor-toolbar>
+                    <!-- </ng-container> -->
+                </app-toolbar>
+            </div>
+            <app-rt-editor
+                #descriptionEditor
+                class="description | mt-1 max-h-72 overflow-y-auto rounded-lg bg-tinted-900 py-1.5 px-2.5 ring-2 ring-transparent transition-colors duration-75"
+                [ngClass]="{
+                    'hasFocus !ring-primary-400': props.isFocused
+                }"
+                [value]="task.description ?? ''"
+                placeholder="Description or notes"
+                (contentChanges)="descriptionChanges$.next($event)"
+                (isFocused)="isDescriptionFocused$.next($event)"
+                (blur)="descriptionBlurEvents$.next(null)"
+                data-test-name="task-description"
+            ></app-rt-editor>
         </div>
-        <div
-            #description
-            (blur)="descriptionBlurEvents$.next($event)"
-            (focus)="highlightQuery$.next(null)"
-            focusable
-            #descriptionFocusable="focusable"
-            [class.hidden]="!(isDescriptionExpanded$ | async) && !descriptionFocusable.isFocused"
-            class="description | mt-1 max-h-72 overflow-y-auto break-words rounded-lg bg-tinted-900 py-1.5 px-2.5 pb-6 text-tinted-300 outline-none ring-1 ring-tinted-700 transition-all duration-75 focus:ring-2 focus:ring-primary-400"
-            [class]="{
-                'not-hover:ring-submit-700': task.status == TaskStatus.COMPLETED,
-                'not-hover:ring-opacity-50': task.status == TaskStatus.COMPLETED
-            }"
-            [contentEditable]="!readonly"
-            data-test-name="task-description"
-            [innerHTML]="task.description | highlight : (highlightQuery$ | push)"
-        ></div>
-    </div>
+    </ng-container>
 </li>
