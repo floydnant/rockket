@@ -68,6 +68,8 @@ import { RxModule } from './rx/rx.module'
 import { TooltipModule } from './tooltip/tooltip.module'
 import { DropdownModule } from './dropdown/dropdown.module'
 import { KeyboardModule } from './keyboard/keyboard.module'
+import { RichTextEditorModule } from './rich-text-editor/rich-text-editor.module'
+import { ToolbarComponent } from './components/molecules/toolbar/toolbar.component'
 
 @NgModule({
     declarations: [
@@ -118,6 +120,7 @@ import { KeyboardModule } from './keyboard/keyboard.module'
         TermsOfServiceComponent,
         PrivacyPolicyComponent,
         ContactComponent,
+        ToolbarComponent,
     ],
     imports: [
         BrowserModule,
@@ -161,6 +164,7 @@ import { KeyboardModule } from './keyboard/keyboard.module'
         TooltipModule,
         DropdownModule,
         KeyboardModule,
+        RichTextEditorModule,
     ],
     providers: [
         {

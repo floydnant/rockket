@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { parseBindingInput } from './combos'
+import { DeviceService } from 'src/app/services/device.service'
 
 @Component({
     selector: 'app-key-combo',
     template: `
-        <span class="ml-2 -mr-1 inline-flex items-center gap-0.5">
+        <span class="ml-2 -mr-1 inline-flex items-center gap-0.5" *ngIf="!(isTouch$ | push)">
             <ng-container #combo *ngFor="let combo of parsedCombos; let isLast = last">
                 <kbd *ngFor="let comboKey of combo" class="font-[helvetica]">{{ comboKey.key }}</kbd>
                 <span *ngIf="!isLast" class="px-1 text-tinted-400">then</span>
@@ -14,6 +15,8 @@ import { parseBindingInput } from './combos'
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KeyComboComponent {
+    isTouch$ = inject(DeviceService).isTouchPrimary$
+
     @Input() combo!: string
 
     get parsedCombos() {

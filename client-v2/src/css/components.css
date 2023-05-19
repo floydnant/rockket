@@ -17,7 +17,7 @@
     }
 
     .button-naked {
-        @apply rounded-lg py-1 px-2 transition-colors hover:bg-tinted-700;
+        @apply rounded-lg py-1 px-2 transition-colors hover:bg-tinted-700 duration-75;
         /* hover:text-tinted-100 */
     }
     .button-naked i {
@@ -32,7 +32,7 @@
         @apply m-0 inline-block aspect-square rounded py-0.5 px-2.5 text-base transition-colors hover:bg-tinted-700;
     }
     .icon-btn {
-        @apply inline-flex aspect-square min-w-[1.75rem] items-center justify-center rounded-lg px-1 transition-colors hover:bg-tinted-500;
+        @apply inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-lg px-1 transition-colors hover:bg-tinted-500;
     }
 
     .button--submit {

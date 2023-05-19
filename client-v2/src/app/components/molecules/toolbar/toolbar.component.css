@@ -1,0 +1,22 @@
+:host:not(.no-styles), app-toolbar:not(.no-styles) {
+    @apply flex
+        items-center
+        gap-1
+        rounded-xl
+        border
+        border-tinted-700/70
+        bg-tinted-800
+        p-1
+        text-tinted-200
+        shadow-lg
+        shadow-tinted-900
+        transition-all
+        glass;
+}
+:host-context(.hide), app-toolbar.hide {
+    @apply pointer-events-none invisible translate-y-2 opacity-0;
+}
+
+.toolbar-separator {
+    @apply h-5 w-px bg-tinted-600;
+}
