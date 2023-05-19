@@ -14,4 +14,5 @@
     placeholder="Description"
     (valueChanges)="descriptionChanges$.next($event)"
     (blur)="blurEvents$.next($event)"
+    data-test-name="description-editor"
 ></app-rt-editor>

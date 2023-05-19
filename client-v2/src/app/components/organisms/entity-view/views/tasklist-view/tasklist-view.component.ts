@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs'
@@ -10,6 +10,8 @@ import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
+import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
+import { moveToMacroQueue } from 'src/app/utils'
 
 @UntilDestroy()
 @Component({
@@ -33,6 +35,13 @@ export class TasklistViewComponent {
         //         if (!entity) return
         //         this.store.dispatch(taskActions.loadRootLevelTasks({ listId: entity.id }))
         //     })
+    }
+
+    @ViewChild(EntityDescriptionComponent) entityDescription?: EntityDescriptionComponent
+    focusDescription() {
+        moveToMacroQueue(() => {
+            this.entityDescription?.editor.editor.commands.focus()
+        })
     }
 
     EntityType = EntityType

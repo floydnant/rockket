@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import {
@@ -18,6 +18,8 @@ import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { getTaskById } from 'src/app/store/entities/utils'
 import { EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
+import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
+import { moveToMacroQueue } from 'src/app/utils'
 
 @UntilDestroy()
 @Component({
@@ -31,6 +33,13 @@ export class TaskViewComponent {
         @Inject(ENTITY_VIEW_DATA) private viewData: EntityViewData<TaskDetail>,
         private store: Store<AppState>
     ) {}
+
+    @ViewChild(EntityDescriptionComponent) entityDescription?: EntityDescriptionComponent
+    focusDescription() {
+        moveToMacroQueue(() => {
+            this.entityDescription?.editor.editor.commands.focus()
+        })
+    }
 
     taskEntity$ = this.viewData.entity$
     detail$ = this.viewData.detail$

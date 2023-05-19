@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, Output, ViewChild } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { BehaviorSubject, filter, first, map, merge, Subject, switchMap, tap } from 'rxjs'
-import { FocusableDirective } from 'src/app/directives/focusable.directive'
+import { RtEditorComponent } from 'src/app/rich-text-editor/rt-editor/rt-editor.component'
 import { createEventEmitter } from 'src/app/utils/observable.helpers'
 
 @UntilDestroy()
@@ -17,7 +17,7 @@ export class EntityDescriptionComponent {
         this.description$.next(description)
     }
 
-    @ViewChild(FocusableDirective) focusable!: FocusableDirective // needed for outside access
+    @ViewChild(RtEditorComponent) editor!: RtEditorComponent // needed for outside access
 
     descriptionChanges$ = new BehaviorSubject<string | null>(null)
     blurEvents$ = new Subject<FocusEvent>()

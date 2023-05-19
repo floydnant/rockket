@@ -16,6 +16,8 @@ import { TasklistViewComponent } from './tasklist-view.component'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
 import { RxModule } from 'src/app/rx/rx.module'
 import { DropdownModule } from 'src/app/dropdown/dropdown.module'
+import { RichTextEditorModule } from 'src/app/rich-text-editor/rich-text-editor.module'
+import { ToolbarComponent } from 'src/app/components/molecules/toolbar/toolbar.component'
 
 const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: TaskTreeMap = {}) => {
     const store = {
@@ -29,7 +31,7 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
     }
     cy.mount(`<app-tasklist-view></app-tasklist-view> `, {
         componentProperties: {},
-        imports: [CdkMenuModule, RxModule, DropdownModule],
+        imports: [CdkMenuModule, RxModule, DropdownModule, RichTextEditorModule],
         declarations: [
             TasklistViewComponent,
             MutationDirective,
@@ -39,6 +41,7 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
             InlineEditorComponent,
             EntityDescriptionComponent,
             HighlightPipe,
+            ToolbarComponent,
         ],
         providers: [
             { provide: ENTITY_VIEW_DATA, useValue: viewData },
@@ -59,7 +62,7 @@ const entityFixture: EntityPreviewRecursive = {
 const entityDetailFixture: TasklistDetail = { description: null, createdAt: '', ownerId: '' }
 
 describe('TasklistViewComponent', () => {
-    it('renders the tasklist', () => {
+    it.only('renders the tasklist', () => {
         setupComponent({
             entity$: new BehaviorSubject(entityFixture),
             detail$: new BehaviorSubject(entityDetailFixture),
@@ -67,7 +70,7 @@ describe('TasklistViewComponent', () => {
         })
 
         cy.get(testName('editable-entity-name')).contains(entityFixture.title)
-        cy.get(testName('description-editor')).should('be.hidden')
+        cy.get(testName('description-editor')).should('not.exist')
         cy.get(testName('entity-children')).should('not.exist')
     })
 

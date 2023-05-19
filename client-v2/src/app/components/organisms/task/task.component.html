@@ -202,7 +202,7 @@
                     'hasFocus !ring-primary-400': props.isFocused
                 }"
                 [value]="task.description ?? ''"
-                placeholder="Description or notes"
+                placeholder="Description"
                 (contentChanges)="descriptionChanges$.next($event)"
                 (isFocused)="isDescriptionFocused$.next($event)"
                 (blur)="descriptionBlurEvents$.next(null)"

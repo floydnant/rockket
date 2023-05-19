@@ -18,7 +18,7 @@
 
     <app-entity-description
         #descriptionEditor
-        [hidden]="!(isDescriptionShown$ | async)"
+        *ngIf="isDescriptionShown$ | async"
         [description]="description$ | async"
         (descriptionChange)="onDescriptionUpdate($event)"
         (blur)="descriptionBlurEvents$.next($event)"
@@ -37,7 +37,7 @@
             *ngIf="!(isDescriptionShown$ | async)"
             class="button-naked text-tinted-200 hover:text-tinted-100"
             appTooltip="Add a description to this list"
-            (click)="isDescriptionShown$.next(true); descriptionEditor.focusable.focus()"
+            (click)="isDescriptionShown$.next(true); focusDescription()"
             cdkMenuItem
             data-test-name="add-description"
         >
