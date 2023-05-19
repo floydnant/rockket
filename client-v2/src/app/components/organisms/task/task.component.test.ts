@@ -14,6 +14,7 @@ import { TaskComponent } from './task.component'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
 import { RxModule } from 'src/app/rx/rx.module'
 import { DropdownModule } from 'src/app/dropdown/dropdown.module'
+import { RichTextEditorModule } from 'src/app/rich-text-editor/rich-text-editor.module'
 
 const taskMenuItems = getEntityMenuItemsMap({} as unknown as Store<AppState>)[EntityType.TASK]
 
@@ -40,7 +41,7 @@ const setupComponent = (
                 ...listeners,
                 menuItems: taskMenuItems.map(useStubsForActions(menuItemStubsMap)),
             },
-            imports: [CdkMenuModule, IconsModule, RxModule, DropdownModule],
+            imports: [CdkMenuModule, IconsModule, RxModule, DropdownModule, RichTextEditorModule],
             declarations: [TaskComponent, InlineEditorComponent, FocusableDirective, MutationDirective, HighlightPipe],
         }
     )
@@ -72,7 +73,7 @@ describe('TaskComponent', () => {
         cy.get(testName('task-title')).contains(taskFixture.title)
         cy.get(testName('task-priority-button')).should('not.exist')
         cy.get(testName('subtask-toggle')).should('not.exist')
-        cy.get(testName('task-description')).should('not.be.visible')
+        cy.get(testName('task-description')).should('not.exist')
     })
 
     describe('Title', () => {
@@ -146,6 +147,7 @@ describe('TaskComponent', () => {
                 ...taskTreeNodeFixture,
                 taskPreview: { ...taskFixture, description },
             })
+            cy.get(testName('description-toggle')).click()
 
             cy.get(testName('task-description')).contains(description)
         })

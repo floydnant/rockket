@@ -81,7 +81,11 @@
                     </ng-container>
 
                     <ng-container *ngIf="task.description || (isDescriptionExpanded$ | async)">
-                        <button class="description-toggle" (click)="toggleDescription()">
+                        <button
+                            class="description-toggle"
+                            (click)="toggleDescription()"
+                            data-test-name="description-toggle"
+                        >
                             <app-icon
                                 icon="chevronRight"
                                 class="mr-1 inline-block transition-transform"
