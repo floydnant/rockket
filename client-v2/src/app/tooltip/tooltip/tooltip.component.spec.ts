@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { TooltipDirective } from 'src/app/directives/tooltip.directive'
 
 import { TooltipComponent, TOOLTIP_DATA } from './tooltip.component'
+import { TooltipDirective } from '../tooltip.directive'
 
 describe('TooltipComponent', () => {
     let component: TooltipComponent
