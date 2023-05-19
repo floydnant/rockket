@@ -3,16 +3,18 @@ import { Component, Input } from '@angular/core'
 import { BehaviorSubject, map } from 'rxjs'
 import { moveToMacroQueue } from 'src/app/utils'
 import { useParamsForRoute } from 'src/app/utils/menu-item.helpers'
-import { IconKey } from '../../atoms/icons/icon/icons'
+import { IconKey } from '../../components/atoms/icons/icon/icons'
 
-export interface MenuItem {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface MenuItem<TActionData = any> {
     title?: string
     /** Any valid `IconKey` or FontAwesome icon class */
     icon?: IconKey
     route?: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    action?: (data?: any) => void
-    isActive?: boolean
+    action?: (data: TActionData) => void
+    isActive?: boolean | ((data: TActionData) => boolean)
+    /** Only for display (doesn't hook up any listeners) for now */
+    keybinding?: string
     children?: MenuItem[]
     isSeperator?: boolean
     variant?: MenuItemVariant
@@ -34,10 +36,13 @@ export class DropDownComponent {
     @Input() set items(items: MenuItem[]) {
         this.items$_.next(items)
     }
-    items$ = this.items$_.pipe(map(items => (!this.data ? items : items.map(useParamsForRoute(this.data)))))
+    items$ = this.items$_.pipe(
+        // @TODO: we should check wether the data is appropriate for route params
+        map(items => (!this.data ? items : items.map(useParamsForRoute(this.data as Record<string, string | number>))))
+    )
 
     /** `data` is used for actions and route param interpolation */
-    @Input() data?: Record<string, string | number>
+    @Input() data?: Record<string, unknown>
     /** `rootTrigger` is used to close the whole menu tree, when nested items are clicked */
     @Input() rootTrigger?: CdkMenuTrigger | CdkContextMenuTrigger
 
@@ -47,4 +52,8 @@ export class DropDownComponent {
     }
 
     MenuItemVariant = MenuItemVariant
+
+    getIsActive(isActive: MenuItem['isActive']) {
+        return typeof isActive == 'function' ? isActive(this.data) : isActive
+    }
 }

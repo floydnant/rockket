@@ -5,11 +5,11 @@ import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-mod
 import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
 import { storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityPageLabelComponent } from '../../atoms/entity-page-label/entity-page-label.component'
-import { DropDownComponent } from '../../molecules/drop-down/drop-down.component'
 import { EditableEntityTitleComponent } from '../../molecules/editable-entity-heading/editable-entity-title.component'
 import { EntityViewComponent, entityViewComponentMap } from './entity-view.component'
 import { TaskViewComponent } from './views/task-view/task-view.component'
 import { TasklistViewComponent } from './views/tasklist-view/tasklist-view.component'
+import { DropdownModule } from 'src/app/dropdown/dropdown.module'
 
 const defaultTemplate = `
 <app-entity-view [entity]="activeEntity$ | async" [entityOptionsMap]="entityOptionsMap$ | async"> </app-entity-view>
@@ -25,13 +25,12 @@ const setupComponent = (template = defaultTemplate) => {
             activeEntity$: new BehaviorSubject(null),
             entityOptionsMap$: new BehaviorSubject(null),
         },
-        imports: [CdkMenuModule],
+        imports: [CdkMenuModule, DropdownModule],
         declarations: [
             EntityViewComponent,
             ...entityViewComponents,
             EditableEntityTitleComponent,
             EntityPageLabelComponent,
-            DropDownComponent,
         ],
         providers: [
             storeMock,

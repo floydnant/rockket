@@ -1,5 +1,5 @@
 import { interpolateParams } from '.'
-import { MenuItem } from '../components/molecules/drop-down/drop-down.component'
+import { MenuItem } from '../dropdown/drop-down/drop-down.component'
 import { TaskPreview } from '../fullstack-shared-models/task.model'
 
 export interface WrappedMenuItems extends Array<MenuItem> {

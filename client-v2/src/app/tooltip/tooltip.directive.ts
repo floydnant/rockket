@@ -2,7 +2,7 @@ import { OverlayRef, Overlay, PositionStrategy, ConnectedPosition } from '@angul
 import { ComponentPortal } from '@angular/cdk/portal'
 import { Directive, ElementRef, HostListener, Injector, Input, TemplateRef, ViewContainerRef } from '@angular/core'
 import { first } from 'rxjs'
-import { TooltipComponent, TOOLTIP_DATA } from '../components/atoms/tooltip/tooltip.component'
+import { TooltipComponent, TOOLTIP_DATA } from './tooltip/tooltip.component'
 import { DeviceService } from '../services/device.service'
 
 const positions = {

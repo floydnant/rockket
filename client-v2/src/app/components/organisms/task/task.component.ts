@@ -7,7 +7,7 @@ import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { insertElementAfter, moveToMacroQueue } from 'src/app/utils'
 import { TaskPreviewFlattend, TaskPriority, TaskStatus } from '../../../fullstack-shared-models/task.model'
 import { EntityState } from '../../atoms/icons/icon/icons'
-import { MenuItem } from '../../molecules/drop-down/drop-down.component'
+import { MenuItem } from '../../../dropdown/drop-down/drop-down.component'
 import { TaskTreeNode } from '../task-tree/task-tree.component'
 
 @UntilDestroy()

@@ -3,7 +3,6 @@ import { testName } from 'cypress/support/helpers'
 import { BehaviorSubject, of } from 'rxjs'
 import { EntityPageLabelComponent } from 'src/app/components/atoms/entity-page-label/entity-page-label.component'
 import { InlineEditorComponent } from 'src/app/components/atoms/inline-editor/inline-editor.component'
-import { DropDownComponent } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EditableEntityTitleComponent } from 'src/app/components/molecules/editable-entity-heading/editable-entity-title.component'
 import { PageProgressBarComponent } from 'src/app/components/molecules/page-progress-bar/page-progress-bar.component'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
@@ -14,8 +13,9 @@ import { TaskTreeMap } from 'src/app/store/entities/entities.state'
 import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 import { TaskViewComponent } from './task-view.component'
-import { PushModule } from '@rx-angular/template/push'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
+import { RxModule } from 'src/app/rx/rx.module'
+import { DropdownModule } from 'src/app/dropdown/dropdown.module'
 
 const setupComponent = (viewData: EntityViewData<TaskDetail>, taskTreeMap: TaskTreeMap = {}) => {
     const store = {
@@ -29,7 +29,7 @@ const setupComponent = (viewData: EntityViewData<TaskDetail>, taskTreeMap: TaskT
     }
     cy.mount(`<app-task-view></app-task-view> `, {
         componentProperties: {},
-        imports: [CdkMenuModule, PushModule],
+        imports: [CdkMenuModule, RxModule, DropdownModule],
         declarations: [
             TaskViewComponent,
             MutationDirective,
@@ -37,7 +37,6 @@ const setupComponent = (viewData: EntityViewData<TaskDetail>, taskTreeMap: TaskT
             EditableEntityTitleComponent,
             EntityPageLabelComponent,
             PageProgressBarComponent,
-            DropDownComponent,
             InlineEditorComponent,
             HighlightPipe,
         ],

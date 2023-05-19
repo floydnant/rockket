@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store'
-import { MenuItem, MenuItemVariant } from '../components/molecules/drop-down/drop-down.component'
+import { MenuItem, MenuItemVariant } from '../dropdown/drop-down/drop-down.component'
 import { EntityType } from '../fullstack-shared-models/entities.model'
 import { TaskPriority, TaskStatus } from '../fullstack-shared-models/task.model'
 import { EntityCrudDto } from '../services/entities.service'

@@ -27,7 +27,7 @@ import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 import { EntityMenuItemsMap } from '../../../shared/entity-menu-items'
-import { MenuItem } from '../../molecules/drop-down/drop-down.component'
+import { MenuItem } from '../../../dropdown/drop-down/drop-down.component'
 import { TaskViewComponent } from './views/task-view/task-view.component'
 import { TasklistViewComponent } from './views/tasklist-view/tasklist-view.component'
 

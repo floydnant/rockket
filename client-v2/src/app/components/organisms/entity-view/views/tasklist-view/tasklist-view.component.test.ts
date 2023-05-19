@@ -3,7 +3,6 @@ import { testName } from 'cypress/support/helpers'
 import { BehaviorSubject, of } from 'rxjs'
 import { EntityPageLabelComponent } from 'src/app/components/atoms/entity-page-label/entity-page-label.component'
 import { InlineEditorComponent } from 'src/app/components/atoms/inline-editor/inline-editor.component'
-import { DropDownComponent } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EditableEntityTitleComponent } from 'src/app/components/molecules/editable-entity-heading/editable-entity-title.component'
 import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
@@ -14,8 +13,9 @@ import { TaskTreeMap } from 'src/app/store/entities/entities.state'
 import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 import { TasklistViewComponent } from './tasklist-view.component'
-import { PushModule } from '@rx-angular/template/push'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
+import { RxModule } from 'src/app/rx/rx.module'
+import { DropdownModule } from 'src/app/dropdown/dropdown.module'
 
 const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: TaskTreeMap = {}) => {
     const store = {
@@ -29,14 +29,13 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
     }
     cy.mount(`<app-tasklist-view></app-tasklist-view> `, {
         componentProperties: {},
-        imports: [CdkMenuModule, PushModule],
+        imports: [CdkMenuModule, RxModule, DropdownModule],
         declarations: [
             TasklistViewComponent,
             MutationDirective,
             FocusableDirective,
             EditableEntityTitleComponent,
             EntityPageLabelComponent,
-            DropDownComponent,
             InlineEditorComponent,
             EntityDescriptionComponent,
             HighlightPipe,

@@ -49,6 +49,10 @@
         @apply text-tinted-300;
     }
 
+    .keybinding, kbd {
+        @apply bg-tinted-700 inline-block py-0.5 px-1 border border-tinted-600/70 text-center h-6 min-w-[1.5rem] text-tinted-300 rounded-md text-sm font-semibold;
+    }
+
     .show-placeholder::before {
         content: attr(data-placeholder);
         color: var(--placeholder-color, theme('colors.tinted.400'));
