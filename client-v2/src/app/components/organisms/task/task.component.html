@@ -2,15 +2,15 @@
     *ngIf="task$ | async as task"
     class="task | relative flex w-full max-w-full list-none flex-col rounded-xl border border-tinted-700 border-opacity-75 bg-tinted-800 py-2 px-1 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
     [ngClass]="{
-        'completed border-submit-700 border-opacity-60 bg-submit-800 text-submit-200':
-            task.status == TaskStatus.COMPLETED,
+        completed: task.status == TaskStatus.COMPLETED,
+        isActive: inlineEditor.isFocused || isDescriptionFocused$ | push,
         titleHasFocus: inlineEditor.isFocused,
-        isHovered,
-        descriptionHasFocus: isDescriptionFocused$ | push
+        isSelected,
+        descriptionIsActive: isDescriptionFocused$ | push
     }"
     [cdkContextMenuTriggerFor]="menu"
-    (cdkContextMenuOpened)="isHovered = true"
-    (cdkContextMenuClosed)="isHovered = false"
+    (cdkContextMenuOpened)="isSelected = true"
+    (cdkContextMenuClosed)="isSelected = false"
 >
     <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
         <div class="max-w-[calc(100%-1.7rem)]">
@@ -20,8 +20,8 @@
                     [appTooltip]="statusTooltip"
                     [tooltipOptions]="{ avoidPositions: ['right'] }"
                     [cdkMenuTriggerFor]="statusMenu"
-                    (cdkMenuOpened)="isHovered = true"
-                    (cdkMenuClosed)="isHovered = false"
+                    (cdkMenuOpened)="isSelected = true"
+                    (cdkMenuClosed)="isSelected = false"
                     data-test-name="task-status-button"
                 >
                     <ng-template #statusTooltip>
@@ -123,8 +123,8 @@
             <button
                 class="| icon-btn | absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
                 [cdkMenuTriggerFor]="menu"
-                (cdkMenuOpened)="isHovered = true"
-                (cdkMenuClosed)="isHovered = false"
+                (cdkMenuOpened)="isSelected = true"
+                (cdkMenuClosed)="isSelected = false"
                 #trigger="cdkMenuTriggerFor"
                 data-test-name="task-menu-button"
             >
@@ -148,8 +148,8 @@
             [appTooltip]="priorityTooltip"
             [tooltipOptions]="{ avoidPositions: ['left'] }"
             [cdkMenuTriggerFor]="priorityMenu"
-            (cdkMenuOpened)="isHovered = true"
-            (cdkMenuClosed)="isHovered = false"
+            (cdkMenuOpened)="isSelected = true"
+            (cdkMenuClosed)="isSelected = false"
             data-test-name="task-priority-button"
         >
             <app-icon [icon]="task.priority"></app-icon>

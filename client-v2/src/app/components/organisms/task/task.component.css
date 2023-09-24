@@ -1,49 +1,48 @@
 @supports not selector(A:has(B)) {
-    /* [task] */
     .task:not(.titleHasFocus) {
-        @apply hover:bg-tinted-700
-            [&.isHovered]:bg-tinted-700;
+        @apply hover:ring-tinted-600;
     }
-    /* same as above, but different color */
+
     .task.completed:not(.titleHasFocus) {
-        @apply hover:bg-submit-700
-            [&.isHovered]:bg-submit-700;
+        @apply bg-submit-800
+            text-submit-200
+            hover:ring-submit-700;
     }
-
-    /* [description] highlight if not focused */
-    /* .task:is(.task, .titleHasFocus) .description:not(:focus, .hasFocus) {
-        @apply hover:bg-tinted-800;
-    } */
 }
+
 @supports selector(A:has(B)) {
-    /* [task] highlight only if description are NOT hovered */
-    .task:not(.titleHasFocus, :has(.description:hover)) {
-        @apply hover:bg-tinted-700
-            [&.isHovered]:bg-tinted-700;
-    }
-    /* same as above, but different color */
-    .task.completed:not(.titleHasFocus, :has(.description:hover)) {
-        @apply hover:bg-submit-700
-            [&.isHovered]:bg-submit-700;
+    .task:not(.titleHasFocus, :has(.description:hover), :has(app-toolbar:hover)) {
+        /* when title (.inline-editor) is hovered */
+        @apply [@media(hover:hover)]:[&:has(.inline-editor:is(:hover,:focus-visible))]:ring-tinted-600;
     }
 
-    /* [description] highlight if not focused */
-    /* .task:is(.task, .titleHasFocus, .isHovered) .description:not(:focus, .hasFocus) {
-        @apply hover:bg-tinted-700;
-    } */
+    .task.completed:not(.titleHasFocus, .descriptionIsActive, :has(app-toolbar:hover)) {
+        @apply border-submit-700
+            bg-submit-800
+           text-submit-200;
+
+        @apply [&_double-ellipsis-icon]:text-submit-300;
+    }
+    .task.completed:not(.isActive, :has(.description:hover), :has(app-toolbar:hover)) {
+        /* when title (.inline-editor) is hovered */
+        @apply [@media(hover:hover)]:[&:has(.inline-editor:is(:hover,:focus-visible))]:ring-submit-700;
+    }
 }
 
 /* [task] */
 .task.titleHasFocus {
-    @apply ring-2 ring-primary-400 border-transparent;
+    @apply border-transparent ring-2 ring-primary-400;
 }
 
 /* [ellipsis] opacity-0 */
 .task {
-    @apply [&:not(.isHovered,.titleHasFocus,.descriptionHasFocus)_double-ellipsis-icon]:not-hover:opacity-0;
+    @apply ring-2 ring-transparent;
+    @apply [&.isSelected]:bg-tinted-700;
+    @apply [&:not(.isSelected,.isActive)_double-ellipsis-icon]:not-hover:opacity-0;
 }
-.task.completed double-ellipsis-icon {
-    @apply text-submit-300;
+.task.completed {
+    @apply border-opacity-60;
+    @apply [&.isSelected]:!bg-submit-700;
 }
 
 .icon-group {
@@ -51,21 +50,24 @@
 }
 /* [icon-group] -translate-x-8 */
 .task {
-    @apply [&:is(.isHovered,.titleHasFocus,.descriptionHasFocus)_.icon-group]:-translate-x-8
-        [&_.icon-group]:hover:-translate-x-8;
+    @apply [&_.icon-group]:hover:-translate-x-8
+        [&:is(.isSelected,.titleHasFocus,.descriptionIsActive)_.icon-group]:-translate-x-8;
 }
 
-.second-row > * {
+.second-row > button {
     @apply text-md text-tinted-400 transition-colors hover:text-tinted-300;
 }
-.task.completed .second-row > * {
+.task.completed:not(.isActive) .second-row > * {
     @apply text-submit-500 hover:text-submit-300;
 }
 .separator {
     @apply mx-1 h-3.5 w-px translate-y-[5px] bg-current brightness-75;
 }
 
-.task.completed .icon-btn:not(app-toolbar .icon-btn) {
+.task.completed:not(.isActive) .icon-btn:not(app-toolbar .icon-btn) {
+    @apply hover:bg-submit-700;
+}
+.task.completed.isSelected .icon-btn:not(app-toolbar .icon-btn) {
     @apply hover:bg-submit-600;
 }
 
