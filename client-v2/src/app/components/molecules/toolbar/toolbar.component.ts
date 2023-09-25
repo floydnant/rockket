@@ -24,6 +24,6 @@ export class ToolbarComponent {
             if (hidden) return timer(150).pipe(map(() => false))
             return of(true)
         }),
-        startWith(!this.hideToolbar)
+        startWith(false)
     )
 }
