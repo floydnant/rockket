@@ -1,6 +1,5 @@
-<!-- @TODO: verify switching from `innerText` to `innerHTML` didn't break anything -->
 <span
-    class="inline-block cursor-text overflow-x-auto outline-none"
+    class="inline-editor | inline-block cursor-text overflow-x-auto outline-none"
     [innerHTML]="text$ | push | highlight : (highlight$ | push)"
     [class.show-placeholder]="!(textDomState$ | async)"
     [class]="editorClass"

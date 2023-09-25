@@ -71,3 +71,6 @@
     @apply hover:bg-submit-600;
 }
 
+.description {
+    @apply not-hover:[&::-webkit-scrollbar-thumb]:bg-transparent;
+}

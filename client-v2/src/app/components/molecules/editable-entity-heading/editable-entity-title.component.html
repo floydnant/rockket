@@ -11,7 +11,7 @@
         <button
             *ngIf="taskStatusMenuItems$ | async as statusItems; else elseBlock"
             [cdkMenuTriggerFor]="statusMenu"
-            class="icon-btn"
+            class="icon-btn aspect-square p-4"
         >
             <ng-container *ngTemplateOutlet="icon"></ng-container>
             <ng-template #statusMenu>
@@ -26,7 +26,7 @@
 
     <app-inline-editor
         class="title"
-        [textInput]="(entity$ | async)?.title || ''"
+        [textInput]="entity.title || ''"
         [placeholder]="ENTITY_TITLE_DEFAULTS[entity.entityType]"
         [enableDebouncedUpdates]="false"
         (update)="titleUpdates$.next($event)"

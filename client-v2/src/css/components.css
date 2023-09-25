@@ -17,7 +17,7 @@
     }
 
     .button-naked {
-        @apply rounded-lg py-1 px-2 transition-colors hover:bg-tinted-700 duration-75;
+        @apply rounded-lg py-1 px-2 transition-colors duration-75 hover:bg-tinted-700;
         /* hover:text-tinted-100 */
     }
     .button-naked i {
@@ -26,13 +26,13 @@
 
     .button-icon-naked {
         /* @TODO: This would need to be adjusted when touch device specific styles/behaviour are added */
-        @apply py-0;
+        @apply py-0 duration-75;
     }
     .button-icon-naked i {
         @apply m-0 inline-block aspect-square rounded py-0.5 px-2.5 text-base transition-colors hover:bg-tinted-700;
     }
     .icon-btn {
-        @apply inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-lg px-1 transition-colors hover:bg-tinted-500;
+        @apply inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-lg px-1 outline-none transition-colors duration-75 hover:bg-tinted-600;
     }
 
     .button--submit {
@@ -65,7 +65,7 @@
 
     .bg-dotted {
         background-image: radial-gradient(theme('colors.tinted.800') 8%, transparent 8%);
-        background-position: .7rem .6rem;
+        background-position: 0.7rem 0.6rem;
         background-size: 27px 27px;
     }
     .fade-in-out-y {
@@ -86,5 +86,9 @@
         min-height: 100vh;
         min-height: -webkit-fill-available;
         min-height: 100dvh;
+    }
+
+    .highlight {
+        @apply rounded-[0.25em] bg-secondary-400 text-tinted-900;
     }
 }
