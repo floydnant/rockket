@@ -65,7 +65,7 @@
                 <ng-container *ngIf="nodeData$ | async as nodeData">
                     <ng-container *ngIf="nodeData.hasChildren">
                         <button
-                            class="subtask-toggle"
+                            class="subtask-toggle | inline-flex gap-1 [&_.count]:transition-all [&_.count]:hover:text-tinted-300 [&_:has(.checklist-counter.counter-complete)_.count]:!text-submit-400"
                             (click)="expansionChange.emit(!nodeData.isExpanded)"
                             data-test-name="subtask-toggle"
                         >
@@ -74,10 +74,14 @@
                                 class="mr-1 inline-block transition-transform"
                                 [class.rotate-90]="nodeData.isExpanded"
                             ></app-icon>
-                            {{ task.childrenCount }} Subtask{{ task.childrenCount == 1 ? '' : 's' }}
-                        </button>
+                            <!-- @TODO: Pluralisation needs to account for nested subtasks too -->
+                            Subtask{{ task.children?.length == 1 ? '' : 's' }}
 
-                        <div *ngIf="task.description || (isDescriptionExpanded$ | async)" class="separator"></div>
+                            <app-elem-container
+                                [elem]="getTaskCounterWidget()"
+                                class="ml-1 text-md text-tinted-400"
+                            ></app-elem-container>
+                        </button>
                     </ng-container>
 
                     <ng-container *ngIf="task.description || (isDescriptionExpanded$ | async)">

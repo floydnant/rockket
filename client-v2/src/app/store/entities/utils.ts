@@ -50,7 +50,7 @@ export const flattenTaskTree = (taskTree: TaskPreviewRecursive[], path: string[]
         const { children, ...restTask } = task
         // if (!children) console.warn(`Children for task '${task.id}' (${task.title}) not loaded yet!`)
 
-        const flatTask = { ...restTask, path, childrenCount: children?.length || 0 }
+        const flatTask = { ...restTask, path, children }
         const subpath = [...path, task.id]
 
         return [flatTask, ...flattenTaskTree(children || [], subpath)]

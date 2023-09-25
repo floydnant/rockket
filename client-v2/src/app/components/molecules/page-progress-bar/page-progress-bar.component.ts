@@ -28,7 +28,7 @@ export const mapByStatus = <T extends TaskPreview>(taskTree: T[]) => {
     return statusCountMap
 }
 
-const getStatusCountMapRecursive = (taskTree: TaskPreviewRecursive[]): Record<TaskStatus, number> => {
+export const getStatusCountMapRecursive = (taskTree: TaskPreviewRecursive[]): Record<TaskStatus, number> => {
     const map = Object.fromEntries(
         Object.entries(mapByStatus(taskTree)).map(([status, tasks]) => [status, tasks.length])
     ) as Record<TaskStatus, number>

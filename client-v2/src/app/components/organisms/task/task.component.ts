@@ -51,6 +51,7 @@ import {
     TaskStatus,
 } from '../../../fullstack-shared-models/task.model'
 import { EntityState } from '../../atoms/icons/icon/icons'
+import { getStatusCountMapRecursive } from '../../molecules/page-progress-bar/page-progress-bar.component'
 import { TaskTreeNode } from '../task-tree/task-tree.component'
 
 @Component({
@@ -271,6 +272,63 @@ export class TaskComponent {
             })
 
         return this.counterWidget
+    }
+
+    getTaskProgress(task: { children?: TaskPreview[] | null }): ChecklistCount {
+        const totalItems = task.children?.length || 0
+        const checkedItems =
+            task.children?.filter(task => task.status == TaskStatus.COMPLETED || task.status == TaskStatus.NOT_PLANNED)
+                .length || 0
+        const progress = (checkedItems / totalItems) * 100 || 0
+
+        return { totalItems, checkedItems, progress }
+    }
+    getTaskProgressRecursive(task: { children?: TaskPreviewRecursive[] | null }): ChecklistCount {
+        const statusTaskCountMap = getStatusCountMapRecursive(task.children || [])
+
+        const totalItems = Object.values(statusTaskCountMap).reduce((acc, curr) => acc + curr)
+        const checkedItems = statusTaskCountMap[TaskStatus.NOT_PLANNED] + statusTaskCountMap[TaskStatus.COMPLETED]
+        const progress = (checkedItems / totalItems) * 100 || 0
+
+        return { totalItems, checkedItems, progress }
+    }
+    private taskCounterWidgetId!: string
+    private taskCounterWidget: HTMLDivElement | null = null
+    getTaskCounterWidget() {
+        if (!this.task$.value) return null
+        if (this.taskCounterWidget) return this.taskCounterWidget
+
+        this.taskCounterWidgetId = 'task-counter' + this.task$.value.id
+        const taskCount = this.getTaskProgressRecursive(this.task$.value)
+
+        this.taskCounterWidget = createCounterWidget({
+            widgetId: this.taskCounterWidgetId,
+            sticky: false,
+            withLabel: false,
+            style: {
+                display: taskCount.totalItems == 0 ? 'none' : 'flex',
+            },
+            overrideStyles: true,
+            checklistCount: taskCount,
+        })
+
+        // @TODO: can we skip some redundant recalculations here?
+        this.task$.pipe(untilDestroyed(this)).subscribe(task => {
+            if (!task) return
+
+            const taskCount = this.getTaskProgressRecursive(task)
+            updateCounterWidget({
+                widgetId: this.taskCounterWidgetId,
+                checklistCount: taskCount,
+                sticky: false,
+                overrideStyles: true,
+                style: {
+                    display: taskCount.totalItems == 0 ? 'none' : 'flex',
+                },
+            })
+        })
+
+        return this.taskCounterWidget
     }
 
     openDescription() {
