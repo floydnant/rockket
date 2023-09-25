@@ -1,5 +1,5 @@
-import { EventEmitter } from '@angular/core'
-import { Observable, switchMap, of, first, filter, map, tap, takeUntil } from 'rxjs'
+import { Observable, filter, first, map, of, switchMap, tap } from 'rxjs'
+import { TapObserver } from 'rxjs/internal/operators/tap'
 
 /** Wraps the `filter()` operator to enable predicates with Observable results. */
 export const filterWith = <T>(predicate: (value: T) => boolean | Observable<boolean>) => {
@@ -18,16 +18,22 @@ export const filterWith = <T>(predicate: (value: T) => boolean | Observable<bool
         )
 }
 
-export const createEventEmitter = <T>(
-    value$: Observable<T>,
-    options?: {
-        until$?: Observable<unknown>
-        isAsync?: boolean
-    }
-): EventEmitter<T> => {
-    const emitter = new EventEmitter<T>(options?.isAsync === true)
-
-    value$.pipe(options?.until$ ? takeUntil(options.until$) : tap()).subscribe(value => emitter.emit(value))
-
-    return emitter
-}
+export const debugObserver = <T>(
+    name: string,
+    {
+        subscribe = true,
+        unsubscribe = true,
+        next = true,
+        error = true,
+        complete = true,
+        finalize = false,
+    }: Partial<Record<keyof TapObserver<unknown>, boolean>> = {} as never
+) =>
+    tap<T>({
+        subscribe: !subscribe ? undefined : () => console.log(`🧩 %csubscribed to %c${name}`, 'color:gray', ''),
+        unsubscribe: !unsubscribe ? undefined : () => console.log(`👋 %cunsubscribed from %c${name}`, 'color:gray', ''),
+        next: !next ? undefined : value => console.log(`🚀 %cnext %c${name}`, 'color:gray', '', { value }),
+        error: !error ? undefined : error => console.log(`🚨 %cerror %c${name}`, 'color:gray', '', { error }),
+        complete: !complete ? undefined : () => console.log(`✅ %ccomplete %c${name}`, 'color:gray', ''),
+        finalize: !finalize ? undefined : () => console.log(`🏁 %cfinalize %c${name}`, 'color:gray', ''),
+    })

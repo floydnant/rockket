@@ -63,12 +63,7 @@ export class HomeComponent {
     EntityType = EntityType
 
     // @TODO: lets have a look at this again when socket integration is ready
-    shouldFetchSubcription = this.deviceService.shouldFetch$
-        .pipe(
-            delay(0), // move to macro queue
-            untilDestroyed(this)
-        )
-        .subscribe(index => {
+    shouldFetchSubcription = this.deviceService.shouldFetch$.pipe(untilDestroyed(this)).subscribe(index => {
             if (index == 0) {
                 this.store.dispatch(entitiesActions.loadPreviews())
                 this.store.dispatch(taskActions.loadTaskPreviews())

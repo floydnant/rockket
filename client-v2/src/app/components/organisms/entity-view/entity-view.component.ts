@@ -12,12 +12,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import {
     BehaviorSubject,
+    Observable,
     combineLatest,
     combineLatestWith,
     delay,
     distinctUntilChanged,
     map,
-    Observable,
     shareReplay,
     tap,
 } from 'rxjs'
@@ -26,8 +26,8 @@ import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
-import { EntityMenuItemsMap } from '../../../shared/entity-menu-items'
 import { MenuItem } from '../../../dropdown/drop-down/drop-down.component'
+import { EntityMenuItemsMap } from '../../../shared/entity-menu-items'
 import { TaskViewComponent } from './views/task-view/task-view.component'
 import { TasklistViewComponent } from './views/tasklist-view/tasklist-view.component'
 
@@ -95,6 +95,7 @@ export class EntityViewComponent {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     entityViewData: EntityViewData<any> = {
+        // @TODO: (high prio): get rid of the delay here
         entity$: this.entity$.pipe(delay(0)), // move to macro queue
         detail$: this.entityDetail$,
         options$: this.entityOptionsItems$,
