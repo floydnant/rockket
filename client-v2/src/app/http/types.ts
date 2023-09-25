@@ -10,7 +10,7 @@ type OriginalHttpClientOptions<K extends keyof HttpClient & HttpMethods> = Param
 type HttpClientOptionsMap = {
     [method in HttpMethods]: OriginalHttpClientOptions<method> & {
         disableErrorInterception?: boolean
-        // more options...
+        // if only we had more options...
     }
 }
 
@@ -27,6 +27,8 @@ export interface HttpServerErrorResponse extends Omit<HttpErrorResponse, 'type'>
         statusCode: StatusCode
     }
 }
+
+export type HttpServerErrorResponseWithMeta<T = { id: string }> = HttpServerErrorResponse & T
 
 export type HttpSuccessResponse<T extends Record<string, unknown> = Record<never, unknown>> = T & {
     successMessage: string
