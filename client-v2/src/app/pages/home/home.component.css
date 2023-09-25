@@ -10,8 +10,8 @@
         hover:bg-tinted-700
         hover:text-tinted-100
         hover:outline-none
-        [&.isHovered]:bg-tinted-700
-        [&.isHovered]:text-tinted-100
+        [&.isSelected]:bg-tinted-700
+        [&.isSelected]:text-tinted-100
         [&.nested]:pl-2.5
         [&.active]:bg-tinted-700;
 
@@ -55,7 +55,7 @@
         duration-75;
 }
 .tree-node {
-    @apply [&.isHovered_.no-toggle-icon_app-icon]:text-tinted-600
+    @apply [&.isSelected_.no-toggle-icon_app-icon]:text-tinted-600
         [&_.no-toggle-icon_app-icon]:hover:text-tinted-600
         [&.active_.no-toggle-icon_app-icon]:text-tinted-600;
 }
@@ -64,7 +64,7 @@
     @apply flex
         gap-0.5;
 }
-.tree-node:not(:hover, .isHovered, :focus-visible, :focus-within) .btn-group {
+.tree-node:not(:hover, .isSelected, :focus-visible, :focus-within) .btn-group {
     @apply hoverable:hidden hoverable:animate-none;
 }
 .btn-group button {

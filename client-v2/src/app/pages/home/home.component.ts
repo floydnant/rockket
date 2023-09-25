@@ -4,9 +4,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { Action } from '@ngrx/store/src/models'
-import { combineLatestWith, delay, map, tap } from 'rxjs'
-import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
+import { combineLatestWith, map, tap } from 'rxjs'
 import { MenuService } from 'src/app/components/templates/sidebar-layout/menu.service'
+import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
 import { EntityPreviewFlattend, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { DeviceService } from 'src/app/services/device.service'
@@ -64,15 +64,15 @@ export class HomeComponent {
 
     // @TODO: lets have a look at this again when socket integration is ready
     shouldFetchSubcription = this.deviceService.shouldFetch$.pipe(untilDestroyed(this)).subscribe(index => {
-            if (index == 0) {
-                this.store.dispatch(entitiesActions.loadPreviews())
-                this.store.dispatch(taskActions.loadTaskPreviews())
-                return
-            }
+        if (index == 0) {
+            this.store.dispatch(entitiesActions.loadPreviews())
+            this.store.dispatch(taskActions.loadTaskPreviews())
+            return
+        }
 
-            this.store.dispatch(entitiesActions.reloadPreviews())
-            this.store.dispatch(taskActions.reloadTaskPreviews())
-        })
+        this.store.dispatch(entitiesActions.reloadPreviews())
+        this.store.dispatch(taskActions.reloadTaskPreviews())
+    })
 
     isMobileScreen$ = this.deviceService.isMobileScreen$
 
@@ -99,6 +99,7 @@ export class HomeComponent {
         return true
     }
 
+    // changes are automatically reflected here, since it always stays the same object identity
     entityExpandedMap = this.uiStateService.sidebarUiState.entityExpandedMap
     toggleExpansion(node: EntityTreeNode) {
         node.isExpanded = !node.isExpanded
@@ -154,7 +155,7 @@ export class HomeComponent {
         entitiesActions.loadPreviewsError,
     ])
 
-    isHovered: Record<string, boolean> = {}
+    isSelected: Record<string, boolean> = {}
     nodeLoadingMap$ = this.loadingService.getEntitiesLoadingStateMap()
 
     dataSource = new ArrayDataSource(this.entityPreviewsTransformed$)
