@@ -74,7 +74,7 @@ export const taskStatusIconMap: Record<TaskStatus, string> = concatMatchingKeys(
     {
         [TaskStatus.OPEN]: 'far fa-circle',
         [TaskStatus.IN_PROGRESS]: 'far fa-clock',
-        [TaskStatus.BACKLOG]: 'fas fa-spinner rotate-[-45deg]',
+        [TaskStatus.BACKLOG]: 'fal fa-stroopwafel',
         [TaskStatus.COMPLETED]: 'fas fa-check-circle',
         [TaskStatus.NOT_PLANNED]: 'fas fa-times-circle',
     } as const,
