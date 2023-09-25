@@ -3,26 +3,38 @@
     @apply pb-6 outline-none;
 }
 
-:is(.ProseMirror, .rendered-content) p {
+:is(.ProseMirror, .rendered-content) :is(p, ul, ol, blockquote) {
     margin: 0;
 }
-:is(.ProseMirror, .rendered-content) code {
-    @apply text-md;
+:is(.ProseMirror, .rendered-content) :is(p, ul, ol, blockquote):not(:last-child) {
+    @apply mb-2;
 }
+:is(.ProseMirror, .rendered-content) hr {
+    @apply my-4;
+}
+
+:is(.ProseMirror, .rendered-content) blockquote {
+    @apply relative rounded bg-tinted-850 py-1 pl-3.5;
+}
+:is(.ProseMirror, .rendered-content) blockquote::before {
+    content: '';
+    @apply absolute left-0 top-0 h-full w-[0.3125rem] rounded bg-tinted-400;
+}
+
 :is(.ProseMirror, .rendered-content) a {
-    @apply underline/* */  cursor-pointer not-hover:text-submit-600;
-}
-
-:is(.ProseMirror, .rendered-content) :is(ul, ol):not(*:not(ul, ol) ~ :is(ul, ol)) {
-    @apply pl-0;
+    @apply underline cursor-pointer;
 }
 
 :is(.ProseMirror, .rendered-content) code {
-    @apply rounded-md bg-tinted-800 px-1 py-0.5 text-tinted-300;
+    @apply rounded-md bg-tinted-800 px-[0.365em] py-[0.125em] text-[.9em] font-medium text-tinted-300;
+}
+:is(.ProseMirror, .rendered-content) a code {
+    @apply !text-inherit;
 }
 :is(.ProseMirror, .rendered-content) pre code {
     @apply my-2 block px-3 py-2;
 }
+
 :is(.ProseMirror, .rendered-content) h1 {
     font-size: 1.8rem;
 }

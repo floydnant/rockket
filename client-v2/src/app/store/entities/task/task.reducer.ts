@@ -4,6 +4,7 @@ import { ReducerOns } from 'src/app/utils/store.helpers'
 import { EntitiesState, TaskTreeMap } from '../entities.state'
 import { buildTaskTreeMap, buildTaskTree, getTaskById } from '../utils'
 import { taskActions } from './task.actions'
+import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 
 export const taskReducerOns: ReducerOns<EntitiesState> = [
     on(taskActions.loadTaskPreviewsSuccess, (state, { previews }): EntitiesState => {
@@ -76,6 +77,7 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
 
     on(taskActions.updateDescriptionSuccess, (state, { id, newDescription }) => {
         const taskTreeMapCopy = structuredClone(state.taskTreeMap || {}) as TaskTreeMap
+        const taskDetailsCopy = structuredClone(state.entityDetails[EntityType.TASK] || {})
 
         // @TODO: This could be optimized by using the `listId` to reduce the number of tasks to iterate over
         const task = getTaskById(Object.values(taskTreeMapCopy).flat(), id)
@@ -83,9 +85,15 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
             task.description = newDescription
         }
 
+        if (taskDetailsCopy[id]) taskDetailsCopy[id].description = newDescription
+
         return {
             ...state,
             taskTreeMap: taskTreeMapCopy,
+            entityDetails: {
+                ...state.entityDetails,
+                [EntityType.TASK]: taskDetailsCopy,
+            },
         }
     }),
 ]

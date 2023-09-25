@@ -1,19 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { RtEditorComponent } from './rt-editor.component'
+import { TipTapEditorComponent } from './tip-tap-editor.component'
 
-describe('RichTextEditorComponent', () => {
-    let component: RtEditorComponent
-    let fixture: ComponentFixture<RtEditorComponent>
+describe('TipTapEditorComponent', () => {
+    let component: TipTapEditorComponent
+    let fixture: ComponentFixture<TipTapEditorComponent>
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [RtEditorComponent],
+            declarations: [TipTapEditorComponent],
         }).compileComponents()
-    })
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(RtEditorComponent)
+        fixture = TestBed.createComponent(TipTapEditorComponent)
         component = fixture.componentInstance
         fixture.detectChanges()
     })

@@ -1,6 +1,6 @@
 import { Editor, Extension, Range } from '@tiptap/core'
 import CodeBlock from '@tiptap/extension-code-block'
-import { getActiveListType } from './helpers'
+import { getActiveListType } from '../../helpers'
 
 interface IndentationOptions {
     /** Wether indentation logic should only be ran for code blocks.
@@ -87,7 +87,7 @@ const getTabRangeToDelete = ({
     const forwards = position.inDocument == firstChar.inDocument
     const startPosition = position.inDocument
 
-    // @FIXME: blindly deleting the char at/before the cursor when there is a tab after the cursor is a bad approach
+    // @TODO: blindly deleting the char at/before the cursor when there is a tab after the cursor is a bad approach
 
     // if there is a tab, remove it
     if (nodeContent[position.inNode] == '\t') {
@@ -114,7 +114,7 @@ const getTabRangeToDelete = ({
     return null
 }
 
-export const Indentation = Extension.create({
+export const IndentationExtension = Extension.create({
     name: 'indentation',
 
     addCommands() {

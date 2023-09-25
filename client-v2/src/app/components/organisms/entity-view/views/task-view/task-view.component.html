@@ -1,22 +1,22 @@
-<ng-container *ngIf="taskEntity$ | async as entity">
+<ng-container *rxIf="taskEntity$; let entity; strategy: 'native'">
     <h1 class="heading | mt-4">
         <app-editable-entity-title [entity]="entity"></app-editable-entity-title>
     </h1>
 
     <app-entity-description
         #descriptionEditor
-        *ngIf="isDescriptionShown$ | async"
-        [description]="description$ | async"
-        (descriptionChange)="onDescriptionUpdate($event)"
-        (blur)="descriptionBlurEvents$.next($event)"
+        *rxIf="isDescriptionOpen$"
+        [context]="descriptionContext$ | push : 'native'"
+        (update)="updateDescription($event)"
+        (blur)="descriptionBlurInput$.next($event)"
     ></app-entity-description>
 
     <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
         <button
-            *ngIf="!(isDescriptionShown$ | async)"
+            *rxIf="!(isDescriptionOpen$ | push)"
             class="button-naked text-tinted-200 hover:text-tinted-100"
             appTooltip="Add a description to this task"
-            (click)="isDescriptionShown$.next(true); focusDescription()"
+            (click)="openDescription()"
             cdkMenuItem
             data-test-name="add-description"
         >

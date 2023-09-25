@@ -1,4 +1,4 @@
-:host:not(.no-styles), app-toolbar:not(.no-styles) {
+:is(app-toolbar:not(.no-styles), .app-toolbar) {
     @apply flex
         items-center
         gap-1
@@ -13,10 +13,10 @@
         transition-all
         glass;
 }
-:host-context(.hide), app-toolbar.hide {
+:is(app-toolbar, .app-toolbar).hide {
     @apply pointer-events-none invisible translate-y-2 opacity-0;
 }
 
 .toolbar-separator {
-    @apply h-5 w-px bg-tinted-600;
+    @apply mx-1 h-5 w-px bg-tinted-600;
 }

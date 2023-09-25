@@ -1,18 +1,13 @@
-<div
-    class="absolute inset-y-0 right-0 -top-12 h-full"
-    *rxLet="descriptionEditor.isFocused$; let isFocused"
-    [class.pointer-events-none]="!isFocused"
->
-    <app-toolbar class="sticky top-2 z-10 block w-fit" [hide]="!isFocused">
-        <app-rt-editor-toolbar [editor]="descriptionEditor.editor"></app-rt-editor-toolbar>
+<div class="pointer-events-none absolute inset-y-0 right-0 -top-12 h-full">
+    <app-toolbar
+        class="pointer-events-auto sticky top-2 z-10 block w-fit max-w-[70vw] overflow-x-auto"
+        [hide]="!(isActive$ | async)"
+    >
+        <app-tt-editor-toolbar
+            [ttEditor]="descriptionTtEditor"
+            [layout]="toolbarLayout$ | push"
+        ></app-tt-editor-toolbar>
     </app-toolbar>
 </div>
 
-<app-rt-editor
-    #descriptionEditor
-    [value]="(description$ | push) ?? ''"
-    placeholder="Description"
-    (valueChanges)="descriptionChanges$.next($event)"
-    (blur)="blurEvents$.next($event)"
-    data-test-name="description-editor"
-></app-rt-editor>
+<app-tt-editor #descriptionTtEditor data-test-name="description-editor"></app-tt-editor>

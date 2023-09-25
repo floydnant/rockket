@@ -17,6 +17,7 @@ const extraIcons = {
     edit: 'far fa-pencil-alt',
     export: 'far fa-file-export',
     clone: 'far fa-clone',
+    close: 'fas fa-times',
     expand: 'far fa-expand-alt',
     priority: 'far fa-exclamation',
     status: 'far fa-dot-circle',
@@ -27,6 +28,8 @@ const extraIcons = {
     workspace: 'fas fa-garage',
     loading: 'fad fa-spinner-third animate-spin',
     image: 'fas fa-image',
+    copy: 'fas fa-copy',
+    markdown: 'fab fa-markdown',
 
     chevronRight: 'fas fa-chevron-right',
     chevronLeft: 'fas fa-chevron-left',
@@ -40,7 +43,7 @@ const extraIcons = {
         redo: 'far fa-redo-alt',
         indent: 'far fa-indent',
         outdent: 'far fa-outdent',
-        paragrapgh: 'far fa-paragraph',
+        paragraph: 'far fa-paragraph',
         text: 'far fa-text',
         heading: 'far fa-heading',
         heading1: 'far fa-h1',
@@ -57,7 +60,7 @@ const extraIcons = {
         horizontalRule: 'far fa-horizontal-rule',
         code: 'far fa-code',
         codeBlock: 'far fa-laptop-code',
-        quote: 'fas fa-quote-right',
+        quote: 'far fa-quote-right',
         table: 'fas fa-table',
     },
 }
@@ -84,8 +87,7 @@ export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingK
         [TaskPriority.HIGH]: 'fas fa-exclamation-circle',
         [TaskPriority.MEDIUM]: 'fas fa-exclamation',
         [TaskPriority.NONE]: 'far fa-minus',
-        // [TaskPriority.OPTIONAL]: 'fas fa-question',
-        [TaskPriority.OPTIONAL]: 'far fa-square rotate-45 scale-[0.8]',
+        [TaskPriority.OPTIONAL]: 'far fa-diamond',
     } as const,
     taskPriorityColorMap
 )

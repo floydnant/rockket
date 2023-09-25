@@ -20,10 +20,10 @@ export class ToolbarComponent {
 
     hideToolbar = false
     showToolbar$ = this.hideToolbar$.pipe(
-        startWith(false),
         switchMap(hidden => {
             if (hidden) return timer(150).pipe(map(() => false))
             return of(true)
-        })
+        }),
+        startWith(!this.hideToolbar)
     )
 }

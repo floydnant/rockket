@@ -17,7 +17,7 @@ const getMenuItems = (logoutAction: MenuItem['action'] = () => ''): MenuItem[] =
             { title: 'Appearance', route: '/settings/appearance' },
         ],
     },
-    { isSeperator: true },
+    { isSeparator: true },
     { title: 'Logout', action: logoutAction, variant: MenuItemVariant.DANGER },
 ]
 

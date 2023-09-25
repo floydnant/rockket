@@ -1,22 +1,22 @@
-import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu'
-import { Component, Input } from '@angular/core'
+import { CdkContextMenuTrigger, CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu'
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core'
 import { BehaviorSubject, map } from 'rxjs'
 import { moveToMacroQueue } from 'src/app/utils'
 import { useParamsForRoute } from 'src/app/utils/menu-item.helpers'
 import { IconKey } from '../../components/atoms/icons/icon/icons'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface MenuItem<TActionData = any> {
+export interface MenuItem<TArg = any> {
     title?: string
     /** Any valid `IconKey` or FontAwesome icon class */
     icon?: IconKey
     route?: string
-    action?: (data: TActionData) => void
-    isActive?: boolean | ((data: TActionData) => boolean)
+    action?: (data: TArg) => void
+    isActive?: boolean | ((data: TArg) => boolean)
     /** Only for display (doesn't hook up any listeners) for now */
     keybinding?: string
     children?: MenuItem[]
-    isSeperator?: boolean
+    isSeparator?: boolean
     variant?: MenuItemVariant
 }
 
@@ -56,4 +56,11 @@ export class DropDownComponent {
     getIsActive(isActive: MenuItem['isActive']) {
         return typeof isActive == 'function' ? isActive(this.data) : isActive
     }
+
+    @ViewChild(CdkMenu) menu!: CdkMenu
+    get hasFocus$() {
+        return this.menu.menuStack.hasFocus
+    }
+
+    @Output() closed = new EventEmitter<void>()
 }

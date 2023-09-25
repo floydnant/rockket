@@ -1,8 +1,29 @@
 import { ChangeDetectionStrategy, Component, Input, Output, ViewChild } from '@angular/core'
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { BehaviorSubject, filter, first, map, merge, Subject, switchMap, tap } from 'rxjs'
-import { RtEditorComponent } from 'src/app/rich-text-editor/rt-editor/rt-editor.component'
-import { createEventEmitter } from 'src/app/utils/observable.helpers'
+import { UntilDestroy } from '@ngneat/until-destroy'
+import {
+    Observable,
+    Subject,
+    delay,
+    distinctUntilKeyChanged,
+    filter,
+    map,
+    mergeMap,
+    shareReplay,
+    switchMap,
+} from 'rxjs'
+import {
+    defaultDesktopEditorLayout,
+    getDefaultEditorFeatures,
+    getDefaultEditorLayout,
+    provideEditorFeatures,
+} from 'src/app/rich-text-editor/features'
+import { TipTapEditorComponent } from 'src/app/rich-text-editor/tip-tap-editor/tip-tap-editor.component'
+import { DeviceService } from 'src/app/services/device.service'
+
+export interface DescriptionContext {
+    id: string
+    description$: Observable<string>
+}
 
 @UntilDestroy()
 @Component({
@@ -10,40 +31,43 @@ import { createEventEmitter } from 'src/app/utils/observable.helpers'
     templateUrl: './entity-description.component.html',
     styleUrls: ['./entity-description.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    viewProviders: [provideEditorFeatures(getDefaultEditorFeatures())],
 })
 export class EntityDescriptionComponent {
-    description$ = new BehaviorSubject<string | null>(null)
-    @Input() set description(description: string | null) {
-        this.description$.next(description)
+    constructor(private deviceService: DeviceService) {}
+
+    @ViewChild(TipTapEditorComponent) ttEditor!: TipTapEditorComponent
+
+    toolbarLayout = defaultDesktopEditorLayout
+    toolbarLayout$ = this.deviceService.isTouchPrimary$.pipe(map(getDefaultEditorLayout))
+
+    private context$ = new Subject<DescriptionContext>()
+    @Input() set context(context: DescriptionContext | null) {
+        if (context) this.context$.next(context)
     }
 
-    @ViewChild(RtEditorComponent) editor!: RtEditorComponent // needed for outside access
-
-    descriptionChanges$ = new BehaviorSubject<string | null>(null)
-    blurEvents$ = new Subject<FocusEvent>()
-    @Output() blur = createEventEmitter(this.blurEvents$.pipe(untilDestroyed(this)))
-
-    descriptionDomState$ = merge(
-        this.descriptionChanges$,
-        this.description$.pipe(
-            tap(() => {
-                if (this.descriptionChanges$.value !== null) this.descriptionChanges$.next(null)
-            })
-        )
+    private editorBound$ = this.context$.pipe(
+        distinctUntilKeyChanged('id'),
+        map(({ id, description$ }) => this.ttEditor.bindEditor(description$, id)),
+        shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    @Output() descriptionChange = createEventEmitter(
-        this.blurEvents$.pipe(
-            switchMap(() => this.descriptionChanges$.pipe(first())),
-            switchMap(description => {
-                return this.description$.pipe(
-                    first(),
-                    map(oldDescription => (oldDescription === description ? null : description))
-                )
-            }),
-            filter(description => description !== null),
-            map(description => description as string),
-            untilDestroyed(this)
+    @Output() isActive$ = this.editorBound$.pipe(switchMap(({ isActive$ }) => isActive$))
+    @Output('update') update$ = this.editorBound$.pipe(
+        mergeMap(({ updateOnBlur$ }) =>
+            updateOnBlur$.pipe(
+                map(({ content: currentState, context }) => ({ id: context, description: currentState }))
+            )
+        )
+    )
+    @Output('blur') blur$ = this.editorBound$.pipe(
+        mergeMap(({ blur$ }) =>
+            blur$.pipe(
+                delay(0),
+                map(() => this.ttEditor.editor.view.hasFocus()),
+                filter(hasFocus => !hasFocus),
+                map(() => null)
+            )
         )
     )
 }

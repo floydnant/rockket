@@ -17,7 +17,7 @@ export const getGeneralMenuItems = (store: Store<AppState>): MenuItem[] => [
     },
 ]
 export const getDangerMenuItems = (store: Store<AppState>): MenuItem[] => [
-    { isSeperator: true },
+    { isSeparator: true },
     {
         title: `Delete`,
         icon: 'trash',
@@ -27,26 +27,39 @@ export const getDangerMenuItems = (store: Store<AppState>): MenuItem[] => [
 ]
 
 export const getTaskStatusMenuItems = (store: Store<AppState>) =>
-    Object.values(TaskStatus).map<MenuItem>(status => ({
+    Object.values(TaskStatus).map<MenuItem<TaskMenuItemData>>(status => ({
         title: status.replace(/_/g, ' '),
         icon: status,
+        isActive: data => data.status !== status,
         action: (dto: { id: string }) => {
             store.dispatch(taskActions.updateStatus({ id: dto.id, status }))
         },
     }))
 export const getTaskPriorityMenuItems = (store: Store<AppState>) =>
-    Object.values(TaskPriority).map<MenuItem>(priority => ({
+    Object.values(TaskPriority).map<MenuItem<TaskMenuItemData>>(priority => ({
         title: priority.replace(/_/g, ' '),
         icon: priority,
+        isActive: data => data.priority !== priority,
         action: (dto: { id: string }) => {
             store.dispatch(taskActions.updatePriority({ id: dto.id, priority }))
         },
     }))
 
-export type EntityMenuItemsMap = Record<EntityType, WrappedMenuItems>
+export type EntityMenuItemData = EntityCrudDto
+export type TaskMenuItemData = EntityMenuItemData & {
+    entityType: EntityType.TASK
+    status: TaskStatus
+    priority: TaskPriority
+}
+
+// @TODO: how do we make this exhaustive?
+export type EntityMenuItemsMap = {
+    [EntityType.TASK]: WrappedMenuItems<TaskMenuItemData>
+    [EntityType.TASKLIST]: WrappedMenuItems<EntityMenuItemData>
+}
 
 export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMap => ({
-    [EntityType.TASKLIST]: wrapMenuItems([
+    [EntityType.TASKLIST]: wrapMenuItems<EntityMenuItemData>([
         ...getGeneralMenuItems(store),
         {
             title: 'New Inside',
@@ -55,33 +68,32 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
                 {
                     title: 'Tasklist',
                     icon: EntityType.TASKLIST,
-                    action: (dto: EntityCrudDto) =>
-                        store.dispatch(listActions.createTaskList({ parentListId: dto.id })),
+                    action: dto => store.dispatch(listActions.createTaskList({ parentListId: dto.id })),
                 },
                 {
                     title: 'Task',
                     icon: EntityType.TASK,
-                    action: (dto: EntityCrudDto) => store.dispatch(taskActions.create({ listId: dto.id })),
+                    action: dto => store.dispatch(taskActions.create({ listId: dto.id })),
                 },
             ],
         },
         {
             title: 'Duplicate',
             icon: 'clone',
-            action: (dto: EntityCrudDto) => store.dispatch(listActions.duplicateList(dto)),
+            action: dto => store.dispatch(listActions.duplicateList(dto)),
         },
         {
             title: `Export`,
             icon: 'export',
-            action: (dto: EntityCrudDto) => store.dispatch(listActions.exportList(dto)),
+            action: dto => store.dispatch(listActions.exportList(dto)),
         },
         ...getDangerMenuItems(store),
     ]),
-    [EntityType.TASK]: wrapMenuItems([
+    [EntityType.TASK]: wrapMenuItems<TaskMenuItemData>([
         {
             title: 'New Subtask',
             icon: 'plus',
-            action: (dto: EntityCrudDto) => store.dispatch(taskActions.create({ parentTaskId: dto.id })),
+            action: dto => store.dispatch(taskActions.create({ parentTaskId: dto.id })),
         },
         ...getGeneralMenuItems(store),
         {
@@ -89,7 +101,7 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
             icon: 'expand',
             route: '/home/:id',
         },
-        { isSeperator: true },
+        { isSeparator: true },
         {
             title: 'Status',
             icon: 'status',

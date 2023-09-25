@@ -39,7 +39,7 @@ export class UserMenuComponent {
         //     title: 'Garbage',
         //     icon: 'fas fa-trash' as IconKey,
         // },
-        { isSeperator: true },
+        { isSeparator: true },
         {
             title: 'Logout',
             icon: 'logout',

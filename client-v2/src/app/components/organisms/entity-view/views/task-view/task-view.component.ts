@@ -1,25 +1,28 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
+import { UntilDestroy } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import {
-    BehaviorSubject,
+    Subject,
     combineLatest,
     distinctUntilChanged,
+    distinctUntilKeyChanged,
+    filter,
     first,
     map,
+    merge,
     mergeWith,
+    share,
     startWith,
-    Subject,
-    tap,
+    withLatestFrom,
 } from 'rxjs'
+import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
 import { TaskDetail } from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
 import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { getTaskById } from 'src/app/store/entities/utils'
-import { EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
-import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
-import { moveToMacroQueue } from 'src/app/utils'
+import { isNotNullish, moveToMacroQueue } from 'src/app/utils'
+import { ENTITY_VIEW_DATA, EntityViewData } from '../../entity-view.component'
 
 @UntilDestroy()
 @Component({
@@ -34,16 +37,58 @@ export class TaskViewComponent {
         private store: Store<AppState>
     ) {}
 
-    @ViewChild(EntityDescriptionComponent) entityDescription?: EntityDescriptionComponent
-    focusDescription() {
-        moveToMacroQueue(() => {
-            this.entityDescription?.editor.editor.commands.focus()
-        })
-    }
-
     taskEntity$ = this.viewData.entity$
     detail$ = this.viewData.detail$
     options$ = this.viewData.options$
+
+    description$ = this.detail$.pipe(
+        map(detail => detail?.description),
+        distinctUntilChanged()
+    )
+    descriptionContext$ = this.taskEntity$.pipe(
+        filter(Boolean),
+        distinctUntilKeyChanged('id'),
+        map(entity => ({
+            id: entity.id,
+            description$: this.description$.pipe(filter(isNotNullish)),
+        }))
+    )
+
+    private descriptionUpdateInput$ = new Subject<string>()
+    updateDescription(data: { id: string; description: string }) {
+        this.descriptionUpdateInput$.next(data.description)
+
+        moveToMacroQueue(() => {
+            this.store.dispatch(taskActions.updateDescription({ id: data.id, newDescription: data.description }))
+        })
+    }
+
+    @ViewChild(EntityDescriptionComponent) entityDescription?: EntityDescriptionComponent
+    focusDescription() {
+        moveToMacroQueue(() => {
+            this.entityDescription?.ttEditor.editor.commands.focus()
+        })
+    }
+
+    descriptionBlurInput$ = new Subject<null>()
+
+    private isDescriptionOpenInput$ = new Subject<boolean>()
+    openDescription() {
+        this.isDescriptionOpenInput$.next(true)
+        moveToMacroQueue(() => this.focusDescription())
+    }
+
+    isDescriptionOpen$ = this.description$.pipe(
+        map(description => Boolean(description)),
+        mergeWith(this.isDescriptionOpenInput$),
+        mergeWith(
+            this.descriptionBlurInput$.pipe(
+                withLatestFrom(merge(this.descriptionUpdateInput$.pipe(startWith(null)), this.description$)),
+                map(([, description]) => Boolean(description))
+            )
+        ),
+        share({ resetOnRefCountZero: true })
+    )
 
     task$ = combineLatest([this.viewData.entity$, this.store.select(entitiesSelectors.taskTreeMap)]).pipe(
         map(([taskEntity, taskTreeMap]) => {
@@ -52,33 +97,6 @@ export class TaskViewComponent {
             return getTaskById(Object.values(taskTreeMap).flat(), taskEntity.id)
         })
     )
-
-    description$ = this.detail$.pipe(
-        map(detail => detail?.description),
-        distinctUntilChanged()
-    )
-    isDescriptionShown$ = new BehaviorSubject(false)
-    descriptionChanges$ = new Subject<string>()
-    descriptionBlurEvents$ = new Subject<FocusEvent>()
-    descriptionSubscription = combineLatest([this.description$, this.descriptionBlurEvents$.pipe(startWith(null))])
-        .pipe(
-            map(([description]) => description),
-            mergeWith(this.descriptionChanges$),
-            tap(description => this.isDescriptionShown$.next(!!description)),
-            untilDestroyed(this)
-        )
-        .subscribe()
-
-    onDescriptionUpdate(newDescription: string) {
-        // @TODO: Throttled updates should only be sent to the server and not update the store yet.
-        // The store should only be updated when the editor is blurred.
-        this.taskEntity$.pipe(first()).subscribe(entity => {
-            if (!entity) return
-            this.store.dispatch(taskActions.updateDescription({ id: entity.id, newDescription }))
-        })
-        this.descriptionChanges$.next(newDescription)
-    }
-
     createSubtask() {
         this.taskEntity$.pipe(first()).subscribe(entity => {
             if (!entity) return

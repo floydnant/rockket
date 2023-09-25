@@ -1,6 +1,6 @@
 import { ArrayDataSource } from '@angular/cdk/collections'
 import { FlatTreeControl } from '@angular/cdk/tree'
-import { Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { Action } from '@ngrx/store/src/models'
@@ -49,6 +49,7 @@ export const convertToEntityTreeNode = (entity: EntityPreviewFlattend): EntityTr
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
     constructor(

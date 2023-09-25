@@ -1,12 +1,12 @@
 <li
-    *ngIf="task$ | async as task"
+    *rxIf="task$; let task; strategy: 'native'"
     class="task | relative flex w-full max-w-full list-none flex-col rounded-xl border border-tinted-700 border-opacity-75 bg-tinted-800 py-2 px-1 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
     [ngClass]="{
         completed: task.status == TaskStatus.COMPLETED,
-        isActive: inlineEditor.isFocused || isDescriptionFocused$ | push,
+        isActive: inlineEditor.isFocused || isDescriptionActive$ | push,
         titleHasFocus: inlineEditor.isFocused,
         isSelected,
-        descriptionIsActive: isDescriptionFocused$ | push
+        descriptionIsActive: isDescriptionActive$ | push
     }"
     [cdkContextMenuTriggerFor]="menu"
     (cdkContextMenuOpened)="isSelected = true"
@@ -44,7 +44,7 @@
                     [textInput]="task.title"
                     [placeholder]="PLACEHOLDER"
                     [placeholderColor]="placeholderColorMap[task.status]"
-                    [highlight]="highlightQuery$ | push"
+                    [highlight]="searchTerm$ | push"
                     [editorClass]="{
                         'line-through': task.status == TaskStatus.NOT_PLANNED,
                         'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED,
@@ -59,7 +59,7 @@
             </div>
 
             <div
-                class="second-row | ml-0.5 flex flex-wrap gap-2"
+                class="second-row | ml-0.5 flex flex-wrap gap-4"
                 [class.mt-1]="(nodeData$ | async)?.hasChildren || task.description || (isDescriptionExpanded$ | async)"
             >
                 <ng-container *ngIf="nodeData$ | async as nodeData">
@@ -82,7 +82,7 @@
 
                     <ng-container *ngIf="task.description || (isDescriptionExpanded$ | async)">
                         <button
-                            class="description-toggle"
+                            class="description-toggle | inline-flex gap-1 [&_.count]:transition-all [&_.count]:hover:text-tinted-300 [&_:has(.checklist-counter.counter-complete)_.count]:!text-submit-400"
                             (click)="toggleDescription()"
                             data-test-name="description-toggle"
                         >
@@ -93,6 +93,11 @@
                             ></app-icon>
                             <!-- <app-icon icon="description" class="mx-1"></app-icon> -->
                             Description
+
+                            <app-elem-container
+                                [elem]="getChecklistCounterWidget()"
+                                class="ml-1 text-md text-tinted-400"
+                            ></app-elem-container>
                         </button>
                         <!-- <button class="expand-description">
                             <app-icon icon="expand"></app-icon>
@@ -168,46 +173,43 @@
     </ng-template>
 
     <ng-container
-        *rxLet="{ isExpanded: isDescriptionExpanded$ | push, isFocused: isDescriptionFocused$ | push }; let props"
+        *rxLet="{ isExpanded: isDescriptionExpanded$ | push, isActive: isDescriptionActive$ | push }; let props"
     >
-        <!-- <div [class.relative]="descriptionEditor.isFocused$ | push"> -->
-        <div *ngIf="props.isExpanded || props.isFocused" [class.relative]="false">
-            <div class="absolute inset-x-0 bottom-[calc(100%-.5rem)] z-20 flex justify-center px-4">
-                <!-- <app-toolbar [hide]="!inlineEditor.isFocused && !(descriptionEditor.isFocused$ | push)"> -->
-                <app-toolbar [hide]="!props.isFocused">
-                    <!-- <button class="button-m">Cancel</button>
-                        <button class="button-m button--submit">Create</button>
-                        <div class="toolbar-separator"></div> -->
-                    <!-- <div class="toolbar-separator"></div> -->
-                    <!-- <ng-container *ngTemplateOutlet="priorityButton"></ng-container> -->
-                    <a
-                        class="open-as-page | skip-default-a-styles keep-editor-focus | icon-btn"
-                        appTooltip="Open task as page"
-                        routerLink="/home/{{ task.id }}"
-                        (click)="descriptionEditor.editor.commands.blur()"
-                    >
-                        <app-icon icon="expand"></app-icon>
-                    </a>
+        <!-- isExpanded: {{ props.isExpanded }}; isActive: {{ props.isActive }} -->
+        <!-- <div [class.relative]="descriptionEditor.isActive$ | push"> -->
+        <!-- <div *ngIf="descriptionEditor?.bindEditor(task$, task.id) as bound" [class.relative]="false"> -->
+        <div *ngIf="props.isExpanded || props.isActive" [class.relative]="false">
+            <div class="pointer-events-none absolute inset-x-0 bottom-[calc(100%-.5rem)] z-20 flex justify-center px-4">
+                <!-- <app-toolbar [hide]="!inlineEditor.isActive && !(descriptionEditor.isActive$ | push)"> -->
+                <app-toolbar [hide]="!props.isActive" cdkMenuBar class="max-w-[70vw] overflow-x-auto">
+                    <!-- <ng-container *ngTemplateOutlet="priorityButton"></ng-container>
+                    <div class="toolbar-separator" role="separator"></div> -->
 
-                    <!-- <ng-container *ngIf="props.isFocused"> -->
-                    <div class="toolbar-separator"></div>
-                    <app-rt-editor-toolbar [editor]="descriptionEditor.editor"></app-rt-editor-toolbar>
-                    <!-- </ng-container> -->
+                    <app-tt-editor-toolbar
+                        [ttEditor]="descriptionEditor"
+                        [layout]="toolbarLayout$ | push"
+                        openAsPageRoute="/home/{{ task.id }}"
+                        class="pointer-events-auto w-max"
+                    ></app-tt-editor-toolbar>
                 </app-toolbar>
             </div>
-            <app-rt-editor
+            <app-tt-editor
                 #descriptionEditor
-                class="description | mt-1 max-h-72 overflow-y-auto rounded-lg bg-tinted-900 py-1.5 px-2.5 ring-2 ring-transparent transition-colors duration-75"
+                class="description | mt-1 max-h-72 overflow-y-auto rounded-lg bg-tinted-900 py-1.5 px-2.5 ring-2 ring-transparent transition-colors duration-75 child-focus-ring"
                 [ngClass]="{
-                    'hasFocus !ring-primary-400': props.isFocused
+                    'isActive !ring-primary-400': props.isActive,
+                    'hover:ring-tinted-600': true,
+                    '[.task.completed:not(.isActive)_&]:hover:ring-submit-700': true
                 }"
-                [value]="task.description ?? ''"
-                placeholder="Description"
-                (contentChanges)="descriptionChanges$.next($event)"
-                (isFocused)="isDescriptionFocused$.next($event)"
-                (blur)="descriptionBlurEvents$.next(null)"
+                [editable]="!readonly"
+                [searchTerm]="searchTerm$ | push"
+                [bind]="(bindConfig$ | push)!"
+                (isActive)="isDescriptionActive$.next($event)"
+                (blur)="descriptionBlur$.next()"
+                (update)="descriptionUpdates$.next($event)"
+                (updateOnBlur)="this.descriptionUpdateOnBlur$.next($event.content)"
                 data-test-name="task-description"
-            ></app-rt-editor>
+            ></app-tt-editor>
         </div>
     </ng-container>
 </li>

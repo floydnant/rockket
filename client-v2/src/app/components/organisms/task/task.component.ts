@@ -1,26 +1,74 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core'
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+} from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
+import { createDocument, getSchema } from '@tiptap/core'
 import {
     BehaviorSubject,
+    Subject,
     distinctUntilChanged,
+    distinctUntilKeyChanged,
     filter,
     first,
     map,
     merge,
+    mergeWith,
+    share,
     shareReplay,
-    Subject,
-    switchMap,
-    tap,
+    startWith,
+    throttleTime,
+    withLatestFrom,
 } from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import {
+    createCounterWidget,
+    updateCounterWidget,
+} from 'src/app/rich-text-editor/editor-features/extensions/checklist-counter.extension'
+import {
+    getDefaultEditorFeatures,
+    getDefaultEditorLayout,
+    provideEditorFeatures,
+} from 'src/app/rich-text-editor/features'
+import { ChecklistCount, countChecklistItems } from 'src/app/rich-text-editor/helpers'
+import { TipTapEditorComponent } from 'src/app/rich-text-editor/tip-tap-editor/tip-tap-editor.component'
+import { DeviceService } from 'src/app/services/device.service'
 import { colors, taskStatusColorMap } from 'src/app/shared/colors'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { insertElementAfter, moveToMacroQueue } from 'src/app/utils'
-import { TaskPreviewFlattend, TaskPriority, TaskStatus } from '../../../fullstack-shared-models/task.model'
-import { EntityState } from '../../atoms/icons/icon/icons'
 import { MenuItem } from '../../../dropdown/drop-down/drop-down.component'
+import {
+    TaskPreview,
+    TaskPreviewFlattend,
+    TaskPreviewRecursive,
+    TaskPriority,
+    TaskStatus,
+} from '../../../fullstack-shared-models/task.model'
+import { EntityState } from '../../atoms/icons/icon/icons'
 import { TaskTreeNode } from '../task-tree/task-tree.component'
-import { RtEditorComponent } from '../../../rich-text-editor/rt-editor/rt-editor.component'
+
+@Component({
+    selector: 'app-elem-container',
+    template: '',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ElemContainerComponent implements OnInit {
+    constructor(private elemRef: ElementRef<HTMLElement>) {}
+
+    @Input() elem: HTMLElement | null = null
+    ngOnInit(): void {
+        if (this.elem) this.elemRef.nativeElement.appendChild(this.elem)
+    }
+}
+
+const editorFeatures = getDefaultEditorFeatures({ checklistCounterFeature: false })
+const editorSchema = getSchema(editorFeatures.flatMap(feature => feature.extensions))
 
 @UntilDestroy()
 @Component({
@@ -28,12 +76,17 @@ import { RtEditorComponent } from '../../../rich-text-editor/rt-editor/rt-editor
     templateUrl: './task.component.html',
     styleUrls: ['./task.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    viewProviders: [provideEditorFeatures(editorFeatures)],
 })
 export class TaskComponent {
+    constructor(private deviceService: DeviceService) {}
+
     EntityType = EntityType
     TaskStatus = TaskStatus
     TaskPriority = TaskPriority
     PLACEHOLDER = ENTITY_TITLE_DEFAULTS[EntityType.TASK]
+
+    toolbarLayout$ = this.deviceService.isTouchPrimary$.pipe(map(getDefaultEditorLayout))
 
     statusColorMap = {
         ...taskStatusColorMap,
@@ -49,9 +102,9 @@ export class TaskComponent {
         [TaskStatus.COMPLETED]: colors.submit[600],
     }
 
-    highlightQuery$ = new BehaviorSubject<string | null>(null)
-    @Input() set highlightQuery(value: string) {
-        this.highlightQuery$.next(value)
+    searchTerm$ = new BehaviorSubject<string | null>(null)
+    @Input() set searchTerm(value: string) {
+        this.searchTerm$.next(value)
     }
 
     task$ = new BehaviorSubject<TaskPreviewFlattend | null>(null)
@@ -62,10 +115,10 @@ export class TaskComponent {
     }
 
     @Input() set menuItems(items: MenuItem[]) {
-        this.menuItems_$.next(items)
+        this.menuItemsInput$.next(items)
     }
-    menuItems_$ = new BehaviorSubject<MenuItem[] | null>(null)
-    menuItems$ = this.menuItems_$.pipe(
+    menuItemsInput$ = new BehaviorSubject<MenuItem[] | null>(null)
+    menuItems$ = this.menuItemsInput$.pipe(
         map(items => {
             if (this.readonly) return null
             if (!items || this.task$.value?.description) return items
@@ -73,7 +126,7 @@ export class TaskComponent {
             const descriptionItem: MenuItem = {
                 title: 'Add description',
                 icon: 'description',
-                action: () => this.addDescription(),
+                action: () => this.openDescription(),
             }
 
             const insertAfterIndex = items.findIndex(({ title }) => title && /Rename/.test(title))
@@ -85,13 +138,13 @@ export class TaskComponent {
         shareReplay(1)
     )
 
-    statusMenuItems$ = this.menuItems_$.pipe(
+    statusMenuItems$ = this.menuItemsInput$.pipe(
         map(items => {
             if (this.readonly) return null
             return items?.find(({ title }) => title == 'Status')?.children
         })
     )
-    priorityMenuItems$ = this.menuItems_$.pipe(
+    priorityMenuItems$ = this.menuItemsInput$.pipe(
         map(items => {
             if (this.readonly) return null
             return items?.find(({ title }) => title == 'Priority')?.children
@@ -101,8 +154,6 @@ export class TaskComponent {
     @Output() expansionChange = new EventEmitter<boolean>()
 
     @Output() titleChange = new EventEmitter<string>()
-    @Output() descriptionChange = new EventEmitter<string>()
-    @Output() descriptionExpansionChange = new EventEmitter<boolean>()
     @Output() statusChange = new EventEmitter<TaskStatus>()
     @Output() priorityChange = new EventEmitter<TaskPriority>()
 
@@ -115,67 +166,126 @@ export class TaskComponent {
 
     @Input() readonly = false
 
-    isHovered = false
+    isSelected = false
 
-    descriptionChanges$ = new BehaviorSubject<{ html: string; text: string } | null>(null)
+    @Output('descriptionChange') descriptionUpdateOnBlur$ = new EventEmitter<string>()
 
-    descriptionExpansionChanges$ = new Subject<{ emit: boolean; isExpanded: boolean }>()
-    isDescriptionExpanded$ = merge(
-        this.nodeData$.pipe(map(nodeData => ({ emit: false, isExpanded: nodeData?.isDescriptionExpanded ?? false }))),
-        this.descriptionExpansionChanges$
-    ).pipe(
-        distinctUntilChanged((prev, curr) => {
-            if (curr.emit) return false
+    descriptionUpdates$ = new Subject<string>()
+    descriptionState$ = merge(
+        this.descriptionUpdates$,
+        this.task$.pipe(
+            map(task => task?.description),
+            filter(description => description !== undefined && description !== null),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            map(description => description!)
+        )
+    ).pipe(share({ resetOnRefCountZero: true }))
 
-            return prev.isExpanded == curr.isExpanded
-        }),
-        tap(({ emit, isExpanded }) => {
-            if (!emit) return
+    @Output() isDescriptionActive$ = new BehaviorSubject<boolean>(false)
+    descriptionBlur$ = new Subject<void>()
 
-            this.descriptionExpansionChange.emit(isExpanded)
-        }),
+    isDescriptionExpandedInput$ = new Subject<{
+        emit: boolean
+        isExpanded: boolean
+    }>()
+    isDescriptionExpandedBus$ = this.nodeData$.pipe(
+        map(nodeData => ({ emit: false, isExpanded: nodeData?.isDescriptionExpanded ?? false })),
+        mergeWith(this.isDescriptionExpandedInput$),
+        mergeWith(
+            this.descriptionBlur$.pipe(
+                withLatestFrom(this.descriptionState$.pipe(startWith(null))),
+                map(([, latestEditorState]) => ({ emit: true, isExpanded: !!latestEditorState }))
+            )
+        ),
+        startWith({ emit: false, isExpanded: false }),
+        shareReplay({ bufferSize: 1, refCount: true })
+    )
+    isDescriptionExpanded$ = this.isDescriptionExpandedBus$.pipe(
         map(({ isExpanded }) => isExpanded),
+        distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    @ViewChild('descriptionEditor') descriptionEditor!: RtEditorComponent
-    addDescription() {
-        this.descriptionExpansionChanges$.next({ emit: false, isExpanded: true })
+    @Output('descriptionExpansionChange') isDescriptionExpandedOutput = this.isDescriptionExpandedBus$.pipe(
+        filter(({ emit }) => emit),
+        map(({ isExpanded }) => isExpanded),
+        distinctUntilChanged()
+    )
+
+    bindConfig$ = this.task$.pipe(
+        filter(Boolean),
+        distinctUntilKeyChanged('id'),
+        map(task => {
+            const description$ = this.task$.pipe(
+                map(task => task?.description || ''),
+                distinctUntilChanged()
+            )
+            return { input$: description$, context: task.id }
+        })
+    )
+
+    @ViewChild(TipTapEditorComponent) descriptionEditor?: TipTapEditorComponent
+
+    private counterWidgetId!: string
+    private counterWidget: HTMLDivElement | null = null
+
+    getChecklistCounterWidget() {
+        if (!this.task$.value) return null
+        if (this.counterWidget) return this.counterWidget
+
+        this.counterWidgetId = 'checklist-counter' + this.task$.value.id
+
+        const checklistCount = countChecklistItems(
+            this.descriptionEditor?.editor.state.doc || createDocument(this.task$.value.description, editorSchema)
+        )
+
+        this.counterWidget = createCounterWidget({
+            widgetId: this.counterWidgetId,
+            sticky: false,
+            withLabel: false,
+            style: {
+                display: checklistCount.totalItems == 0 ? 'none' : 'flex',
+            },
+            overrideStyles: true,
+            checklistCount,
+        })
+
+        this.descriptionState$
+            .pipe(untilDestroyed(this), throttleTime(400, undefined, { leading: true, trailing: true }))
+            .subscribe(description => {
+                if (!this.task$.value) return
+
+                const checklistCount = countChecklistItems(
+                    this.descriptionEditor?.editor.state.doc || createDocument(description, editorSchema)
+                )
+
+                updateCounterWidget({
+                    widgetId: this.counterWidgetId,
+                    checklistCount,
+                    sticky: false,
+                    overrideStyles: true,
+                    style: {
+                        display: checklistCount.totalItems == 0 ? 'none' : 'flex',
+                    },
+                })
+            })
+
+        return this.counterWidget
+    }
+
+    openDescription() {
+        this.isDescriptionExpandedInput$.next({ emit: false, isExpanded: true })
         moveToMacroQueue(() => {
-            this.descriptionEditor.editor.commands.focus()
+            this.descriptionEditor?.editor.commands.focus()
         })
     }
     resetDescription() {
-        this.descriptionEditor.editor.commands.setContent(this.task$.value?.description || '')
+        // @TODO: this needs be updated
+        this.descriptionEditor?.editor.commands.setContent(this.task$.value?.description || '')
     }
     toggleDescription() {
         this.isDescriptionExpanded$.pipe(first()).subscribe(isExpanded => {
-            this.descriptionExpansionChanges$.next({ emit: true, isExpanded: !isExpanded })
+            this.isDescriptionExpandedInput$.next({ emit: true, isExpanded: !isExpanded })
         })
     }
-
-    isDescriptionFocused$ = new BehaviorSubject<boolean>(false)
-    descriptionBlurEvents$ = new Subject()
-    descriptionUpdatesSub = this.descriptionBlurEvents$
-        .pipe(
-            switchMap(() => this.descriptionChanges$.pipe(first())),
-            filter(Boolean),
-            tap(({ text }) => {
-                if (!text) this.descriptionExpansionChanges$.next({ emit: true, isExpanded: false })
-            }),
-            filter(({ text, html }) => {
-                if (!text && !this.task$.value?.description) return false
-                // if (this.task$.value?.description == text) return false
-                if (this.task$.value?.description == html) return false
-
-                return true
-            }),
-            tap(({ text, html }) => {
-                this.descriptionChange.emit(text ? html : '')
-
-                if (text) this.descriptionExpansionChanges$.next({ emit: true, isExpanded: true })
-            }),
-            untilDestroyed(this)
-        )
-        .subscribe()
 }

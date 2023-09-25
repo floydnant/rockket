@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './pages/app.component'
 import { DemoComponent } from './components/demo/demo.component'
-import { TaskComponent } from './components/organisms/task/task.component'
+import { ElemContainerComponent, TaskComponent } from './components/organisms/task/task.component'
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
 import { FocusableDirective } from './directives/focusable.directive'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -121,6 +121,7 @@ import { ToolbarComponent } from './components/molecules/toolbar/toolbar.compone
         PrivacyPolicyComponent,
         ContactComponent,
         ToolbarComponent,
+        ElemContainerComponent,
     ],
     imports: [
         BrowserModule,

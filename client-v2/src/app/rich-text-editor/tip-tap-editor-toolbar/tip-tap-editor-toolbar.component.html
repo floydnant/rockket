@@ -1,0 +1,100 @@
+<div
+    #container
+    class="format-controls-container | flex items-center gap-1"
+    (keydown.escape)="ttEditor.editor.commands.focus()"
+    cdkMenuBar
+    #controlsMenuBar="cdkMenuBar"
+>
+    <ng-template #separator>
+        <div class="toolbar-separator" role="separator"></div>
+    </ng-template>
+
+    <ng-template #focusToolbarHint>
+        <!-- If the tooltip is shown we're not on a touch device so we're free to show this hint. -->
+        <ng-container [ngTemplateOutlet]="separator"></ng-container>
+        <app-key-combo combo="mod+E" class="mr-0.5"></app-key-combo>
+        to focus toolbar
+    </ng-template>
+
+    <ng-container *rxFor="let controlItem of controls$; let isFirst = first; trackBy: controlItemTrackBy">
+        <ng-container #controlButton *ngIf="!isSeparator(controlItem); else separator">
+            <button
+                *ngIf="!controlItem.dropdownItems"
+                cdkMenuItem
+                class="format-control-item | icon-btn | w-max"
+                [class.isActive]="controlItem.isActive?.(controlArgs)"
+                [appTooltip]="tooltip"
+                [tooltipOptions]="{ avoidPositions: ['left', 'right'] }"
+                (click)="controlItem.action && execControlAction(controlItem.action)"
+                [id]="'control-' + controlItem.controlId"
+                [attr.data-test-name]="'control-' + controlItem.controlId"
+                [style.width]="controlItem.fixedWith"
+            >
+                <app-icon [icon]="resolveIcon(controlItem)"></app-icon>
+            </button>
+
+            <button
+                *ngIf="controlItem.dropdownItems"
+                cdkMenuItem
+                #dropdownTrigger
+                (click)="dropdownTrigger.focus(); dropdownTriggerTooltip.hideTooltip()"
+                class="format-control-item format-control-dropdown-trigger | icon-btn | w-max"
+                [class.isActive]="controlItem.isActive?.(controlArgs)"
+                [appTooltip]="tooltip"
+                #dropdownTriggerTooltip="appTooltip"
+                [tooltipOptions]="{ avoidPositions: ['left', 'right'] }"
+                [cdkMenuTriggerFor]="dropdown"
+                (click)="controlItem.action && execControlAction(controlItem.action, true)"
+                #trigger="cdkMenuTriggerFor"
+                [id]="'control-' + controlItem.controlId"
+                [attr.data-test-name]="'control-' + controlItem.controlId"
+                [style.width]="controlItem.fixedWith"
+            >
+                <app-icon [icon]="resolveIcon(controlItem)"></app-icon>
+                <app-icon icon="caret-down" class="ml-1"></app-icon>
+
+                <ng-template #dropdown>
+                    <app-drop-down
+                        #dropdown
+                        *ngIf="controlItem.dropdownItems"
+                        [items]="controlItem.dropdownItems"
+                        [rootTrigger]="trigger"
+                        [data]="controlArgsAsRecord"
+                    ></app-drop-down>
+                </ng-template>
+            </button>
+
+            <ng-template #tooltip>
+                <div class="flex items-center gap-1">
+                    <span> {{ resolveTitle(controlItem) }} </span>
+                    <app-key-combo
+                        *ngIf="controlItem.keybinding"
+                        [combo]="controlItem.keybinding"
+                        class="translate-x-1"
+                    ></app-key-combo>
+
+                    <ng-container *ngIf="isFirst" [ngTemplateOutlet]="focusToolbarHint"></ng-container>
+                </div>
+            </ng-template>
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="openAsPageRoute">
+        <button
+            class="open-as-page | skip-default-a-styles keep-editor-focus | icon-btn | w-max"
+            [appTooltip]="toolbar"
+            cdkMenuItem
+            (click)="navigate(openAsPageRoute)"
+        >
+            <app-icon icon="expand"></app-icon>
+
+            <ng-template #toolbar>
+                <div class="flex items-center gap-1">
+                    <span> Open as page </span>
+                    <!-- @TODO: Implement keybinding for this -->
+                    <!-- <app-key-combo combo="mod-o" class="translate-x-1"></app-key-combo> -->
+                </div>
+            </ng-template>
+        </button>
+    </ng-container>
+</div>
