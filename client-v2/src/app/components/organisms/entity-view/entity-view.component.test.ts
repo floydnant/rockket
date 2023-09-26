@@ -10,6 +10,7 @@ import { EntityViewComponent, entityViewComponentMap } from './entity-view.compo
 import { TaskViewComponent } from './views/task-view/task-view.component'
 import { TasklistViewComponent } from './views/tasklist-view/tasklist-view.component'
 import { DropdownModule } from 'src/app/dropdown/dropdown.module'
+import { RxModule } from 'src/app/rx/rx.module'
 
 const defaultTemplate = `
 <app-entity-view [entity]="activeEntity$ | async" [entityOptionsMap]="entityOptionsMap$ | async"> </app-entity-view>
@@ -25,7 +26,7 @@ const setupComponent = (template = defaultTemplate) => {
             activeEntity$: new BehaviorSubject(null),
             entityOptionsMap$: new BehaviorSubject(null),
         },
-        imports: [CdkMenuModule, DropdownModule],
+        imports: [CdkMenuModule, DropdownModule, RxModule],
         declarations: [
             EntityViewComponent,
             ...entityViewComponents,
