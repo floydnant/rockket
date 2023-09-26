@@ -3,18 +3,20 @@ import { testName } from 'cypress/support/helpers'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
 import { TaskPreviewRecursive, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
+import { RichTextEditorModule } from 'src/app/rich-text-editor/rich-text-editor.module'
+import { RxModule } from 'src/app/rx/rx.module'
 import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { IconsModule } from '../../atoms/icons/icons.module'
 import { InlineEditorComponent } from '../../atoms/inline-editor/inline-editor.component'
 import { TaskComponent } from '../task/task.component'
 import { TaskTreeComponent } from './task-tree.component'
-import { PushModule } from '@rx-angular/template/push'
-import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
+import { DropdownModule } from 'src/app/dropdown/dropdown.module'
 
 const setupComponent = (taskTree: TaskPreviewRecursive[]) => {
     cy.mount(`<app-task-tree [tasks]="taskTree"></app-task-tree>`, {
         componentProperties: { taskTree },
-        imports: [IconsModule, CdkMenuModule, PushModule],
+        imports: [IconsModule, CdkMenuModule, RxModule, RichTextEditorModule, DropdownModule],
         declarations: [
             TaskTreeComponent,
             TaskComponent,

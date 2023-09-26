@@ -49,7 +49,7 @@ const setupComponent = (
 
 const taskFixture: TaskPreviewFlattend = {
     title: 'The title',
-    childrenCount: 0,
+    children: [],
     description: '',
     id: '',
     listId: '',
