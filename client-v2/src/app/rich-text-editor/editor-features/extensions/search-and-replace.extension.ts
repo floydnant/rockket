@@ -1,6 +1,6 @@
 // Stolen from https://github.com/ueberdosis/tiptap/pull/2075
 
-import { Extension } from '@tiptap/core'
+import { Editor, Extension } from '@tiptap/core'
 import { Decoration, DecorationSet } from 'prosemirror-view'
 import { EditorState, Plugin, PluginKey } from 'prosemirror-state'
 import { Node as ProsemirrorNode } from 'prosemirror-model'
@@ -34,12 +34,18 @@ interface Result {
 }
 
 interface SearchOptions {
-    searchTerm: string
-    replaceTerm: string
-    results: Result[]
+    // searchTerm: string
+    // replaceTerm: string
+    // results: Result[]
     searchResultClass: string
     caseSensitive: boolean
     disableRegex: boolean
+}
+
+interface SearchStorage {
+    searchTerm: string
+    replaceTerm: string
+    results: Result[]
 }
 
 interface TextNodesWithPosition {
@@ -176,18 +182,26 @@ const replaceAll = (replaceTerm: string, results: Result[], { tr, dispatch }: an
     dispatch(tr)
 }
 
+// need to use editor storage because the extension storage is shared among all instances
+const getSearchStorage = (editor: Editor): SearchStorage => editor.storage['search'] as SearchStorage
+
 // eslint-disable-next-line @typescript-eslint/ban-types
-export const SearchAndReplace = Extension.create<SearchOptions>({
+export const SearchAndReplace = Extension.create<SearchOptions, unknown>({
     name: 'search',
 
     addOptions() {
         return {
-            searchTerm: '',
-            replaceTerm: '',
-            results: [],
             searchResultClass: 'search-result',
             caseSensitive: false,
             disableRegex: false,
+        }
+    },
+
+    onBeforeCreate() {
+        this.editor.storage['search'] = {
+            searchTerm: '',
+            replaceTerm: '',
+            results: [],
         }
     },
 
@@ -196,8 +210,8 @@ export const SearchAndReplace = Extension.create<SearchOptions>({
             setSearchTerm:
                 (searchTerm: string) =>
                 ({ state, dispatch }) => {
-                    this.options.searchTerm = searchTerm
-                    this.options.results = []
+                    getSearchStorage(this.editor).searchTerm = searchTerm
+                    getSearchStorage(this.editor).results = []
 
                     updateView(state, dispatch)
 
@@ -206,8 +220,8 @@ export const SearchAndReplace = Extension.create<SearchOptions>({
             setReplaceTerm:
                 (replaceTerm: string) =>
                 ({ state, dispatch }) => {
-                    this.options.replaceTerm = replaceTerm
-                    this.options.results = []
+                    getSearchStorage(this.editor).replaceTerm = replaceTerm
+                    getSearchStorage(this.editor).results = []
 
                     updateView(state, dispatch)
 
@@ -216,10 +230,10 @@ export const SearchAndReplace = Extension.create<SearchOptions>({
             replace:
                 () =>
                 ({ state, dispatch }) => {
-                    const { replaceTerm, results } = this.options
+                    const { replaceTerm, results } = getSearchStorage(this.editor)
 
                     replace(replaceTerm, results, { state, dispatch })
-                    this.options.results.shift()
+                    getSearchStorage(this.editor).results.shift()
 
                     updateView(state, dispatch)
 
@@ -228,10 +242,10 @@ export const SearchAndReplace = Extension.create<SearchOptions>({
             replaceAll:
                 () =>
                 ({ state, tr, dispatch }) => {
-                    const { replaceTerm, results } = this.options
+                    const { replaceTerm, results } = getSearchStorage(this.editor)
 
                     replaceAll(replaceTerm, results, { tr, dispatch })
-                    this.options.results = []
+                    getSearchStorage(this.editor).results = []
 
                     updateView(state, dispatch)
 
@@ -252,7 +266,8 @@ export const SearchAndReplace = Extension.create<SearchOptions>({
                         return DecorationSet.empty
                     },
                     apply({ doc, docChanged }) {
-                        const { searchTerm, searchResultClass, disableRegex, caseSensitive } = extensionThis.options
+                        const { searchResultClass, disableRegex, caseSensitive } = extensionThis.options
+                        const { searchTerm } = getSearchStorage(extensionThis.editor)
 
                         if (docChanged || searchTerm) {
                             const { decorationsToReturn, results } = processSearches(
@@ -260,8 +275,7 @@ export const SearchAndReplace = Extension.create<SearchOptions>({
                                 regex(searchTerm, disableRegex, caseSensitive),
                                 searchResultClass
                             )
-
-                            extensionThis.options.results = results
+                            getSearchStorage(extensionThis.editor).results = results
 
                             return decorationsToReturn
                         }

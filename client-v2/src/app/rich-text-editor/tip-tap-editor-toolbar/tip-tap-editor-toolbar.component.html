@@ -83,6 +83,7 @@
         <button
             class="open-as-page | skip-default-a-styles keep-editor-focus | icon-btn | w-max"
             [appTooltip]="toolbar"
+            [tooltipOptions]="{ avoidPositions: ['left', 'right'] }"
             cdkMenuItem
             (click)="navigate(openAsPageRoute)"
         >
