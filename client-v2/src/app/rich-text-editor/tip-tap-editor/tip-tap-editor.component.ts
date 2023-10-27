@@ -33,7 +33,7 @@ import { debugObserver } from 'src/app/utils/observable.helpers'
 import { AppEditor } from '../app-editor'
 import { EditorFeature } from '../editor.types'
 import { EDITOR_FEATURES_TOKEN } from '../features'
-import { isTaskItem } from '../helpers'
+import { isChecklistItem } from '../helpers'
 
 @UntilDestroy()
 @Component({
@@ -93,7 +93,7 @@ export class TipTapEditorComponent implements OnDestroy {
             if (isControlClicked) return false
 
             // check if a task item was clicked (only inside the current editor)
-            if (isTaskItem(clickedElem) && this.editor.view.dom.contains(clickedElem as Node)) return false
+            if (isChecklistItem(clickedElem) && this.editor.view.dom.contains(clickedElem as Node)) return false
 
             // -> Its good to explicitly allow elems as instead of blindly ignoring everything from inside the editor
 

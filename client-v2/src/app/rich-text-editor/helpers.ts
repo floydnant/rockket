@@ -43,7 +43,7 @@ export const countChecklistItems = (doc: EditorState['doc']): ChecklistCount => 
     }
 }
 
-export const isTaskItem = (elem: HTMLElement | undefined) => {
+export const isChecklistItem = (elem: HTMLElement | undefined) => {
     if (!elem?.matches('input[type="checkbox"]')) return false
     if (!elem?.parentElement?.matches('label[contenteditable]')) return false
     if (!elem?.parentElement?.parentElement?.matches('li[data-checked]')) return false
