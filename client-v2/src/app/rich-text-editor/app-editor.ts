@@ -5,14 +5,13 @@ import {
     Observable,
     Subject,
     delay,
-    distinctUntilKeyChanged,
-    filter,
     first,
     fromEvent,
     fromEventPattern,
     map,
     merge,
     share,
+    startWith,
     takeUntil,
     withLatestFrom,
 } from 'rxjs'
@@ -31,13 +30,6 @@ export class AppEditor extends Editor {
         handler => this.off('destroy', handler)
     ).pipe(first(), share({ resetOnRefCountZero: true }))
 
-    private unbindTrigger$ = new Subject<void>()
-    unbind$ = merge(this.unbindTrigger$, this.destroy$).pipe(debugObserver('unbind$ and destroy$'))
-    /** Cancel input binding */
-    unbindInput() {
-        this.unbindTrigger$.next()
-    }
-
     override get storage() {
         return super.storage as EditorStorage
     }
@@ -49,12 +41,23 @@ export class AppEditor extends Editor {
         )
     }
 
-    update$ = this.getEventStream('update')
+    updateRaw$ = this.getEventStream('update')
     selectionUpdate$ = this.getEventStream('selectionUpdate')
     transaction$ = this.getEventStream('transaction')
 
     focus$ = this.getEventStream('focus')
     blur$ = this.getEventStream('blur')
+
+    update$ = this.updateRaw$.pipe(
+        map(({ editor }) => {
+            const isEmpty = editor.isEmpty
+            return {
+                plainText: isEmpty ? '' : editor.getText().trim(),
+                html: isEmpty ? '' : editor.getHTML(),
+            }
+        }),
+        share({ resetOnRefCountZero: true })
+    )
 
     resetState(content: Content, parseOptions?: ParseOptions) {
         const newState = EditorState.create({
@@ -66,105 +69,53 @@ export class AppEditor extends Editor {
         this.view.updateState(newState)
     }
 
-    bindInput(input$: Observable<string>) {
+    bindEditor(input$: Observable<string>, searchTerm$?: Observable<string>) {
         // cancel the previous binding
-        this.unbindInput()
-
-        // input$ = from([
-        //     '<p>This is content one and</p>',
-        //     '<p>This is content one and each</p>',
-        //     '<p>This is content one and each</p>',
-        //     '<p>This is content one and each time</p>',
-        //     '<p>This is content one and each time a little </p>',
-        //     '<p>This is content one and each time a little more</p>',
-        //     '<p>This is content one. But suddenly</p>',
-        //     '<p>Gone</p>',
-        // ]).pipe(concatMap(content => of(content).pipe(delay(4000))))
-
-        const updateOnBlur$ = merge(this.blur$, this.unbind$).pipe(
-            map(() => (this.isEmpty ? '' : this.getHTML())),
-            withLatestFrom(input$),
-            filter(([currentState, lastInput]) => currentState != lastInput),
-            distinctUntilKeyChanged(0),
-            map(([currentState]) => currentState),
-            takeUntil(this.unbind$),
-            debugObserver('updateOnBlur$'),
-            share({ resetOnRefCountZero: true })
-        )
+        this.unbind()
+        this.commands.blur()
 
         input$
             .pipe(
+                debugObserver('input$'),
                 takeUntil(this.unbind$),
-                map((input, index) => ({
+                withLatestFrom(this.update$.pipe(startWith(null))),
+                map(([input, currentState], index) => ({
                     input,
-                    currentState: this.isEmpty ? '' : this.getHTML(),
+                    currentState,
                     isFirst: index == 0,
                 }))
             )
             .subscribe(({ input, currentState, isFirst }) => {
-                if (input == currentState) return
+                if (input == currentState?.html || input == currentState?.plainText) return
 
-                if (isFirst) this.resetState(input)
-                else this.chain().setContent(input, false).setMeta('addToHistory', false).run()
+                if (isFirst) {
+                    this.resetState(input)
+                } else {
+                    this.chain().setContent(input, false).setMeta('addToHistory', false).run()
+                }
             })
 
+        searchTerm$?.pipe(takeUntil(this.unbind$)).subscribe({
+            next: searchTerm => this.commands.setSearchTerm(searchTerm),
+            complete: () => this.commands.setSearchTerm(''),
+        })
+
         return {
-            unbindInput: this.unbindInput.bind(this),
+            unbind: () => this.unbind(),
             unbind$: this.unbind$.pipe(takeUntil(this.unbind$.pipe(delay(0)))),
-            update$: this.update$.pipe(takeUntil(this.unbind$)),
-            updateOnBlur$,
+            updateRaw$: this.updateRaw$,
             selectionUpdate$: this.selectionUpdate$.pipe(takeUntil(this.unbind$)),
             focus$: this.focus$.pipe(takeUntil(this.unbind$)),
             blur$: this.blur$.pipe(takeUntil(this.unbind$)),
         }
     }
-    // bindInput_(input$: Observable<string>) {
-    //     // cancel the previous binding
-    //     this.unbind$.next(null)
 
-    //     // @TODO: test this
-    //     const unbind$ = merge(this.unbind$, this.destroy$).pipe(debugObserver('unbind$ and destroy$'))
-
-    //     // @TODO: lets add a bit of throttling here and add an isEmpty
-    //     const update$ = this.update$.pipe(
-    //         takeUntil(this.destroy$),
-    //         takeUntil(unbind$),
-    //         // map(({ editor }) => (editor.isEmpty ? '' : editor.getHTML())),
-    //         map(({ editor }) => '<NOOP>'),
-    //         debugObserver('update$'),
-    //         share({ resetOnRefCountZero: true })
-    //     )
-
-    //     input$
-    //         .pipe(
-    //             takeUntil(unbind$),
-    //             withLatestFrom(update$.pipe(startWith(null))),
-    //             map(([input, lastOutput], index) => ({
-    //                 input,
-    //                 lastOutput,
-    //                 isFirst: index == 0,
-    //             }))
-    //         )
-    //         .subscribe(({ input, lastOutput, isFirst }) => {
-    //             if (input === lastOutput) return
-
-    //             if (isFirst) this.resetState(input)
-    //             else {
-    //                 this.chain().setContent(input, false).setMeta('addToHistory', false).run()
-    //             }
-    //         })
-
-    //     return {
-    //         editor: this,
-    //         unbind: () => this.unbind$.next(null),
-    //         onUnbind$: unbind$.pipe(takeUntil(unbind$.pipe(delay(0)))),
-    //         onUpdate$: update$,
-    //         onSelectionUpdate$: this.selectionUpdate$.pipe(takeUntil(unbind$)),
-    //         // onFocusChange$: this.isFocused$.pipe(takeUntil(unbind$)),
-    //         onFocus$: this.focus$.pipe(takeUntil(unbind$)),
-    //         onBlur$: this.blur$.pipe(takeUntil(unbind$)),
-    //     }
-    // }
+    private unbindTrigger$ = new Subject<void>()
+    unbind$ = merge(this.unbindTrigger$, this.destroy$).pipe(debugObserver('unbind$ and destroy$'))
+    /** Cancel input binding */
+    unbind() {
+        this.unbindTrigger$.next()
+    }
 
     deselect = () => window.getSelection()?.removeAllRanges()
 }

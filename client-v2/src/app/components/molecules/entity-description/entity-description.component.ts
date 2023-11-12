@@ -55,9 +55,7 @@ export class EntityDescriptionComponent {
     @Output() isActive$ = this.editorBound$.pipe(switchMap(({ isActive$ }) => isActive$))
     @Output('update') update$ = this.editorBound$.pipe(
         mergeMap(({ updateOnBlur$ }) =>
-            updateOnBlur$.pipe(
-                map(({ content: currentState, context }) => ({ id: context, description: currentState }))
-            )
+            updateOnBlur$.pipe(map(({ html, context }) => ({ id: context, description: html })))
         )
     )
     @Output('blur') blur$ = this.editorBound$.pipe(

@@ -1,17 +1,9 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Inject,
-    Input,
-    OnDestroy,
-    Output,
-    ViewEncapsulation,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, Input, OnDestroy, Output, ViewEncapsulation } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { coalesceWith } from '@rx-angular/cdk/coalescing'
 import {
     Observable,
+    ReplaySubject,
     Subject,
     delay,
     distinctUntilKeyChanged,
@@ -21,7 +13,6 @@ import {
     mergeWith,
     share,
     shareReplay,
-    skip,
     startWith,
     switchMap,
     takeUntil,
@@ -29,7 +20,6 @@ import {
     timer,
     withLatestFrom,
 } from 'rxjs'
-import { debugObserver } from 'src/app/utils/observable.helpers'
 import { AppEditor } from '../app-editor'
 import { EditorFeature } from '../editor.types'
 import { EDITOR_FEATURES_TOKEN } from '../features'
@@ -46,7 +36,7 @@ import { isChecklistItem } from '../helpers'
         class: 'block',
     },
 })
-export class TipTapEditorComponent implements OnDestroy {
+export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
     constructor(@Inject(EDITOR_FEATURES_TOKEN) public features: EditorFeature[]) {}
 
     ngOnDestroy(): void {
@@ -60,17 +50,14 @@ export class TipTapEditorComponent implements OnDestroy {
         return this.editor?.isEditable ?? true
     }
 
-    private searchTerm: string | null = null
-    @Input('searchTerm') set searchTerm_(searchTerm: string | null) {
-        this.searchTerm = searchTerm
-        if (searchTerm) this.editor?.commands.setSearchTerm(searchTerm)
+    private searchTerm$ = new ReplaySubject<string>(1)
+    @Input() set searchTerm(searchTerm: string | null) {
+        if (searchTerm !== null) this.searchTerm$.next(searchTerm)
     }
 
     editor = new AppEditor({
         editable: this.editable,
         extensions: this.features.flatMap(feature => feature.extensions),
-
-        onDestroy: () => this.unbind$.next(null),
     })
 
     private focusStateInput$ = new Subject<boolean>()
@@ -95,7 +82,7 @@ export class TipTapEditorComponent implements OnDestroy {
             // check if a task item was clicked (only inside the current editor)
             if (isChecklistItem(clickedElem) && this.editor.view.dom.contains(clickedElem as Node)) return false
 
-            // -> Its good to explicitly allow elems as instead of blindly ignoring everything from inside the editor
+            // -> Its good to explicitly allow elems instead of blindly ignoring everything from inside the editor
 
             return true
         }),
@@ -105,27 +92,19 @@ export class TipTapEditorComponent implements OnDestroy {
         share({ resetOnRefCountZero: true })
     )
 
-    @Output() unbind$ = new EventEmitter<null>()
-
-    @Output('isActive') isActive$ = merge(this.focus$, this.blur$, this.unbind$).pipe(
+    @Output('isActive') isActive$ = merge(this.focus$, this.blur$).pipe(
         map(() => this.editor.isFocused),
         coalesceWith(timer(70)),
-        mergeWith(this.unbind$.pipe(map(() => false))), // because we blur the editor when (un)binding
+        mergeWith(this.editor.unbind$.pipe(map(() => false))), // because we blur the editor when (un)binding
         startWith(false),
         untilDestroyed(this),
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    @Output('update') update$ = this.editor.update$.pipe(
-        untilDestroyed(this),
-        skip(1), // emits first state when editor is empty for some reason
-        // @TODO: here would go the throttler
-        map(({ editor }) => (editor.isEmpty ? '' : editor.getHTML())),
-        share({ resetOnRefCountZero: true })
-    )
+    @Output('update') update$ = this.editor.update$.pipe(untilDestroyed(this))
 
-    private bindConfig$ = new Subject<{ input$: Observable<string>; context: unknown }>()
-    @Input() set bind(bound: { input$: Observable<string>; context: unknown }) {
+    private bindConfig$ = new Subject<{ input$: Observable<string>; context: TContext }>()
+    @Input() set bind(bound: { input$: Observable<string>; context: TContext }) {
         this.bindConfig$.next(bound)
     }
     private bound$ = this.bindConfig$.pipe(
@@ -138,56 +117,22 @@ export class TipTapEditorComponent implements OnDestroy {
         share({ resetOnRefCountZero: true })
     )
 
-    bindEditor<TContext>(input$: Observable<string>, context: TContext) {
-        // cancel the previous binding
-        this.unbind$.next(null)
-        this.editor.commands.blur()
-
-        input$
-            .pipe(
-                debugObserver('input$'),
-                untilDestroyed(this),
-                takeUntil(this.unbind$),
-                withLatestFrom(this.update$.pipe(startWith(null))),
-                map(([input, currentState], index) => ({
-                    input,
-                    currentState,
-                    isFirst: index == 0,
-                }))
-            )
-            .subscribe(({ input, currentState, isFirst }) => {
-                if (input == currentState) return
-
-                if (isFirst) {
-                    this.editor.resetState(input)
-                    if (this.searchTerm) {
-                        console.log('setting search term', this.searchTerm)
-                        this.editor.commands.setSearchTerm(this.searchTerm)
-                    }
-                } else {
-                    this.editor.chain().setContent(input, false).setMeta('addToHistory', false).run()
-                }
-            })
-
-        const updateOnBlur$ = merge(this.blur$, this.unbind$).pipe(
-            withLatestFrom(this.update$, input$.pipe(startWith(null))),
-            map(([, content, lastInput]) => ({ content, lastInput, context })),
-            filter(({ content, lastInput }) => content != lastInput),
-            distinctUntilKeyChanged('content'),
-            untilDestroyed(this),
-            takeUntil(this.unbind$.pipe(delay(0))),
-            share({ resetOnRefCountZero: true })
-        )
-
+    bindEditor<TContext>(input$: Observable<string>, context: TContext, searchTerm$?: Observable<string>) {
+        const searchTerm$_ = searchTerm$ ? searchTerm$.pipe(mergeWith(this.searchTerm$)) : this.searchTerm$
         return {
-            unbind: () => this.unbind$.next(null),
-            unbind$: this.unbind$.pipe(untilDestroyed(this), takeUntil(this.unbind$.pipe(delay(0)))),
-            update$: this.update$,
-            updateOnBlur$,
-            selectionUpdate$: this.editor.selectionUpdate$.pipe(untilDestroyed(this), takeUntil(this.unbind$)),
-            isActive$: this.isActive$.pipe(untilDestroyed(this), takeUntil(this.unbind$)),
-            focus$: this.focus$.pipe(untilDestroyed(this), takeUntil(this.unbind$)),
-            blur$: this.blur$.pipe(untilDestroyed(this), takeUntil(this.unbind$)),
+            ...this.editor.bindEditor(input$, searchTerm$_),
+            isActive$: this.isActive$,
+            updateOnBlur$: merge(this.blur$, this.editor.unbind$).pipe(
+                withLatestFrom(this.update$, input$.pipe(startWith(null))),
+                map(([, { html, plainText }, lastInput]) => ({ html, plainText, lastInput, context })),
+                filter(({ html, plainText, lastInput }) => html != lastInput || plainText != lastInput),
+                distinctUntilKeyChanged('html'),
+                untilDestroyed(this),
+                // Must be delayed so that `unbind$` triggers a last update before the bound is destroyed,
+                // to make sure all transactions are dispatched.
+                takeUntil(this.editor.unbind$.pipe(delay(0))),
+                share({ resetOnRefCountZero: true })
+            ),
         }
     }
 }

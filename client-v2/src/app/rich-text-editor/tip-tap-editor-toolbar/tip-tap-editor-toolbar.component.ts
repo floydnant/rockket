@@ -3,7 +3,17 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Input, ViewC
 import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { BehaviorSubject, distinctUntilChanged, map, merge, skip, startWith, switchMap, throttleTime } from 'rxjs'
+import {
+    BehaviorSubject,
+    delay,
+    distinctUntilChanged,
+    map,
+    merge,
+    skip,
+    startWith,
+    switchMap,
+    throttleTime,
+} from 'rxjs'
 import { IconKey } from 'src/app/components/atoms/icons/icon/icons'
 import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
 import { DeviceService } from 'src/app/services/device.service'
@@ -87,6 +97,7 @@ export class TipTapEditorToolbarComponent implements AfterViewInit {
             startWith(false),
             distinctUntilChanged(),
             skip(1),
+            delay(0), // delay to make sure the editor has time to update its focus state before we check it
             untilDestroyed(this)
         ).subscribe(toolbarHasFocus => {
             if (!toolbarHasFocus && !this.ttEditor.editor.view.hasFocus()) {
@@ -103,7 +114,8 @@ export class TipTapEditorToolbarComponent implements AfterViewInit {
         this.controlsMenuBar?.focusFirstItem()
     }
 
-    @Input() ttEditor!: TipTapEditorComponent
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    @Input() ttEditor!: TipTapEditorComponent<any>
 
     @Input() openAsPageRoute?: string
 

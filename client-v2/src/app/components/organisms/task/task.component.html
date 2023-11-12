@@ -210,8 +210,8 @@
                 [bind]="(bindConfig$ | push)!"
                 (isActive)="isDescriptionActive$.next($event)"
                 (blur)="descriptionBlur$.next()"
-                (update)="descriptionUpdates$.next($event)"
-                (updateOnBlur)="this.descriptionUpdateOnBlur$.next($event.content)"
+                (update)="descriptionUpdates$.next($event.html)"
+                (updateOnBlur)="this.descriptionUpdateOnBlur$.next($event.html)"
                 data-test-name="task-description"
             ></app-tt-editor>
         </div>
