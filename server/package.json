@@ -6,6 +6,7 @@
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
+        "postinstall": "npx prisma generate",
         "prebuild": "rimraf dist",
         "build": "nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -26,7 +27,10 @@
         "e2e": "sh run-e2e.sh '--watch --config ./test/jest-e2e.json'",
         "e2e:ci": "sh run-e2e.sh '--config ./test/jest-e2e.json'",
         "db:reset": "prisma db push --force-reset --accept-data-loss --skip-generate",
-        "db-testing:reset": "DATABASE_URL=$(bash ./get-testing-db-url.sh) npm run db:reset"
+        "db-testing:reset": "DATABASE_URL=$(bash ./get-testing-db-url.sh) npm run db:reset",
+        "db:snapshot:pull": "ts-node ./prisma/backups/pull-snapshot.ts",
+        "db:snapshot:push": "ts-node ./prisma/backups/push-snapshot.ts",
+        "typecheck-snapshot-scripts": "tsc --esModuleInterop --noEmit ./prisma/backups/pull-snapshot.ts ./prisma/backups/push-snapshot.ts"
     },
     "dependencies": {
         "@nestjs/common": "^9.3.12",

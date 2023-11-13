@@ -1,7 +1,7 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { TestingModule, Test } from '@nestjs/testing'
 import { AppModule } from '../src/app.module'
-import * as superRequest from 'supertest'
+import superRequest from 'supertest'
 import { SignupCredentialsDto, LoginCredentialsDto } from '../src/user/dto/auth-credetials.dto'
 import { CreateTasklistDto } from '../src/entities/list/list.dto'
 import { Task, Tasklist } from '@prisma/client'
