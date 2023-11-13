@@ -70,6 +70,9 @@ jobs:
             - run: npm run lint
               working-directory: ./server
 
+            - run: npm run typecheck-snapshot-scripts
+              working-directory: ./server
+
             - name: Setup Postgres              
               uses: Daniel-Marynicz/postgresql-action@master
               with:
