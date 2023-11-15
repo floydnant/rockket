@@ -171,24 +171,25 @@ export class TaskComponent {
 
     @Output('descriptionChange') descriptionUpdateOnBlur$ = new EventEmitter<string>()
 
+    // this is where the editor output lands
     descriptionUpdates$ = new Subject<string>()
     descriptionState$ = merge(
         this.descriptionUpdates$,
         this.task$.pipe(
             map(task => task?.description),
-            filter(description => description !== undefined && description !== null),
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            map(description => description!)
+            filter((description): description is string => description !== undefined && description !== null)
         )
     ).pipe(share({ resetOnRefCountZero: true }))
 
     @Output() isDescriptionActive$ = new BehaviorSubject<boolean>(false)
     descriptionBlur$ = new Subject<void>()
 
+    // this is where explicit toggles land
     isDescriptionExpandedInput$ = new Subject<{
         emit: boolean
         isExpanded: boolean
     }>()
+    // this is what controls the flow -> combines explicit and implicit toggles (blur events)
     isDescriptionExpandedBus$ = this.nodeData$.pipe(
         map(nodeData => ({ emit: false, isExpanded: nodeData?.isDescriptionExpanded ?? false })),
         mergeWith(this.isDescriptionExpandedInput$),
@@ -201,13 +202,14 @@ export class TaskComponent {
         startWith({ emit: false, isExpanded: false }),
         shareReplay({ bufferSize: 1, refCount: true })
     )
+    // this drives the view
     isDescriptionExpanded$ = this.isDescriptionExpandedBus$.pipe(
         map(({ isExpanded }) => isExpanded),
         distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: true })
     )
-
-    @Output('descriptionExpansionChange') isDescriptionExpandedOutput = this.isDescriptionExpandedBus$.pipe(
+    // this is what the parent component listens to
+    @Output('descriptionExpansionChange') isDescriptionExpandedOutput$ = this.isDescriptionExpandedBus$.pipe(
         filter(({ emit }) => emit),
         map(({ isExpanded }) => isExpanded),
         distinctUntilChanged()
@@ -336,10 +338,6 @@ export class TaskComponent {
         moveToMacroQueue(() => {
             this.descriptionEditor?.editor.commands.focus()
         })
-    }
-    resetDescription() {
-        // @TODO: this needs be updated
-        this.descriptionEditor?.editor.commands.setContent(this.task$.value?.description || '')
     }
     toggleDescription() {
         this.isDescriptionExpanded$.pipe(first()).subscribe(isExpanded => {

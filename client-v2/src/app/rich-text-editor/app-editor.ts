@@ -11,6 +11,7 @@ import {
     map,
     merge,
     share,
+    skipUntil,
     startWith,
     takeUntil,
     withLatestFrom,
@@ -41,14 +42,16 @@ export class AppEditor extends Editor {
         )
     }
 
-    updateRaw$ = this.getEventStream('update')
+    // @TODO: investigate why this is emitting upon editor initialisation only in the
+    // task description, and not in the full page description editors
+    private updateRaw$ = this.getEventStream('update')
     selectionUpdate$ = this.getEventStream('selectionUpdate')
     transaction$ = this.getEventStream('transaction')
 
     focus$ = this.getEventStream('focus')
     blur$ = this.getEventStream('blur')
 
-    update$ = this.updateRaw$.pipe(
+    private update$ = this.updateRaw$.pipe(
         map(({ editor }) => {
             const isEmpty = editor.isEmpty
             return {
@@ -103,7 +106,13 @@ export class AppEditor extends Editor {
         return {
             unbind: () => this.unbind(),
             unbind$: this.unbind$.pipe(takeUntil(this.unbind$.pipe(delay(0)))),
-            updateRaw$: this.updateRaw$,
+            update$: this.update$.pipe(
+                // Skip all updates until we have populated the editor with the initial input.
+                // This is needed because the editor will emit an update event when it is created
+                // in some cases. (only happend in the task description editor so far, not in the full page description editor)
+                skipUntil(input$),
+                takeUntil(this.unbind$)
+            ),
             selectionUpdate$: this.selectionUpdate$.pipe(takeUntil(this.unbind$)),
             focus$: this.focus$.pipe(takeUntil(this.unbind$)),
             blur$: this.blur$.pipe(takeUntil(this.unbind$)),
@@ -111,7 +120,7 @@ export class AppEditor extends Editor {
     }
 
     private unbindTrigger$ = new Subject<void>()
-    unbind$ = merge(this.unbindTrigger$, this.destroy$).pipe(debugObserver('unbind$ and destroy$'))
+    unbind$ = merge(this.unbindTrigger$, this.destroy$)
     /** Cancel input binding */
     unbind() {
         this.unbindTrigger$.next()

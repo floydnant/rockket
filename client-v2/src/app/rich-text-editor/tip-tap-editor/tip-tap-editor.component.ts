@@ -101,8 +101,6 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
         shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    @Output('update') update$ = this.editor.update$.pipe(untilDestroyed(this))
-
     private bindConfig$ = new Subject<{ input$: Observable<string>; context: TContext }>()
     @Input() set bind(bound: { input$: Observable<string>; context: TContext }) {
         this.bindConfig$.next(bound)
@@ -112,6 +110,11 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
         map(({ input$, context }) => this.bindEditor(input$, context)),
         share({ resetOnRefCountZero: true })
     )
+
+    @Output('update') update$ = this.bound$.pipe(
+        switchMap(({ update$ }) => update$),
+        share({ resetOnRefCountZero: true })
+    )
     @Output('updateOnBlur') updateOnBlur$ = this.bound$.pipe(
         switchMap(({ updateOnBlur$ }) => updateOnBlur$),
         share({ resetOnRefCountZero: true })
@@ -119,11 +122,12 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
 
     bindEditor<TContext>(input$: Observable<string>, context: TContext, searchTerm$?: Observable<string>) {
         const searchTerm$_ = searchTerm$ ? searchTerm$.pipe(mergeWith(this.searchTerm$)) : this.searchTerm$
+        const bound = this.editor.bindEditor(input$, searchTerm$_)
         return {
-            ...this.editor.bindEditor(input$, searchTerm$_),
+            ...bound,
             isActive$: this.isActive$,
             updateOnBlur$: merge(this.blur$, this.editor.unbind$).pipe(
-                withLatestFrom(this.update$, input$.pipe(startWith(null))),
+                withLatestFrom(bound.update$, input$.pipe(startWith(null))),
                 map(([, { html, plainText }, lastInput]) => ({ html, plainText, lastInput, context })),
                 filter(({ html, plainText, lastInput }) => html != lastInput || plainText != lastInput),
                 distinctUntilKeyChanged('html'),

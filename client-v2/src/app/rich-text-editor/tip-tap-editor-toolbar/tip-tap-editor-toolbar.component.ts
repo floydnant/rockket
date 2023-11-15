@@ -3,21 +3,12 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Input, ViewC
 import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import {
-    BehaviorSubject,
-    delay,
-    distinctUntilChanged,
-    map,
-    merge,
-    skip,
-    startWith,
-    switchMap,
-    throttleTime,
-} from 'rxjs'
+import { BehaviorSubject, distinctUntilChanged, map, merge, skip, startWith, switchMap, throttleTime } from 'rxjs'
 import { IconKey } from 'src/app/components/atoms/icons/icon/icons'
 import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
 import { DeviceService } from 'src/app/services/device.service'
 import '../editor-features/custom-events.feature'
+import { EDITOR_FEATURES_TOKEN } from '../editor.features'
 import {
     EditorControl,
     EditorControlArgs,
@@ -28,7 +19,6 @@ import {
     ResolvedEditorControlItem,
     isSeparator,
 } from '../editor.types'
-import { EDITOR_FEATURES_TOKEN } from '../editor.features'
 import { TipTapEditorComponent } from '../tip-tap-editor/tip-tap-editor.component'
 
 const resolveControlsLayout = (
@@ -97,7 +87,6 @@ export class TipTapEditorToolbarComponent implements AfterViewInit {
             startWith(false),
             distinctUntilChanged(),
             skip(1),
-            delay(0), // delay to make sure the editor has time to update its focus state before we check it
             untilDestroyed(this)
         ).subscribe(toolbarHasFocus => {
             if (!toolbarHasFocus && !this.ttEditor.editor.view.hasFocus()) {
