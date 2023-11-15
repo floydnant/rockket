@@ -22,8 +22,8 @@ import {
 } from 'rxjs'
 import { AppEditor } from '../app-editor'
 import { EditorFeature } from '../editor.types'
-import { EDITOR_FEATURES_TOKEN } from '../features'
-import { isChecklistItem } from '../helpers'
+import { EDITOR_FEATURES_TOKEN } from '../editor.features'
+import { isChecklistItem } from '../editor.helpers'
 
 @UntilDestroy()
 @Component({

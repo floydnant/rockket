@@ -3,7 +3,7 @@ import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { Decoration, DecorationSet } from '@tiptap/pm/view'
 import { mediaQueries } from 'src/app/services/device.service'
 import { colors } from 'src/app/shared/colors'
-import { ChecklistCount, countChecklistItems } from '../../helpers'
+import { ChecklistCount, countChecklistItems } from '../../editor.helpers'
 import { EditorState } from 'prosemirror-state'
 
 const getCircumferenceOffset = (radius: number, progress: number) => {

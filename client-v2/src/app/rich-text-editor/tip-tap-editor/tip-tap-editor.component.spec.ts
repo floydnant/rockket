@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
 import { TipTapEditorComponent } from './tip-tap-editor.component'
-import { getDefaultEditorFeatures, provideEditorFeatures } from '../features'
+import { getDefaultEditorFeatures, provideEditorFeatures } from '../editor.features'
 
 describe('TipTapEditorComponent', () => {
     let component: TipTapEditorComponent

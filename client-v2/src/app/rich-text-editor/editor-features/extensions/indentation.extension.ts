@@ -1,6 +1,6 @@
 import { Editor, Extension, Range } from '@tiptap/core'
 import CodeBlock from '@tiptap/extension-code-block'
-import { getActiveListType } from '../../helpers'
+import { getActiveListType } from '../../editor.helpers'
 
 interface IndentationOptions {
     /** Wether indentation logic should only be ran for code blocks.

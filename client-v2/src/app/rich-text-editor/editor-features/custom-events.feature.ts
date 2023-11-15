@@ -1,5 +1,5 @@
 import { Extension } from '@tiptap/core'
-import { createEditorFeature } from '../helpers'
+import { createEditorFeature } from '../editor.helpers'
 import { EditorFeatureId } from '../editor.types'
 import { Observable, Subject } from 'rxjs'
 

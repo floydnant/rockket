@@ -12,7 +12,7 @@ import { markdownFeature } from './editor-features/markdown.feature'
 import { placeholderFeature } from './editor-features/placeholder.feature'
 import { typographyFeature } from './editor-features/typography.feature'
 import { EditorControlId, EditorFeature, EditorFeatureId, EditorLayoutItem, separator } from './editor.types'
-import { createEditorFeature } from './helpers'
+import { createEditorFeature } from './editor.helpers'
 import { searchAndReplaceFeature } from './editor-features/search-and-replace.feature'
 
 const moreMenuFeature = createEditorFeature({

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
 import { TipTapEditorToolbarComponent } from './tip-tap-editor-toolbar.component'
-import { provideEditorFeatures, getDefaultEditorFeatures } from '../features'
+import { provideEditorFeatures, getDefaultEditorFeatures } from '../editor.features'
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { TipTapEditorComponent } from '../tip-tap-editor/tip-tap-editor.component'
 

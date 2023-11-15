@@ -11,7 +11,7 @@ import { TaskItem } from '@tiptap/extension-task-item'
 import { TaskList } from '@tiptap/extension-task-list'
 import { IconKey } from 'src/app/components/atoms/icons/icon/icons'
 import { EditorControl, EditorControlId, EditorFeatureId, separator } from '../editor.types'
-import { createEditorFeature, getActiveListType } from '../helpers'
+import { createEditorFeature, getActiveListType } from '../editor.helpers'
 
 const extensionDisplayName = {
     bulletList: 'Bullet list',

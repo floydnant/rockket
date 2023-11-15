@@ -3,7 +3,7 @@ import { Code } from '@tiptap/extension-code'
 import { Italic } from '@tiptap/extension-italic'
 import { Strike } from '@tiptap/extension-strike'
 import { EditorControlId, EditorFeatureId } from '../editor.types'
-import { createEditorFeature } from '../helpers'
+import { createEditorFeature } from '../editor.helpers'
 
 export const inlineFeature = createEditorFeature({
     featureId: EditorFeatureId.Inline,

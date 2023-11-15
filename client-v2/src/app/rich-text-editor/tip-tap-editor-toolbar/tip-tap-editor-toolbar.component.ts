@@ -28,7 +28,7 @@ import {
     ResolvedEditorControlItem,
     isSeparator,
 } from '../editor.types'
-import { EDITOR_FEATURES_TOKEN } from '../features'
+import { EDITOR_FEATURES_TOKEN } from '../editor.features'
 import { TipTapEditorComponent } from '../tip-tap-editor/tip-tap-editor.component'
 
 const resolveControlsLayout = (
@@ -44,7 +44,7 @@ const resolveControlsLayout = (
 
         const controlId = typeof featureLayout == 'string' ? featureLayout : featureLayout.controlId
         const control = controls.find(control => control.controlId == controlId)
-        if (!control) throw new Error(`Control '${featureLayout}' not found`)
+        if (!control) throw new Error(`Control '${control}' not found`)
 
         if (typeof featureLayout != 'string' && 'dropdown' in featureLayout) {
             const resolvedControl = control as ResolvedEditorControl

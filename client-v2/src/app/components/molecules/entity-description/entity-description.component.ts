@@ -16,7 +16,7 @@ import {
     getDefaultEditorFeatures,
     getDefaultEditorLayout,
     provideEditorFeatures,
-} from 'src/app/rich-text-editor/features'
+} from 'src/app/rich-text-editor/editor.features'
 import { TipTapEditorComponent } from 'src/app/rich-text-editor/tip-tap-editor/tip-tap-editor.component'
 import { DeviceService } from 'src/app/services/device.service'
 

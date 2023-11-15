@@ -1,6 +1,6 @@
 import { Extension } from '@tiptap/core'
 import { EditorControlId, EditorFeatureId } from '../editor.types'
-import { createEditorFeature } from '../helpers'
+import { createEditorFeature } from '../editor.helpers'
 
 export const blurFeature = createEditorFeature({
     featureId: EditorFeatureId.Blur,
