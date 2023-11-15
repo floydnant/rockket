@@ -33,10 +33,10 @@ const extraIcons = {
 
     chevronRight: 'fas fa-chevron-right',
     chevronLeft: 'fas fa-chevron-left',
-    'caret-down': 'fas fa-caret-down',
-    'caret-up': 'fas fa-caret-up',
-    'ellipsis-h': 'fas fa-ellipsis-h',
-    'ellipsis-v': 'fas fa-ellipsis-v',
+    caretDown: 'fas fa-caret-down',
+    caretUp: 'fas fa-caret-up',
+    ellipsisHorizontal: 'fas fa-ellipsis-h',
+    ellipsisVertical: 'fas fa-ellipsis-v',
 
     editor: {
         undo: 'far fa-undo-alt',

@@ -22,7 +22,7 @@ const moreMenuFeature = createEditorFeature({
         {
             controlId: EditorControlId.More,
             title: 'More',
-            icon: 'ellipsis-h',
+            icon: 'ellipsisHorizontal',
             fixedWith: '2.75rem',
         },
     ],
