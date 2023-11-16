@@ -42,7 +42,10 @@ export class TaskViewComponent {
     options$ = this.viewData.options$
 
     description$ = this.detail$.pipe(
-        map(detail => detail?.description),
+        map(detail => {
+            if (!detail) return null
+            return detail.description || ''
+        }),
         distinctUntilChanged()
     )
     descriptionContext$ = this.taskEntity$.pipe(
