@@ -62,7 +62,7 @@ const entityFixture: EntityPreviewRecursive = {
 const entityDetailFixture: TasklistDetail = { description: null, createdAt: '', ownerId: '' }
 
 describe('TasklistViewComponent', () => {
-    it.only('renders the tasklist', () => {
+    it('renders the tasklist', () => {
         setupComponent({
             entity$: new BehaviorSubject(entityFixture),
             detail$: new BehaviorSubject(entityDetailFixture),

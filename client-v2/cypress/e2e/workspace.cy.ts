@@ -63,7 +63,7 @@ describe('Workspace', () => {
         })
     })
 
-    describe.only('Entity page', () => {
+    describe('Entity page', () => {
         describe('Tasklist view', () => {
             it('can edit the entity name', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
