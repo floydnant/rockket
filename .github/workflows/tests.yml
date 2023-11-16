@@ -130,3 +130,10 @@ jobs:
 
             - run: npm run e2e:ci
               working-directory: ./client-v2
+
+            - name: Upload e2e test videos
+              uses: actions/upload-artifact@v3
+              with:
+                  name: e2e test videos
+                  path: client-v2/cypress/videos
+                  retention-days: 7

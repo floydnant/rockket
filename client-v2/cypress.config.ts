@@ -4,6 +4,7 @@ export default defineConfig({
     e2e: {
         baseUrl: 'http://localhost:4200',
         supportFile: './cypress/support/e2e.ts',
+        video: true,
     },
 
     component: {
@@ -12,5 +13,6 @@ export default defineConfig({
             bundler: 'webpack',
         },
         specPattern: '**/*.test.ts',
+        video: true,
     },
 })
