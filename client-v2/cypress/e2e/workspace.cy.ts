@@ -53,9 +53,10 @@ describe('Workspace', () => {
                 cy.get('[data-test-is-loading="false"]') // wait for loading to finish
                 cy.get(testName('entity-tree-node'))
                     .first()
-                    .focus()
+                    // .focus()
                     .within(() => {
-                        cy.get(testName('open-menu')).click()
+                        // we need to force the click because the element might not be visible in ci (even after focusing the parent which should make it visible)
+                        cy.get(testName('open-menu')).click({ force: true })
                     })
 
                 cy.get(testName('drop-down-menu')).should('exist')
