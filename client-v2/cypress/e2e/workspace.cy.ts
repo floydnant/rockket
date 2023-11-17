@@ -80,7 +80,14 @@ describe('Workspace', () => {
 
                 const description = 'The testing entity description'
 
+                // wait for loading to finish
+                cy.get(testName('entity-name-container')).within(() => {
+                    cy.get('[data-test-is-loading="false"]')
+                })
+
                 cy.get(testName('add-description')).click()
+                cy.get(testName('add-description')).should('not.exist')
+
                 cy.get(testName('description-editor')).focused().type(description).blur()
                 cy.wait('@updateList').its('response.statusCode').should('equal', 200) // we currently don't have any other way to verify if updating the description has succeeded
                 // maybe it is not a bad idea to assert on the request, but we could take this a step further and verify that the db record was updated
@@ -141,7 +148,14 @@ describe('Workspace', () => {
             it('can edit the description', () => {
                 const description = 'The testing entity description'
 
+                // wait for loading to finish
+                cy.get(testName('entity-name-container')).within(() => {
+                    cy.get('[data-test-is-loading="false"]')
+                })
+
                 cy.get(testName('add-description')).click()
+                cy.get(testName('add-description')).should('not.exist')
+
                 cy.get(testName('description-editor')).focused().type(description).blur()
                 cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
             })
