@@ -19,7 +19,6 @@ jobs:
                   cache: 'npm'
                   cache-dependency-path: client-v2/package-lock.json
 
-            - run: cd client-v2
             - run: npm ci
               working-directory: ./client-v2
 
@@ -34,6 +33,14 @@ jobs:
 
             - run: npm run comp:ci
               working-directory: ./client-v2
+
+            - name: Upload component test artifacts
+              uses: actions/upload-artifact@v3
+              if: always()
+              with:
+                  name: component test artifacts
+                  path: client-v2/.cypress/component
+                  retention-days: 7
 
             # - name: Upload coverage artifacts
             #   uses: actions/upload-artifact@v3
@@ -60,11 +67,10 @@ jobs:
                   cache: 'npm'
                   cache-dependency-path: server/package-lock.json
 
-            - run: cd server
             - run: npm ci
               working-directory: ./server
 
-            - run: npm run build --if-present
+            - run: npm run build
               working-directory: ./server
 
             - run: npm run lint
@@ -73,7 +79,7 @@ jobs:
             - run: npm run typecheck-snapshot-scripts
               working-directory: ./server
 
-            - name: Setup Postgres              
+            - name: Setup Postgres
               uses: Daniel-Marynicz/postgresql-action@master
               with:
                   postgres_image_tag: 12-alpine
@@ -131,10 +137,10 @@ jobs:
             - run: npm run e2e:ci
               working-directory: ./client-v2
 
-            - name: Upload e2e test videos
+            - name: Upload e2e test artifacts
               uses: actions/upload-artifact@v3
               if: always()
               with:
-                  name: e2e test videos
-                  path: client-v2/cypress/videos
+                  name: e2e test artifacts
+                  path: client-v2/.cypress/e2e
                   retention-days: 7
