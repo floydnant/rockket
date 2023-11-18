@@ -10,4 +10,11 @@
     </app-toolbar>
 </div>
 
-<app-tt-editor #descriptionTtEditor data-test-name="description-editor"></app-tt-editor>
+<app-tt-editor
+    #descriptionTtEditor
+    [bind]="bindConfig$ | push : 'native'"
+    (isActive)="isActive$.next($event)"
+    (updateOnBlur)="updateInput$.next($event)"
+    (blur)="blurInput$.next($event)"
+    data-test-name="description-editor"
+></app-tt-editor>

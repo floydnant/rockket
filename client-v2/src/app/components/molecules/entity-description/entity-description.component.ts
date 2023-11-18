@@ -1,16 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, Output, ViewChild } from '@angular/core'
 import { UntilDestroy } from '@ngneat/until-destroy'
-import {
-    Observable,
-    Subject,
-    delay,
-    distinctUntilKeyChanged,
-    filter,
-    map,
-    mergeMap,
-    shareReplay,
-    switchMap,
-} from 'rxjs'
+import { Observable, ReplaySubject, Subject, delay, distinctUntilKeyChanged, filter, map } from 'rxjs'
 import {
     defaultDesktopEditorLayout,
     getDefaultEditorFeatures,
@@ -36,36 +26,34 @@ export interface DescriptionContext {
 export class EntityDescriptionComponent {
     constructor(private deviceService: DeviceService) {}
 
-    @ViewChild(TipTapEditorComponent) ttEditor!: TipTapEditorComponent
+    @ViewChild(TipTapEditorComponent) private ttEditor!: TipTapEditorComponent
+    focus() {
+        this.ttEditor.editor.commands.focus()
+    }
 
     toolbarLayout = defaultDesktopEditorLayout
     toolbarLayout$ = this.deviceService.isTouchPrimary$.pipe(map(getDefaultEditorLayout))
 
-    private context$ = new Subject<DescriptionContext>()
+    private context$ = new ReplaySubject<DescriptionContext>()
     @Input() set context(context: DescriptionContext | null) {
         if (context) this.context$.next(context)
     }
 
-    private editorBound$ = this.context$.pipe(
+    bindConfig$ = this.context$.pipe(
         distinctUntilKeyChanged('id'),
-        map(({ id, description$ }) => this.ttEditor.bindEditor(description$, id)),
-        shareReplay({ bufferSize: 1, refCount: true })
+        map(context => ({ input$: context.description$, context: context.id }))
     )
 
-    @Output() isActive$ = this.editorBound$.pipe(switchMap(({ isActive$ }) => isActive$))
-    @Output('update') update$ = this.editorBound$.pipe(
-        mergeMap(({ updateOnBlur$ }) =>
-            updateOnBlur$.pipe(map(({ html, context }) => ({ id: context, description: html })))
-        )
-    )
-    @Output('blur') blur$ = this.editorBound$.pipe(
-        mergeMap(({ blur$ }) =>
-            blur$.pipe(
-                delay(0),
-                map(() => this.ttEditor.editor.view.hasFocus()),
-                filter(hasFocus => !hasFocus),
-                map(() => null)
-            )
-        )
+    @Output('isActive') isActive$ = new ReplaySubject<boolean>()
+
+    updateInput$ = new Subject<{ html: string; context: string }>()
+    @Output('update') update$ = this.updateInput$.pipe(map(({ html, context }) => ({ id: context, description: html })))
+
+    blurInput$ = new Subject()
+    @Output('blur') blur$ = this.blurInput$.pipe(
+        delay(0),
+        map(() => this.ttEditor.editor.view.hasFocus()),
+        filter(hasFocus => !hasFocus),
+        map(() => null)
     )
 }

@@ -18,6 +18,11 @@ import { RxModule } from 'src/app/rx/rx.module'
 import { DropdownModule } from 'src/app/dropdown/dropdown.module'
 import { RichTextEditorModule } from 'src/app/rich-text-editor/rich-text-editor.module'
 import { ToolbarComponent } from 'src/app/components/molecules/toolbar/toolbar.component'
+import { IconsModule } from 'src/app/components/atoms/icons/icons.module'
+import { PageProgressBarComponent } from 'src/app/components/molecules/page-progress-bar/page-progress-bar.component'
+import { TooltipModule } from 'src/app/tooltip/tooltip.module'
+import { IntersectionDirective } from 'src/app/directives/intersection.directive'
+import { LoadingStateService } from 'src/app/services/loading-state.service'
 
 const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: TaskTreeMap = {}) => {
     const store = {
@@ -31,7 +36,7 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
     }
     cy.mount(`<app-tasklist-view></app-tasklist-view> `, {
         componentProperties: {},
-        imports: [CdkMenuModule, RxModule, DropdownModule, RichTextEditorModule],
+        imports: [CdkMenuModule, IconsModule, RxModule, DropdownModule, RichTextEditorModule, TooltipModule],
         declarations: [
             TasklistViewComponent,
             MutationDirective,
@@ -42,12 +47,18 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
             EntityDescriptionComponent,
             HighlightPipe,
             ToolbarComponent,
+            PageProgressBarComponent,
+            IntersectionDirective,
         ],
         providers: [
             { provide: ENTITY_VIEW_DATA, useValue: viewData },
             store,
             { provide: EntityViewComponent, useValue: { progress$: new BehaviorSubject<number | null>(null) } },
             actionsMock,
+            {
+                provide: LoadingStateService,
+                useValue: { getEntityLoadingState: () => of(false) },
+            },
         ],
     })
 }
@@ -86,8 +97,6 @@ describe('TasklistViewComponent', () => {
             cy.get(testName('description-editor')).should('not.be.hidden')
             cy.get(testName('description-editor')).contains(description)
         })
-
-        it.skip('can update the description')
     })
 
     describe('Children', () => {

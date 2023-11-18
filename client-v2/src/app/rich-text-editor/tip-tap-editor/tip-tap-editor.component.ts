@@ -120,12 +120,11 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
         share({ resetOnRefCountZero: true })
     )
 
-    bindEditor<TContext>(input$: Observable<string>, context: TContext, searchTerm$?: Observable<string>) {
+    private bindEditor<TContext>(input$: Observable<string>, context: TContext, searchTerm$?: Observable<string>) {
         const searchTerm$_ = searchTerm$ ? searchTerm$.pipe(mergeWith(this.searchTerm$)) : this.searchTerm$
         const bound = this.editor.bindEditor(input$, searchTerm$_)
         return {
             ...bound,
-            isActive$: this.isActive$,
             updateOnBlur$: merge(this.blur$, this.editor.unbind$).pipe(
                 withLatestFrom(bound.update$, input$.pipe(startWith(null))),
                 map(([, { html, plainText }, lastInput]) => ({ html, plainText, lastInput, context })),

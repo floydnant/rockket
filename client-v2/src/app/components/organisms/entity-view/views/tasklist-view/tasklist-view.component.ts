@@ -71,7 +71,7 @@ export class TasklistViewComponent {
     @ViewChild(EntityDescriptionComponent) entityDescription?: EntityDescriptionComponent
     focusDescription() {
         moveToMacroQueue(() => {
-            this.entityDescription?.ttEditor.editor.commands.focus()
+            this.entityDescription?.focus()
         })
     }
 

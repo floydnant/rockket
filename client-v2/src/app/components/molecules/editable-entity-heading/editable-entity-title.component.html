@@ -1,44 +1,43 @@
-<!-- @TODO: see if this strategy really needs to be 'native' -->
-<ng-container *rxLet="isLoading$; let isLoading; strategy: 'native'">
-    <div
-        class="inline-flex items-center overflow-x-auto"
-        *ngIf="entity$ | async as entity"
-        data-test-name="entity-name-container"
-    >
-        <ng-template #icon>
-            <app-icon
-                class="text-2xl"
-                [icon]="isLoading ? EntityState.LOADING : entity.status || entity.entityType"
-                [attr.data-test-is-loading]="isLoading"
-            >
-            </app-icon>
-        </ng-template>
+<div
+    class="inline-flex items-center overflow-x-auto"
+    *ngIf="entity$ | async as entity"
+    data-test-name="entity-name-container"
+>
+    <ng-template #icon>
+        <!-- @TODO: see if this strategy really needs to be 'native' -->
+        <app-icon
+            *rxLet="isLoading$; let isLoading; strategy: 'native'"
+            class="text-2xl"
+            [icon]="isLoading ? EntityState.LOADING : entity.status || entity.entityType"
+            [attr.data-test-is-loading]="isLoading"
+        >
+        </app-icon>
+    </ng-template>
 
-        <div class="mr-2.5 inline-block -translate-y-0.5">
-            <button
-                *ngIf="taskStatusMenuItems$ | async as statusItems; else elseBlock"
-                [cdkMenuTriggerFor]="statusMenu"
-                class="icon-btn aspect-square p-4"
-            >
-                <ng-container *ngTemplateOutlet="icon"></ng-container>
-                <ng-template #statusMenu>
-                    <app-drop-down [items]="statusItems" [data]="{ id: entity.id }"></app-drop-down>
-                </ng-template>
-            </button>
-
-            <ng-template #elseBlock>
-                <ng-container *ngTemplateOutlet="icon"></ng-container>
+    <div class="mr-2.5 inline-block -translate-y-0.5">
+        <button
+            *ngIf="taskStatusMenuItems$ | async as statusItems; else elseBlock"
+            [cdkMenuTriggerFor]="statusMenu"
+            class="icon-btn aspect-square p-4"
+        >
+            <ng-container *ngTemplateOutlet="icon"></ng-container>
+            <ng-template #statusMenu>
+                <app-drop-down [items]="statusItems" [data]="{ id: entity.id }"></app-drop-down>
             </ng-template>
-        </div>
+        </button>
 
-        <app-inline-editor
-            class="title"
-            [textInput]="entity.title || ''"
-            [placeholder]="ENTITY_TITLE_DEFAULTS[entity.entityType]"
-            [enableDebouncedUpdates]="false"
-            (update)="titleUpdates$.next($event)"
-            editorClass="pr-14"
-            data-test-name="editable-entity-name"
-        ></app-inline-editor>
+        <ng-template #elseBlock>
+            <ng-container *ngTemplateOutlet="icon"></ng-container>
+        </ng-template>
     </div>
-</ng-container>
+
+    <app-inline-editor
+        class="title"
+        [textInput]="entity.title || ''"
+        [placeholder]="ENTITY_TITLE_DEFAULTS[entity.entityType]"
+        [enableDebouncedUpdates]="false"
+        (update)="titleUpdates$.next($event)"
+        editorClass="pr-14"
+        data-test-name="editable-entity-name"
+    ></app-inline-editor>
+</div>
