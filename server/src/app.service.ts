@@ -15,6 +15,7 @@ export class AppService {
         return 'Hello World!'
     }
 
+    // @TODO: this should not reside in application code, lets move it to a CLI/npm script
     async clearDb() {
         if (this.configService.get('TESTING_ENV') != 'true') throw new ForbiddenException()
 

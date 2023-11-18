@@ -95,7 +95,8 @@ export class EntityViewComponent {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     entityViewData: EntityViewData<any> = {
-        // @TODO: (high prio): get rid of the delay here
+        // @TODO: (high prio): get rid of the macro queue here as its causing
+        // a huge delay of ~170ms on rendering the view
         entity$: this.entity$.pipe(delay(0)), // move to macro queue
         detail$: this.entityDetail$,
         options$: this.entityOptionsItems$,
