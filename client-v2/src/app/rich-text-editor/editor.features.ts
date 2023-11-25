@@ -43,7 +43,7 @@ export const defaultFeatureMap = {
     customEventsFeature,
     checklistCounterFeature: checklistCounterFeature(),
     searchAndReplaceFeature,
-}
+} // @TODO: satisfies Record<string, EditorFeature>
 const defaultFeatureMask = Object.fromEntries(Object.keys(defaultFeatureMap).map(key => [key, true]))
 
 // @TODO: can be made more generic -> `getEditorFeatureGroup(featureMap)(featureMask) => EditorFeature[]`

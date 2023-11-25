@@ -18,7 +18,7 @@ export const blurFeature = createEditorFeature({
         {
             controlId: EditorControlId.Blur,
             icon: 'close',
-            title: 'Save & Close',
+            title: 'Done',
             keybinding: 'Mod-Enter',
             action: ({ editor }) => {
                 editor.commands.focus()
