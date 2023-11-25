@@ -12,7 +12,7 @@
 
 <app-tt-editor
     #descriptionTtEditor
-    [bind]="bindConfig$ | push : 'native'"
+    [bind]="bindConfig$ | push"
     (isActive)="isActive$.next($event)"
     (updateOnBlur)="updateInput$.next($event)"
     (blur)="blurInput$.next($event)"

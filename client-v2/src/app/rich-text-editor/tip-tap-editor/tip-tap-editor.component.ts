@@ -102,8 +102,8 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
     )
 
     private bindConfig$ = new Subject<{ input$: Observable<string>; context: TContext }>()
-    @Input() set bind(bound: { input$: Observable<string>; context: TContext }) {
-        this.bindConfig$.next(bound)
+    @Input() set bind(bindConfig: { input$: Observable<string>; context: TContext } | undefined) {
+        if (bindConfig) this.bindConfig$.next(bindConfig)
     }
     private bound$ = this.bindConfig$.pipe(
         untilDestroyed(this),
