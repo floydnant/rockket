@@ -25,7 +25,7 @@ interface EditorStorage {
     [key: string]: unknown
 }
 
-export class AppEditor extends Editor {
+export class TipTapEditor extends Editor {
     destroy$ = fromEventPattern<EditorEvents['destroy']>(
         handler => this.on('destroy', handler),
         handler => this.off('destroy', handler)
