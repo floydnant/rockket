@@ -16,7 +16,6 @@ import {
     takeUntil,
     withLatestFrom,
 } from 'rxjs'
-import { debugObserver } from 'src/app/utils/observable.helpers'
 import { CustomEditorEventsStorage } from './editor-features/custom-events.feature'
 import { EditorFeatureId } from './editor.types'
 
@@ -79,7 +78,6 @@ export class TipTapEditor extends Editor {
 
         input$
             .pipe(
-                debugObserver('input$'),
                 takeUntil(this.unbind$),
                 withLatestFrom(this.update$.pipe(startWith(null))),
                 map(([input, currentState], index) => ({

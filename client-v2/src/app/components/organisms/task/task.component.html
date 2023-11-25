@@ -179,16 +179,9 @@
     <ng-container
         *rxLet="{ isExpanded: isDescriptionExpanded$ | push, isActive: isDescriptionActive$ | push }; let props"
     >
-        <!-- isExpanded: {{ props.isExpanded }}; isActive: {{ props.isActive }} -->
-        <!-- <div [class.relative]="descriptionEditor.isActive$ | push"> -->
-        <!-- <div *ngIf="descriptionEditor?.bindEditor(task$, task.id) as bound" [class.relative]="false"> -->
         <div *ngIf="props.isExpanded || props.isActive" [class.relative]="false">
-            <div class="pointer-events-none absolute inset-x-0 bottom-[calc(100%-.5rem)] z-20 flex justify-center px-4">
-                <!-- <app-toolbar [hide]="!inlineEditor.isActive && !(descriptionEditor.isActive$ | push)"> -->
-                <app-toolbar [hide]="!props.isActive" cdkMenuBar class="max-w-[70vw] overflow-x-auto">
-                    <!-- <ng-container *ngTemplateOutlet="priorityButton"></ng-container>
-                    <div class="toolbar-separator" role="separator"></div> -->
-
+            <div class="absolute inset-x-0 bottom-[calc(100%-.5rem)] z-20 flex justify-center px-4">
+                <app-toolbar [hide]="!props.isActive" cdkMenuBar class="max-w-full overflow-x-auto sm:max-w-[70vw]">
                     <app-tt-editor-toolbar
                         [ttEditor]="descriptionEditor"
                         [layout]="toolbarLayout$ | push"
