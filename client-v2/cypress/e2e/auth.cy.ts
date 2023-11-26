@@ -36,8 +36,6 @@ describe('Authentication', () => {
             cy.get(testName('user-menu-toggle')).invoke('attr', 'data-logged-in').should('eq', 'true')
         })
         it('cannot login with the wrong email', () => {
-            // cy.clearDb()
-
             cy.signup()
             cy.clearLocalStorage()
 

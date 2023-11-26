@@ -139,7 +139,8 @@
                 "e2e-ci": {
                     "builder": "@cypress/schematic:cypress",
                     "options": {
-                        "devServerTarget": "client-v2:serve"
+                        "devServerTarget": "client-v2:serve",
+                        "record": true
                     },
                     "configurations": {
                         "production": {
