@@ -64,7 +64,7 @@ export const entitiesReducer = createReducer(
         }
 
         // @TODO: We can optimize this by checking the entityType, then calling the appropriate function and reducing the appropriate state
-        const entityTreeCopy = structuredClone(state.entityTree)
+        const entityTreeCopy = structuredClone(state.entityTree) || []
         const entity = getEntityById(entityTreeCopy, id)
         if (!entity) return state
 
@@ -75,23 +75,22 @@ export const entitiesReducer = createReducer(
             entityTree: entityTreeCopy,
         }
     }),
+        on(entitiesActions.deleteSuccess, (state, { id }): EntitiesState => {
+            const entityTreeCopy = structuredClone(state.entityTree) || []
+            const taskTreeMapCopy = structuredClone(state.taskTreeMap) || {}
 
-    on(entitiesActions.deleteSuccess, (state, { id }): EntitiesState => {
-        const entityTreeCopy = structuredClone(state.entityTree)
-        const taskTreeMapCopy = structuredClone(state.taskTreeMap)
+            // @TODO: We can optimize this by checking the entityType, then calling the appropriate function and reducing the appropriate state
+            const result = getParentEntityByChildIdIncludingTasks(entityTreeCopy, taskTreeMapCopy, id)
+            if (!result) return state
 
-        // @TODO: We can optimize this by checking the entityType, then calling the appropriate function and reducing the appropriate state
-        const result = getParentEntityByChildIdIncludingTasks(entityTreeCopy, taskTreeMapCopy, id)
-        if (!result) return state
+            result.subTree.splice(result.index, 1)
 
-        result.subTree.splice(result.index, 1)
-
-        return {
-            ...state,
-            entityTree: entityTreeCopy,
-            taskTreeMap: taskTreeMapCopy,
-        }
-    }),
+            return {
+                ...state,
+                entityTree: entityTreeCopy,
+                taskTreeMap: taskTreeMapCopy,
+            }
+        }),
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     on(entitiesActions.search, (state, { type, ...search }): EntitiesState => {
@@ -100,8 +99,8 @@ export const entitiesReducer = createReducer(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     on(entitiesActions.searchSuccess, (state, { type, ...result }): EntitiesState => {
         const entityDetailsCopy = structuredClone(state.entityDetails)
-        const entityTreeCopy = structuredClone(state.entityTree || [])
-        const taskTreeMapCopy = structuredClone(state.taskTreeMap || {})
+        const entityTreeCopy = structuredClone(state.entityTree) || []
+        const taskTreeMapCopy = structuredClone(state.taskTreeMap) || {}
 
         for (const entityType_ in result) {
             const entityType = entityType_ as EntityType
