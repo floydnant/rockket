@@ -24,10 +24,10 @@ describe('Authentication', () => {
     })
 
     describe('Login', () => {
-        it.skip('can login', () => {
+        it('can login', () => {
             // @TODO: there's sth wrong here, fix it
             // this should not be necessary, but somehow a previous `signup` call from within `beforeEach` prevents the following signup
-            cy.clearDb()
+            // cy.clearDb()
 
             cy.signup()
             cy.clearLocalStorage()
@@ -36,6 +36,8 @@ describe('Authentication', () => {
             cy.get(testName('user-menu-toggle')).invoke('attr', 'data-logged-in').should('eq', 'true')
         })
         it('cannot login with the wrong email', () => {
+            // cy.clearDb()
+
             cy.signup()
             cy.clearLocalStorage()
 

@@ -23,7 +23,11 @@ function setLocalStorage(itemName: string, itemValue: string) {
 Cypress.Commands.add('setLocalStorage', setLocalStorage)
 
 function clearDb() {
-    cy.request('http://localhost:3001/clear-db').as('clearDb')
+    cy.request('http://localhost:3001/clear-db')
+        .as('clearDb')
+        .then(res => {
+            expect(res.status).to.eq(200)
+        })
 }
 Cypress.Commands.add('clearDb', clearDb)
 
@@ -36,6 +40,8 @@ function signup() {
     cy.request({ method: 'POST', url: 'http://localhost:3001/auth/signup', body: signupDto })
         .as('shadow-signup')
         .then(res => {
+            expect(res.status).to.eq(201)
+
             // token needs to be JSON parsable
             cy.setLocalStorage('rockket-auth-token', `${JSON.stringify(res.body.user.authToken)}`)
         })
