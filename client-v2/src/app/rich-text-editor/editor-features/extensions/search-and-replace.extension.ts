@@ -34,9 +34,6 @@ interface Result {
 }
 
 interface SearchOptions {
-    // searchTerm: string
-    // replaceTerm: string
-    // results: Result[]
     searchResultClass: string
     caseSensitive: boolean
     disableRegex: boolean

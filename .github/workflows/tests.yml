@@ -36,7 +36,7 @@ jobs:
 
             - name: Upload component test artifacts
               uses: actions/upload-artifact@v3
-              if: always()
+              if: failure()
               with:
                   name: component test artifacts
                   path: client-v2/.cypress/component
@@ -139,7 +139,7 @@ jobs:
 
             - name: Upload e2e test artifacts
               uses: actions/upload-artifact@v3
-              if: always()
+              if: failure()
               with:
                   name: e2e test artifacts
                   path: client-v2/.cypress/e2e

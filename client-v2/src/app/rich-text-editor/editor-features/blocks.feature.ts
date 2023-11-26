@@ -159,8 +159,6 @@ export const blocksFeature = createEditorFeature({
 
                 return 'editor.paragraph'
             },
-            // isActive: ({ editor }) =>
-            //     editor.isActive('heading') || !!getActiveListType(editor) || editor.isActive('codeBlock'),
             fixedWith: '2.75rem',
         },
         // @TODO: currently only limited to 4 levels by FontAwesome only having 4 heading icons

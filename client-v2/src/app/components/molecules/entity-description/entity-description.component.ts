@@ -51,6 +51,7 @@ export class EntityDescriptionComponent {
 
     blurInput$ = new Subject()
     @Output('blur') blur$ = this.blurInput$.pipe(
+        // @TODO: get rid of this delay code smell
         delay(0),
         map(() => this.ttEditor.editor.view.hasFocus()),
         filter(hasFocus => !hasFocus),
