@@ -33,6 +33,8 @@ jobs:
 
             - run: npm run comp:ci
               working-directory: ./client-v2
+              env:
+                CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
             - name: Upload component test artifacts
               uses: actions/upload-artifact@v3
@@ -136,6 +138,8 @@ jobs:
 
             - run: npm run e2e:ci
               working-directory: ./client-v2
+              env:
+                CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
             - name: Upload e2e test artifacts
               uses: actions/upload-artifact@v3
