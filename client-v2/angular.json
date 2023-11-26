@@ -1,11 +1,11 @@
 {
     "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
     "schematics": {
-      "@schematics/angular": {
-        "component": {
-          "changeDetection": "OnPush"
+        "@schematics/angular": {
+            "component": {
+                "changeDetection": "OnPush"
+            }
         }
-      }
     },
     "version": 1,
     "newProjectRoot": "projects",
@@ -31,7 +31,8 @@
                         "tsConfig": "tsconfig.app.json",
                         "assets": ["src/favicon.ico", "src/assets"],
                         "styles": ["src/css/main.css"],
-                        "scripts": []
+                        "scripts": [],
+                        "allowedCommonJsDependencies": ["markdown-it-task-lists"]
                     },
                     "configurations": {
                         "production": {
@@ -39,12 +40,12 @@
                                 {
                                     "type": "initial",
                                     "maximumWarning": "500kb",
-                                    "maximumError": "1mb"
+                                    "maximumError": "1.5mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
                                     "maximumWarning": "2kb",
-                                    "maximumError": "5kb"
+                                    "maximumError": "6kb"
                                 }
                             ],
                             "fileReplacements": [
@@ -138,7 +139,8 @@
                 "e2e-ci": {
                     "builder": "@cypress/schematic:cypress",
                     "options": {
-                        "devServerTarget": "client-v2:serve"
+                        "devServerTarget": "client-v2:serve",
+                        "record": true
                     },
                     "configurations": {
                         "production": {

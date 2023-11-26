@@ -1,12 +1,12 @@
 import { interpolateParams } from '.'
-import { MenuItem } from '../components/molecules/drop-down/drop-down.component'
+import { MenuItem } from '../dropdown/drop-down/drop-down.component'
 import { TaskPreview } from '../fullstack-shared-models/task.model'
 
-export interface WrappedMenuItems extends Array<MenuItem> {
-    applyOperators(...operator: ((item: MenuItem) => MenuItem)[]): WrappedMenuItems
+export interface WrappedMenuItems<T> extends Array<MenuItem<T>> {
+    applyOperators(...operator: ((item: MenuItem<T>) => MenuItem<T>)[]): WrappedMenuItems<T>
 }
-const getOperatorApplier = (items: MenuItem[]) => {
-    return (...operators: ((item: MenuItem) => MenuItem)[]): WrappedMenuItems => {
+const getOperatorApplier = <T>(items: MenuItem<T>[]) => {
+    return (...operators: ((item: MenuItem<T>) => MenuItem<T>)[]): WrappedMenuItems<T> => {
         const result = items.map(item => {
             return operators.reduce((prevMapperResult, operator) => operator(prevMapperResult), item)
         })
@@ -17,14 +17,14 @@ const getOperatorApplier = (items: MenuItem[]) => {
 /** Used to apply operators sequentially per iteration, instead of iterating over all menu items for each operator.
  * Though it is unnecessary to use `applyOperators` for only one operator.
  */
-export const wrapMenuItems = (items: MenuItem[]): WrappedMenuItems => {
+export const wrapMenuItems = <T>(items: MenuItem<T>[]): WrappedMenuItems<T> => {
     return Object.assign(items, { applyOperators: getOperatorApplier(items) })
 }
 
 /** Used to update items on the fly. The callback is also recursively applied to children. */
-export const interceptItem = (callback: (item: MenuItem) => Partial<Omit<MenuItem, 'children'>>) => {
-    return (item: MenuItem): MenuItem => {
-        if (item.isSeperator) return item
+export const interceptItem = <T>(callback: (item: MenuItem<T>) => Partial<Omit<MenuItem<T>, 'children'>>) => {
+    return (item: MenuItem<T>): MenuItem<T> => {
+        if (item.isSeparator) return item
         return {
             ...item,
             ...callback(item),
@@ -51,16 +51,18 @@ export const interceptItem = (callback: (item: MenuItem) => Partial<Omit<MenuIte
  * action({ id: 'bar' }) // will take precedence over injected parameters
  * ```
  */
-export const useDataForAction = (data: unknown) => {
-    return interceptItem(({ action }) => ({
-        action: action && ((localData: unknown) => action(localData || data)),
+export const useDataForAction = <T>(data: T) => {
+    return interceptItem<T>(({ action, isActive }) => ({
+        action: action && ((localData: T) => action(localData || data)),
+        isActive: typeof isActive === 'function' ? (localData: T) => isActive(localData || data) : isActive,
     }))
 }
 
 /** Used to transform the data when the action is called. */
-export const interceptDataForAction = (callback: (data: unknown) => unknown) => {
-    return interceptItem(({ action }) => ({
-        action: action && ((localData: unknown) => action(callback(localData))),
+export const interceptDataForAction = <T>(callback: (data: T) => T) => {
+    return interceptItem<T>(({ action, isActive }) => ({
+        action: action && ((localData: T) => action(callback(localData))),
+        isActive: typeof isActive === 'function' ? (localData: T) => isActive(callback(localData)) : isActive,
     }))
 }
 
@@ -72,8 +74,8 @@ export const interceptDataForAction = (callback: (data: unknown) => unknown) => 
  * ```
  * and the resulting route will look like this `/route/to/foo`
  */
-export const useParamsForRoute = (params: Record<string, string | number>) => {
-    return interceptItem(({ route }) => ({
+export const useParamsForRoute = <T>(params: Record<string, string | number>) => {
+    return interceptItem<T>(({ route }) => ({
         route: route && interpolateParams(route, params),
     }))
 }

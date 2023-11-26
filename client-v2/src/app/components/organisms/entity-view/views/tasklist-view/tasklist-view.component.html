@@ -1,4 +1,4 @@
-<ng-container *ngIf="listEntity$ | async as entity">
+<ng-container *rxIf="listEntity$; let entity; strategy: 'native'">
     <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
     <!--     <button class="button-naked">Add Sublist</button> -->
     <!--     <button class="button-naked">Add Description</button> -->
@@ -11,17 +11,17 @@
         <app-editable-entity-title [entity]="entity"></app-editable-entity-title>
     </h1>
 
-    <!-- <div class="created-at | test-md text-tinted-400" *ngIf="detail$ | async as detail">
+    <!-- <div class="created-at | test-sm text-tinted-400" *ngIf="detail$ | async as detail">
         <span class="text-tinted-500">Created at</span> {{ detail?.createdAt | date }},
         {{ detail?.createdAt | date : 'shortTime' }}
     </div> -->
 
     <app-entity-description
         #descriptionEditor
-        [hidden]="!(isDescriptionShown$ | async)"
-        [description]="description$ | async"
-        (descriptionChange)="onDescriptionUpdate($event)"
-        (blur)="descriptionBlurEvents$.next($event)"
+        *rxIf="isDescriptionOpen$"
+        [context]="descriptionContext$ | push : 'native'"
+        (update)="updateDescription($event)"
+        (blur)="descriptionBlurInput$.next($event)"
     ></app-entity-description>
 
     <!-- <p>And this is the part for the description</p>
@@ -34,10 +34,10 @@
 
     <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
         <button
-            *ngIf="!(isDescriptionShown$ | async)"
+            *rxIf="!(isDescriptionOpen$ | push)"
             class="button-naked text-tinted-200 hover:text-tinted-100"
             appTooltip="Add a description to this list"
-            (click)="isDescriptionShown$.next(true); descriptionEditor.focusable.focus()"
+            (click)="openDescription()"
             cdkMenuItem
             data-test-name="add-description"
         >
@@ -48,7 +48,7 @@
         <button
             class="button-naked text-tinted-200 hover:text-tinted-100"
             appTooltip="Create a new list inside this one"
-            (click)="createNewSublist()"
+            (click)="createSublist()"
             cdkMenuItem
             data-test-name="create-children"
         >

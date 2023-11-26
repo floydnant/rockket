@@ -14,7 +14,7 @@ import {
     timer,
 } from 'rxjs'
 
-const mediaQueries = {
+export const mediaQueries = {
     mobileScreen: '(max-width: 768px)',
     touchPrimary: '(pointer: coarse)',
     canHover: '(hover:hover)',

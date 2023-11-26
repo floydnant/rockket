@@ -4,7 +4,7 @@ import { betterEmailValidator, matchSibling } from 'src/app/components/molecules
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { HotToastService } from '@ngneat/hot-toast'
 import { DialogService } from 'src/app/modal/dialog.service'
-import { MenuItem } from 'src/app/components/molecules/drop-down/drop-down.component'
+import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
 
 @Component({
     selector: 'component-playground',

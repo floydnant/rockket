@@ -1,11 +1,9 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { EntitiesSearchResultDto, EntityPreview } from 'src/app/fullstack-shared-models/entities.model'
-import { HttpServerErrorResponse } from 'src/app/http/types'
-import { EntityCrudDto } from 'src/app/services/entities.service'
+import { HttpServerErrorResponse, HttpServerErrorResponseWithMeta } from '../../http/types'
+import { EntityCrudDto } from '../../services/entities.service'
 import { listActions } from './list/list.actions'
 import { taskActions } from './task/task.actions'
-
-export type HttpServerErrorResponseWithData<T = { id: string }> = HttpServerErrorResponse & T
 
 export const entitiesActions = createActionGroup({
     source: 'Entities',
@@ -18,21 +16,21 @@ export const entitiesActions = createActionGroup({
         'load detail': props<EntityCrudDto>(),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         'load detail success': props<EntityCrudDto<{ entityDetail: Record<string, any> }>>(),
-        'load detail error': props<HttpServerErrorResponseWithData>(),
+        'load detail error': props<HttpServerErrorResponseWithMeta>(),
 
         'open rename dialog': props<EntityCrudDto>(),
         'abort rename dialog': emptyProps(),
         //
         rename: props<EntityCrudDto<{ title: string; showToast?: boolean }>>(),
         'rename success': props<EntityCrudDto<{ title: string }>>(),
-        'rename error': props<HttpServerErrorResponseWithData>(),
+        'rename error': props<HttpServerErrorResponseWithMeta>(),
 
         'open delete dialog': props<EntityCrudDto>(),
         'abort delete dialog': emptyProps(),
         //
         delete: props<EntityCrudDto>(),
         'delete success': props<EntityCrudDto>(),
-        'delete error': props<HttpServerErrorResponseWithData>(),
+        'delete error': props<HttpServerErrorResponseWithMeta>(),
 
         search: props<{ query: string }>(),
         'search success': props<EntitiesSearchResultDto>(),
@@ -40,6 +38,7 @@ export const entitiesActions = createActionGroup({
     },
 })
 
+/** Entity actions which directly correspond to an entity, indicating a loading state */
 export const loadingStateActions = [
     entitiesActions.loadDetail,
     entitiesActions.loadDetailSuccess,

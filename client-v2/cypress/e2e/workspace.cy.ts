@@ -53,9 +53,9 @@ describe('Workspace', () => {
                 cy.get('[data-test-is-loading="false"]') // wait for loading to finish
                 cy.get(testName('entity-tree-node'))
                     .first()
-                    .focus()
                     .within(() => {
-                        cy.get(testName('open-menu')).click()
+                        // we need to force the click because the element might not be visible in ci (even after focusing the parent which should make it visible)
+                        cy.get(testName('open-menu')).click({ force: true })
                     })
 
                 cy.get(testName('drop-down-menu')).should('exist')
@@ -63,7 +63,7 @@ describe('Workspace', () => {
         })
     })
 
-    describe.only('Entity page', () => {
+    describe('Entity page', () => {
         describe('Tasklist view', () => {
             it('can edit the entity name', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
@@ -73,16 +73,52 @@ describe('Workspace', () => {
                 cy.get(testName('entity-tree-node')).should('contain.text', entityName)
             })
 
-            it('can edit the description', () => {
+            it('can add a description', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
                 cy.get(testName('editable-entity-name'))
 
                 const description = 'The testing entity description'
 
+                // wait for loading to finish
+                cy.get(testName('entity-name-container')).within(() => {
+                    cy.get('[data-test-is-loading="false"]')
+                })
+
                 cy.get(testName('add-description')).click()
-                cy.get(testName('description-editor')).type(description).blur()
+                cy.get(testName('add-description')).should('not.exist')
+
+                cy.get(testName('description-editor')).focused().type(description).blur()
                 cy.wait('@updateList').its('response.statusCode').should('equal', 200) // we currently don't have any other way to verify if updating the description has succeeded
                 // maybe it is not a bad idea to assert on the request, but we could take this a step further and verify that the db record was updated
+            })
+
+            it('can update the description', () => {
+                cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('editable-entity-name'))
+
+                // wait for loading to finish
+                cy.get(testName('entity-name-container')).within(() => {
+                    cy.get('[data-test-is-loading="false"]')
+                })
+
+                cy.get(testName('add-description')).click()
+                cy.get(testName('add-description')).should('not.exist')
+
+                const description = 'The testing entity description'
+                cy.get(testName('description-editor')).focused().type(description).blur()
+                cy.wait('@updateList').its('response.statusCode').should('equal', 200)
+
+                // wait for loading to finish
+                cy.get(testName('entity-name-container')).within(() => {
+                    cy.get('[data-test-is-loading="false"]')
+                })
+
+                cy.get(testName('add-description')).should('not.exist')
+
+                const descriptionUpdate = ' - With updates'
+                cy.get(testName('description-editor')).click()
+                cy.get(testName('description-editor')).focused().type(descriptionUpdate).blur()
+                cy.wait('@updateList').its('response.statusCode').should('equal', 200)
             })
 
             it('can add children', () => {
@@ -137,12 +173,49 @@ describe('Workspace', () => {
                 // @TODO: assert that task-tree has changed
             })
 
-            it('can edit the description', () => {
+            it('can add a description', () => {
                 const description = 'The testing entity description'
 
+                // wait for loading to finish
+                cy.get(testName('entity-name-container')).within(() => {
+                    cy.get('[data-test-is-loading="false"]')
+                })
+
                 cy.get(testName('add-description')).click()
-                cy.get(testName('description-editor')).type(description).blur()
+                cy.get(testName('add-description')).should('not.exist')
+
+                cy.get(testName('description-editor')).focused().type(description).blur()
                 cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
+            })
+
+            // seems to be a flaky test
+            it.skip('can update the description', () => {
+                cy.get(testName('sidebar-create-new-list')).click()
+                cy.get(testName('editable-entity-name'))
+
+                // wait for loading to finish
+                cy.get(testName('entity-name-container')).within(() => {
+                    cy.get('[data-test-is-loading="false"]')
+                })
+
+                cy.get(testName('add-description')).click()
+                cy.get(testName('add-description')).should('not.exist')
+
+                const description = 'The testing entity description'
+                cy.get(testName('description-editor')).focused().type(description).blur()
+                cy.wait('@updateList').its('response.statusCode').should('equal', 200)
+
+                // wait for loading to finish
+                cy.get(testName('entity-name-container')).within(() => {
+                    cy.get('[data-test-is-loading="false"]')
+                })
+
+                cy.get(testName('add-description')).should('not.exist')
+
+                const descriptionUpdate = ' - With updates'
+                cy.get(testName('description-editor')).click()
+                cy.get(testName('description-editor')).focused().type(descriptionUpdate).blur()
+                cy.wait('@updateList').its('response.statusCode').should('equal', 200)
             })
 
             it('can add tasks', () => {
@@ -200,15 +273,41 @@ describe('Workspace', () => {
                     cy.get(testName('task-menu-button')).click()
                 })
 
-                // task menu
+                // task menu - create new subtask
                 cy.get(testName('drop-down-menu')).within(() => {
-                    cy.contains(/Subtask/)
+                    cy.contains(/Subtask/i)
                         .closest(testName('menu-item'))
                         .click()
                 })
 
                 cy.get(testName('task-tree-node')).should('have.length', 2)
                 cy.get(testName('task-tree-node')).last().should('have.attr', 'data-test-node-level', 1)
+            })
+
+            describe('Task description', () => {
+                it('can add a description', () => {
+                    cy.get(testName('task-tree-node')).within(() => {
+                        cy.get(testName('task-menu-button')).click()
+                    })
+
+                    // task menu - Add description
+                    cy.get(testName('drop-down-menu')).within(() => {
+                        cy.contains(/Description/i)
+                            .closest(testName('menu-item'))
+                            .click()
+                    })
+
+                    const descriptionCy = cy.get(testName('task-tree-node')).focused()
+                    descriptionCy.type('This is a description').blur()
+                    cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
+                })
+
+                it.skip('can update a description', () => {
+                    // @TODO:
+                })
+                it.skip('can open the task as page from the description toolbar', () => {
+                    // @TODO:
+                })
             })
         })
     })

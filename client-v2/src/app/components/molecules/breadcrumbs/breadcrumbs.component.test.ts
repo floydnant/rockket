@@ -2,20 +2,21 @@ import { CdkMenuModule } from '@angular/cdk/menu'
 import { testName } from 'cypress/support/helpers'
 import { EntityPageLabelComponent } from '../../atoms/entity-page-label/entity-page-label.component'
 import { IconsModule } from '../../atoms/icons/icons.module'
-import { DropDownComponent, MenuItem } from '../drop-down/drop-down.component'
+import { MenuItem } from '../../../dropdown/drop-down/drop-down.component'
 import { Breadcrumb, BreadcrumbsComponent } from './breadcrumbs.component'
 import { OverlayModule } from '@angular/cdk/overlay'
 import { DeviceService } from 'src/app/services/device.service'
-import { TooltipComponent } from '../../atoms/tooltip/tooltip.component'
-import { ForModule } from '@rx-angular/template/for'
 import { menuServiceMock } from 'src/app/utils/unit-test.mocks'
+import { RxModule } from 'src/app/rx/rx.module'
+import { DropdownModule } from 'src/app/dropdown/dropdown.module'
+import { TooltipModule } from 'src/app/tooltip/tooltip.module'
 
 const defaultTemplate = `<app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>`
 const setupComponent = (breadcrumbs: Breadcrumb[], template = defaultTemplate) => {
     cy.mount(template, {
         componentProperties: { breadcrumbs },
-        imports: [CdkMenuModule, IconsModule, OverlayModule, ForModule],
-        declarations: [BreadcrumbsComponent, EntityPageLabelComponent, DropDownComponent, TooltipComponent],
+        imports: [CdkMenuModule, IconsModule, OverlayModule, RxModule, DropdownModule, TooltipModule],
+        declarations: [BreadcrumbsComponent, EntityPageLabelComponent],
         providers: [DeviceService, menuServiceMock],
     })
 }

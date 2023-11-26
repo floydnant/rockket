@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './pages/app.component'
 import { DemoComponent } from './components/demo/demo.component'
-import { TaskComponent } from './components/organisms/task/task.component'
+import { ElemContainerComponent, TaskComponent } from './components/organisms/task/task.component'
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
 import { FocusableDirective } from './directives/focusable.directive'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -33,12 +33,9 @@ import { SettingsAccountComponent } from './pages/settings/account/account.compo
 import { AuthComponent } from './pages/auth/auth.component'
 import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.component'
 import { CdkMenuModule } from '@angular/cdk/menu'
-import { DropDownComponent } from './components/molecules/drop-down/drop-down.component'
 import { ModalModule } from './modal/modal.module'
 import { IconsModule } from './components/atoms/icons/icons.module'
 import { OverlayModule } from '@angular/cdk/overlay'
-import { TooltipDirective } from './directives/tooltip.directive'
-import { TooltipComponent } from './components/atoms/tooltip/tooltip.component'
 import { CdkTreeModule } from '@angular/cdk/tree'
 import { EntityPageLabelComponent } from './components/atoms/entity-page-label/entity-page-label.component'
 import { EntityPageComponent } from './pages/home/entity-page/entity-page.component'
@@ -58,10 +55,6 @@ import { LayoutModule } from '@angular/cdk/layout'
 import { IntersectionDirective } from './directives/intersection.directive'
 import { EntityDescriptionComponent } from './components/molecules/entity-description/entity-description.component'
 import { ApplicationinsightsAngularpluginErrorService } from '@microsoft/applicationinsights-angularplugin-js'
-import { LetModule } from '@rx-angular/template/let'
-import { IfModule } from '@rx-angular/template/if'
-import { ForModule } from '@rx-angular/template/for'
-import { PushModule } from '@rx-angular/template/push'
 import { SearchComponent } from './pages/home/search/search.component'
 import { HighlightPipe } from './pipes/highlight.pipe'
 import { TaskNestingDemoComponent } from './pages/landing-page/demos/task-nesting-demo.component'
@@ -71,6 +64,12 @@ import { TaskDescriptionDemoComponent } from './pages/landing-page/demos/task-de
 import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-service.component'
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component'
 import { ContactComponent } from './pages/contact/contact.component'
+import { RxModule } from './rx/rx.module'
+import { TooltipModule } from './tooltip/tooltip.module'
+import { DropdownModule } from './dropdown/dropdown.module'
+import { KeyboardModule } from './keyboard/keyboard.module'
+import { RichTextEditorModule } from './rich-text-editor/rich-text-editor.module'
+import { ToolbarComponent } from './components/molecules/toolbar/toolbar.component'
 
 @NgModule({
     declarations: [
@@ -96,9 +95,6 @@ import { ContactComponent } from './pages/contact/contact.component'
         SettingsAccountComponent,
         AuthComponent,
         LoginLoadingComponent,
-        DropDownComponent,
-        TooltipDirective,
-        TooltipComponent,
         EntityPageLabelComponent,
         EntityPageComponent,
         BreadcrumbsComponent,
@@ -124,6 +120,8 @@ import { ContactComponent } from './pages/contact/contact.component'
         TermsOfServiceComponent,
         PrivacyPolicyComponent,
         ContactComponent,
+        ToolbarComponent,
+        ElemContainerComponent,
     ],
     imports: [
         BrowserModule,
@@ -163,10 +161,11 @@ import { ContactComponent } from './pages/contact/contact.component'
         OverlayModule,
         CdkTreeModule,
         LayoutModule,
-        LetModule,
-        IfModule,
-        ForModule,
-        PushModule,
+        RxModule,
+        TooltipModule,
+        DropdownModule,
+        KeyboardModule,
+        RichTextEditorModule,
     ],
     providers: [
         {

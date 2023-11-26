@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, distinctUntilChanged, filter, first, map, of, switchMap, tap } from 'rxjs'
+import { BehaviorSubject, distinctUntilKeyChanged, filter, first, map, of, switchMap } from 'rxjs'
 import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
@@ -36,20 +36,16 @@ export class EditableEntityTitleComponent {
     titleUpdates$ = new BehaviorSubject<string | null>(null)
 
     isLoading$ = this.entity$.pipe(
-        filter(entity => !!entity),
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        map(entity => entity!.id),
-        distinctUntilChanged(),
-        switchMap(entityId => {
-            return this.loadingService.getEntityLoadingState(action => entityId == action.id)
+        filter(Boolean),
+        distinctUntilKeyChanged('id'),
+        switchMap(({ id: entityId }) => {
+            return this.loadingService.getEntityLoadingState(action => action.id == entityId)
         })
     )
 
     titleUpdatesSubscription = this.titleUpdates$
         .pipe(
-            filter(title => title !== null),
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            map(title => title!),
+            filter((title): title is string => title !== null),
             switchMap(title => {
                 return this.isLoading$.pipe(
                     first(),
@@ -74,14 +70,10 @@ export class EditableEntityTitleComponent {
                     })
                 )
             }),
-            tap(action => {
-                if (!action) return
-
-                this.store.dispatch(action)
-            }),
+            filter(Boolean),
             untilDestroyed(this)
         )
-        .subscribe()
+        .subscribe(action => this.store.dispatch(action))
 
     private readonly taskStatusMenuItems = getTaskStatusMenuItems(this.store)
     taskStatusMenuItems$ = this.entity$.pipe(

@@ -61,3 +61,5 @@ export const moveElement = <T>(arr: Array<T>, fromIndex: number, toIndex: number
     insertElementAfter(arr, toIndex, elem)
     return arr
 }
+
+export const isNotNullish = <T>(value: T | undefined | null): value is T => value !== undefined && value !== null

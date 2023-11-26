@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { IconKey } from '../../atoms/icons/icon/icons'
-import { MenuItem } from '../drop-down/drop-down.component'
+import { MenuItem } from '../../../dropdown/drop-down/drop-down.component'
 import { BehaviorSubject, combineLatestWith, distinctUntilChanged, map, timer } from 'rxjs'
 import { moveToMacroQueue } from 'src/app/utils'
 import { DeviceService } from 'src/app/services/device.service'

@@ -6,10 +6,10 @@ import { Store } from '@ngrx/store'
 import { combineLatestWith, map, of, shareReplay, switchMap } from 'rxjs'
 import { IconKey } from 'src/app/components/atoms/icons/icon/icons'
 import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs.component'
-import { EntityPreviewRecursive } from 'src/app/fullstack-shared-models/entities.model'
+import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
-import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
+import { TaskMenuItemData, getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { traceEntity, traceEntityIncludingTasks } from 'src/app/store/entities/utils'
 import { useDataForAction, useParamsForRoute, useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
@@ -67,21 +67,35 @@ export class EntityPageComponent {
             )
         ),
         map(([trace, loadingMap]) =>
-            trace?.map<Breadcrumb>((entity /* , index, { length } */) => {
-                // @TODO: we should check if the primary loading spinner is visible, and only if not, enable spinner in last breadcrumb
-                // const isLast = index == length - 1
-                const loadingIcon: false | IconKey = /* !isLast && */ loadingMap[entity.id] && 'Loading'
+            trace?.map<Breadcrumb>(({ entityType, ...entity }) => {
+                const loadingIcon: false | IconKey = loadingMap[entity.id] && 'Loading'
                 const statusIcon = (entity as EntityPreviewRecursive & Pick<TaskPreview, 'status'>).status
+
+                let contextMenuItems: Breadcrumb['contextMenuItems']
+
+                if (entityType == EntityType.TASK) {
+                    const taskEntity: TaskMenuItemData = {
+                        ...(entity as EntityPreviewRecursive & TaskPreview),
+                        entityType,
+                    }
+
+                    // @TODO: we must add the data for the tasks in the dropdown
+                    contextMenuItems = this.entityOptionsMap[entityType].applyOperators(
+                        useDataForAction(taskEntity),
+                        useTaskForActiveItems(taskEntity as EntityPreviewRecursive & TaskPreview),
+                        useParamsForRoute({ id: entity.id })
+                    )
+                } else
+                    contextMenuItems = this.entityOptionsMap[entityType].applyOperators(
+                        useDataForAction({ id: entity.id, entityType: entityType as EntityType }),
+                        useParamsForRoute({ id: entity.id })
+                    )
 
                 return {
                     title: entity.title,
-                    icon: loadingIcon || statusIcon || entity.entityType,
+                    icon: loadingIcon || statusIcon || entityType,
                     route: `/home/${entity.id}`,
-                    contextMenuItems: this.entityOptionsMap[entity.entityType].applyOperators(
-                        useDataForAction({ id: entity.id, entityType: entity.entityType }),
-                        useTaskForActiveItems(entity as EntityPreviewRecursive & TaskPreview),
-                        useParamsForRoute({ id: entity.id })
-                    ),
+                    contextMenuItems: contextMenuItems,
                 }
             })
         )

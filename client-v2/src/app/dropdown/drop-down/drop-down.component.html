@@ -1,4 +1,4 @@
-<div class="menu | dropdown-menu" cdkMenu data-test-name="drop-down-menu">
+<div class="menu | dropdown-menu" cdkMenu data-test-name="drop-down-menu" (closed)="closed.emit()">
     <ng-container *ngFor="let menuItem of items$ | async">
         <ng-template #chevron>
             <app-icon class="chevron | translate-x-2 text-tinted-500" icon="chevronRight"></app-icon>
@@ -12,33 +12,44 @@
                 *ngIf="menuItem.icon"
                 [icon]="menuItem.icon"
                 class="mr-1 inline-block scale-[1.3]"
-                [class.text-tinted-400]="!menuItem.variant || menuItem.variant == MenuItemVariant.DEFAULT"
+                [ngClass]="{
+                    'text-tinted-400 [.item-active_&]:text-tinted-300':
+                        !menuItem.variant || menuItem.variant == MenuItemVariant.DEFAULT
+                }"
             ></app-icon>
+        </ng-template>
+        <ng-template #keybinding>
+            <app-key-combo
+                *ngIf="menuItem.keybinding"
+                [combo]="menuItem.keybinding"
+                class="ml-2 -mr-0.5"
+            ></app-key-combo>
         </ng-template>
 
         <a
-            *ngIf="!menuItem.isSeperator && menuItem.route && !menuItem.children?.length"
+            *ngIf="!menuItem.isSeparator && menuItem.route && !menuItem.children?.length"
             #link
             [routerLink]="menuItem.route"
             routerLinkActive="route-active"
             class="skip-default-a-styles menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }}"
-            [class.bg-tinted-600]="menuItem.isActive"
+            [class.item-active]="getIsActive(menuItem.isActive)"
             cdkMenuItem
             (cdkMenuItemTriggered)="link.click(); rootTrigger?.close?.()"
             data-test-name="menu-item"
         >
-            <ng-container *ngTemplateOutlet="icon"></ng-container>
-            <span class="title">{{ menuItem.title }}</span>
+            <span>
+                <ng-container *ngTemplateOutlet="icon"></ng-container>
+                <span class="title">{{ menuItem.title }}</span>
+            </span>
+            <ng-container *ngTemplateOutlet="keybinding"></ng-container>
         </a>
         <a
-            *ngIf="!menuItem.isSeperator && menuItem.route && menuItem.children?.length"
+            *ngIf="!menuItem.isSeparator && menuItem.route && menuItem.children?.length"
             [routerLink]="menuItem.route"
             #link
             routerLinkActive="route-active"
-            class="skip-default-a-styles menu-item {{
-                menuItem.variant || MenuItemVariant.DEFAULT
-            }} | inline-flex justify-between"
-            [class.bg-tinted-600]="menuItem.isActive"
+            class="skip-default-a-styles menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }}"
+            [class.item-active]="getIsActive(menuItem.isActive)"
             cdkMenuItem
             [cdkMenuTriggerFor]="subMenu"
             (cdkMenuItemTriggered)="link.click(); rootTrigger?.close?.()"
@@ -52,21 +63,24 @@
         </a>
 
         <button
-            *ngIf="!menuItem.isSeperator && !menuItem.route && !menuItem.children?.length"
+            *ngIf="!menuItem.isSeparator && !menuItem.route && !menuItem.children?.length"
             class="menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }}"
-            [class.bg-tinted-600]="menuItem.isActive"
+            [class.item-active]="getIsActive(menuItem.isActive)"
             cdkMenuItem
             (cdkMenuItemTriggered)="triggerAction(menuItem.action); rootTrigger?.close?.()"
             data-test-name="menu-item"
         >
-            <ng-container *ngTemplateOutlet="icon"></ng-container>
-            <span class="title">{{ menuItem.title }}</span>
+            <span>
+                <ng-container *ngTemplateOutlet="icon"></ng-container>
+                <span class="title">{{ menuItem.title }}</span>
+            </span>
+            <ng-container *ngTemplateOutlet="keybinding"></ng-container>
         </button>
 
         <button
-            *ngIf="!menuItem.isSeperator && !menuItem.route && menuItem.children?.length"
-            class="menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }} | inline-flex justify-between"
-            [class.bg-tinted-600]="menuItem.isActive"
+            *ngIf="!menuItem.isSeparator && !menuItem.route && menuItem.children?.length"
+            class="menu-item {{ menuItem.variant || MenuItemVariant.DEFAULT }}"
+            [class.item-active]="getIsActive(menuItem.isActive)"
             cdkMenuItem
             (cdkMenuItemTriggered)="triggerAction(menuItem.action); rootTrigger?.close?.()"
             [cdkMenuTriggerFor]="subMenu"
@@ -79,6 +93,6 @@
             <ng-container *ngTemplateOutlet="chevron"></ng-container>
         </button>
 
-        <hr *ngIf="menuItem.isSeperator" class="mx-2 my-1 border-tinted-700" />
+        <hr *ngIf="menuItem.isSeparator" class="mx-2 my-1 border-tinted-700" />
     </ng-container>
 </div>

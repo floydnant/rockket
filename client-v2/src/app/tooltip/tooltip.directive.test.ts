@@ -1,6 +1,6 @@
 import { OverlayModule } from '@angular/cdk/overlay'
 import { testName } from 'cypress/support/helpers'
-import { TooltipComponent } from '../components/atoms/tooltip/tooltip.component'
+import { TooltipComponent } from './tooltip/tooltip.component'
 import { TooltipDirective } from './tooltip.directive'
 
 const tooltipString = "And this is it's tooltip"

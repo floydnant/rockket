@@ -56,10 +56,7 @@ export type TaskPreview = Pick<Task, 'id' | 'title' | 'status' | 'priority' | 'l
 export type TaskDetail = Task
 
 export type TaskPreviewRecursive = TaskPreview & { children: TaskPreviewRecursive[] | null }
-export type TaskPreviewFlattend = Omit<TaskPreviewRecursive, 'children'> & {
-    path: string[]
-    childrenCount: number
-}
+export type TaskPreviewFlattend = TaskPreviewRecursive & { path: string[] }
 
 // @TODO: ITaskEvent
 

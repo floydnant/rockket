@@ -9,11 +9,12 @@ import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { IconsModule } from '../../atoms/icons/icons.module'
 import { InlineEditorComponent } from '../../atoms/inline-editor/inline-editor.component'
-import { DropDownComponent } from '../../molecules/drop-down/drop-down.component'
 import { TaskTreeNode } from '../task-tree/task-tree.component'
 import { TaskComponent } from './task.component'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
-import { PushModule } from '@rx-angular/template/push'
+import { RxModule } from 'src/app/rx/rx.module'
+import { DropdownModule } from 'src/app/dropdown/dropdown.module'
+import { RichTextEditorModule } from 'src/app/rich-text-editor/rich-text-editor.module'
 
 const taskMenuItems = getEntityMenuItemsMap({} as unknown as Store<AppState>)[EntityType.TASK]
 
@@ -40,22 +41,15 @@ const setupComponent = (
                 ...listeners,
                 menuItems: taskMenuItems.map(useStubsForActions(menuItemStubsMap)),
             },
-            imports: [CdkMenuModule, IconsModule, PushModule],
-            declarations: [
-                TaskComponent,
-                DropDownComponent,
-                InlineEditorComponent,
-                FocusableDirective,
-                MutationDirective,
-                HighlightPipe,
-            ],
+            imports: [CdkMenuModule, IconsModule, RxModule, DropdownModule, RichTextEditorModule],
+            declarations: [TaskComponent, InlineEditorComponent, FocusableDirective, MutationDirective, HighlightPipe],
         }
     )
 }
 
 const taskFixture: TaskPreviewFlattend = {
     title: 'The title',
-    childrenCount: 0,
+    children: [],
     description: '',
     id: '',
     listId: '',
@@ -79,7 +73,7 @@ describe('TaskComponent', () => {
         cy.get(testName('task-title')).contains(taskFixture.title)
         cy.get(testName('task-priority-button')).should('not.exist')
         cy.get(testName('subtask-toggle')).should('not.exist')
-        cy.get(testName('task-description')).should('not.be.visible')
+        cy.get(testName('task-description')).should('not.exist')
     })
 
     describe('Title', () => {
@@ -153,6 +147,7 @@ describe('TaskComponent', () => {
                 ...taskTreeNodeFixture,
                 taskPreview: { ...taskFixture, description },
             })
+            cy.get(testName('description-toggle')).click()
 
             cy.get(testName('task-description')).contains(description)
         })

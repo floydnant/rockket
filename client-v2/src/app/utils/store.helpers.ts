@@ -91,7 +91,7 @@ export const loadingUpdates = <T extends AnyActionCreator>(
 /** Injects `isLoading` interpreted by the action type:
 
  * | action type matching | loading state |
- * | ---------------------|---------------|
+ * | -------------------- | ------------- |
  * | `/error/i`           | `false`       |
  * | `/success/i`         | `false`       |
  * | all other cases      | `true`        |

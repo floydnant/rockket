@@ -1,8 +1,15 @@
-<div class="inline-flex items-center overflow-x-auto" *ngIf="entity$ | async as entity">
+<div
+    class="inline-flex items-center overflow-x-auto"
+    *ngIf="entity$ | async as entity"
+    data-test-name="entity-name-container"
+>
     <ng-template #icon>
+        <!-- @TODO: see if this strategy really needs to be 'native' -->
         <app-icon
+            *rxLet="isLoading$; let isLoading; strategy: 'native'"
             class="text-2xl"
-            [icon]="(isLoading$ | async) ? EntityState.LOADING : entity.status || entity.entityType"
+            [icon]="isLoading ? EntityState.LOADING : entity.status || entity.entityType"
+            [attr.data-test-is-loading]="isLoading"
         >
         </app-icon>
     </ng-template>
@@ -11,7 +18,7 @@
         <button
             *ngIf="taskStatusMenuItems$ | async as statusItems; else elseBlock"
             [cdkMenuTriggerFor]="statusMenu"
-            class="icon-btn"
+            class="icon-btn aspect-square p-4"
         >
             <ng-container *ngTemplateOutlet="icon"></ng-container>
             <ng-template #statusMenu>
@@ -26,7 +33,7 @@
 
     <app-inline-editor
         class="title"
-        [textInput]="(entity$ | async)?.title || ''"
+        [textInput]="entity.title || ''"
         [placeholder]="ENTITY_TITLE_DEFAULTS[entity.entityType]"
         [enableDebouncedUpdates]="false"
         (update)="titleUpdates$.next($event)"

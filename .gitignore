@@ -6,3 +6,5 @@ node_modules
 .idea
 # Local Netlify folder
 .netlify
+# Cypress artifacts folder
+.cypress

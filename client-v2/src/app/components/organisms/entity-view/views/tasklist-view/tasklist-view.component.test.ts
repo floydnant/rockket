@@ -3,7 +3,6 @@ import { testName } from 'cypress/support/helpers'
 import { BehaviorSubject, of } from 'rxjs'
 import { EntityPageLabelComponent } from 'src/app/components/atoms/entity-page-label/entity-page-label.component'
 import { InlineEditorComponent } from 'src/app/components/atoms/inline-editor/inline-editor.component'
-import { DropDownComponent } from 'src/app/components/molecules/drop-down/drop-down.component'
 import { EditableEntityTitleComponent } from 'src/app/components/molecules/editable-entity-heading/editable-entity-title.component'
 import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
@@ -14,8 +13,16 @@ import { TaskTreeMap } from 'src/app/store/entities/entities.state'
 import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 import { TasklistViewComponent } from './tasklist-view.component'
-import { PushModule } from '@rx-angular/template/push'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
+import { RxModule } from 'src/app/rx/rx.module'
+import { DropdownModule } from 'src/app/dropdown/dropdown.module'
+import { RichTextEditorModule } from 'src/app/rich-text-editor/rich-text-editor.module'
+import { ToolbarComponent } from 'src/app/components/molecules/toolbar/toolbar.component'
+import { IconsModule } from 'src/app/components/atoms/icons/icons.module'
+import { PageProgressBarComponent } from 'src/app/components/molecules/page-progress-bar/page-progress-bar.component'
+import { TooltipModule } from 'src/app/tooltip/tooltip.module'
+import { IntersectionDirective } from 'src/app/directives/intersection.directive'
+import { LoadingStateService } from 'src/app/services/loading-state.service'
 
 const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: TaskTreeMap = {}) => {
     const store = {
@@ -29,23 +36,29 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
     }
     cy.mount(`<app-tasklist-view></app-tasklist-view> `, {
         componentProperties: {},
-        imports: [CdkMenuModule, PushModule],
+        imports: [CdkMenuModule, IconsModule, RxModule, DropdownModule, RichTextEditorModule, TooltipModule],
         declarations: [
             TasklistViewComponent,
             MutationDirective,
             FocusableDirective,
             EditableEntityTitleComponent,
             EntityPageLabelComponent,
-            DropDownComponent,
             InlineEditorComponent,
             EntityDescriptionComponent,
             HighlightPipe,
+            ToolbarComponent,
+            PageProgressBarComponent,
+            IntersectionDirective,
         ],
         providers: [
             { provide: ENTITY_VIEW_DATA, useValue: viewData },
             store,
             { provide: EntityViewComponent, useValue: { progress$: new BehaviorSubject<number | null>(null) } },
             actionsMock,
+            {
+                provide: LoadingStateService,
+                useValue: { getEntityLoadingState: () => of(false) },
+            },
         ],
     })
 }
@@ -68,7 +81,7 @@ describe('TasklistViewComponent', () => {
         })
 
         cy.get(testName('editable-entity-name')).contains(entityFixture.title)
-        cy.get(testName('description-editor')).should('be.hidden')
+        cy.get(testName('description-editor')).should('not.exist')
         cy.get(testName('entity-children')).should('not.exist')
     })
 
@@ -84,8 +97,6 @@ describe('TasklistViewComponent', () => {
             cy.get(testName('description-editor')).should('not.be.hidden')
             cy.get(testName('description-editor')).contains(description)
         })
-
-        it.skip('can update the description')
     })
 
     describe('Children', () => {

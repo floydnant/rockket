@@ -57,7 +57,7 @@ export class TasksDemoComponent {
         .map<TaskPreviewFlattend>(task => ({
             ...task,
             path: [],
-            childrenCount: 0,
+            children: [],
         }))
         .map(node => convertToTaskTreeNode(node))
 }

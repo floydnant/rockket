@@ -29,7 +29,7 @@ export interface TaskTreeNode {
 export const convertToTaskTreeNode = (task: TaskPreviewFlattend, expand?: boolean): TaskTreeNode => {
     return {
         taskPreview: task,
-        hasChildren: task.childrenCount > 0,
+        hasChildren: (task.children?.length || 0) > 0,
         isExpanded: expand ?? uiDefaults.mainView.IS_TASK_EXPANDED,
         isDescriptionExpanded: expand ?? uiDefaults.mainView.IS_TASK_DESCRIPTION_EXPANDED,
         path: task.path,

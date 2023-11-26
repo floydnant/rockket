@@ -19,7 +19,7 @@
                 <app-task
                     [data]="taskNode"
                     class="mt-2 grow"
-                    [highlightQuery]="highlightQuery"
+                    [searchTerm]="highlightQuery"
                     [menuItems]="(menuItemsMap$ | async)?.[taskNode.taskPreview.id] || []"
                     [isLoading]="(isLoadingMap$ | async)?.[taskNode.taskPreview.id] || false"
                     [readonly]="readonly"
