@@ -32,7 +32,7 @@ If you want your changes to be merged, [fork this repository and file a Pull-Req
 - [PostgreSQL](https://www.postgresql.org/download/) database server
 - [Node.js](https://nodejs.org/en/download/) 14 or higher
 
-### Installation & Preperation
+### Installation & Preparation
 0. Clone the repo with 
     ```sh
     git clone git@github.com:dein-ding/rockket.git
