@@ -5,7 +5,7 @@ import { MenuService } from '../menu.service'
     selector: 'app-menu-toggle',
     template: `
         <button
-            class="w-12 py-2 px-4 md:hidden"
+            class="w-12 px-4 py-2 md:hidden"
             (click)="toggleIsOpen()"
             data-test-name="menu-toggle"
             [attr.data-test-name]="'menu-toggle-' + index"

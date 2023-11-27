@@ -4,10 +4,9 @@ import { BehaviorSubject } from 'rxjs'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { TaskPreviewFlattend, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { IconsModule } from '../../atoms/icons/icons.module'
-
 import { TaskComponent } from './task.component'
-import { PushModule } from '@rx-angular/template/push'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
+import { RxModule } from 'src/app/rx/rx.module'
 
 describe('TaskComponent', () => {
     let component: TaskComponent
@@ -15,7 +14,7 @@ describe('TaskComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [IconsModule, CdkMenuModule, PushModule],
+            imports: [IconsModule, CdkMenuModule, RxModule],
             declarations: [TaskComponent, FocusableDirective, HighlightPipe],
         }).compileComponents()
     })

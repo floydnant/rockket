@@ -7,7 +7,7 @@ import { AppState } from '../store'
 @Injectable({
     providedIn: 'root',
 })
-export class AuthGuard  {
+export class AuthGuard {
     constructor(private store: Store<AppState>, private router: Router) {}
 
     canActivate(_route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot) {

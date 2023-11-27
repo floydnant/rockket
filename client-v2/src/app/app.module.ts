@@ -13,7 +13,7 @@ import { FormComponent } from './components/molecules/form/form.component'
 import { LoginComponent } from './pages/auth/login/login.component'
 import { SignupComponent } from './pages/auth/signup/signup.component'
 import { HttpModule } from './http/http.module'
-import { HotToastModule } from '@ngneat/hot-toast'
+import { HotToastModule, provideHotToastConfig } from '@ngneat/hot-toast'
 import { StoreModule } from '@ngrx/store'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { reducers, metaReducers, effects } from './store'
@@ -129,27 +129,6 @@ import { ToolbarComponent } from './components/molecules/toolbar/toolbar.compone
         ReactiveFormsModule,
         AppRoutingModule,
         HttpModule,
-        HotToastModule.forRoot({
-            success: {
-                iconTheme: { primary: 'var(--submit-400)', secondary: 'var(--tinted-900)' },
-            },
-            loading: {
-                iconTheme: { primary: 'var(--tinted-400)', secondary: 'transparent' },
-            },
-            error: {
-                iconTheme: { primary: 'var(--danger-400)', secondary: 'var(--tinted-900)' },
-            },
-            warning: {
-                iconTheme: { primary: 'var(--secondary-400)', secondary: 'var(--tinted-900)' },
-            },
-
-            style: {
-                background: 'var(--tinted-800)',
-                color: 'var(--tinted-100)',
-                borderRadius: '10px',
-                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 10px rgba(0, 0, 0, 0.25)',
-            },
-        }),
         StoreModule.forRoot(reducers, {
             metaReducers,
         }),
@@ -172,6 +151,27 @@ import { ToolbarComponent } from './components/molecules/toolbar/toolbar.compone
             provide: ErrorHandler,
             useClass: ApplicationinsightsAngularpluginErrorService,
         },
+        provideHotToastConfig({
+            success: {
+                iconTheme: { primary: 'var(--submit-400)', secondary: 'var(--tinted-900)' },
+            },
+            loading: {
+                iconTheme: { primary: 'var(--tinted-400)', secondary: 'transparent' },
+            },
+            error: {
+                iconTheme: { primary: 'var(--danger-400)', secondary: 'var(--tinted-900)' },
+            },
+            warning: {
+                iconTheme: { primary: 'var(--secondary-400)', secondary: 'var(--tinted-900)' },
+            },
+
+            style: {
+                background: 'var(--tinted-800)',
+                color: 'var(--tinted-100)',
+                borderRadius: '10px',
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 10px rgba(0, 0, 0, 0.25)',
+            },
+        }),
     ],
     bootstrap: [AppComponent],
 })

@@ -1,6 +1,6 @@
 <li
     *rxIf="task$; let task; strategy: 'native'"
-    class="task | relative flex w-full max-w-full list-none flex-col rounded-xl border border-tinted-700 border-opacity-75 bg-tinted-800 py-2 px-1 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
+    class="task | relative flex w-full max-w-full list-none flex-col rounded-xl border border-tinted-700 border-opacity-75 bg-tinted-800 px-1 py-2 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
     [ngClass]="{
         completed: task.status == TaskStatus.COMPLETED,
         isActive: inlineEditor.isFocused || isDescriptionActive$ | push,
@@ -130,7 +130,7 @@
                 </ng-container>
             </div>
             <button
-                class="| icon-btn | absolute top-[50%] right-0 translate-y-[-50%] text-tinted-200 transition-opacity"
+                class="| icon-btn | absolute right-0 top-[50%] translate-y-[-50%] text-tinted-200 transition-opacity"
                 [cdkMenuTriggerFor]="menu"
                 (cdkMenuOpened)="isSelected = true"
                 (cdkMenuClosed)="isSelected = false"
@@ -192,7 +192,7 @@
             </div>
             <app-tt-editor
                 #descriptionEditor
-                class="description | mt-1 max-h-72 overflow-y-auto rounded-lg bg-tinted-900 py-1.5 px-2.5 ring-2 ring-transparent transition-colors duration-75 child-focus-ring"
+                class="description | mt-1 max-h-72 overflow-y-auto rounded-lg bg-tinted-900 px-2.5 py-1.5 ring-2 ring-transparent transition-colors duration-75 child-focus-ring"
                 [ngClass]="{
                     'isActive !ring-primary-400': props.isActive,
                     'hover:ring-tinted-600': true,
