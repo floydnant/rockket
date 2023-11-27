@@ -11,8 +11,8 @@ describe('UserMenuComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [UserMenuComponent, CdkMenuTrigger],
-            imports: [OverlayModule],
+            declarations: [UserMenuComponent],
+            imports: [OverlayModule, CdkMenuTrigger],
             providers: [
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 { provide: Store, useValue: { subscribe() {}, select() {} } },
