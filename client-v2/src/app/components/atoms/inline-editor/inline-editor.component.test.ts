@@ -3,8 +3,8 @@ import { BehaviorSubject } from 'rxjs'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
 import { InlineEditorComponent, INLINE_EDITOR_DELAY_TIME } from './inline-editor.component'
-import { PushModule } from '@rx-angular/template/push'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
+import { RxModule } from 'src/app/rx/rx.module'
 
 const setupComponent = (props: {
     textInput$: BehaviorSubject<string>
@@ -19,7 +19,7 @@ const setupComponent = (props: {
         ></app-inline-editor>`,
         {
             componentProperties: props,
-            imports: [PushModule],
+            imports: [RxModule],
             declarations: [InlineEditorComponent, MutationDirective, FocusableDirective, HighlightPipe],
             providers: [],
         }
