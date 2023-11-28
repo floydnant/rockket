@@ -1,4 +1,4 @@
-import { CdkMenuModule, CdkMenuTrigger } from '@angular/cdk/menu'
+import { CdkMenuModule } from '@angular/cdk/menu'
 import { OverlayModule } from '@angular/cdk/overlay'
 import { testName } from 'cypress/support/helpers'
 import { UiStateService } from 'src/app/services/ui-state.service'
