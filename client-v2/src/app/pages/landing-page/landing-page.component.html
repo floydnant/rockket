@@ -256,7 +256,7 @@
             <div class="my-16">
                 <h3>Progressbar</h3>
                 <div
-                    class="progress-container | group top-[6.3rem] z-30 m-2 flex items-center gap-2 rounded-[12.5px] bg-tinted-900 py-2 px-3.5 shadow-header glass"
+                    class="progress-container | group top-[6.3rem] z-30 m-2 flex items-center gap-2 rounded-[12.5px] bg-tinted-900 px-3.5 py-2 shadow-header glass"
                     [class.sticky]="false"
                     appTooltip="Tells you how much you've accomplished so far."
                     [tooltipOptions]="{
@@ -332,7 +332,7 @@
     </app-centered-layout>
 
     <app-centered-layout containerClasses="bg-primary-500 shadow-footer mt-10 mt-20" width="lg" [fullHeight]="false">
-        <section class="py-36 px-10 text-center" id="cta">
+        <section class="px-10 py-36 text-center" id="cta">
             <div
                 class="overlap | bg-dotted absolute inset-x-0 top-0 h-8 rounded-b-2xl bg-tinted-900 shadow-header [background-position:.7rem_.3rem]"
             ></div>
@@ -358,7 +358,7 @@
                 </p>
             </div>
             <ul
-                class="flex flex-col gap-2 marker:text-tinted-400 [&_app-icon]:text-tinted-400 [&_ul]:mt-1 [&>li]:list-none"
+                class="flex flex-col gap-2 marker:text-tinted-400 [&>li]:list-none [&_app-icon]:text-tinted-400 [&_ul]:mt-1"
             >
                 <li>
                     <app-icon icon="far fa-code-commit rotate-90" class=""></app-icon> Filtering and Sorting options
@@ -396,7 +396,7 @@
                         <div class="profile-image | mt-1.5 aspect-square h-8 rounded-full bg-tinted-500"></div>
 
                         <div
-                            class="relative grow rounded-tl-lg pl-1 transition-colors after:absolute after:top-0 after:-right-4 after:block after:h-full after:w-4 after:rounded-tr-lg after:transition-colors group-hover:bg-tinted-700 after:group-hover:bg-tinted-700"
+                            class="relative grow rounded-tl-lg pl-1 transition-colors after:absolute after:-right-4 after:top-0 after:block after:h-full after:w-4 after:rounded-tr-lg after:transition-colors group-hover:bg-tinted-700 after:group-hover:bg-tinted-700"
                         >
                             <div class="person | font-bold transition-transform group-hover:translate-x-1">
                                 {{ person.name }}
@@ -428,7 +428,7 @@
 </div>
 
 <app-centered-layout containerClasses="bg-tinted-800 mt-10" width="lg" [fullHeight]="false">
-    <footer class="pt-28 pb-20">
+    <footer class="pb-20 pt-28">
         <div class="overlap | absolute inset-x-0 top-0 h-8 rounded-b-2xl bg-tinted-900 shadow-header"></div>
         <div class="flex flex-col items-center sm:flex-row sm:items-start [&_li]:list-none">
             <div class="flex-1">

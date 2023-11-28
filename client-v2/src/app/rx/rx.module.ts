@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core'
-import { ForModule } from '@rx-angular/template/for'
-import { IfModule } from '@rx-angular/template/if'
-import { LetModule } from '@rx-angular/template/let'
-import { PushModule } from '@rx-angular/template/push'
+import { RxFor } from '@rx-angular/template/for'
+import { RxIf } from '@rx-angular/template/if'
+import { RxLet } from '@rx-angular/template/let'
+import { RxPush } from '@rx-angular/template/push'
 
 @NgModule({
-    exports: [LetModule, IfModule, ForModule, PushModule],
+    imports: [RxFor, RxIf, RxLet, RxPush],
+    exports: [RxFor, RxIf, RxLet, RxPush],
 })
 export class RxModule {}

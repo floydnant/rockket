@@ -20,7 +20,7 @@ export const tasklistReducerOns: ReducerOns<EntitiesState> = [
                 entityTree: [...(state.entityTree || []), listEntity],
             }
 
-        const entityTreeCopy = structuredClone(state.entityTree)
+        const entityTreeCopy = structuredClone(state.entityTree) || []
         const parentList = getEntityById(entityTreeCopy, parentListId)
 
         if (!parentList)

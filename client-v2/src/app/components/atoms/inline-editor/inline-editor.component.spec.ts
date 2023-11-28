@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
-
 import { InlineEditorComponent } from './inline-editor.component'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
-import { PushModule } from '@rx-angular/template/push'
+import { RxModule } from 'src/app/rx/rx.module'
 
 describe('InlineEditorComponent', () => {
     let component: InlineEditorComponent
@@ -11,7 +10,7 @@ describe('InlineEditorComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [PushModule],
+            imports: [RxModule],
             declarations: [InlineEditorComponent, FocusableDirective, HighlightPipe],
         }).compileComponents()
 
