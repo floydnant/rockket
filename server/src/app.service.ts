@@ -5,7 +5,10 @@ import { PrismaService } from './prisma-abstractions/prisma.service'
 
 @Injectable()
 export class AppService {
-    constructor(prisma: PrismaService, private configService: ConfigService) {
+    constructor(
+        prisma: PrismaService,
+        private configService: ConfigService,
+    ) {
         this.dbHelper = new DbHelper(prisma)
     }
     dbHelper: DbHelper
