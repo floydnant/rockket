@@ -9,11 +9,11 @@ type NotPrefixedWith<T extends string | symbol, TPrefix extends string> = T exte
 
 export type PrismaEntity = NotPrefixedWith<keyof PrismaClient, '$'>
 
-export type EntityModeType<TEntity extends PrismaEntity> = PromiseType<
+export type EntityModelType<TEntity extends PrismaEntity> = PromiseType<
     ReturnType<PrismaClient[TEntity]['findFirstOrThrow']>
 >
 export type DbSnapshot<T extends PrismaEntity = PrismaEntity> = {
-    [K in T]: EntityModeType<K>[]
+    [K in T]: EntityModelType<K>[]
 }
 
 const listAll = async <TEntity extends PrismaEntity>(prisma: PrismaClient, entity: TEntity) => {
@@ -37,7 +37,7 @@ export const getSnapshot = async <TEntities extends Record<PrismaEntity, true>>(
 const createAll = <TEntity extends PrismaEntity>(
     prisma: PrismaClient,
     entity: TEntity,
-    data: EntityModeType<TEntity>[],
+    data: EntityModelType<TEntity>[],
 ) => {
     const createMany = prisma[entity].createMany as unknown as (args: {
         data: typeof data
