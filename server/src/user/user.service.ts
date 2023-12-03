@@ -18,7 +18,10 @@ import { SELECT_user_preview } from '../prisma-abstractions/query-helpers'
 
 @Injectable()
 export class UserService {
-    constructor(private prisma: PrismaService, private jwtService: JwtService) {}
+    constructor(
+        private prisma: PrismaService,
+        private jwtService: JwtService,
+    ) {}
 
     private logger = new Logger('UsersService')
 

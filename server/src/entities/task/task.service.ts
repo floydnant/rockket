@@ -6,7 +6,10 @@ import { TaskRepository } from './task.repository'
 
 @Injectable()
 export class TaskService {
-    constructor(private taskRepository: TaskRepository, private permissions: PermissionsService) {}
+    constructor(
+        private taskRepository: TaskRepository,
+        private permissions: PermissionsService,
+    ) {}
 
     async getAllTaskPreviews(userId: string) {
         return this.taskRepository.getAllTasks(userId)
