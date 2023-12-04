@@ -61,7 +61,7 @@
         "@angular/cli": "^16.2.10",
         "@angular/compiler-cli": "^16.2.12",
         "@cypress/schematic": "^2.5.0",
-        "@html-eslint/parser": "^0.19.1",
+        "@html-eslint/parser": "^0.21.0",
         "@ngx-env/builder": "^15.2.0",
         "@total-typescript/ts-reset": "^0.5.1",
         "@types/jasmine": "^5.1.4",
