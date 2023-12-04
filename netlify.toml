@@ -4,4 +4,4 @@
     status = 200
 
 [context.deploy-preview.build]
-    ignore = "bash ../check-dependencies-label-for-pr.sh $REVIEW_ID"
+    ignore = "bash ../scripts/check-dependencies-label-for-pr.sh $REVIEW_ID"
