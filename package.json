@@ -1,19 +1,23 @@
 {
-    "name": "rockket",
+    "name": "@rockket/source",
     "version": "2.0.0",
-    "description": "A small, carefully crafted todo app with a focus on user experience, built with ❤️ and angular.",
     "scripts": {
-        "ci": "bash ./run-ci-scripts.sh server && bash ./run-ci-scripts.sh client-v2",
-        "deploy": "git checkout prod && git pull origin main && git push && git checkout main && echo '' && echo 'deploying should be in the building phase by now'"
+        "postinstall": "npx prisma generate --schema=./apps/rockket-backend/prisma/schema.prisma"
     },
+    "private": true,
+    "dependencies": {
+    },
+    "devDependencies": {
+        "nx": "17.1.3"
+    },
+    "license": "ISC",
+    "author": "Floyd Haremsa",
+    "homepage": "https://rockket.netlify.app",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/dein-ding/rockket.git"
+        "url": "git+https://github.com/floydnant/rockket.git"
     },
-    "author": "Floyd Haremsa",
-    "license": "ISC",
     "bugs": {
         "url": "https://github.com/dein-ding/rockket/issues"
-    },
-    "homepage": "https://rockket.netlify.app"
+    }
 }
