@@ -1,7 +1,8 @@
 {
     "root": true,
     "ignorePatterns": ["**/*"],
-    "plugins": ["@nx"],
+    "plugins": ["@nx", "tailwindcss"],
+    "extends": ["plugin:tailwindcss/recommended", "prettier"],
     "overrides": [
         {
             "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -22,6 +23,12 @@
             }
         },
         {
+            "files": ["*.ts", "*.tsx", "*.js", "*.jsx", "*.html"],
+            "rules": {
+                "tailwindcss/no-custom-classname": "off"
+            }
+        },
+        {
             "files": ["*.ts", "*.tsx"],
             "extends": ["plugin:@nx/typescript"],
             "rules": {}
@@ -30,6 +37,12 @@
             "files": ["*.js", "*.jsx"],
             "extends": ["plugin:@nx/javascript"],
             "rules": {}
+        },
+        {
+            "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+            "rules": {
+                "@typescript-eslint/no-unused-vars": "warn"
+            }
         },
         {
             "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],

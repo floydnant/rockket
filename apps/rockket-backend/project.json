@@ -38,6 +38,18 @@
                 }
             }
         },
+        "serve-testing": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "PORT=3001 TESTING_ENV=true nx run rockket-backend:serve:development"
+            },
+            "configurations": {
+                "production": {
+                    "command": "PORT=3001 TESTING_ENV=true nx run rockket-backend:serve:production"
+                }
+            },
+            "dependsOn": ["rockket-backend:db:snapshot:pull"]
+        },
         "lint": {
             "executor": "@nx/eslint:lint",
             "outputs": ["{options.outputFile}"],
@@ -50,14 +62,6 @@
             "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
             "options": {
                 "jestConfig": "apps/rockket-backend/jest.config.ts"
-            }
-        },
-        "e2e": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-            "options": {
-                "jestConfig": "apps/rockket-backend/e2e/jest-e2e.config.json",
-                "passWithNoTests": true
             }
         },
         "typecheck-snapshot-scripts": {

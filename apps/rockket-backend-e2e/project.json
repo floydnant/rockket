@@ -10,7 +10,8 @@
             "options": {
                 "jestConfig": "apps/rockket-backend-e2e/jest.config.ts",
                 "passWithNoTests": true
-            }
+            },
+            "dependsOn": ["rockket-backend:db:snapshot:pull"]
         },
         "lint": {
             "executor": "@nx/eslint:lint",

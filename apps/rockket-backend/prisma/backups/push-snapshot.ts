@@ -2,8 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import 'dotenv/config'
 import fs from 'node:fs/promises'
 import { argv } from 'node:process'
-import { DbSnapshot } from './snapshot.helpers'
-import { applySnapshot } from './snapshot.helpers'
+import { DbSnapshot, applySnapshot } from './snapshot.helpers'
 
 const snapshotPath = argv[2]
 
@@ -24,7 +23,7 @@ main()
     .then(async () => {
         await prisma.$disconnect()
     })
-    .catch(async (e) => {
+    .catch(async e => {
         console.error(e)
         await prisma.$disconnect()
         process.exit(1)
