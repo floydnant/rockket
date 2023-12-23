@@ -65,7 +65,7 @@ jobs:
                   app_user: ${{ env.DB_USER }}
                   app_user_password: ${{ env.DB_PWD }}
                   app_db: ${{ env.DB_NAME }}
-            - run: npx prisma migrate deploy
+            - run: npx nx run rockket-backend:db:migrate:deploy
             - run: npx nx test rockket-backend
             - run: npx nx e2e rockket-backend-e2e
 
@@ -96,7 +96,7 @@ jobs:
                   app_db: ${{ env.DB_NAME }}
 
             - run: npm ci
-            - run: npx prisma migrate deploy
+            - run: npx nx run rockket-backend:db:migrate:deploy
             - run: npx nx e2e rockket-web-e2e
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

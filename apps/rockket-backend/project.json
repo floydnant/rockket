@@ -70,6 +70,12 @@
                 "command": "tsc --esModuleInterop --skipLibCheck --noEmit {projectRoot}/prisma/backups/pull-snapshot.ts {projectRoot}/prisma/backups/push-snapshot.ts"
             }
         },
+        "db:migrate:deploy": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "npx prisma migrate deploy --schema {projectRoot}/prisma/schema.prisma"
+            }
+        },
         "db:snapshot:pull": {
             "executor": "nx:run-commands",
             "options": {
