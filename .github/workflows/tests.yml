@@ -20,10 +20,10 @@ jobs:
                   cache-dependency-path: package-lock.json
 
             - run: npm ci
-            - run: nx run-many -t lint -p rockket-web,rockket-web-e2e --verbose
-            - run: nx build rockket-web
-            - run: nx test rockket-web
-            - run: nx component-test rockket-web
+            - run: npx nx run-many -t lint -p rockket-web,rockket-web-e2e --verbose
+            - run: npx nx build rockket-web
+            - run: npx nx test rockket-web
+            - run: npx nx component-test rockket-web
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
@@ -54,9 +54,9 @@ jobs:
                   cache-dependency-path: package-lock.json
 
             - run: npm ci
-            - run: nx run-many -t lint -p rockket-backend,rockket-backend-e2e --verbose
-            - run: nx build rockket-backend
-            - run: nx typecheck-snapshot-scripts rockket-backend
+            - run: npx nx run-many -t lint -p rockket-backend,rockket-backend-e2e --verbose
+            - run: npx nx build rockket-backend
+            - run: npx nx typecheck-snapshot-scripts rockket-backend
 
             - name: Setup Postgres
               uses: Daniel-Marynicz/postgresql-action@master
@@ -65,8 +65,8 @@ jobs:
                   app_user: ${{ env.DB_USER }}
                   app_user_password: ${{ env.DB_PWD }}
                   app_db: ${{ env.DB_NAME }}
-            - run: nx test rockket-backend
-            - run: nx e2e rockket-backend-e2e
+            - run: npx nx test rockket-backend
+            - run: npx nx e2e rockket-backend-e2e
 
     run-full-e2e-tests:
         runs-on: ubuntu-latest
@@ -95,7 +95,7 @@ jobs:
                   app_db: ${{ env.DB_NAME }}
 
             - run: npm ci
-            - run: nx e2e rockket-web-e2e
+            - run: npx nx e2e rockket-web-e2e
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
