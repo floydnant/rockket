@@ -6,7 +6,7 @@ interface MutationOptions {
 }
 
 @Directive({
-    selector: '[domChanges], [textChanges]',
+    selector: '[appMutation], [domChanges], [textChanges]',
 })
 export class MutationDirective implements OnDestroy {
     constructor(private elementRef: ElementRef<HTMLElement>) {}

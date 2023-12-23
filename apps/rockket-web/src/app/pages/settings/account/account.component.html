@@ -17,7 +17,7 @@
 </p>
 <p class="mt-4" *ngIf="usernameControl.dirty">
     <button class="button button--submit | mr-2" (click)="onUsernameSubmit()" [disabled]="usernameFormLoading$ | async">
-        <loading-spinner *ngIf="usernameFormLoading$ | async"></loading-spinner> Update Username
+        <app-loading-spinner *ngIf="usernameFormLoading$ | async"></app-loading-spinner> Update Username
     </button>
     <button class="button-naked" (click)="resetUsername()">Cancel</button>
 </p>

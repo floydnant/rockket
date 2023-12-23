@@ -13,7 +13,7 @@
                 [value]="(routeQuery$ | push) || ''"
             />
             <button class="button button--submit inline-flex gap-2" (click)="searchFor(input.value)">
-                <loading-spinner *rxIf="isLoading$"></loading-spinner>
+                <app-loading-spinner *rxIf="isLoading$"></app-loading-spinner>
                 Search
             </button>
         </div>

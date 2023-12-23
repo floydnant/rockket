@@ -59,7 +59,7 @@
         </p>
 
         <div class="pt-10 text-center" *ngIf="isTreeLoading$ | async; else tree">
-            <loading-spinner class="text-xl"></loading-spinner>
+            <app-loading-spinner class="text-xl"></app-loading-spinner>
         </div>
 
         <ng-template #tree>
@@ -139,7 +139,7 @@
                                 (cdkMenuClosed)="isSelected[node.id] = false"
                                 data-test-name="open-menu"
                             >
-                                <double-ellipsis-icon></double-ellipsis-icon>
+                                <app-double-ellipsis-icon></app-double-ellipsis-icon>
                             </button>
                         </div>
                         <ng-template #nodeDropDown>

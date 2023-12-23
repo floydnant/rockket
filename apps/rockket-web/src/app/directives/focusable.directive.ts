@@ -10,7 +10,8 @@ export const canSelect = <T extends HTMLElement>(elem: T): elem is T & { select(
 }
 
 @Directive({
-    selector: '[focusable]',
+    // @TODO: rename to blurrable and remove the focusable selector
+    selector: '[appBlurrable], [focusable]',
     host: {
         '(focus)': 'emitFocusChange(true)',
         '(blur)': 'emitFocusChange(false)',

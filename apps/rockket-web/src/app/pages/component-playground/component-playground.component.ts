@@ -7,7 +7,7 @@ import { DialogService } from 'src/app/modal/dialog.service'
 import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
 
 @Component({
-    selector: 'component-playground',
+    selector: 'app-component-playground',
     templateUrl: './component-playground.component.html',
     styleUrls: ['./component-playground.component.css'],
 })

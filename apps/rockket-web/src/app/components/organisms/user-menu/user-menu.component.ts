@@ -6,7 +6,7 @@ import { userFeature } from 'src/app/store/user/user.selectors'
 import { MenuItem, MenuItemVariant } from '../../../dropdown/drop-down/drop-down.component'
 
 @Component({
-    selector: 'user-menu',
+    selector: 'app-user-menu',
     templateUrl: './user-menu.component.html',
     styleUrls: ['./user-menu.component.css'],
 })
