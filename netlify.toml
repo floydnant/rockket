@@ -1,3 +1,11 @@
+[build]
+    base = "./"
+    publish = "dist/apps/rockket-web"
+    command = "npx nx build rockket-web"
+
+[[plugins]]
+    package = "@netlify/plugin-lighthouse"
+
 [[redirects]]
     from = "/*"
     to = "/index.html"

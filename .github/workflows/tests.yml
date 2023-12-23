@@ -41,7 +41,7 @@ jobs:
             DB_USER: app
             DB_PWD: develop
             DB_NAME: rockket-testing
-            TESTING_DATABASE_URL: postgresql://app:develop@localhost:5432/rockket-testing?schema=public
+            DATABASE_URL: postgresql://app:develop@localhost:5432/rockket-testing?schema=public
             JWT_SECRET: this is the secret that nobody should know
 
         steps:
@@ -74,7 +74,7 @@ jobs:
             DB_USER: app
             DB_PWD: develop
             DB_NAME: rockket-testing
-            TESTING_DATABASE_URL: postgresql://app:develop@localhost:5432/rockket-testing?schema=public
+            DATABASE_URL: postgresql://app:develop@localhost:5432/rockket-testing?schema=public
             JWT_SECRET: this is the secret that nobody should know
 
         steps:
@@ -84,7 +84,7 @@ jobs:
               with:
                   node-version: 16.x
                   cache: 'npm'
-                  cache-dependency-path: client-v2/package-lock.json
+                  cache-dependency-path: package-lock.json
 
             - name: Setup Postgres
               uses: Daniel-Marynicz/postgresql-action@master
