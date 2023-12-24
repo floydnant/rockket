@@ -1,18 +1,18 @@
-import { ErrorHandler, NgModule } from '@angular/core'
-import { BrowserModule } from '@angular/platform-browser'
-
 import { LayoutModule } from '@angular/cdk/layout'
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { OverlayModule } from '@angular/cdk/overlay'
 import { CdkTreeModule } from '@angular/cdk/tree'
+import { ErrorHandler, NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { BrowserModule } from '@angular/platform-browser'
+import { RouterModule } from '@angular/router'
 import { ApplicationinsightsAngularpluginErrorService } from '@microsoft/applicationinsights-angularplugin-js'
 import { provideHotToastConfig } from '@ngneat/hot-toast'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreModule } from '@ngrx/store'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { environment } from 'src/environments/environment'
-import { AppRoutingModule } from './app-routing.module'
+import { routes } from './app.routes'
 import { EntityPageLabelComponent } from './components/atoms/entity-page-label/entity-page-label.component'
 import { IconsModule } from './components/atoms/icons/icons.module'
 import { InlineEditorComponent } from './components/atoms/inline-editor/inline-editor.component'
@@ -127,11 +127,9 @@ import { TooltipModule } from './tooltip/tooltip.module'
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        AppRoutingModule,
+        RouterModule.forRoot(routes),
         HttpModule,
-        StoreModule.forRoot(reducers, {
-            metaReducers,
-        }),
+        StoreModule.forRoot(reducers, { metaReducers }),
         EffectsModule.forRoot(effects),
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         CdkMenuModule,

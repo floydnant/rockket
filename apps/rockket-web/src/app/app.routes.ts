@@ -1,7 +1,6 @@
-import { inject, NgModule } from '@angular/core'
-import { RouterModule, Routes } from '@angular/router'
+import { inject } from '@angular/core'
+import { Routes } from '@angular/router'
 import { Store } from '@ngrx/store'
-import { environment } from '../environments/environment'
 import { AuthGuard } from './guards/auth.guard'
 import { AuthComponent } from './pages/auth/auth.component'
 import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.component'
@@ -23,12 +22,13 @@ import { SearchComponent } from './pages/home/search/search.component'
 import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-service.component'
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component'
 import { ContactComponent } from './pages/contact/contact.component'
+import { environment } from 'src/environments/environment'
 
 const ENVIRONMENT_HINT = `[${environment.REVIEW_ID ? environment.REVIEW_ID + '-' : ''}${environment.CONTEXT}]`
 const APP_TITLE = `Rockket ${environment.CONTEXT == 'Production' ? '' : ENVIRONMENT_HINT}`
 const APP_TITLE_SUFFIX = `- ${APP_TITLE}`
 
-const routes: Routes = [
+export const routes: Routes = [
     {
         path: '',
         component: LandingPageComponent,
@@ -133,9 +133,3 @@ const routes: Routes = [
         title: `404 Not Found ${APP_TITLE_SUFFIX}`,
     },
 ]
-
-@NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule],
-})
-export class AppRoutingModule {}
