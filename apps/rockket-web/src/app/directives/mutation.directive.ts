@@ -47,7 +47,7 @@ export class MutationDirective implements OnDestroy {
                 element.innerHTML = trimmedText
 
                 try {
-                    window.getSelection()?.setPosition(element, 1) // restore cursor position
+                    window.getSelection()?.setPosition(element, 1) // Restore cursor position
                 } catch (err) {
                     console.log('Error restoring cursor position', err)
                 }

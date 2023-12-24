@@ -35,7 +35,7 @@ export class LoginLoadingComponent {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (isLoggedIn) this.router.navigateByUrl(this.callbackUrl!, { replaceUrl: true })
             else {
-                // this.toast.error('Invalid session, please login again.')
+                // This.toast.error('Invalid session, please login again.')
                 this.router.navigateByUrl('/auth', { replaceUrl: true })
             }
         })

@@ -1,5 +1,5 @@
 <div
-    class="breadcrumbs | flex w-full overflow-x-auto px-4 py-2 text-tinted-300"
+    class="breadcrumbs | text-tinted-300 flex w-full overflow-x-auto px-4 py-2"
     cdkMenuBar
     data-test-name="breadcrumbs-container"
     #breadcrumbsContainer
@@ -50,7 +50,7 @@
             <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { breadcrumb, isLast }"></ng-container>
         </ng-container>
 
-        <span class="separator | mx-0.5 text-tinted-500" *ngIf="!isLast">/</span>
+        <span class="separator | text-tinted-500 mx-0.5" *ngIf="!isLast">/</span>
     </div>
 </div>
 

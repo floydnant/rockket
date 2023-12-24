@@ -8,7 +8,7 @@ export interface TaskList {
     parentListId: string
     childLists: string[]
     taskIds: string[]
-    // participants: string[] // maybe this one as well
+    // Participants: string[] // maybe this one as well
 }
 
 export type TasklistPreview = Pick<TaskList, 'id' | 'title' | 'childLists' | 'parentListId'>

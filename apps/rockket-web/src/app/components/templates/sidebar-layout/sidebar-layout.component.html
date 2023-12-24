@@ -2,7 +2,7 @@
     <div class="relative flex h-[calc(100%-var(--bottom-nav-height))] md:h-full">
         <aside
             #sidebar
-            class="sidebar | sidebar--mobile | relative flex h-full flex-shrink-0 flex-col border-tinted-700 bg-tinted-800 md:w-[var(--sidebar-width,14rem)] md:min-w-[10rem] md:max-w-[25rem] md:border-r md:text-md"
+            class="sidebar | sidebar--mobile | border-tinted-700 bg-tinted-800 md:text-md relative flex h-full shrink-0 flex-col md:w-[var(--sidebar-width,14rem)] md:min-w-[10rem] md:max-w-[25rem] md:border-r"
             [class.hide]="!(isMenuOpen$ | async)"
             [hidden]="!(isMenuOpen$ | async)"
             data-test-name="sidebar"
@@ -19,7 +19,7 @@
                     >Drag <span class="text-tinted-300">to resize the sidebar</span></ng-template
                 >
                 <div
-                    class="relative left-[50%] h-full w-0.5 -translate-x-[50%] transition-colors delay-75 group-hover:bg-tinted-400"
+                    class="group-hover:bg-tinted-400 relative left-[50%] h-full w-0.5 translate-x-[-50%] transition-colors delay-75"
                 ></div>
             </div>
             <header
@@ -46,7 +46,7 @@
     </div>
     <div
         *ngIf="isMobileScreen$ | async"
-        class="bottom-nav | z-[1] flex h-[var(--bottom-nav-height)] items-center justify-evenly border-t border-transparent text-xl text-tinted-300 shadow-footer transition-colors"
+        class="bottom-nav | text-tinted-300 shadow-footer z-[1] flex h-[var(--bottom-nav-height)] items-center justify-evenly border-t border-transparent text-xl transition-colors"
         [class.!border-tinted-700]="(isBottomNavBorderVisible$ | async) || (isMenuOpen$ | async)"
     >
         <button class="px-4 py-2" routerLink="/settings" routerLinkActive="text-primary-300">

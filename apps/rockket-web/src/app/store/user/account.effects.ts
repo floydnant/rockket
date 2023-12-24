@@ -88,7 +88,7 @@ export class AccountEffects {
                 // @TODO: implement this
                 this.toast.info('Resetting passwords is not yet supported.')
                 return of(appActions.nothing())
-                // const res$ = this.userService.resetPassword()
+                // Const res$ = this.userService.resetPassword()
 
                 // return res$.pipe(
                 //     this.toast.observe({

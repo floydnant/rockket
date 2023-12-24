@@ -53,7 +53,7 @@ export class SidebarLayoutComponent implements AfterViewInit {
                 ),
                 coalesceWith(animationFrames()),
                 map(e => {
-                    const width = e.clientX // just take the x coordinate as the new width
+                    const width = e.clientX // Just take the x coordinate as the new width
                     const sidebar = this.sidebar.nativeElement
 
                     sidebar.style.width = width + 'px'

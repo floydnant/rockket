@@ -44,6 +44,6 @@
     <app-task-tree *ngIf="task.children && task.children.length; else noTasks" [tasks]="task.children"></app-task-tree>
 
     <ng-template #noTasks>
-        <p class="text-center text-tinted-400">No subtasks yet...</p>
+        <p class="text-tinted-400 text-center">No subtasks yet...</p>
     </ng-template>
 </ng-container>

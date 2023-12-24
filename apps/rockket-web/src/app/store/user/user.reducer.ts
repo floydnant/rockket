@@ -52,7 +52,7 @@ export const userReducer = createReducer<UserState>(
         isLoggedIn: false,
     })),
 
-    // logout
+    // Logout
     on(authActions.logoutProceed, () => initialState),
 
     // Update username success

@@ -4,6 +4,6 @@ export const appActions = createActionGroup({
     source: 'App',
     events: {
         nothing: emptyProps(),
-        // error: props<HttpServerErrorResponse>(),
+        // Error: props<HttpServerErrorResponse>(),
     },
 })

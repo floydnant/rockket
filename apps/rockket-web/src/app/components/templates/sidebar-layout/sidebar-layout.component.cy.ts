@@ -66,14 +66,14 @@ describe('SidebarLayoutComponent', () => {
             cy.viewport('iphone-se2')
             setupComponent(defaultTemplate)
 
-            // open by default
+            // Open by default
             cy.get(testName('sidebar')).should('not.have.attr', 'hidden')
 
-            // then close it
+            // Then close it
             cy.get(testName('menu-toggle-2')).click()
             cy.get(testName('sidebar')).should('have.attr', 'hidden')
 
-            // then open again
+            // Then open again
             cy.get(testName('menu-toggle-1')).click()
             cy.get(testName('sidebar')).should('not.have.attr', 'hidden')
         })

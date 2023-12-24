@@ -80,7 +80,7 @@ describe('TaskComponent', () => {
         it('emits title updates', () => {
             const onTitleChange = cy.stub().as('onTitleChange')
             setupComponent(taskTreeNodeFixture, { onTitleChange })
-            cy.contains(taskFixture.title) // wait for render to complete
+            cy.contains(taskFixture.title) // Wait for render to complete
 
             const updatedTitle = 'updated task title'
 
@@ -118,7 +118,7 @@ describe('TaskComponent', () => {
                 ...taskTreeNodeFixture,
                 taskPreview: { ...taskFixture, priority },
             })
-            cy.contains(taskFixture.title) // wait for render to complete
+            cy.contains(taskFixture.title) // Wait for render to complete
 
             cy.get(testName('task-priority-button')).should('exist')
         })
@@ -132,7 +132,7 @@ describe('TaskComponent', () => {
                     priority,
                 },
             })
-            cy.contains(taskFixture.title) // wait for render to complete
+            cy.contains(taskFixture.title) // Wait for render to complete
 
             cy.get(testName('task-priority-button')).should('not.exist')
         })
@@ -163,7 +163,7 @@ describe('TaskComponent', () => {
         }
         it('displays the subtask toggle', () => {
             setupComponent(data)
-            cy.contains(taskFixture.title) // wait for render to complete
+            cy.contains(taskFixture.title) // Wait for render to complete
 
             cy.get(testName('subtask-toggle')).should('exist')
         })
@@ -171,7 +171,7 @@ describe('TaskComponent', () => {
         it('emits toggle events', () => {
             const onToggleSubtasks = cy.stub().as('onToggleSubtasks')
             setupComponent(data, { onToggleSubtasks })
-            cy.contains(taskFixture.title) // wait for render to complete
+            cy.contains(taskFixture.title) // Wait for render to complete
 
             cy.get(testName('subtask-toggle'))
                 .click()

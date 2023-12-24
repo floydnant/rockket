@@ -29,7 +29,7 @@ describe('TaskComponent', () => {
             status: TaskStatus.OPEN,
             description: '',
             listId: '',
-            // ownerId: '',
+            // OwnerId: '',
             // closedAt: '',
             // deadline: '',
             // openedAt: '',
@@ -37,7 +37,7 @@ describe('TaskComponent', () => {
             // subtaskIds: [],
             // blockedById: '',
             parentTaskId: '',
-            // inProgressSince: '',
+            // InProgressSince: '',
         } as null | TaskPreviewFlattend)
         fixture.detectChanges()
     })

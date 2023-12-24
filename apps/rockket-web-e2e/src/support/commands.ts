@@ -19,7 +19,7 @@ declare namespace Cypress {
 }
 
 function setLocalStorage(itemName: string, itemValue: string) {
-    // cy.visit('/')
+    // Cy.visit('/')
     return cy.window().then(() => {
         window.localStorage.setItem(itemName, itemValue)
     })
@@ -46,7 +46,7 @@ function signup() {
         .then(res => {
             expect(res.status).to.eq(201)
 
-            // token needs to be JSON parsable
+            // Token needs to be JSON parsable
             cy.setLocalStorage('rockket-auth-token', `${JSON.stringify(res.body.user.authToken)}`)
         })
 }

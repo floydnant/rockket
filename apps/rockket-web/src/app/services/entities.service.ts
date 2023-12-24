@@ -28,7 +28,7 @@ export type EntityServiceInstanceMap = {
 const entityServiceInjectorMap = {
     [EntityType.TASKLIST]: ListService,
     [EntityType.TASK]: TaskService,
-} // satisfies Record<EntityType, EntityServiceConstructor> // @TODO: upgrade to typescript@4.9 => angular@15
+} // Satisfies Record<EntityType, EntityServiceConstructor> // @TODO: upgrade to typescript@4.9 => angular@15
 
 export const getEntityServiceInjector = <T extends EntityType>(entityType: T): EntityServiceInjectorMap[T] => {
     return entityServiceInjectorMap[entityType]

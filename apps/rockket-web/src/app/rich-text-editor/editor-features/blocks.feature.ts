@@ -44,7 +44,8 @@ export const blocksFeature = createEditorFeature({
                 return {
                     ...this.parent?.(),
                     toggleTaskItem: () => {
-                        // if (this.editor.isActive('taskItem')) {
+                        // @TODO: find out what this is supposed to be and remove it
+                        // If (this.editor.isActive('taskItem')) {
                         //     return this.editor.commands.toggleTaskList()
                         // }
                         // return this.editor.commands.command(({ tr, dispatch }) => {
@@ -177,7 +178,7 @@ export const blocksFeature = createEditorFeature({
             controlId: EditorControlId.CodeBlock,
             title: extensionDisplayName.codeBlock,
             icon: 'editor.codeBlock',
-            // keybinding: 'mod+alt+C',
+            // Keybinding: 'mod+alt+C',
             isActive: ({ editor }) => editor.isActive('codeBlock'),
             action: ({ chain }) => chain().toggleCodeBlock().run(),
         },

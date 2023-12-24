@@ -92,7 +92,7 @@ describe('FormComponent', () => {
                 { submitButton: 'Submit' }
             )
 
-            // not submitting the form
+            // Not submitting the form
             cy.get('[data-test-name="validation-errors"]').should('have.length', 0)
         })
 
@@ -170,7 +170,7 @@ describe('FormComponent', () => {
             )
 
             cy.get('[data-test-name="input-username"]').type('this is the username')
-            // leave password blank
+            // Leave password blank
 
             cy.get('[data-test-name="submit-button"]')
                 .click()

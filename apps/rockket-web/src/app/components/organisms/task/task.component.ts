@@ -163,7 +163,7 @@ export class TaskComponent {
     get loading() {
         return this.isLoading ? EntityState.LOADING : false
     }
-    blocked = false // disabled for now
+    blocked = false // Disabled for now
 
     @Input() readonly = false
 
@@ -171,7 +171,7 @@ export class TaskComponent {
 
     @Output('descriptionChange') descriptionUpdateOnBlur$ = new EventEmitter<string>()
 
-    // this is where the editor output lands
+    // This is where the editor output lands
     descriptionUpdates$ = new Subject<string>()
     descriptionState$ = merge(
         this.descriptionUpdates$,
@@ -184,12 +184,12 @@ export class TaskComponent {
     @Output() isDescriptionActive$ = new BehaviorSubject<boolean>(false)
     descriptionBlur$ = new Subject<void>()
 
-    // this is where explicit toggles land
+    // This is where explicit toggles land
     isDescriptionExpandedInput$ = new Subject<{
         emit: boolean
         isExpanded: boolean
     }>()
-    // this is what controls the flow -> combines explicit and implicit toggles (blur events)
+    // This is what controls the flow -> combines explicit and implicit toggles (blur events)
     isDescriptionExpandedBus$ = this.nodeData$.pipe(
         map(nodeData => ({ emit: false, isExpanded: nodeData?.isDescriptionExpanded ?? false })),
         mergeWith(this.isDescriptionExpandedInput$),
@@ -202,13 +202,13 @@ export class TaskComponent {
         startWith({ emit: false, isExpanded: false }),
         shareReplay({ bufferSize: 1, refCount: true }),
     )
-    // this drives the view
+    // This drives the view
     isDescriptionExpanded$ = this.isDescriptionExpandedBus$.pipe(
         map(({ isExpanded }) => isExpanded),
         distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: true }),
     )
-    // this is what the parent component listens to
+    // This is what the parent component listens to
     @Output('descriptionExpansionChange') isDescriptionExpandedOutput$ = this.isDescriptionExpandedBus$.pipe(
         filter(({ emit }) => emit),
         map(({ isExpanded }) => isExpanded),

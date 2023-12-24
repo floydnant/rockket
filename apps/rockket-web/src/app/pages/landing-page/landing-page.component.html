@@ -9,7 +9,7 @@
             >
             <a
                 routerLink="/auth/login"
-                class="text-sm font-semibold leading-6 !text-tinted-100"
+                class="!text-tinted-100 text-sm font-semibold leading-6"
                 data-test-name="login-link"
                 >Log in <span aria-hidden="true">&rarr;</span></a
             >
@@ -17,18 +17,18 @@
     </app-user-menu>
 </ng-template>
 
-<header class="sticky top-0 z-50 w-full bg-tinted-900 shadow-header glass">
+<header class="bg-tinted-900 shadow-header glass sticky top-0 z-50 w-full">
     <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div class="flex lg:flex-1">
             <a routerLink="/" class="-m-1.5 flex items-center gap-4 p-1.5 decoration-transparent">
                 <img class="h-8 w-auto" src="assets/rockket-logo.png" alt="Rockket logo" />
-                <span class="font-bold text-tinted-100">Rockket</span>
+                <span class="text-tinted-100 font-bold">Rockket</span>
             </a>
         </div>
         <div class="flex lg:hidden">
             <button
                 type="button"
-                class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-2xl text-tinted-500"
+                class="text-tinted-500 -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-2xl"
                 (click)="isMobileMenuOpen = !isMobileMenuOpen"
                 data-test-name="mobile-menu-toggle"
             >
@@ -54,7 +54,7 @@
             <a
                 *ngFor="let link of mainNavLinks"
                 [href]="link.route"
-                class="text-sm font-semibold leading-6 text-tinted-900"
+                class="text-tinted-900 text-sm font-semibold leading-6"
                 >{{ link.title }}</a
             >
         </div>
@@ -69,7 +69,7 @@
     <!-- Background backdrop, show/hide based on slide-over state. -->
     <div class="fixed inset-0 z-50"></div>
     <div
-        class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-tinted-900 !bg-opacity-80 px-6 py-6 glass sm:max-w-sm sm:ring-1 sm:ring-tinted-900/10"
+        class="bg-tinted-900 glass sm:ring-tinted-900/10 fixed inset-y-0 right-0 z-50 w-full overflow-y-auto !bg-opacity-80 p-6 sm:max-w-sm sm:ring-1"
     >
         <div class="flex items-center justify-between">
             <a routerLink="#" class="-m-1.5 p-1.5">
@@ -78,7 +78,7 @@
             </a>
             <button
                 type="button"
-                class="-m-2.5 rounded-md p-2.5 text-2xl text-tinted-700"
+                class="text-tinted-700 -m-2.5 rounded-md p-2.5 text-2xl"
                 (click)="isMobileMenuOpen = !isMobileMenuOpen"
             >
                 <span class="sr-only">Close menu</span>
@@ -96,12 +96,12 @@
             </button>
         </div>
         <div class="mt-6 flow-root">
-            <div class="-my-6 divide-y divide-tinted-500/10">
+            <div class="divide-tinted-500/10 -my-6 divide-y">
                 <div class="space-y-2 py-6">
                     <a
                         *ngFor="let link of mainNavLinks"
                         [href]="link.route"
-                        class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-tinted-700"
+                        class="hover:bg-tinted-700 -mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7"
                         >{{ link.title }}</a
                     >
                 </div>
@@ -123,7 +123,7 @@
                 aria-hidden="true"
             >
                 <div
-                    class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-primary-500 to-submit-500 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                    class="from-primary-500 to-submit-500 relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
                     style="
                         clip-path: polygon(
                             74.1% 44.1%,
@@ -149,7 +149,7 @@
             <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
                 <div class="hidden sm:mb-8 sm:flex sm:justify-center">
                     <div
-                        class="anouncement | relative rounded-full bg-tinted-900 px-3 py-1 text-sm leading-6 text-tinted-500 ring-1 ring-tinted-300/10 transition-colors glass hover:ring-tinted-300/20"
+                        class="anouncement | bg-tinted-900 text-tinted-500 ring-tinted-300/10 glass hover:ring-tinted-300/20 relative rounded-full px-3 py-1 text-sm leading-6 ring-1 transition-colors"
                     >
                         We just launched! 🎉 Be one of the first to try out rockket.
                         <a href="#cta" class="font-semibold"
@@ -163,7 +163,7 @@
                         Stay motivated with every
                         <app-icon icon="Completed" class="text-3xl sm:text-5xl"></app-icon> task!
                     </h1>
-                    <p class="subline | mt-6 text-lg leading-8 text-tinted-500">
+                    <p class="subline | text-tinted-500 mt-6 text-lg leading-8">
                         Say goodbye to procrastination, Rockket is the task manager that keeps you on track and rewards
                         you for your hard work.
                     </p>
@@ -171,7 +171,7 @@
                         <a routerLink="/auth/signup" class="get-started | button button--submit skip-default-a-styles"
                             >Get started</a
                         >
-                        <a href="#features" class="learn-more | text-sm font-semibold leading-6 text-tinted-900"
+                        <a href="#features" class="learn-more | text-tinted-900 text-sm font-semibold leading-6"
                             >Learn more <span aria-hidden="true">→</span></a
                         >
                     </div>
@@ -182,7 +182,7 @@
                 aria-hidden="true"
             >
                 <div
-                    class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-submit-400 to-primary-400 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+                    class="from-submit-400 to-primary-400 relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
                     style="
                         clip-path: polygon(
                             74.1% 44.1%,
@@ -256,7 +256,7 @@
             <div class="my-16">
                 <h3>Progressbar</h3>
                 <div
-                    class="progress-container | group top-[6.3rem] z-30 m-2 flex items-center gap-2 rounded-[12.5px] bg-tinted-900 px-3.5 py-2 shadow-header glass"
+                    class="progress-container | bg-tinted-900 shadow-header glass group top-[6.3rem] z-30 m-2 flex items-center gap-2 rounded-[12.5px] px-3.5 py-2"
                     [class.sticky]="false"
                     appTooltip="Tells you how much you've accomplished so far."
                     [tooltipOptions]="{
@@ -265,12 +265,12 @@
                     }"
                 >
                     <div
-                        class="progress-bar | h-1.5 grow rounded bg-tinted-700 transition-colors group-hover:bg-tinted-600"
+                        class="progress-bar | bg-tinted-700 group-hover:bg-tinted-600 h-1.5 grow rounded transition-colors"
                     >
-                        <div class="progress | h-full rounded bg-submit-400" [style.width]="progress + '%'"></div>
+                        <div class="progress | bg-submit-400 h-full rounded" [style.width]="progress + '%'"></div>
                     </div>
                     <span
-                        class="progress-number | font-bold text-tinted-400 transition-colors"
+                        class="progress-number | text-tinted-400 font-bold transition-colors"
                         [class.!text-submit-400]="progress == 100"
                     >
                         {{ progress + ' %' }}
@@ -302,7 +302,7 @@
                         <ng-template #elseBlock>
                             <ng-template #comingSoon>
                                 <div
-                                    class="flex aspect-video w-full items-center rounded-lg border border-dashed border-tinted-600 bg-gradient-to-br from-transparent to-tinted-900 px-8 text-center text-tinted-400"
+                                    class="border-tinted-600 to-tinted-900 text-tinted-400 flex aspect-video w-full items-center rounded-lg border border-dashed bg-gradient-to-br from-transparent px-8 text-center"
                                 >
                                     This feature will arrive over the course of the next few months.
                                 </div>
@@ -334,7 +334,7 @@
     <app-centered-layout containerClasses="bg-primary-500 shadow-footer mt-10 mt-20" width="lg" [fullHeight]="false">
         <section class="px-10 py-36 text-center" id="cta">
             <div
-                class="overlap | bg-dotted absolute inset-x-0 top-0 h-8 rounded-b-2xl bg-tinted-900 shadow-header [background-position:.7rem_.3rem]"
+                class="overlap | bg-dotted bg-tinted-900 shadow-header absolute inset-x-0 top-0 h-8 rounded-b-2xl [background-position:.7rem_.3rem]"
             ></div>
 
             <h2 class="text-4xl">Ready to take control of your to-do list?</h2>
@@ -342,7 +342,7 @@
             <p class="mt-6"><a routerLink="/auth/signup" class="button button--submit px-8">Signup</a></p>
 
             <div
-                class="overlap | bg-dotted absolute inset-x-0 bottom-0 h-8 rounded-t-2xl bg-tinted-900 shadow-footer [background-position:.7rem_.9rem]"
+                class="overlap | bg-dotted bg-tinted-900 shadow-footer absolute inset-x-0 bottom-0 h-8 rounded-t-2xl [background-position:.7rem_.9rem]"
             ></div>
         </section>
     </app-centered-layout>
@@ -358,7 +358,7 @@
                 </p>
             </div>
             <ul
-                class="flex flex-col gap-2 marker:text-tinted-400 [&>li]:list-none [&_app-icon]:text-tinted-400 [&_ul]:mt-1"
+                class="marker:text-tinted-400 [&_app-icon]:text-tinted-400 flex flex-col gap-2 [&>li]:list-none [&_ul]:mt-1"
             >
                 <li>
                     <app-icon icon="far fa-code-commit rotate-90" class=""></app-icon> Filtering and Sorting options
@@ -388,20 +388,20 @@
 
         <section class="testimonials | mt-20 flex snap-x snap-mandatory gap-3 overflow-x-auto py-8" *rxIf="false">
             <div
-                class="testimonial | group w-1/4 flex-shrink-0 select-none snap-start rounded-lg bg-tinted-800 p-4 transition-colors hover:bg-tinted-700"
+                class="testimonial | bg-tinted-800 hover:bg-tinted-700 group w-1/4 shrink-0 select-none snap-start rounded-lg p-4 transition-colors"
                 *ngFor="let person of testimonials"
             >
                 <div class="transition-transform group-hover:-translate-y-9">
                     <div class="testimonial-header | mb-2 flex items-start gap-2">
-                        <div class="profile-image | mt-1.5 aspect-square h-8 rounded-full bg-tinted-500"></div>
+                        <div class="profile-image | bg-tinted-500 mt-1.5 aspect-square h-8 rounded-full"></div>
 
                         <div
-                            class="relative grow rounded-tl-lg pl-1 transition-colors after:absolute after:-right-4 after:top-0 after:block after:h-full after:w-4 after:rounded-tr-lg after:transition-colors group-hover:bg-tinted-700 after:group-hover:bg-tinted-700"
+                            class="group-hover:bg-tinted-700 after:group-hover:bg-tinted-700 relative grow rounded-tl-lg pl-1 transition-colors after:absolute after:-right-4 after:top-0 after:block after:h-full after:w-4 after:rounded-tr-lg after:transition-colors"
                         >
                             <div class="person | font-bold transition-transform group-hover:translate-x-1">
                                 {{ person.name }}
                             </div>
-                            <div class="role | text-sm text-tinted-400 transition-transform group-hover:translate-x-1">
+                            <div class="role | text-tinted-400 text-sm transition-transform group-hover:translate-x-1">
                                 {{ person.role }}
                             </div>
                         </div>
@@ -429,7 +429,7 @@
 
 <app-centered-layout containerClasses="bg-tinted-800 mt-10" width="lg" [fullHeight]="false">
     <footer class="pb-20 pt-28">
-        <div class="overlap | absolute inset-x-0 top-0 h-8 rounded-b-2xl bg-tinted-900 shadow-header"></div>
+        <div class="overlap | bg-tinted-900 shadow-header absolute inset-x-0 top-0 h-8 rounded-b-2xl"></div>
         <div class="flex flex-col items-center sm:flex-row sm:items-start [&_li]:list-none">
             <div class="flex-1">
                 <h3>Rockket</h3>

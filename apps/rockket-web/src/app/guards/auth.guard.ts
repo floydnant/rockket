@@ -14,7 +14,7 @@ export class AuthGuard {
         return this.store
             .select(state => state.user)
             .pipe(
-                first(), // not sure if this is necessary, but better safe than sorry
+                first(), // Not sure if this is necessary, but better safe than sorry
                 // filter(userState => !userState.isLoading), // wait for ongoing login process to complete
                 map(({ isLoggedIn, isLoading }) => {
                     if (isLoggedIn) return true

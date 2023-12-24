@@ -31,19 +31,19 @@ export class ListController {
         return this.listService.deletelist(user.id, listId)
     }
 
-    // root level list previews
+    // Root level list previews
     @Get('lists')
     getRootLevelTasklists(@GetUser() user: User) {
         return this.listService.getRootLevelTasklists(user.id)
     }
 
-    // nested child list previews
+    // Nested child list previews
     @Get('list/:listId/child-lists')
     getChildTasklists(@GetUser() user: User, @Param('listId') listId: string) {
         return this.listService.getChildTasklists(user.id, listId)
     }
 
-    // tasklist sharing
+    // Tasklist sharing
     @Post('list/:listId/share/:userId')
     shareList(
         @GetUser() user: User,
@@ -71,7 +71,7 @@ export class ListController {
         return this.listService.removeParticipant(user.id, listId, userId)
     }
 
-    // the actual tasks
+    // The actual tasks
     @Get('list/:listId/tasks')
     // @TODO: the response should be minimized to the TaskPreview
     getTasks(@GetUser() user: User, @Param('listId') listId: string) {

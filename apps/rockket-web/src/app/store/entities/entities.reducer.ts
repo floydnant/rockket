@@ -107,7 +107,7 @@ export const entitiesReducer = createReducer(
             const entities = result[entityType]
 
             for (const entity of entities) {
-                // update details
+                // Update details
                 entityDetailsCopy[entityType][entity.id] = {
                     ...(entityDetailsCopy[entityType][entity.id] || {}),
                     ...entity,
@@ -136,7 +136,7 @@ export const entitiesReducer = createReducer(
                     else containingArr[index] = { ...containingArr[index], ...task }
                 }
 
-                // update list tree
+                // Update list tree
                 if (entityType == EntityType.TASKLIST) {
                     const list = entity as TaskList
                     const listEntity: EntityPreviewRecursive = {

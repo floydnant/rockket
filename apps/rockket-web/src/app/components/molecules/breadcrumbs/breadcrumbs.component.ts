@@ -52,7 +52,7 @@ const range = (start: number, end: number) => {
     const length = end - start + 1
     return new Array(length).fill(null).map((_, index) => start + index)
 }
-// const range_ = (startOrLength: number, end?: number) => {
+// Const range_ = (startOrLength: number, end?: number) => {
 //     const length = !end ? startOrLength : end - startOrLength + 1
 //     const offset = end ? startOrLength : 0
 //     return new Array(length).fill(null).map((_, index) => offset + index)
@@ -89,7 +89,7 @@ export class BreadcrumbsComponent {
         combineLatestWith(this.menuService.sidebarWidth$, this.deviceService.isMobileScreen$),
         coalesceWith(timer(100)),
         map(([screenWidth, sidebarWidth, isMobileScreen]) => {
-            return (isMobileScreen ? screenWidth : screenWidth - sidebarWidth) - 170 // extra space
+            return (isMobileScreen ? screenWidth : screenWidth - sidebarWidth) - 170 // Extra space
         })
     )
 
@@ -128,7 +128,7 @@ export class BreadcrumbsComponent {
     trackByFn(_index: number, crumb: BreadcrumbInternal): string {
         if (isTruncationBreadcrumb(crumb)) {
             return 'truncated'
-            // return crumb.truncated.map((c, i) => this.trackByFn(i, c)).join('')
+            // Return crumb.truncated.map((c, i) => this.trackByFn(i, c)).join('')
         }
 
         const { icon, title, route } = crumb

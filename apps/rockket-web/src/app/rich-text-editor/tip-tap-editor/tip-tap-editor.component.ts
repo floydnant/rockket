@@ -67,13 +67,13 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
 
     @Output('focus') focus$ = this.editor.focus$.pipe(
         map(({ event }) => event),
-        mergeWith(this.focusStateInput$.pipe(filter((isFocused): isFocused is true => isFocused)))
+        mergeWith(this.focusStateInput$.pipe(filter((isFocused): isFocused is true => isFocused))),
     )
     @Output('blur') blur$ = this.editor.blur$.pipe(
         filter(({ event }) => {
             const clickedElem = event.relatedTarget as HTMLElement | undefined
 
-            // check if a control from the toolbar was clicked
+            // Check if a control from the toolbar was clicked
             const isControlClicked =
                 clickedElem?.className?.includes('format-control-item') ||
                 clickedElem?.className?.includes('format-controls-container') ||
@@ -82,7 +82,7 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
                 clickedElem?.parentElement?.className?.includes('keep-editor-focus')
             if (isControlClicked) return false
 
-            // check if a task item was clicked (only inside the current editor)
+            // Check if a task item was clicked (only inside the current editor)
             if (isChecklistItem(clickedElem) && this.editor.view.dom.contains(clickedElem as Node)) return false
 
             // -> Its good to explicitly allow elems instead of blindly ignoring everything from inside the editor
@@ -92,16 +92,16 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
         tap(() => this.editor.deselect()),
         map(({ event }) => event),
         mergeWith(this.focusStateInput$.pipe(filter((isFocused): isFocused is false => !isFocused))),
-        share({ resetOnRefCountZero: true })
+        share({ resetOnRefCountZero: true }),
     )
 
     @Output('isActive') isActive$ = merge(this.focus$, this.blur$).pipe(
         map(() => this.editor.isFocused),
         coalesceWith(timer(70)),
-        mergeWith(this.editor.unbind$.pipe(map(() => false))), // because we blur the editor when (un)binding
+        mergeWith(this.editor.unbind$.pipe(map(() => false))), // Because we blur the editor when (un)binding
         startWith(false),
         untilDestroyed(this),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     private bindConfig$ = new Subject<{ input$: Observable<string>; context: TContext }>()
@@ -114,12 +114,12 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
             const bound = this.editor.bindEditor(input$, this.searchTerm$)
             return { input$, context, ...bound }
         }),
-        share({ resetOnRefCountZero: true })
+        share({ resetOnRefCountZero: true }),
     )
 
     @Output('update') update$ = this.bound$.pipe(
         switchMap(({ update$ }) => update$),
-        share({ resetOnRefCountZero: true })
+        share({ resetOnRefCountZero: true }),
     )
 
     @Output('updateOnBlur') updateOnBlur$ = this.bound$.pipe(
@@ -133,9 +133,9 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
                 // Must be delayed so that `unbind$` triggers a last update before the bound is destroyed,
                 // to make sure all transactions are dispatched.
                 takeUntil(this.editor.unbind$.pipe(delay(0))),
-                share({ resetOnRefCountZero: true })
-            )
+                share({ resetOnRefCountZero: true }),
+            ),
         ),
-        share({ resetOnRefCountZero: true })
+        share({ resetOnRefCountZero: true }),
     )
 }

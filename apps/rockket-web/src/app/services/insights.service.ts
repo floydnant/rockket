@@ -18,7 +18,7 @@ export class InsightsService {
         if (environment.CONTEXT != 'Production')
             console.info('Insights enabled:', enableInsights, enableInsights ? `with role: ${role}` : '')
 
-        this.appInsights.loadAppInsights() // insights need to be loaded, in order to display errors correctly
+        this.appInsights.loadAppInsights() // Insights need to be loaded, in order to display errors correctly
 
         if (!enableInsights) return
 
@@ -26,7 +26,7 @@ export class InsightsService {
             if (envelope.tags) envelope.tags['ai.cloud.role'] = role
         })
 
-        // set user context
+        // Set user context
         this.actions$
             .pipe(
                 ofType(authActions.loginOrSignupSuccess),
@@ -35,7 +35,7 @@ export class InsightsService {
             )
             .subscribe(userId => this.appInsights.setAuthenticatedUserContext(userId, undefined, true))
 
-        // clear user context
+        // Clear user context
         this.actions$
             .pipe(ofType(authActions.logoutProceed, authActions.confirmLoginError, authActions.loginOrSignupError))
             .subscribe(() => this.appInsights.clearAuthenticatedUserContext())

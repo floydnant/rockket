@@ -73,7 +73,7 @@ export interface EditorControl {
 type Separator = { isSeparator: true }
 export const separator = { isSeparator: true } as Separator
 export const isSeparator = (item: unknown): item is Separator =>
-    /* item == separator || */ typeof item == 'object' && item != null && 'isSeparator' in item
+    /* Item == separator || */ typeof item == 'object' && item != null && 'isSeparator' in item
 
 export interface EditorLayoutParentItem {
     controlId: EditorControlId
@@ -83,7 +83,7 @@ export type EditorLayoutItem = EditorControlId | EditorLayoutParentItem | Separa
 
 export interface EditorFeature {
     featureId: EditorFeatureId
-    // extensions: (Extension | Node | Mark)[]
+    // Extensions: (Extension | Node | Mark)[]
     extensions: Extensions
     controls?: EditorControl[]
     layout?: EditorLayoutItem[]

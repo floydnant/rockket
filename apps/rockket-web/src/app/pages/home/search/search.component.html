@@ -1,7 +1,7 @@
 <app-main-pane>
     <ng-container main>
         <h1>Search</h1>
-        <div class="sticky top-0 z-40 -mt-3 flex w-full gap-2 rounded-b-lg bg-tinted-900 pt-3 shadow-header glass">
+        <div class="bg-tinted-900 shadow-header glass sticky top-0 z-40 -mt-3 flex w-full gap-2 rounded-b-lg pt-3">
             <input
                 #input
                 type="text"
@@ -40,7 +40,7 @@
                     <ng-template #entityTemplate let-entities="entities" let-level="level">
                         <ng-container *rxFor="let entity of entities">
                             <button
-                                class="list-preview | m-0 flex cursor-pointer flex-col items-start rounded-xl border border-tinted-700 bg-tinted-800 p-1 text-left transition-colors hover:bg-tinted-700"
+                                class="list-preview | border-tinted-700 bg-tinted-800 hover:bg-tinted-700 m-0 flex cursor-pointer flex-col items-start rounded-xl border p-1 text-left transition-colors"
                                 routerLink="/home/{{ entity.id }}"
                                 [style]="{ 'margin-left': level * 1.5 + 'rem' }"
                             >
@@ -53,7 +53,7 @@
                                         getEntityDetail(entitiesState, entity.entityType, entity.id)?.description;
                                         let desc
                                     "
-                                    class="description | mt-1 h-full max-h-40 w-full overflow-y-auto rounded-lg bg-tinted-900 px-2 py-1 text-tinted-300"
+                                    class="description | bg-tinted-900 text-tinted-300 mt-1 h-full max-h-40 w-full overflow-y-auto rounded-lg px-2 py-1"
                                     [innerHTML]="desc | highlight : search.query"
                                 ></div>
                             </button>
@@ -81,7 +81,7 @@
                     search.result.tasks.length == 0 &&
                     !(isLoading$ | push)
                 "
-                class="mt-3 text-center text-danger-400"
+                class="text-danger-400 mt-3 text-center"
             >
                 No matches found
             </p>

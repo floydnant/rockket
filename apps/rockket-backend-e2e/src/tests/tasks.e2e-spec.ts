@@ -104,7 +104,7 @@ describe('Task CRUD (e2e)', () => {
             ['status', 'In_Progress'],
             ['priority', 'High'],
             ['deadline', new Date().toISOString()],
-            // blockedById event is tested seperately, because it is too specific and needs special care
+            // BlockedById event is tested seperately, because it is too specific and needs special care
         ])("can update a task's %s -> verify task event", async (key, value) => {
             const createdTask = await createTask(app, authToken, {
                 title: 'This is the task title',
@@ -191,14 +191,14 @@ describe('Task CRUD (e2e)', () => {
                 listId: createdList.id,
             })
 
-            // share the list with annie, but only for viewing
+            // Share the list with annie, but only for viewing
             await request(app)
                 .post(`/list/${createdList.id}/share/${annie.id}`)
                 .auth(authToken, typeBearer)
                 .send({ permission: 'View' })
                 .expect(201)
 
-            // annie tries to comment
+            // Annie tries to comment
             await request(app)
                 .post(`/task/${createdTask.id}/comment`)
                 .auth(annie.authToken, typeBearer)
@@ -220,7 +220,7 @@ describe('Task CRUD (e2e)', () => {
                 listId: createdList.id,
             })
 
-            // annie comments
+            // Annie comments
             const createRes = await request(app)
                 .post(`/task/${createdTask.id}/comment`)
                 .auth(authToken, typeBearer)
@@ -245,10 +245,10 @@ describe('Task CRUD (e2e)', () => {
                 listId: createdList.id,
             })
 
-            // jonathan shares the list with annie (Edit permissions)
+            // Jonathan shares the list with annie (Edit permissions)
             await request(app).post(`/list/${createdList.id}/share/${annie.id}`).auth(authToken, typeBearer).expect(201)
 
-            // annie comments
+            // Annie comments
             const res = await request(app)
                 .post(`/task/${createdTask.id}/comment`)
                 .auth(annie.authToken, typeBearer)
@@ -256,7 +256,7 @@ describe('Task CRUD (e2e)', () => {
                 .expect(201)
             const comment = res.body as TaskComment
 
-            // jonathan tries to update the comment
+            // Jonathan tries to update the comment
             await request(app)
                 .patch(`/task/comment/${comment.id}`)
                 .auth(authToken, typeBearer)
@@ -277,7 +277,7 @@ describe('Task CRUD (e2e)', () => {
                 .expect(201)
             const comment = res.body as TaskComment
 
-            // jonathan deletes the comment
+            // Jonathan deletes the comment
             await request(app).delete(`/task/comment/${comment.id}`).auth(authToken, typeBearer).expect(200)
         })
 
@@ -289,7 +289,7 @@ describe('Task CRUD (e2e)', () => {
                 listId: createdList.id,
             })
 
-            // jonathan shares the list with annie (Edit permissions)
+            // Jonathan shares the list with annie (Edit permissions)
             await request(app)
                 .post(`/list/${createdList.id}/share/${annie.id}`)
                 .auth(authToken, typeBearer)
@@ -303,7 +303,7 @@ describe('Task CRUD (e2e)', () => {
                 .expect(201)
             const comment = res.body as TaskComment
 
-            // annie deletes the comment
+            // Annie deletes the comment
             await request(app).delete(`/task/comment/${comment.id}`).auth(annie.authToken, typeBearer).expect(200)
         })
     })

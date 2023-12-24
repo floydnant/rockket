@@ -41,11 +41,11 @@ export class DbHelper {
         let names = await tableNames
         names ||= await this.getTables()
 
-        // console.time(`TRUNCATED tables: ${names}`)
+        // Console.time(`TRUNCATED tables: ${names}`)
         await this.prisma.$transaction(
             names.map(name => this.prisma.$executeRawUnsafe(`TRUNCATE TABLE "public"."${name}" CASCADE;`)),
         )
-        // console.timeEnd(`TRUNCATED tables: ${names}`)
+        // Console.timeEnd(`TRUNCATED tables: ${names}`)
 
         // // console.time(`CLEARED DATABASE`)
         // for (const tableName of names) {

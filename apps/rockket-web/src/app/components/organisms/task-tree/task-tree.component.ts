@@ -46,7 +46,7 @@ export class TaskTreeComponent {
     constructor(
         private store: Store<AppState>,
         private loadingService: LoadingStateService,
-        private uiStateService: UiStateService
+        private uiStateService: UiStateService,
     ) {}
 
     tasks$ = new BehaviorSubject<TaskPreviewRecursive[] | null>(null)
@@ -74,7 +74,7 @@ export class TaskTreeComponent {
                 return treeNode
             })
             return treeNodes
-        })
+        }),
     )
 
     uiChangeEvents = new BehaviorSubject<{
@@ -120,7 +120,7 @@ export class TaskTreeComponent {
         }),
         tap(taskNodes => {
             this.treeWithUiChanges = taskNodes
-        })
+        }),
     )
 
     private getParentNode(node: TaskTreeNode) {
@@ -168,14 +168,14 @@ export class TaskTreeComponent {
 
         return node
     }
-    // is first elem in the current hierarchy
+    /** Is first elem in the current hierarchy */
     isPreviousLineSpotATask(nodeIndex: number, lineIndex: number, nodeLevel: number) {
         const previousNode = this.getNodeAt(nodeIndex - 1)
         const previousNodeLevel = previousNode?.path?.length || 0
 
         return previousNodeLevel + lineIndex < nodeLevel
     }
-    // is last elem in the current hierarchy
+    /** Is last elem in the current hierarchy */
     isNextLineSpotATask(nodeIndex: number, lineIndex: number, nodeLevel: number) {
         const nextNode = this.getNodeAt(nodeIndex + 1, true)
         const nextNodeLevel = nextNode?.path?.length || 0
@@ -194,12 +194,12 @@ export class TaskTreeComponent {
             })
             return Object.fromEntries(menuItemEntries)
         }),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     // @OUTSOURCE
     isLoadingMap$ = this.loadingService.getEntitiesLoadingStateMap(action =>
-        this.flattendTaskTree$.pipe(map(tasks => tasks.some(task => task.taskPreview.id == action.id)))
+        this.flattendTaskTree$.pipe(map(tasks => tasks.some(task => task.taskPreview.id == action.id))),
     )
 
     onTitleChange(id: string, title: string) {

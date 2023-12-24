@@ -48,7 +48,7 @@ export const flattenEntityTree = (
 export const flattenTaskTree = (taskTree: TaskPreviewRecursive[], path: string[] = []): TaskPreviewFlattend[] => {
     return taskTree.flatMap(task => {
         const { children, ...restTask } = task
-        // if (!children) console.warn(`Children for task '${task.id}' (${task.title}) not loaded yet!`)
+        // If (!children) console.warn(`Children for task '${task.id}' (${task.title}) not loaded yet!`)
 
         const flatTask = { ...restTask, path, children }
         const subpath = [...path, task.id]

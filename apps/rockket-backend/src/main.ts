@@ -16,7 +16,7 @@ async function bootstrap(configService: ConfigService) {
         methods: ['GET', 'POST', 'PATCH', 'DELETE'],
         credentials: true,
     }
-    // app.useWebSocketAdapter(new ExtendedIoAdapter(app, corsConfig));
+    // App.useWebSocketAdapter(new ExtendedIoAdapter(app, corsConfig));
     app.enableCors(corsConfig)
 
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }))

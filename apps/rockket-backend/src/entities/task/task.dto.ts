@@ -19,7 +19,7 @@ class TaskDto {
     @IsEnum(TaskPriority, enumInvalidMessage('priority', TaskPriority))
     priority: TaskPriority
 
-    // listId must always be given, even when the task is not a root level task
+    // ListId must always be given, even when the task is not a root level task
     @IsUUID()
     listId: string
 
@@ -42,7 +42,7 @@ export class UpdateTaskDto extends TaskDto {
     @IsOptional()
     title: string
 
-    // but we only need the listId here if we move the task to a different list
+    // But we only need the listId here if we move the task to a different list
     @IsOptional()
     listId: string
 }

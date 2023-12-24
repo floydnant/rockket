@@ -11,7 +11,7 @@ export const inlineFeature = createEditorFeature({
         Bold,
         Italic,
         Code.extend({
-            excludes: 'bold italic code', // allow links and strikethrough in code
+            excludes: 'bold italic code', // Allow links and strikethrough in code
             code: true,
             exitable: true,
 

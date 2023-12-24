@@ -58,7 +58,7 @@ describe('List CRUD (e2e)', () => {
                 title: 'This is the task title',
                 listId: createdList.id,
             })
-            // updating a task, will create a `TaskEvent` which needs to be deleted as well
+            // Updating a task, will create a `TaskEvent` which needs to be deleted as well
             await request(app)
                 .patch(`/task/${createdTask.id}`)
                 .send({ status: TaskStatus.Completed })
@@ -106,49 +106,49 @@ describe('List CRUD (e2e)', () => {
 
     describe('Sharing (participants)', () => {
         it('can share a list with other users', async () => {
-            // jonathan creates a list
+            // Jonathan creates a list
             const createdList = await createTasklist(app, authToken, createListDtoFixture)
 
-            // annie signes up
+            // Annie signes up
             const anniesRes = await signup(app, userFixtures.annie).expect(201)
             const annie = anniesRes.body.user
 
-            // jonathan shares the list with annie
+            // Jonathan shares the list with annie
             await request(app).post(`/list/${createdList.id}/share/${annie.id}`).auth(authToken, typeBearer).expect(201)
 
-            // annie checks if she has access to the list
+            // Annie checks if she has access to the list
             await request(app).get(`/list/${createdList.id}`).auth(annie.authToken, typeBearer).expect(200)
         })
         describe('Permissions', () => {
             it('cannot access a tasklist without permissions', async () => {
-                // jonathan creates a list
+                // Jonathan creates a list
                 const createdList = await createTasklist(app, authToken, createListDtoFixture)
 
-                // annie signes up
+                // Annie signes up
                 const anniesRes = await signup(app, userFixtures.annie).expect(201)
                 const annie = anniesRes.body.user
 
-                // jonathan doesn't share the list with annie
+                // Jonathan doesn't share the list with annie
 
                 // annie checks if she has access to the list
                 await request(app).get(`/list/${createdList.id}`).auth(annie.authToken, typeBearer).expect(403)
             })
 
             it('cannot edit a tasklist without Edit permissions', async () => {
-                // jonathan creates a list
+                // Jonathan creates a list
                 const createdList = await createTasklist(app, authToken, createListDtoFixture)
 
-                // annie signes up
+                // Annie signes up
                 const annie = (await signup(app, userFixtures.annie).expect(201)).body.user
 
-                // jonathan shares the list with annie
+                // Jonathan shares the list with annie
                 await request(app)
                     .post(`/list/${createdList.id}/share/${annie.id}`)
                     .auth(authToken, typeBearer)
                     .send({ permission: 'View' })
                     .expect(201)
 
-                // annie checks if she can edit the list
+                // Annie checks if she can edit the list
                 await request(app)
                     .patch(`/list/${createdList.id}`)
                     .auth(annie.authToken, typeBearer)

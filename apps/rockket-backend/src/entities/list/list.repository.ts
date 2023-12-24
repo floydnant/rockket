@@ -9,7 +9,7 @@ export class ListRepository {
     constructor(private prisma: PrismaService) {}
 
     async createTasklist(userId: string, { parentListId, ...dto }: CreateTasklistDto) {
-        if (parentListId) await this.getTasklistById(parentListId) // throw if parentList not found
+        if (parentListId) await this.getTasklistById(parentListId) // Throw if parentList not found
 
         return await this.prisma.tasklist.create({
             data: {

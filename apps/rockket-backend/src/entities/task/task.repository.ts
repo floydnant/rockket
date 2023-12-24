@@ -47,8 +47,8 @@ export class TaskRepository {
         if (!task) throw new NotFoundException('Could not find task')
 
         const eventsToCreate = eventRelatedUpdatedFields
-            .filter((key) => task[key]?.toString() != dto[key]) // skip creating events when the value didn't actually change
-            .map((key) => ({
+            .filter(key => task[key]?.toString() != dto[key]) // Skip creating events when the value didn't actually change
+            .map(key => ({
                 updatedField: key,
                 prevValue: task[key]?.toString(),
                 newValue: dto[key],
@@ -130,7 +130,7 @@ export class TaskRepository {
     async getTaskComments(taskId: string) {
         return this.prisma.taskComment.findMany({
             where: { taskId },
-            // orderBy: { commentedAt: 'asc' }, // maybe this won't be nececcary, let's see
+            // OrderBy: { commentedAt: 'asc' }, // maybe this won't be nececcary, let's see
         })
     }
     async createTaskComment(userId: string, taskId: string, dto: CreateTaskCommentDto) {

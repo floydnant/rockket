@@ -43,7 +43,7 @@ export class EntityPageComponent {
                         // @TODO: how do we check if the entity is loading or if the request was not even sent yet?
                         if (!entityTree) return null
 
-                        // const isActiveTaskLoading = taskLoadingMap[activeId] as boolean | undefined
+                        // Const isActiveTaskLoading = taskLoadingMap[activeId] as boolean | undefined
                         // if (!isActiveTaskLoading) {
                         //     this.store.dispatch(Load the given task)
                         //     return null

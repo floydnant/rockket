@@ -34,7 +34,7 @@ const tasklist = Object.values(TaskStatus)
 const sortTasklist = (tasklist: TaskPreview[]) => {
     const openTasks = tasklist
         .filter(
-            // prettier-ignore
+            // Prettier-ignore
             t => t.status != TaskStatus.NOT_PLANNED &&
                 t.status != TaskStatus.COMPLETED &&
                 t.status != TaskStatus.BACKLOG

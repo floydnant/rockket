@@ -57,7 +57,7 @@ export const getStatusCountMapRecursive = (taskTree: TaskPreviewRecursive[]): Re
 })
 export class PageProgressBarComponent {
     constructor(
-        private entityView: EntityViewComponent, // needed to update the secondary progress bar, @TODO: find a clearer way to do this
+        private entityView: EntityViewComponent, // Needed to update the secondary progress bar, @TODO: find a clearer way to do this
         private uiStateService: UiStateService
     ) {}
 

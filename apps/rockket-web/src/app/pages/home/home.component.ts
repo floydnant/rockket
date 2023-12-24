@@ -99,7 +99,7 @@ export class HomeComponent {
         return true
     }
 
-    // changes are automatically reflected here, since it always stays the same object identity
+    // Changes are automatically reflected here, since it always stays the same object identity
     entityExpandedMap = this.uiStateService.sidebarUiState.entityExpandedMap
     toggleExpansion(node: EntityTreeNode) {
         node.isExpanded = !node.isExpanded

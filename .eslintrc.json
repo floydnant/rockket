@@ -25,7 +25,14 @@
         {
             "files": ["*.ts", "*.tsx", "*.js", "*.jsx", "*.html"],
             "rules": {
-                "tailwindcss/no-custom-classname": "off"
+                "tailwindcss/no-custom-classname": "off",
+                "capitalized-comments": [
+                    "warn",
+                    "always",
+                    {
+                        "ignoreConsecutiveComments": true
+                    }
+                ]
             }
         },
         {

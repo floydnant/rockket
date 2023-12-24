@@ -97,7 +97,7 @@ export class EntityViewComponent {
     entityViewData: EntityViewData<any> = {
         // @TODO: (high prio): get rid of the macro queue here as its causing
         // a huge delay of ~170ms on rendering the view
-        entity$: this.entity$.pipe(delay(0)), // move to macro queue
+        entity$: this.entity$.pipe(delay(0)), // Move to macro queue
         detail$: this.entityDetail$,
         options$: this.entityOptionsItems$,
     }
@@ -111,7 +111,7 @@ export class EntityViewComponent {
         .pipe(
             distinctUntilChanged((previous, current) => previous?.id == current?.id),
             tap(() => this.topElement?.nativeElement?.scrollIntoView({ behavior: 'smooth' })),
-            delay(0), // needs to be on the macro queue or else, change detection is complaining
+            delay(0), // Needs to be on the macro queue or else, change detection is complaining
             tap(entity => {
                 if (!entity) return
 

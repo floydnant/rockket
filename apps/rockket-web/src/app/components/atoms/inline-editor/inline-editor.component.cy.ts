@@ -66,7 +66,7 @@ describe('InlineEditorComponent', () => {
                 .type('{selectAll}{backspace}' + updatedText)
 
             textInput$.next(updatedText)
-            cy.get(testName('inline-editor')).should('be.focused') // when a re-render happens, the editor looses focus
+            cy.get(testName('inline-editor')).should('be.focused') // When a re-render happens, the editor looses focus
 
             cy.wait(INLINE_EDITOR_DELAY_TIME).then(() => {
                 // @TODO: maybe the editor should not be emitting if the same content just came in
@@ -85,7 +85,7 @@ describe('InlineEditorComponent', () => {
                 textInput$: new BehaviorSubject(originalText),
                 onUpdate,
             })
-            cy.contains(originalText) // wait for content to render
+            cy.contains(originalText) // Wait for content to render
 
             cy.get(testName('inline-editor'))
                 .click()
@@ -109,7 +109,7 @@ describe('InlineEditorComponent', () => {
                 textInput$: new BehaviorSubject(originalText),
                 onUpdate,
             })
-            cy.contains(originalText) // wait for content to render
+            cy.contains(originalText) // Wait for content to render
 
             cy.get(testName('inline-editor'))
                 .click()
@@ -128,7 +128,7 @@ describe('InlineEditorComponent', () => {
                 textInput$: new BehaviorSubject(originalText),
                 onUpdate,
             })
-            cy.contains(originalText) // wait for content to render
+            cy.contains(originalText) // Wait for content to render
 
             cy.get(testName('inline-editor'))
                 .click()
@@ -149,7 +149,7 @@ describe('InlineEditorComponent', () => {
                 placeholder,
             })
 
-            // cy.get(testName('inline-editor')).contains(placeholder) // @TODO: we must assert on the :before's content property
+            // Cy.get(testName('inline-editor')).contains(placeholder) // @TODO: we must assert on the :before's content property
         })
     })
 })

@@ -17,6 +17,6 @@ describe('HighlightPipe', () => {
         expect(result).toEqual(expected)
     })
 
-    // it.skip('does not include html syntax', () => {})
+    // It.skip('does not include html syntax', () => {})
     // it.skip('includes href attributes', () => {})
 })

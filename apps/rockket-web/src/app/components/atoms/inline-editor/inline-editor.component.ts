@@ -71,7 +71,7 @@ export class InlineEditorComponent {
 
                     return text != latestTextUpdate
                 }),
-                map(() => text)
+                map(() => text),
             )
         }),
         tap(text => {
@@ -85,10 +85,10 @@ export class InlineEditorComponent {
                 this.inlineEditor.nativeElement.innerText = ''
             }
         }),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
-    isFocused = false // needed for access from outside the component
+    isFocused = false // Needed for access from outside the component
 
     keydownEvents$ = new BehaviorSubject<KeyboardEvent | null>(null)
     blurEvents$ = new BehaviorSubject<FocusEvent | null>(null)
@@ -99,8 +99,8 @@ export class InlineEditorComponent {
         this.text$.pipe(
             tap(() => {
                 if (this.textChanges$.value !== null) this.textChanges$.next(null)
-            })
-        )
+            }),
+        ),
     ).pipe(shareReplay({ bufferSize: 1, refCount: true }))
 
     textUpdateEvents$ = merge(
@@ -114,18 +114,18 @@ export class InlineEditorComponent {
                 return false
             }),
             throttleTime(INLINE_EDITOR_DELAY_TIME),
-            switchMap(() => this.textChanges$.pipe(first()))
+            switchMap(() => this.textChanges$.pipe(first())),
         ),
         this.blurEvents$.pipe(
             filter(e => !!e),
             tap(() => this.deselectEditor()),
             throttleTime(INLINE_EDITOR_DELAY_TIME),
-            switchMap(() => this.textChanges$.pipe(first()))
+            switchMap(() => this.textChanges$.pipe(first())),
         ),
         this.textChanges$.pipe(
             filter(() => this.enableDebouncedUpdates),
-            debounceTime(INLINE_EDITOR_DELAY_TIME)
-        )
+            debounceTime(INLINE_EDITOR_DELAY_TIME),
+        ),
     ).pipe(
         map(newText => {
             if (newText === null) return null
@@ -133,7 +133,7 @@ export class InlineEditorComponent {
             return newText || this.placeholder || '' // @TODO: same here with placeholder
         }),
         distinctUntilChanged(),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     textUpdatesSubscription = this.textUpdateEvents$
@@ -144,7 +144,7 @@ export class InlineEditorComponent {
                 this.lastEmittedUpdate = text
                 this.update.emit(text)
             }),
-            untilDestroyed(this)
+            untilDestroyed(this),
         )
         .subscribe()
 

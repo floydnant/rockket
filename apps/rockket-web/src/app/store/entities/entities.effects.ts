@@ -208,7 +208,7 @@ export class EntitiesEffects {
     search = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.search),
-            // should be switchMap, because we want to cancel the previous search, when a new one is triggered
+            // Should be switchMap, because we want to cancel the previous search, when a new one is triggered
             switchMap(({ query }) => {
                 const res$ = this.entitiesService.search(query)
 

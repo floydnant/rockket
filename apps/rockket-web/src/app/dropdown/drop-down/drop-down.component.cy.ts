@@ -71,10 +71,10 @@ describe('DropDownComponent', () => {
         cy.get('button').click()
         cy.get(testName('drop-down-menu'))
 
-        cy.get(testName('menu-item')).first().next().focus().type('{rightArrow}') // opening the nested menu
-        cy.get(testName('drop-down-menu')).should('have.length', 2) // two menus should be open
-        cy.get(testName('menu-item')).first().next().focus().type('{rightArrow}{enter}') // click the first item in the nested menu
-        cy.get(testName('drop-down-menu')).should('not.exist') // the whole tree should close
+        cy.get(testName('menu-item')).first().next().focus().type('{rightArrow}') // Opening the nested menu
+        cy.get(testName('drop-down-menu')).should('have.length', 2) // Two menus should be open
+        cy.get(testName('menu-item')).first().next().focus().type('{rightArrow}{enter}') // Click the first item in the nested menu
+        cy.get(testName('drop-down-menu')).should('not.exist') // The whole tree should close
     })
 
     it('calls the action on item click', () => {

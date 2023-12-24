@@ -68,7 +68,7 @@ describe('InputComponent', () => {
             cy.get('[data-test-name="validation-errors"]').contains('maximum length')
         })
 
-        // it('should display extra errors', () => {
+        // It('should display extra errors', () => {
         // })
     })
 })

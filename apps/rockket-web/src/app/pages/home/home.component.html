@@ -3,7 +3,7 @@
     <ng-container sidebarHeader>
         <div
             *ngIf="!(isMobileScreen$ | async)"
-            class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5 text-tinted-300"
+            class="text-tinted-300 flex flex-col items-start gap-1 px-2 pb-2 pt-0.5"
             cdkMenu
         >
             <button
@@ -46,10 +46,10 @@
 
     <!-- SIDEBAR CONTENT -->
     <ng-container sidebarContent>
-        <p class="flex items-center justify-between px-3 text-sm text-tinted-400">
+        <p class="text-tinted-400 flex items-center justify-between px-3 text-sm">
             Tasklists
             <button
-                class="icon-btn text-base hover:bg-tinted-700"
+                class="icon-btn hover:bg-tinted-700 text-base"
                 appTooltip="Create new list"
                 (click)="createNewList()"
                 data-test-name="sidebar-create-new-list"
@@ -63,7 +63,7 @@
         </div>
 
         <ng-template #tree>
-            <p *ngIf="(entityPreviewsTransformed$ | async)?.length == 0" class="text-center text-tinted-400">
+            <p *ngIf="(entityPreviewsTransformed$ | async)?.length == 0" class="text-tinted-400 text-center">
                 No lists so far...
             </p>
 

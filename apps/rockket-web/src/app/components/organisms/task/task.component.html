@@ -1,6 +1,6 @@
 <li
     *rxIf="task$; let task; strategy: 'native'"
-    class="task | relative flex w-full max-w-full list-none flex-col rounded-xl border border-tinted-700 border-opacity-75 bg-tinted-800 px-1 py-2 pb-1 shadow shadow-tinted-900 transition-colors duration-75"
+    class="task | border-tinted-700/75 bg-tinted-800 shadow-tinted-900 relative flex w-full max-w-full list-none flex-col rounded-xl border px-1 py-2 pb-1 shadow transition-colors duration-75"
     [ngClass]="{
         completed: task.status == TaskStatus.COMPLETED,
         isActive: inlineEditor.isFocused || isDescriptionActive$ | push,
@@ -65,7 +65,7 @@
                 <ng-container *ngIf="nodeData$ | async as nodeData">
                     <ng-container *ngIf="nodeData.hasChildren">
                         <button
-                            class="subtask-toggle | inline-flex gap-1 [&_.count]:transition-all [&_.count]:hover:text-tinted-300 [&_:has(.checklist-counter.counter-complete)_.count]:!text-submit-400"
+                            class="subtask-toggle | [&_.count]:hover:text-tinted-300 [&_:has(.checklist-counter.counter-complete)_.count]:!text-submit-400 inline-flex gap-1 [&_.count]:transition-all"
                             (click)="expansionChange.emit(!nodeData.isExpanded)"
                             data-test-name="subtask-toggle"
                         >
@@ -79,14 +79,14 @@
 
                             <app-elem-container
                                 [elem]="getTaskCounterWidget()"
-                                class="ml-1 text-md text-tinted-400"
+                                class="text-md text-tinted-400 ml-1"
                             ></app-elem-container>
                         </button>
                     </ng-container>
 
                     <ng-container *ngIf="task.description || (isDescriptionExpanded$ | async)">
                         <button
-                            class="description-toggle | inline-flex gap-1 [&_.count]:transition-all [&_.count]:hover:text-tinted-300 [&_:has(.checklist-counter.counter-complete)_.count]:!text-submit-400"
+                            class="description-toggle | [&_.count]:hover:text-tinted-300 [&_:has(.checklist-counter.counter-complete)_.count]:!text-submit-400 inline-flex gap-1 [&_.count]:transition-all"
                             (click)="toggleDescription()"
                             data-test-name="description-toggle"
                         >
@@ -100,7 +100,7 @@
 
                             <app-elem-container
                                 [elem]="getChecklistCounterWidget()"
-                                class="ml-1 text-md text-tinted-400"
+                                class="text-md text-tinted-400 ml-1"
                             ></app-elem-container>
                         </button>
                         <!-- <button class="expand-description">
@@ -130,7 +130,7 @@
                 </ng-container>
             </div>
             <button
-                class="| icon-btn | absolute right-0 top-[50%] translate-y-[-50%] text-tinted-200 transition-opacity"
+                class="| icon-btn | text-tinted-200 absolute right-0 top-[50%] translate-y-[-50%] transition-opacity"
                 [cdkMenuTriggerFor]="menu"
                 (cdkMenuOpened)="isSelected = true"
                 (cdkMenuClosed)="isSelected = false"
@@ -192,7 +192,7 @@
             </div>
             <app-tt-editor
                 #descriptionEditor
-                class="description | mt-1 max-h-72 overflow-y-auto rounded-lg bg-tinted-900 px-2.5 py-1.5 ring-2 ring-transparent transition-colors duration-75 child-focus-ring"
+                class="description | bg-tinted-900 child-focus-ring mt-1 max-h-72 overflow-y-auto rounded-lg px-2.5 py-1.5 ring-2 ring-transparent transition-colors duration-75"
                 [ngClass]="{
                     'isActive !ring-primary-400': props.isActive,
                     'hover:ring-tinted-600': true,

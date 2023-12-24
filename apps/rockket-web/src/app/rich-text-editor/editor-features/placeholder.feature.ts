@@ -32,7 +32,7 @@ export const placeholderFeature = (emptyEditorPlaceholder: string): EditorFeatur
                 if (node.type.name == Heading.name) return 'Heading ' + node.attrs['level']
                 if (node.type.name == Blockquote.name) return 'Quote'
 
-                // const parentNode = editor.state.selection.$anchor.parent
+                // Const parentNode = editor.state.selection.$anchor.parent
                 // console.log('node', node.type.name)
                 // console.log('parent', parentNode.type.name)
                 // if (parentNode.type.name == 'bulletList') return 'List'

@@ -6,7 +6,7 @@
     <p><button class="upload-photo | button | mt-4" (click)="onUploadPhoto()">Upload photo</button></p>
 </div>
 
-<h2 class="mb-2 text-tinted-300">Username</h2>
+<h2 class="text-tinted-300 mb-2">Username</h2>
 <p>
     <app-input
         [enableLabel]="false"
@@ -27,7 +27,7 @@
     Your username will be visibile to other users you collaborate with.
 </p>
 
-<h2 class="mb-2 text-tinted-300">Email address</h2>
+<h2 class="text-tinted-300 mb-2">Email address</h2>
 <p>
     <span class="email | mr-2">{{ (userState | async)?.me?.email || 'failed to load email' }}</span>
     <button class="button-naked text-primary-200" (click)="openFormModal('email')">Change email address</button>
@@ -62,7 +62,7 @@
     </app-modal>
 </ng-template>
 
-<h2 class="mb-2 text-tinted-300">Password</h2>
+<h2 class="text-tinted-300 mb-2">Password</h2>
 <p>
     <button class="button-naked text-primary-200" (click)="openFormModal('password')">Change password</button>
     <button class="button-naked text-primary-200" (click)="onResetPassword()">Reset password</button>
@@ -88,17 +88,17 @@
     </app-modal>
 </ng-template>
 
-<h2 class="mb-2 text-xl text-danger-400">Danger zone</h2>
-<div class="danger-zone | flex flex-col gap-2 rounded-lg border border-danger-600 bg-danger-900 p-2">
+<h2 class="text-danger-400 mb-2 text-xl">Danger zone</h2>
+<div class="danger-zone | border-danger-600 bg-danger-900 flex flex-col gap-2 rounded-lg border p-2">
     <button
         (click)="onLogout()"
-        class="button | bg-transparent text-left text-danger-400 hover:bg-danger-400 hover:text-tinted-800"
+        class="button | text-danger-400 hover:bg-danger-400 hover:text-tinted-800 bg-transparent text-left"
     >
         Logout
     </button>
     <button
         (click)="onDeleteAccount()"
-        class="button | bg-transparent text-left text-danger-400 hover:bg-danger-400 hover:text-tinted-800"
+        class="button | text-danger-400 hover:bg-danger-400 hover:text-tinted-800 bg-transparent text-left"
     >
         Delete my account
     </button>

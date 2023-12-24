@@ -83,6 +83,6 @@ describe('TaskViewComponent', () => {
         })
 
         cy.get(testName('editable-entity-name')).contains(entityFixture.title)
-        // cy.get(testName('description-editor')).should('be.hidden')
+        // Cy.get(testName('description-editor')).should('be.hidden')
     })
 })

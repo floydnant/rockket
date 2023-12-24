@@ -17,7 +17,7 @@ import { mount } from 'cypress/angular'
 // Import commands.ts using ES2015 syntax:
 import './commands'
 
-// add component testing only related command here, such as mount
+// Add component testing only related command here, such as mount
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Cypress {

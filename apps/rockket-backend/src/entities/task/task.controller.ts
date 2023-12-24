@@ -32,19 +32,19 @@ export class TaskController {
         return this.taskService.deleteTask(user.id, taskId)
     }
 
-    // subtasks
+    // Subtasks
     @Get(':taskId/subtasks')
     getSubtasks(@GetUser() user: User, @Param('taskId') taskId: string) {
         return this.taskService.getSubtasks(user.id, taskId)
     }
 
-    // task events
+    // Task events
     @Get(':taskId/events')
     getTaskEvents(@GetUser() user: User, @Param('taskId') taskId: string) {
         return this.taskService.getTaskEvents(user.id, taskId)
     }
 
-    // task comments
+    // Task comments
     @Get(':taskId/comments')
     getTaskComments(@GetUser() user: User, @Param('taskId') taskId: string) {
         return this.taskService.getTaskComments(user.id, taskId)

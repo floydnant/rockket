@@ -51,7 +51,7 @@ const getCoordinates = (anchor: ResolvedPos): Coordinates | null => {
 
     let info: Coordinates | null = null
 
-    // look for the first new line char before the cursor, i.e. start of the current line
+    // Look for the first new line char before the cursor, i.e. start of the current line
     for (let i = cursorPosInContent; i >= 0; i--) {
         if (nodeContent[i] == '\n' || i == 0) {
             const firstChar = i == 0 ? 0 : i + 1
@@ -83,7 +83,7 @@ const getTabRangeToDelete = ({
     nodeContent,
     firstChar,
 }: Omit<Coordinates, 'cursor'> & { position: Position }): Range | null => {
-    /** wether to delete the range after the cursor, or before */
+    /** Wether to delete the range after the cursor, or before */
     const forwards = position.inDocument == firstChar.inDocument
     const startPosition = position.inDocument
 
@@ -95,7 +95,7 @@ const getTabRangeToDelete = ({
         return { from, to: from + 1 }
     }
 
-    // if there is a tab before the cursor, remove it
+    // If there is a tab before the cursor, remove it
     if (nodeContent[position.inNode - 1] == '\t' && position.inNode != startOfLine.inNode) {
         const offset = forwards ? -1 : 0
         const from = (forwards ? startPosition : startPosition - 1) + offset

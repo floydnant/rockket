@@ -33,7 +33,7 @@ export class FocusableDirective implements AfterViewInit {
     isFocused = false
     focus(select = false) {
         this.isFocused = true
-        // add a delay in case the call originated from a mouse click
+        // Add a delay in case the call originated from a mouse click
         moveToMacroQueue(() => {
             const elem = this.elemRef.nativeElement
 

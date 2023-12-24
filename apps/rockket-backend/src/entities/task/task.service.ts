@@ -53,7 +53,7 @@ export class TaskService {
         }
     }
 
-    // subtasks
+    // Subtasks
     async getSubtasks(userId: string, taskId: string) {
         const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.View)
         if (!hasPermission) throw new ForbiddenException("You don't have permission to view this task")
@@ -61,7 +61,7 @@ export class TaskService {
         return this.taskRepository.getSubtasks(taskId)
     }
 
-    // task events
+    // Task events
     async getTaskEvents(userId: string, taskId: string) {
         const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.View)
         if (!hasPermission) throw new ForbiddenException("You don't have permission to view this task")
@@ -69,7 +69,7 @@ export class TaskService {
         return this.taskRepository.getTaskEvents(taskId)
     }
 
-    // task comments
+    // Task comments
     async getTaskComments(userId: string, taskId: string) {
         const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.View)
         if (!hasPermission)

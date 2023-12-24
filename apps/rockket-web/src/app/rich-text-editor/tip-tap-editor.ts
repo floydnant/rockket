@@ -72,7 +72,7 @@ export class TipTapEditor extends Editor {
     }
 
     bindEditor(input$: Observable<string>, searchTerm$?: Observable<string>) {
-        // cancel the previous binding
+        // Cancel the previous binding
         this.unbind()
         this.commands.blur()
 

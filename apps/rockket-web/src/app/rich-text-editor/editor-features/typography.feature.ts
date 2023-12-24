@@ -6,7 +6,7 @@ export const typographyFeature: EditorFeature = {
     extensions: [
         Typography.configure({
             emDash: false,
-            // ellipsis ??
+            // Ellipsis ??
             openDoubleQuote: false,
             closeDoubleQuote: false,
             openSingleQuote: false,

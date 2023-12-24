@@ -56,7 +56,7 @@ export const loadingStateActions = [
     listActions.updateDescriptionSuccess,
     listActions.updateDescriptionError,
 
-    // taskActions.create,
+    // TaskActions.create,
     // taskActions.createSuccess,
     // taskActions.createError,
 

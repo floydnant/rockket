@@ -36,7 +36,7 @@ describe('Workspace', () => {
             it('can add children', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
 
-                cy.get('[data-test-is-loading="false"]') // wait for loading to finish
+                cy.get('[data-test-is-loading="false"]') // Wait for loading to finish
                 cy.get(testName('entity-tree-node')).first().as('treeNode')
                 cy.get('@treeNode').focus()
                 cy.get('@treeNode').within(() => {
@@ -50,11 +50,11 @@ describe('Workspace', () => {
             it('can open the options menu', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
 
-                cy.get('[data-test-is-loading="false"]') // wait for loading to finish
+                cy.get('[data-test-is-loading="false"]') // Wait for loading to finish
                 cy.get(testName('entity-tree-node'))
                     .first()
                     .within(() => {
-                        // we need to force the click because the element might not be visible in ci (even after focusing the parent which should make it visible)
+                        // We need to force the click because the element might not be visible in ci (even after focusing the parent which should make it visible)
                         cy.get(testName('open-menu')).click({ force: true })
                     })
 
@@ -83,7 +83,7 @@ describe('Workspace', () => {
 
                 const description = 'The testing entity description'
 
-                // wait for loading to finish
+                // Wait for loading to finish
                 cy.get(testName('entity-name-container')).within(() => {
                     cy.get('[data-test-is-loading="false"]')
                 })
@@ -93,7 +93,7 @@ describe('Workspace', () => {
 
                 cy.get(testName('description-editor')).focused().type(description)
                 cy.get(testName('description-editor')).focused().blur()
-                cy.wait('@updateList').its('response.statusCode').should('equal', 200) // we currently don't have any other way to verify if updating the description has succeeded
+                cy.wait('@updateList').its('response.statusCode').should('equal', 200) // We currently don't have any other way to verify if updating the description has succeeded
                 // maybe it is not a bad idea to assert on the request, but we could take this a step further and verify that the db record was updated
             })
 
@@ -101,7 +101,7 @@ describe('Workspace', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
                 cy.get(testName('editable-entity-name'))
 
-                // wait for loading to finish
+                // Wait for loading to finish
                 cy.get(testName('entity-name-container')).within(() => {
                     cy.get('[data-test-is-loading="false"]')
                 })
@@ -114,7 +114,7 @@ describe('Workspace', () => {
                 cy.get(testName('description-editor')).focused().blur()
                 cy.wait('@updateList').its('response.statusCode').should('equal', 200)
 
-                // wait for loading to finish
+                // Wait for loading to finish
                 cy.get(testName('entity-name-container')).within(() => {
                     cy.get('[data-test-is-loading="false"]')
                 })
@@ -143,7 +143,7 @@ describe('Workspace', () => {
 
                 cy.get(testName('create-task')).click()
                 cy.get(testName('task-tree-node')).should('exist')
-                // cy.get(testName('entity-tree-node')).last().should('have.attr', 'data-level', 1)
+                // Cy.get(testName('entity-tree-node')).last().should('have.attr', 'data-level', 1)
             })
         })
 
@@ -152,7 +152,7 @@ describe('Workspace', () => {
                 cy.get(testName('task-menu-button')).click()
             })
 
-            // task menu
+            // Task menu
             cy.get(testName('drop-down-menu')).within(() => {
                 cy.get(testName('menu-item')).contains(/Open/).click()
             })
@@ -187,7 +187,7 @@ describe('Workspace', () => {
             it('can add a description', () => {
                 const description = 'The testing entity description'
 
-                // wait for loading to finish
+                // Wait for loading to finish
                 cy.get(testName('entity-name-container')).within(() => {
                     cy.get('[data-test-is-loading="false"]')
                 })
@@ -200,12 +200,12 @@ describe('Workspace', () => {
                 cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
             })
 
-            // seems to be a flaky test
+            // Seems to be a flaky test
             it.skip('can update the description', () => {
                 cy.get(testName('sidebar-create-new-list')).click()
                 cy.get(testName('editable-entity-name'))
 
-                // wait for loading to finish
+                // Wait for loading to finish
                 cy.get(testName('entity-name-container')).within(() => {
                     cy.get('[data-test-is-loading="false"]')
                 })
@@ -218,7 +218,7 @@ describe('Workspace', () => {
                 cy.get(testName('description-editor')).focused().blur()
                 cy.wait('@updateList').its('response.statusCode').should('equal', 200)
 
-                // wait for loading to finish
+                // Wait for loading to finish
                 cy.get(testName('entity-name-container')).within(() => {
                     cy.get('[data-test-is-loading="false"]')
                 })
@@ -262,7 +262,7 @@ describe('Workspace', () => {
                     cy.get(testName('task-menu-button')).click()
                 })
 
-                // task menu
+                // Task menu
                 cy.get(testName('drop-down-menu')).within(() => {
                     cy.contains(/Priority/)
                         .closest(testName('menu-item'))
@@ -272,7 +272,7 @@ describe('Workspace', () => {
                     cy.get('@priorityMenuItem').type('{rightArrow}')
                 })
 
-                // priority menu
+                // Priority menu
                 cy.get(testName('drop-down-menu'))
                     .last()
                     .within(() => {
@@ -289,7 +289,7 @@ describe('Workspace', () => {
                     cy.get(testName('task-menu-button')).click()
                 })
 
-                // task menu - create new subtask
+                // Task menu - create new subtask
                 cy.get(testName('drop-down-menu')).within(() => {
                     cy.contains(/Subtask/i)
                         .closest(testName('menu-item'))
@@ -306,7 +306,7 @@ describe('Workspace', () => {
                         cy.get(testName('task-menu-button')).click()
                     })
 
-                    // task menu - Add description
+                    // Task menu - Add description
                     cy.get(testName('drop-down-menu')).within(() => {
                         cy.contains(/Description/i)
                             .closest(testName('menu-item'))

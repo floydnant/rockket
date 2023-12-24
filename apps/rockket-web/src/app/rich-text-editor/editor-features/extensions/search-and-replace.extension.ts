@@ -179,7 +179,7 @@ const replaceAll = (replaceTerm: string, results: Result[], { tr, dispatch }: an
     dispatch(tr)
 }
 
-// need to use editor storage because the extension storage is shared among all instances
+// Need to use editor storage because the extension storage is shared among all instances
 const getSearchStorage = (editor: Editor): SearchStorage => editor.storage['search'] as SearchStorage
 
 // eslint-disable-next-line @typescript-eslint/ban-types

@@ -12,7 +12,7 @@ const useDelay = <T>(enable = environment.CONTEXT == 'Development') => {
     return delay<T>(500)
 }
 
-/** catches errors and re-throws an `HttpServerErrorResponse` */
+/** Catches errors and re-throws an `HttpServerErrorResponse` */
 const interceptErrors = <T>(http: HttpService): OperatorFunction<T, T> => {
     return <T>(source: Observable<T>) => {
         return source.pipe(
@@ -26,7 +26,7 @@ const interceptErrors = <T>(http: HttpService): OperatorFunction<T, T> => {
             catchError<T, Observable<T>>(({ type, ...err }: HttpErrorResponse) => {
                 if (err.status !== 0) return throwError(() => err)
 
-                // check if client is connected to internet
+                // Check if client is connected to internet
                 if (!navigator.onLine)
                     return throwError(() => ({
                         ...err,
@@ -37,9 +37,9 @@ const interceptErrors = <T>(http: HttpService): OperatorFunction<T, T> => {
                         },
                     }))
 
-                // check if the server is even up
+                // Check if the server is even up
                 return http.get('/health', { disableErrorInterception: true }).pipe(
-                    // server is up
+                    // Server is up
                     mergeMap(() => {
                         return throwError(() => ({
                             ...err,
@@ -51,7 +51,7 @@ const interceptErrors = <T>(http: HttpService): OperatorFunction<T, T> => {
                             },
                         }))
                     }),
-                    // server is down
+                    // Server is down
                     catchError<T, Observable<T>>(err => {
                         console.warn('second catchError catched:', err)
                         return throwError(() => ({
@@ -127,7 +127,7 @@ export class HttpService {
         return response$.pipe(useDelay(), interceptErrors(this))
     }
 
-    /** adds bearer token inside the 'headers'*/
+    /** Adds bearer token inside the 'headers'*/
     private addBearerToken(options: HttpClientOptions | undefined): HttpClientOptions {
         if (!this.bearerToken) return options || {}
 

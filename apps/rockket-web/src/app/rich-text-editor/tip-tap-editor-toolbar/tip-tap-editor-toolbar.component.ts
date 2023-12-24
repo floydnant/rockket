@@ -77,11 +77,11 @@ export class TipTapEditorToolbarComponent implements AfterViewInit {
     ) {}
 
     ngAfterViewInit(): void {
-        // focus controls when editor tells us to (e.g. when the shortcut is triggered)
+        // Focus controls when editor tells us to (e.g. when the shortcut is triggered)
         const customEvents = this.ttEditor.editor.storage[EditorFeatureId.CustomEvents]
         customEvents?.shouldFocusToolbar$.pipe(untilDestroyed(this)).subscribe(() => this.focusControls())
 
-        // update editor focus state to false when the toolbar looses focus and the editor isn't focused
+        // Update editor focus state to false when the toolbar looses focus and the editor isn't focused
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.controlsMenuBar!.menuStack.hasFocus.pipe(
             startWith(false),

@@ -10,7 +10,7 @@ type OriginalHttpClientOptions<K extends keyof HttpClient & HttpMethods> = Param
 type HttpClientOptionsMap = {
     [method in HttpMethods]: OriginalHttpClientOptions<method> & {
         disableErrorInterception?: boolean
-        // if only we had more options...
+        // If only we had more options...
     }
 }
 

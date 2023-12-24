@@ -2,7 +2,7 @@
     <label
         [for]="id"
         [class.hidden]="!enableLabel"
-        class="placeholder | pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] text-tinted-300 transition-all"
+        class="placeholder | text-tinted-300 pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] transition-all"
         [attr.data-test-name]="'input-placeholder-' + (controlName || id)"
     >
         {{ name }}
@@ -43,7 +43,7 @@
 </div>
 
 <div
-    class="errors | mt-1 text-sm text-danger-400"
+    class="errors | text-danger-400 mt-1 text-sm"
     *ngIf="(control.invalid && control.dirty) || extraErrorMessages?.length"
     data-test-name="validation-errors"
 >

@@ -8,7 +8,7 @@ import { DeviceService } from 'src/app/services/device.service'
         <span class="inline-flex items-center gap-0.5" *ngIf="!(isTouch$ | push)">
             <ng-container #combo *ngFor="let combo of parsedCombos; let isLast = last">
                 <kbd *ngFor="let comboKey of combo" class="font-[helvetica]">{{ comboKey.key }}</kbd>
-                <span *ngIf="!isLast" class="px-1 text-tinted-400">then</span>
+                <span *ngIf="!isLast" class="text-tinted-400 px-10">then</span>
             </ng-container>
         </span>
     `,

@@ -6,7 +6,7 @@ const toggleLink = (editor: Editor) => {
     const selectionStart = editor.state.selection.from
     const selectionEnd = editor.state.selection.to
     const selectedText = editor.state.doc.textBetween(selectionStart, selectionEnd).trim()
-    // console.log(editor.getAttributes('link').href)
+    // Console.log(editor.getAttributes('link').href)
     // @TODO: just a quick hack, needs improvement
     const linkRegex = /https?:\/\/[^\s]+/
     const parsedLink = linkRegex.exec(selectedText)?.[0]
@@ -33,7 +33,7 @@ export const linkFeature: EditorFeature = {
             title: 'Link',
             controlId: EditorControlId.Link,
             icon: 'editor.link',
-            // displayKeybinding: 'mod+K',
+            // DisplayKeybinding: 'mod+K',
             // registerKeybinding: 'Mod-k',
             keybinding: 'ctrl+k',
             isActive: ({ editor }) => editor.isActive('link'),

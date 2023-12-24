@@ -42,11 +42,11 @@ export const parseCombo = (
 }
 
 export const parseBindingInput = (input: string) => {
-    // input: 'some-mod:another-mod: mod+shift+E => mod-S'
+    // Input: 'some-mod:another-mod: mod+shift+E => mod-S'
     const stripped = input.replace(/\s+/g, '')
 
     const [sequence, ...stateModifiers] = stripped.split(':').reverse()
-    // sequence: 'mod+shift+E => mod-S'
+    // Sequence: 'mod+shift+E => mod-S'
     // stateModifiers: ['another-mod', 'some-mod']
 
     // combos: ['mod+shift+E', 'mod-S'] -> [ComboKey[], ComboKey[]]

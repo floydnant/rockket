@@ -28,7 +28,7 @@ export const interceptItem = <T>(callback: (item: MenuItem<T>) => Partial<Omit<M
         return {
             ...item,
             ...callback(item),
-            // we cannot use optional chaining syntax here, because cypress->webpack complains
+            // We cannot use optional chaining syntax here, because cypress->webpack complains
             children: item.children && item.children.map(interceptItem(callback)),
         }
     }
@@ -99,7 +99,7 @@ export const useTaskForActivePriority = (task: Pick<TaskPreview, 'priority'>) =>
 /** Used to take a tasks status and priority and set the respective status/priority-items as `isActive` */
 export const useTaskForActiveItems = (task: Pick<TaskPreview, 'status' | 'priority'>) => {
     return (item: MenuItem): MenuItem => {
-        // define mappers for the children of specific items
+        // Define mappers for the children of specific items
         const machine = {
             Status: useTaskForActiveStatus,
             Priority: useTaskForActivePriority,

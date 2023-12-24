@@ -47,7 +47,7 @@ export class DropDownComponent {
     @Input() rootTrigger?: CdkMenuTrigger | CdkContextMenuTrigger
 
     triggerAction(action: MenuItem['action']) {
-        // this ensures that the keydown event doesn't get picked up by another component
+        // This ensures that the keydown event doesn't get picked up by another component
         moveToMacroQueue(() => action?.(this.data))
     }
 

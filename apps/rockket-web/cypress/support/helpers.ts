@@ -6,7 +6,7 @@ export const useStubsForActions = <T>(stubMap?: Record<string, ReturnType<typeof
     return interceptItem<T>(({ action, title }) => {
         if (!action) return {}
 
-        // we cannot use optional chaining syntax here, because cypress->webpack complains
+        // We cannot use optional chaining syntax here, because cypress->webpack complains
         const customStub = title && stubMap && stubMap[title]
         const stub = customStub || cy.stub().as(`item:${title}`)
         return { action: stub }

@@ -71,14 +71,14 @@ export class UserService {
                 id,
                 username: user?.username,
                 authenticated: !!user,
-                // listIds: [], // @TODO:
+                // ListIds: [], // @TODO:
             }
         } catch (err) {
             return {
                 id: null,
                 username: null,
                 authenticated: false,
-                // listIds: [],
+                // ListIds: [],
             }
         }
     }
@@ -114,7 +114,7 @@ export class UserService {
             }
         } catch (err) {
             if (err.code != 'P2002') throw err
-            // conflict: duplicate email
+            // Conflict: duplicate email
 
             this.logger.verbose(`update user failed => '${newEmail}' already exists`)
             throw new ConflictException(`email:There is already an account associated with '${newEmail}'.`)
@@ -177,7 +177,7 @@ export class UserService {
             })
         } catch (err) {
             if (err.code != 'P2002') throw new InternalServerErrorException(err)
-            // conflict: duplicate email
+            // Conflict: duplicate email
 
             this.logger.verbose(`update user failed => '${email}' already exists`)
             throw new ConflictException(`email:There is already an account associated with '${email}'.`)
@@ -204,7 +204,7 @@ export class UserService {
     }
 
     async searchUsers(userId: string, query: string /* , options: {} */): Promise<IUserSearchResult[]> {
-        // this is where a full text search engine would come in handy
+        // This is where a full text search engine would come in handy
         const users = await this.prisma.user.findMany({
             where: {
                 username: {
