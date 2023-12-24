@@ -28,7 +28,7 @@ export class DeviceService {
 
     private queryChanges$ = this.mediaObserver.observe(Object.values(mediaQueries)).pipe(
         map(({ breakpoints }) => breakpoints),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     screenWidth$ = fromEvent(window, 'resize').pipe(
@@ -36,34 +36,34 @@ export class DeviceService {
         map(() => window.innerWidth),
         startWith(window.innerWidth),
         distinctUntilChanged(),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     isMobileScreen$ = this.queryChanges$.pipe(
         map(queryMap => queryMap[mediaQueries.mobileScreen]),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     isTouchPrimary$ = this.queryChanges$.pipe(
         map(queryMap => queryMap[mediaQueries.touchPrimary]),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
     canHover$ = this.queryChanges$.pipe(
         map(queryMap => queryMap[mediaQueries.canHover]),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     isOnline$ = merge(fromEvent(window, 'online'), fromEvent(window, 'offline')).pipe(
         map(() => navigator.onLine),
         startWith(navigator.onLine),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     isAppVisible$ = fromEvent(document, 'visibilitychange').pipe(
         map(() => document.visibilityState),
         startWith(document.visibilityState),
         map(visibilityState => visibilityState == 'visible'),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     shouldFetch$ = merge(this.isOnline$, this.isAppVisible$).pipe(
@@ -72,6 +72,6 @@ export class DeviceService {
         throttleTime(15000),
         filter(event => event == true),
         map((_, index) => index),
-        share({ resetOnRefCountZero: true })
+        share({ resetOnRefCountZero: true }),
     )
 }

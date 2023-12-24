@@ -67,7 +67,11 @@
                 No lists so far...
             </p>
 
-            <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree-container | flex flex-col px-2">
+            <cdk-tree
+                [dataSource]="dataSource"
+                [treeControl]="treeControl"
+                class="tree-container | flex flex-col px-2"
+            >
                 <cdk-tree-node *cdkTreeNodeDef="let node" [class.hidden]="!shouldRender(node)">
                     <button
                         class="tree-node"

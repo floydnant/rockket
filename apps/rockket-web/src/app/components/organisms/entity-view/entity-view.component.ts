@@ -64,7 +64,7 @@ export class EntityViewComponent {
 
             return entitiesState.entityDetails[entity.entityType][entity.id]
         }),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     @Input() set entityOptionsMap(menuItems: EntityMenuItemsMap | undefined | null) {
@@ -78,10 +78,10 @@ export class EntityViewComponent {
             if (!entity) return null
 
             return optionsMap?.[entity.entityType].map(
-                useTaskForActiveItems(entity as EntityPreviewRecursive & TaskPreview)
+                useTaskForActiveItems(entity as EntityPreviewRecursive & TaskPreview),
             )
         }),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     entityViewComponent$ = this.entity$.pipe(
@@ -90,7 +90,7 @@ export class EntityViewComponent {
             if (!entity) return null
 
             return entityViewComponentMap[entity.entityType]
-        })
+        }),
     )
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,9 +116,11 @@ export class EntityViewComponent {
                 if (!entity) return
 
                 // @TODO: Maybe we should refresh the data here too
-                this.store.dispatch(entitiesActions.loadDetail({ entityType: entity.entityType, id: entity.id }))
+                this.store.dispatch(
+                    entitiesActions.loadDetail({ entityType: entity.entityType, id: entity.id }),
+                )
             }),
-            untilDestroyed(this)
+            untilDestroyed(this),
         )
         .subscribe()
 

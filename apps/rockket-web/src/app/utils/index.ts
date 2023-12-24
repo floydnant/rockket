@@ -17,7 +17,7 @@ export const interpolateParams = (template: string, params: Record<string, strin
 
 export const flattenObject = <T extends Record<string, string | Record<string, string>>>(
     obj: T,
-    prefix?: string
+    prefix?: string,
 ): Record<LeavesConcatenated<T>, string> => {
     const flattend = Object.entries(obj).reduce((acc, [key, value]) => {
         const prefix_ = prefix ? prefix + '.' : ''
@@ -36,7 +36,7 @@ export const flattenObject = <T extends Record<string, string | Record<string, s
 /** Concat the values with matching keys of the objects. */
 export const concatMatchingKeys = (
     obj1: Record<string, string>,
-    obj2: Record<string, string>
+    obj2: Record<string, string>,
 ): Record<string, string> => {
     const entries = Object.entries(obj1).map(([key, value]) => [key, `${value} ${obj2[key]}`])
     return Object.fromEntries(entries)
@@ -62,4 +62,5 @@ export const moveElement = <T>(arr: Array<T>, fromIndex: number, toIndex: number
     return arr
 }
 
-export const isNotNullish = <T>(value: T | undefined | null): value is T => value !== undefined && value !== null
+export const isNotNullish = <T>(value: T | undefined | null): value is T =>
+    value !== undefined && value !== null

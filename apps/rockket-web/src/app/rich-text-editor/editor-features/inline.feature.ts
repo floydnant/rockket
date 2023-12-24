@@ -33,7 +33,12 @@ export const inlineFeature = createEditorFeature({
             },
         }),
     ],
-    layout: [EditorControlId.Bold, EditorControlId.Italic, EditorControlId.Strike, EditorControlId.InlineCode],
+    layout: [
+        EditorControlId.Bold,
+        EditorControlId.Italic,
+        EditorControlId.Strike,
+        EditorControlId.InlineCode,
+    ],
     controls: [
         {
             title: 'Bold',

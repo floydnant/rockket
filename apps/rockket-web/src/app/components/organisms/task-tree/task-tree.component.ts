@@ -65,7 +65,9 @@ export class TaskTreeComponent {
                 const treeNode = convertToTaskTreeNode(task, this.expandAll)
 
                 treeNode.isExpanded =
-                    this.expandAll ?? this.entityExpandedMap.get(task.id) ?? uiDefaults.mainView.IS_TASK_EXPANDED
+                    this.expandAll ??
+                    this.entityExpandedMap.get(task.id) ??
+                    uiDefaults.mainView.IS_TASK_EXPANDED
                 treeNode.isDescriptionExpanded =
                     (task.description ? this.expandAll : null) ??
                     this.descriptionExpandedMap.get(task.id) ??

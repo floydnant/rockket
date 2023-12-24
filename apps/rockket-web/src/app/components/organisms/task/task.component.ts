@@ -96,10 +96,9 @@ export class TaskComponent {
     }
 
     placeholderColorMap = {
-        ...(Object.fromEntries(Object.values(TaskStatus).map(status => [status, colors.tinted[400]])) as Record<
-            TaskStatus,
-            string
-        >),
+        ...(Object.fromEntries(
+            Object.values(TaskStatus).map(status => [status, colors.tinted[400]]),
+        ) as Record<TaskStatus, string>),
         [TaskStatus.COMPLETED]: colors.submit[600],
     }
 
@@ -239,7 +238,8 @@ export class TaskComponent {
         this.counterWidgetId = 'checklist-counter' + this.task$.value.id
 
         const checklistCount = countChecklistItems(
-            this.descriptionEditor?.editor.state.doc || createDocument(this.task$.value.description, editorSchema),
+            this.descriptionEditor?.editor.state.doc ||
+                createDocument(this.task$.value.description, editorSchema),
         )
 
         this.counterWidget = createCounterWidget({
@@ -279,8 +279,9 @@ export class TaskComponent {
     getTaskProgress(task: { children?: TaskPreview[] | null }): ChecklistCount {
         const totalItems = task.children?.length || 0
         const checkedItems =
-            task.children?.filter(task => task.status == TaskStatus.COMPLETED || task.status == TaskStatus.NOT_PLANNED)
-                .length || 0
+            task.children?.filter(
+                task => task.status == TaskStatus.COMPLETED || task.status == TaskStatus.NOT_PLANNED,
+            ).length || 0
         const progress = (checkedItems / totalItems) * 100 || 0
 
         return { totalItems, checkedItems, progress }
@@ -289,7 +290,8 @@ export class TaskComponent {
         const statusTaskCountMap = getStatusCountMapRecursive(task.children || [])
 
         const totalItems = Object.values(statusTaskCountMap).reduce((acc, curr) => acc + curr)
-        const checkedItems = statusTaskCountMap[TaskStatus.NOT_PLANNED] + statusTaskCountMap[TaskStatus.COMPLETED]
+        const checkedItems =
+            statusTaskCountMap[TaskStatus.NOT_PLANNED] + statusTaskCountMap[TaskStatus.COMPLETED]
         const progress = (checkedItems / totalItems) * 100 || 0
 
         return { totalItems, checkedItems, progress }

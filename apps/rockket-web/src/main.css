@@ -35,7 +35,7 @@ body {
     @apply bg-transparent;
 }
 ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-tinted-700 hover:bg-tinted-600;
+    @apply bg-tinted-700 hover:bg-tinted-600 rounded-full;
 }
 [disabled] {
     @apply cursor-not-allowed;
@@ -100,7 +100,7 @@ h5 {
 }
 
 pre {
-    @apply select-text whitespace-pre-wrap text-submit-400;
+    @apply text-submit-400 select-text whitespace-pre-wrap;
 }
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -113,15 +113,15 @@ pre {
     }
 
     .button-m {
-        @apply rounded-md bg-tinted-800 px-2 py-0.5 text-tinted-300 transition-colors hover:bg-tinted-700 hover:text-tinted-100;
+        @apply bg-tinted-800 text-tinted-300 hover:bg-tinted-700 hover:text-tinted-100 rounded-md px-2 py-0.5 transition-colors;
     }
     /* @TODO: This should be button-lg */
     .button {
-        @apply rounded-lg bg-tinted-500 px-5 py-2 font-semibold text-tinted-100 transition-colors hover:bg-tinted-600;
+        @apply bg-tinted-500 text-tinted-100 hover:bg-tinted-600 rounded-lg px-5 py-2 font-semibold transition-colors;
     }
 
     .button-naked {
-        @apply rounded-lg px-2 py-1 transition-colors duration-75 hover:bg-tinted-700;
+        @apply hover:bg-tinted-700 rounded-lg px-2 py-1 transition-colors duration-75;
     }
     .button-naked i {
         @apply mr-1 w-4 text-center text-sm;
@@ -132,10 +132,10 @@ pre {
         @apply py-0 duration-75;
     }
     .button-icon-naked i {
-        @apply m-0 inline-block aspect-square rounded px-2.5 py-0.5 text-base transition-colors hover:bg-tinted-700;
+        @apply hover:bg-tinted-700 m-0 inline-block aspect-square rounded px-2.5 py-0.5 text-base transition-colors;
     }
     .icon-btn {
-        @apply inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-lg px-1 outline-none transition-colors duration-75 hover:bg-tinted-600;
+        @apply hover:bg-tinted-600 inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-lg px-1 outline-none transition-colors duration-75;
     }
 
     .button--submit {
@@ -146,7 +146,7 @@ pre {
     }
 
     .input {
-        @apply rounded-lg bg-tinted-700 px-3 py-2 outline-none ring-primary-400 focus:ring-2;
+        @apply bg-tinted-700 ring-primary-400 rounded-lg px-3 py-2 outline-none focus:ring-2;
     }
     .input::placeholder {
         @apply text-tinted-300;
@@ -154,7 +154,7 @@ pre {
 
     .keybinding,
     kbd {
-        @apply inline-block h-6 min-w-[1.5rem] rounded-md border border-tinted-600/70 bg-tinted-700 px-0.5 py-[0.0625rem] text-center text-[0.8125rem] font-semibold text-tinted-300;
+        @apply border-tinted-600/70 bg-tinted-700 text-tinted-300 inline-block h-6 min-w-[1.5rem] rounded-md border px-0.5 py-[0.0625rem] text-center text-[0.8125rem] font-semibold;
     }
 
     .show-placeholder::before {
@@ -169,7 +169,7 @@ pre {
     .dropdown-menu {
         min-width: 180px;
         max-width: 280px;
-        @apply mx-2 flex flex-col gap-0.5 rounded-xl border border-tinted-700/70 bg-tinted-900 p-2 shadow-lg glass;
+        @apply border-tinted-700/70 bg-tinted-900 glass mx-2 flex flex-col gap-0.5 rounded-xl border p-2 shadow-lg;
     }
     .dropdown-menu .menu-item {
         @apply pl-2.5;
@@ -224,6 +224,6 @@ pre {
     }
 
     .highlight {
-        @apply rounded-[0.25em] bg-secondary-400 text-tinted-900;
+        @apply bg-secondary-400 text-tinted-900 rounded-[0.25em];
     }
 }

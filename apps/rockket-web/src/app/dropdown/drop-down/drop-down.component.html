@@ -4,7 +4,11 @@
             <app-icon class="chevron | text-tinted-500 translate-x-2" icon="chevronRight"></app-icon>
         </ng-template>
         <ng-template #subMenu>
-            <app-drop-down [items]="menuItem.children!" [rootTrigger]="rootTrigger" [data]="data"></app-drop-down>
+            <app-drop-down
+                [items]="menuItem.children!"
+                [rootTrigger]="rootTrigger"
+                [data]="data"
+            ></app-drop-down>
         </ng-template>
 
         <ng-template #icon>

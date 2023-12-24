@@ -27,7 +27,8 @@ export const placeholderFeature = (emptyEditorPlaceholder: string): EditorFeatur
             },
         }).configure({
             placeholder: ({ node, editor }) => {
-                if (editor.isEmpty) return editor.storage[EditorFeatureId.Placeholder] || emptyEditorPlaceholder
+                if (editor.isEmpty)
+                    return editor.storage[EditorFeatureId.Placeholder] || emptyEditorPlaceholder
 
                 if (node.type.name == Heading.name) return 'Heading ' + node.attrs['level']
                 if (node.type.name == Blockquote.name) return 'Quote'

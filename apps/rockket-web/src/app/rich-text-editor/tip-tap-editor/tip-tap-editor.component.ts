@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, Inject, Input, OnDestroy, Output, ViewEncapsulation } from '@angular/core'
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Inject,
+    Input,
+    OnDestroy,
+    Output,
+    ViewEncapsulation,
+} from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { coalesceWith } from '@rx-angular/cdk/coalescing'
 import {
@@ -83,7 +91,8 @@ export class TipTapEditorComponent<TContext = unknown> implements OnDestroy {
             if (isControlClicked) return false
 
             // Check if a task item was clicked (only inside the current editor)
-            if (isChecklistItem(clickedElem) && this.editor.view.dom.contains(clickedElem as Node)) return false
+            if (isChecklistItem(clickedElem) && this.editor.view.dom.contains(clickedElem as Node))
+                return false
 
             // -> Its good to explicitly allow elems instead of blindly ignoring everything from inside the editor
 

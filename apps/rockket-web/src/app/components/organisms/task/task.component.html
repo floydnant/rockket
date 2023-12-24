@@ -60,7 +60,9 @@
 
             <div
                 class="second-row | ml-0.5 flex flex-wrap gap-4"
-                [class.mt-1]="(nodeData$ | async)?.hasChildren || task.description || (isDescriptionExpanded$ | async)"
+                [class.mt-1]="
+                    (nodeData$ | async)?.hasChildren || task.description || (isDescriptionExpanded$ | async)
+                "
             >
                 <ng-container *ngIf="nodeData$ | async as nodeData">
                     <ng-container *ngIf="nodeData.hasChildren">
@@ -111,7 +113,9 @@
             </div>
         </div>
         <div class="relative -mr-1 max-w-max">
-            <div class="icon-group | flex max-w-max flex-wrap items-center justify-end gap-3 transition-transform">
+            <div
+                class="icon-group | flex max-w-max flex-wrap items-center justify-end gap-3 transition-transform"
+            >
                 <app-icon
                     *ngIf="isOverdue"
                     class="overdue-icon | animate-ping"
@@ -177,11 +181,18 @@
     </ng-template>
 
     <ng-container
-        *rxLet="{ isExpanded: isDescriptionExpanded$ | push, isActive: isDescriptionActive$ | push }; let props"
+        *rxLet="
+            { isExpanded: isDescriptionExpanded$ | push, isActive: isDescriptionActive$ | push };
+            let props
+        "
     >
         <div *ngIf="props.isExpanded || props.isActive" [class.relative]="false">
             <div class="absolute inset-x-0 bottom-[calc(100%-.5rem)] z-20 flex justify-center px-4">
-                <app-toolbar [hide]="!props.isActive" cdkMenuBar class="max-w-full overflow-x-auto sm:max-w-[70vw]">
+                <app-toolbar
+                    [hide]="!props.isActive"
+                    cdkMenuBar
+                    class="max-w-full overflow-x-auto sm:max-w-[70vw]"
+                >
                     <app-tt-editor-toolbar
                         [ttEditor]="descriptionEditor"
                         [layout]="toolbarLayout$ | push"

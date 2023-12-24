@@ -11,7 +11,8 @@ import { SignupComponent } from './signup/signup.component'
 export class AuthComponent {
     constructor(private router: Router) {
         const defaultRouteAfterLogin = '/home'
-        this.callbackUrl = this.router.parseUrl(this.router.url).queryParams['callback'] || defaultRouteAfterLogin
+        this.callbackUrl =
+            this.router.parseUrl(this.router.url).queryParams['callback'] || defaultRouteAfterLogin
     }
     callbackUrl: string
 

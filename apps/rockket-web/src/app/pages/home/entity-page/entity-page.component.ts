@@ -25,7 +25,7 @@ export class EntityPageComponent {
         private store: Store<AppState>,
         private route: ActivatedRoute,
         private loadingService: LoadingStateService,
-        private location: Location
+        private location: Location,
     ) {}
 
     entityOptionsMap = getEntityMenuItemsMap(this.store)
@@ -52,10 +52,10 @@ export class EntityPageComponent {
                         if (!taskTreeMap) return traceEntity(entityTree, activeId)
 
                         return traceEntityIncludingTasks(entityTree, taskTreeMap, activeId)
-                    })
+                    }),
                 )
         }),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     activeEntity$ = this.activeEntityTrace$.pipe(map(trace => trace?.[trace.length - 1]))
@@ -63,8 +63,10 @@ export class EntityPageComponent {
     breadcrumbs$ = this.activeEntityTrace$.pipe(
         combineLatestWith(
             this.loadingService.getEntitiesLoadingStateMap(action =>
-                this.activeEntityTrace$.pipe(map(tasks => tasks?.some(task => task.id == action.id) || false))
-            )
+                this.activeEntityTrace$.pipe(
+                    map(tasks => tasks?.some(task => task.id == action.id) || false),
+                ),
+            ),
         ),
         map(([trace, loadingMap]) =>
             trace?.map<Breadcrumb>(({ entityType, ...entity }) => {
@@ -83,12 +85,12 @@ export class EntityPageComponent {
                     contextMenuItems = this.entityOptionsMap[entityType].applyOperators(
                         useDataForAction(taskEntity),
                         useTaskForActiveItems(taskEntity as EntityPreviewRecursive & TaskPreview),
-                        useParamsForRoute({ id: entity.id })
+                        useParamsForRoute({ id: entity.id }),
                     )
                 } else
                     contextMenuItems = this.entityOptionsMap[entityType].applyOperators(
                         useDataForAction({ id: entity.id, entityType: entityType as EntityType }),
-                        useParamsForRoute({ id: entity.id })
+                        useParamsForRoute({ id: entity.id }),
                     )
 
                 return {
@@ -97,8 +99,8 @@ export class EntityPageComponent {
                     route: `/home/${entity.id}`,
                     contextMenuItems: contextMenuItems,
                 }
-            })
-        )
+            }),
+        ),
     )
 
     goBack() {

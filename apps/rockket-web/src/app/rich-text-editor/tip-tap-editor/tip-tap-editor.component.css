@@ -14,19 +14,19 @@
 }
 
 :is(.ProseMirror, .rendered-content) blockquote {
-    @apply relative rounded bg-tinted-850 py-1 pl-3.5;
+    @apply bg-tinted-850 relative rounded py-1 pl-3.5;
 }
 :is(.ProseMirror, .rendered-content) blockquote::before {
     content: '';
-    @apply absolute left-0 top-0 h-full w-[0.3125rem] rounded bg-tinted-400;
+    @apply bg-tinted-400 absolute left-0 top-0 h-full w-[0.3125rem] rounded;
 }
 
 :is(.ProseMirror, .rendered-content) a {
-    @apply underline cursor-pointer;
+    @apply cursor-pointer underline;
 }
 
 :is(.ProseMirror, .rendered-content) code {
-    @apply rounded-md bg-tinted-800 px-[0.365em] py-[0.125em] text-[.9em] font-medium text-tinted-300;
+    @apply bg-tinted-800 text-tinted-300 rounded-md px-[0.365em] py-[0.125em] text-[.9em] font-medium;
 }
 :is(.ProseMirror, .rendered-content) a code {
     @apply !text-inherit;
@@ -70,5 +70,5 @@
 }
 
 button.isActive {
-    @apply !bg-primary-400 font-bold text-tinted-900;
+    @apply !bg-primary-400 text-tinted-900 font-bold;
 }

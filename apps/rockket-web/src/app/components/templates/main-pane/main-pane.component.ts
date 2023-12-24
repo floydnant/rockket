@@ -11,7 +11,7 @@ import { MenuService } from '../sidebar-layout/menu.service'
             }
 
             .main-header {
-                @apply z-30 shadow-header;
+                @apply shadow-header z-30;
             }
             @media (max-width: 768px) {
                 .main-header--mobile.hide {

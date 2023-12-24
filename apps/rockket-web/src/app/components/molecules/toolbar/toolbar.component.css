@@ -1,22 +1,22 @@
 :is(app-toolbar:not(.no-styles), .app-toolbar) {
-    @apply flex
+    @apply border-tinted-700/70
+        bg-tinted-800
+        text-tinted-200
+        shadow-tinted-900
+        glass
+        flex
         items-center
         gap-1
         rounded-xl
         border
-        border-tinted-700/70
-        bg-tinted-800
         p-1
-        text-tinted-200
         shadow-lg
-        shadow-tinted-900
-        transition-all
-        glass;
+        transition-all;
 }
 :is(app-toolbar, .app-toolbar).hide {
     @apply pointer-events-none invisible translate-y-2 opacity-0;
 }
 
 .toolbar-separator {
-    @apply mx-1 h-5 w-px bg-tinted-600;
+    @apply bg-tinted-600 mx-1 h-5 w-px;
 }

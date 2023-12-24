@@ -37,6 +37,8 @@
     <ng-container main>
         <div #top></div>
 
-        <ng-container *ngComponentOutlet="entityViewComponent$ | push; injector: entityViewInjector"></ng-container>
+        <ng-container
+            *ngComponentOutlet="entityViewComponent$ | push; injector: entityViewInjector"
+        ></ng-container>
     </ng-container>
 </app-main-pane>

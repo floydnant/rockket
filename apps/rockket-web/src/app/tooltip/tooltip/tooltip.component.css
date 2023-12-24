@@ -2,20 +2,20 @@
     --reveal-delay: 0ms;
 }
 :host {
-    @apply box-border
+    @apply border-tinted-600/60
+        bg-tinted-700
+        text-tinted-100
+        glass
+        box-border
         block
         max-w-xs
         overflow-hidden
         rounded-lg
         border
-        border-tinted-600/60
-        bg-tinted-700
-        py-1
         px-2
+        py-1
         text-sm
-        text-tinted-100
-        shadow-xl
-        glass;
+        shadow-xl;
 
     animation: reveal 130ms var(--reveal-delay, 280ms) forwards;
     scale: 0.8;

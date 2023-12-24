@@ -35,12 +35,16 @@ export class UiStateService {
         .pipe(ofType(entitiesActions.deleteSuccess))
         .subscribe(({ id, entityType }) => this.deleteUiEntryForEntity(id, entityType))
 
-    private sidebarUiState_ = new StorageItem('rockket-sidebar-ui-state', { defaultValue: new SidebarUiState() })
+    private sidebarUiState_ = new StorageItem('rockket-sidebar-ui-state', {
+        defaultValue: new SidebarUiState(),
+    })
     get sidebarUiState() {
         return this.sidebarUiState_.value as SidebarUiState
     }
 
-    private mainViewUiState_ = new StorageItem('rockket-main-ui-state', { defaultValue: new MainViewUiState() })
+    private mainViewUiState_ = new StorageItem('rockket-main-ui-state', {
+        defaultValue: new MainViewUiState(),
+    })
     get mainViewUiState() {
         return this.mainViewUiState_.value as MainViewUiState
     }

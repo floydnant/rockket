@@ -78,7 +78,7 @@ export const taskStatusIconMap: Record<TaskStatus, string> = concatMatchingKeys(
         [TaskStatus.COMPLETED]: 'fas fa-check-circle',
         [TaskStatus.NOT_PLANNED]: 'fas fa-times-circle',
     } as const,
-    taskStatusColorMap
+    taskStatusColorMap,
 )
 
 export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingKeys(
@@ -89,7 +89,7 @@ export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingK
         [TaskPriority.NONE]: 'far fa-minus',
         [TaskPriority.OPTIONAL]: 'far fa-diamond',
     } as const,
-    taskPriorityColorMap
+    taskPriorityColorMap,
 )
 
 export const defaultEntityIcons: Record<EntityType, string> = {

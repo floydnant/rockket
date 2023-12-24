@@ -5,7 +5,11 @@ describe('InputComponent', () => {
     let control: FormControl
 
     beforeEach(() => {
-        control = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(10)])
+        control = new FormControl('', [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(10),
+        ])
         cy.mount(
             `<app-input 
                 name="Test input"
@@ -22,7 +26,7 @@ describe('InputComponent', () => {
                 },
                 declarations: [InputComponent],
                 imports: [ReactiveFormsModule],
-            }
+            },
         )
     })
 

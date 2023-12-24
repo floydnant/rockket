@@ -20,7 +20,9 @@ export const customEventsFeature = createEditorFeature({
             addKeyboardShortcuts() {
                 return {
                     'Mod-e': () => {
-                        const events = this.editor.storage[EditorFeatureId.CustomEvents] as CustomEditorEventsStorage
+                        const events = this.editor.storage[
+                            EditorFeatureId.CustomEvents
+                        ] as CustomEditorEventsStorage
                         ;(events?.shouldFocusToolbar$ as Subject<void>).next()
 
                         return true

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core'
-import { convertToTaskTreeNode, TaskTreeNode } from 'src/app/components/organisms/task-tree/task-tree.component'
+import {
+    convertToTaskTreeNode,
+    TaskTreeNode,
+} from 'src/app/components/organisms/task-tree/task-tree.component'
 import {
     prioritySortingMap,
     statusSortingMap,
@@ -27,7 +30,7 @@ const tasklist = Object.values(TaskStatus)
             id: '',
             listId: '',
             parentTaskId: '',
-        }))
+        })),
     )
     .flat()
 
@@ -35,14 +38,17 @@ const sortTasklist = (tasklist: TaskPreview[]) => {
     const openTasks = tasklist
         .filter(
             // Prettier-ignore
-            t => t.status != TaskStatus.NOT_PLANNED &&
+            t =>
+                t.status != TaskStatus.NOT_PLANNED &&
                 t.status != TaskStatus.COMPLETED &&
-                t.status != TaskStatus.BACKLOG
+                t.status != TaskStatus.BACKLOG,
         )
         .sort(sortByStatus)
         .sort(sortByPriority)
     const backlogTasks = tasklist.filter(t => t.status == TaskStatus.BACKLOG).sort(sortByPriority)
-    const closedTasks = tasklist.filter(t => t.status == TaskStatus.NOT_PLANNED || t.status == TaskStatus.COMPLETED) // @TODO: sort by closedAt
+    const closedTasks = tasklist.filter(
+        t => t.status == TaskStatus.NOT_PLANNED || t.status == TaskStatus.COMPLETED,
+    ) // @TODO: sort by closedAt
 
     return [...openTasks, ...backlogTasks, ...closedTasks]
 }

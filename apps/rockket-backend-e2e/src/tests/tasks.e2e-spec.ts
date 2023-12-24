@@ -74,7 +74,9 @@ describe('Task CRUD (e2e)', () => {
             parentTaskId: createdParentTask.id,
         })
 
-        const res = await request(app).get(`/task/${createdParentTask.id}/subtasks`).auth(authToken, typeBearer)
+        const res = await request(app)
+            .get(`/task/${createdParentTask.id}/subtasks`)
+            .auth(authToken, typeBearer)
 
         expect(res.body.length).toEqual(1)
         expect(res.body[0].id).toEqual(createdSubTask.id)
@@ -117,7 +119,10 @@ describe('Task CRUD (e2e)', () => {
                 .send({ [key]: value })
                 .expect(200)
 
-            const res = await request(app).get(`/task/${createdTask.id}/events`).auth(authToken, typeBearer).expect(200)
+            const res = await request(app)
+                .get(`/task/${createdTask.id}/events`)
+                .auth(authToken, typeBearer)
+                .expect(200)
             const taskEvents: TaskEvent[] = res.body
 
             expect(taskEvents.length).toEqual(1)
@@ -246,7 +251,10 @@ describe('Task CRUD (e2e)', () => {
             })
 
             // Jonathan shares the list with annie (Edit permissions)
-            await request(app).post(`/list/${createdList.id}/share/${annie.id}`).auth(authToken, typeBearer).expect(201)
+            await request(app)
+                .post(`/list/${createdList.id}/share/${annie.id}`)
+                .auth(authToken, typeBearer)
+                .expect(201)
 
             // Annie comments
             const res = await request(app)
@@ -304,7 +312,10 @@ describe('Task CRUD (e2e)', () => {
             const comment = res.body as TaskComment
 
             // Annie deletes the comment
-            await request(app).delete(`/task/comment/${comment.id}`).auth(annie.authToken, typeBearer).expect(200)
+            await request(app)
+                .delete(`/task/comment/${comment.id}`)
+                .auth(annie.authToken, typeBearer)
+                .expect(200)
         })
     })
 })

@@ -30,6 +30,6 @@ export class SettingsComponent {
             const breadcrumb = this.pathBreadcrumbMap[path]
 
             return [{ title: 'Settings', route: '/settings', icon: 'settings' }, breadcrumb]
-        })
+        }),
     )
 }

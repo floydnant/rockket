@@ -25,7 +25,13 @@ const entityTreeFixture: EntityPreviewRecursive[] = [
                 title: 'First nested',
                 parentId: '1',
                 children: [
-                    { id: '4', title: 'Deep nested', children: [], parentId: '3', entityType: EntityType.TASKLIST },
+                    {
+                        id: '4',
+                        title: 'Deep nested',
+                        children: [],
+                        parentId: '3',
+                        entityType: EntityType.TASKLIST,
+                    },
                 ],
             },
         ],
@@ -117,10 +123,22 @@ describe('Store entity utils', () => {
                     title: 'First nested',
                     parentId: '1',
                     children: [
-                        { id: '4', entityType: EntityType.TASKLIST, title: 'Deep nested', children: [], parentId: '3' },
+                        {
+                            id: '4',
+                            entityType: EntityType.TASKLIST,
+                            title: 'Deep nested',
+                            children: [],
+                            parentId: '3',
+                        },
                     ],
                 },
-                { id: '4', entityType: EntityType.TASKLIST, title: 'Deep nested', children: [], parentId: '3' },
+                {
+                    id: '4',
+                    entityType: EntityType.TASKLIST,
+                    title: 'Deep nested',
+                    children: [],
+                    parentId: '3',
+                },
             ]
             expect(trace).toEqual(traceFixture)
         })
@@ -131,7 +149,13 @@ describe('Store entity utils', () => {
             const result = getParentEntityByChildId(entityTreeFixture, '4')
             const resultFixture: ReturnType<typeof getParentEntityByChildId> = {
                 subTree: [
-                    { id: '4', entityType: EntityType.TASKLIST, title: 'Deep nested', children: [], parentId: '3' },
+                    {
+                        id: '4',
+                        entityType: EntityType.TASKLIST,
+                        title: 'Deep nested',
+                        children: [],
+                        parentId: '3',
+                    },
                 ],
                 index: 0,
             }

@@ -38,10 +38,15 @@ interface GetErrorMapUpdatesOptions {
 }
 
 /** Returns an observable of error messages, mapped by their matching `field` */
-export const getErrorMapUpdates = ({ actions$, fields, resetAction, errorAction }: GetErrorMapUpdatesOptions) => {
+export const getErrorMapUpdates = ({
+    actions$,
+    fields,
+    resetAction,
+    errorAction,
+}: GetErrorMapUpdatesOptions) => {
     const resetActions = actions$.pipe(
         ofType(resetAction),
-        map(() => ({}))
+        map(() => ({})),
     )
     const errorActions = actions$.pipe(
         ofType(errorAction),
@@ -53,11 +58,12 @@ export const getErrorMapUpdates = ({ actions$, fields, resetAction, errorAction 
             const errorMap: Record<string, string[]> = {}
             messages.forEach(msg => {
                 const fieldName = fields.find(field => new RegExp(field, 'i').test(msg))
-                if (fieldName) errorMap[fieldName] = [...(errorMap[fieldName] || []), msg.replace(/^\w+:/, '')]
+                if (fieldName)
+                    errorMap[fieldName] = [...(errorMap[fieldName] || []), msg.replace(/^\w+:/, '')]
             })
 
             return errorMap
-        })
+        }),
     )
 
     return merge(resetActions, errorActions)
@@ -75,7 +81,7 @@ export const getErrorMapUpdates = ({ actions$, fields, resetAction, errorAction 
  */
 export const loadingUpdates = <T extends AnyActionCreator>(
     actionsToListenFor: T[],
-    filterPredicate?: (action: ReturnType<T>) => boolean | Observable<boolean>
+    filterPredicate?: (action: ReturnType<T>) => boolean | Observable<boolean>,
 ) => {
     return (source: Actions) =>
         source.pipe(
@@ -84,7 +90,7 @@ export const loadingUpdates = <T extends AnyActionCreator>(
             interpretLoadingStates(),
             map(action => action.isLoading),
             startWith(false),
-            shareReplay({ bufferSize: 1, refCount: true })
+            shareReplay({ bufferSize: 1, refCount: true }),
         )
 }
 
@@ -116,9 +122,9 @@ export const collectLoadingMap = <T extends Action & { id: string; isLoading: bo
                     type: '' as T['type'],
                     id: '',
                     loadingStateMap: {} as Record<string, boolean>,
-                }
+                },
             ),
-            shareReplay({ bufferSize: 1, refCount: true })
+            shareReplay({ bufferSize: 1, refCount: true }),
         )
 
     operator.getMap = () => (source: Actions<T>) => operator(source).pipe(map(res => res.loadingStateMap))

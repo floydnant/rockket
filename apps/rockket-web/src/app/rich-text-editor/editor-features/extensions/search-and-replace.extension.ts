@@ -60,7 +60,7 @@ const regex = (s: string, disableRegex: boolean, caseSensitive: boolean): RegExp
 function processSearches(
     doc: ProsemirrorNode,
     searchTerm: RegExp,
-    searchResultClass: string
+    searchResultClass: string,
 ): { decorationsToReturn: DecorationSet; results: Result[] } {
     const decorations: Decoration[] = []
     let textNodesWithPosition: TextNodesWithPosition[] = []
@@ -135,7 +135,7 @@ const rebaseNextResult = (
     replaceTerm: string,
     index: number,
     lastOffset: number,
-    results: Result[]
+    results: Result[],
 ): [number, Result[]] | null => {
     const nextIndex = index + 1
 
@@ -270,7 +270,7 @@ export const SearchAndReplace = Extension.create<SearchOptions, unknown>({
                             const { decorationsToReturn, results } = processSearches(
                                 doc,
                                 regex(searchTerm, disableRegex, caseSensitive),
-                                searchResultClass
+                                searchResultClass,
                             )
                             getSearchStorage(extensionThis.editor).results = results
 

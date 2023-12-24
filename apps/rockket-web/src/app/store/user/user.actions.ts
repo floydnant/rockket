@@ -1,7 +1,11 @@
 import { UrlTree } from '@angular/router'
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
 import { HttpServerErrorResponse } from 'src/app/http/types'
-import { SignupCredentialsDto, LoginCredentialsDto, LoggedInUser } from 'src/app/fullstack-shared-models/auth.model'
+import {
+    SignupCredentialsDto,
+    LoginCredentialsDto,
+    LoggedInUser,
+} from 'src/app/fullstack-shared-models/auth.model'
 
 export const authActions = createActionGroup({
     source: 'User/Auth',

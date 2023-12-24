@@ -17,7 +17,7 @@ export class AccountEffects {
         private actions$: Actions,
         private accountService: AccountService,
         private toast: HotToastService,
-        private store: Store<AppState>
+        private store: Store<AppState>,
     ) {
         this.store.subscribe(state => (this.userState = state.user))
     }
@@ -37,9 +37,9 @@ export class AccountEffects {
                         error: getMessageFromHttpError,
                     }),
                     map(() => accountActions.updateUsernameSuccess(dto)),
-                    catchError((err: HttpServerErrorResponse) => of(accountActions.updateUsernameError(err)))
+                    catchError((err: HttpServerErrorResponse) => of(accountActions.updateUsernameError(err))),
                 )
-            })
+            }),
         )
     })
 
@@ -56,9 +56,9 @@ export class AccountEffects {
                         error: getMessageFromHttpError,
                     }),
                     map(() => accountActions.updateEmailSuccess({ email: dto.email })),
-                    catchError((err: HttpServerErrorResponse) => of(accountActions.updateEmailError(err)))
+                    catchError((err: HttpServerErrorResponse) => of(accountActions.updateEmailError(err))),
                 )
-            })
+            }),
         )
     })
 
@@ -75,9 +75,9 @@ export class AccountEffects {
                         error: getMessageFromHttpError,
                     }),
                     map(() => accountActions.updatePasswordSuccess()),
-                    catchError((err: HttpServerErrorResponse) => of(accountActions.updatePasswordError(err)))
+                    catchError((err: HttpServerErrorResponse) => of(accountActions.updatePasswordError(err))),
                 )
-            })
+            }),
         )
     })
 
@@ -98,7 +98,7 @@ export class AccountEffects {
                 //     }),
                 //     map(() => userActions.deleteAccountSuccess())
                 // )
-            })
+            }),
         )
     })
 
@@ -115,16 +115,16 @@ export class AccountEffects {
                         error: getMessageFromHttpError,
                     }),
                     map(() => accountActions.deleteAccountSuccess()),
-                    catchError((err: HttpServerErrorResponse) => of(accountActions.deleteAccountError(err)))
+                    catchError((err: HttpServerErrorResponse) => of(accountActions.deleteAccountError(err))),
                 )
-            })
+            }),
         )
     })
     forwardDeleteAccount = createEffect(() =>
         this.actions$.pipe(
             ofType(accountActions.deleteAccountSuccess),
-            map(() => authActions.logoutProceed())
-        )
+            map(() => authActions.logoutProceed()),
+        ),
     )
 
     loadEmail = createEffect(() => {
@@ -137,7 +137,7 @@ export class AccountEffects {
                 const res$ = this.accountService.loadEmail()
 
                 return res$.pipe(map(({ email }) => accountActions.loadEmailSuccess({ email })))
-            })
+            }),
         )
     })
 }

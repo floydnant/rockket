@@ -4,7 +4,6 @@ import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { catchError, first, map, mergeMap, of, switchMap } from 'rxjs'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
-import { DialogService } from 'src/app/modal/dialog.service'
 import { TaskService } from 'src/app/services/entity.services/task.service'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
@@ -19,7 +18,6 @@ export class TaskEffects {
         private taskService: TaskService,
         private toast: HotToastService,
         private store: Store<AppState>,
-        private dialogService: DialogService
     ) {}
 
     loadTaskPreviews = createEffect(() => {
@@ -33,9 +31,9 @@ export class TaskEffects {
                     catchError(err => {
                         this.toast.error('Failed to load task previews.')
                         return of(taskActions.loadTaskPreviewsError({ ...err }))
-                    })
+                    }),
                 )
-            })
+            }),
         )
     })
 
@@ -50,9 +48,9 @@ export class TaskEffects {
                     catchError(err => {
                         this.toast.error('Failed to load tasks for this list.')
                         return of(taskActions.loadRootLevelTasksError({ ...err, id }))
-                    })
+                    }),
                 )
-            })
+            }),
         )
     })
 
@@ -75,10 +73,12 @@ export class TaskEffects {
                                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                   const task = getTaskById(taskTree, dto.parentTaskId!)
                                   return task?.listId as string
-                              })
+                              }),
                           )
 
-                const res$ = listId$.pipe(switchMap(listId => this.taskService.create({ ...dto, listId, title })))
+                const res$ = listId$.pipe(
+                    switchMap(listId => this.taskService.create({ ...dto, listId, title })),
+                )
 
                 const task = dto.parentTaskId ? 'Subtask' : 'Task'
 
@@ -89,9 +89,11 @@ export class TaskEffects {
                         error: getMessageFromHttpError,
                     }),
                     map(createdTask => taskActions.createSuccess({ createdTask })),
-                    catchError(err => of(taskActions.createError({ ...err, id: listId || dto.parentTaskId })))
+                    catchError(err =>
+                        of(taskActions.createError({ ...err, id: listId || dto.parentTaskId })),
+                    ),
                 )
-            })
+            }),
         )
     })
 
@@ -106,9 +108,9 @@ export class TaskEffects {
                     catchError(err => {
                         this.toast.error('Failed to update the newDescription of this task.')
                         return of(taskActions.updateDescriptionError({ ...err, id }))
-                    })
+                    }),
                 )
-            })
+            }),
         )
     })
 
@@ -124,9 +126,9 @@ export class TaskEffects {
                         error: 'Failed to update the status of this task.',
                     }),
                     map(() => taskActions.updateStatusSuccess({ id, status })),
-                    catchError(err => of(taskActions.updateStatusError({ ...err, id })))
+                    catchError(err => of(taskActions.updateStatusError({ ...err, id }))),
                 )
-            })
+            }),
         )
     })
 
@@ -141,9 +143,9 @@ export class TaskEffects {
                     catchError(err => {
                         this.toast.error('Failed to update the priority of this task.')
                         return of(taskActions.updatePriorityError({ ...err, id }))
-                    })
+                    }),
                 )
-            })
+            }),
         )
     })
 }

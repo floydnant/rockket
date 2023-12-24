@@ -5,10 +5,7 @@ import { TaskService } from './task/task.service'
 
 @Injectable()
 export class EntitiesService {
-    constructor(
-        private listService: ListService,
-        private taskService: TaskService,
-    ) {}
+    constructor(private listService: ListService, private taskService: TaskService) {}
 
     async getEntityPreviews(userId: string) {
         const [tasklists] = await Promise.all([this.listService.getAllTasklists(userId)])

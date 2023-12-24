@@ -2,14 +2,11 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
-import { Store } from '@ngrx/store'
 import { catchError, map, mergeMap, of, tap } from 'rxjs'
-import { DialogService } from 'src/app/modal/dialog.service'
-import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import { ListService } from 'src/app/services/entity.services/list.service'
+import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
-import { AppState } from '../..'
 import { appActions } from '../../app.actions'
 import { listActions } from './list.actions'
 
@@ -19,9 +16,7 @@ export class ListEffects {
         private actions$: Actions,
         private listService: ListService,
         private toast: HotToastService,
-        private store: Store<AppState>,
-        private dialogService: DialogService,
-        private router: Router
+        private router: Router,
     ) {}
 
     createTaskList = createEffect(() => {
@@ -39,9 +34,9 @@ export class ListEffects {
                     }),
                     map(tasklist => listActions.createTaskListSuccess({ createdList: tasklist })),
                     tap(({ createdList }) => this.router.navigate(['/home', createdList.id])),
-                    catchError(err => of(listActions.createTaskListError(err)))
+                    catchError(err => of(listActions.createTaskListError(err))),
                 )
-            })
+            }),
         )
     })
 
@@ -56,9 +51,9 @@ export class ListEffects {
                     catchError(err => {
                         this.toast.error('Failed to update description')
                         return of(listActions.updateDescriptionError({ ...err, id: dto.id }))
-                    })
+                    }),
                 )
-            })
+            }),
         )
     })
 
@@ -68,7 +63,7 @@ export class ListEffects {
             mergeMap(() => {
                 this.toast.info('Duplicating lists is not supported yet.')
                 return of(appActions.nothing())
-            })
+            }),
         )
     })
 
@@ -78,7 +73,7 @@ export class ListEffects {
             mergeMap(() => {
                 this.toast.info('Exporting lists is not supported yet.')
                 return of(appActions.nothing())
-            })
+            }),
         )
     })
 }

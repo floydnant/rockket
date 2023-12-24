@@ -1,7 +1,17 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Store } from '@ngrx/store'
-import { OperatorFunction, catchError, Observable, throwError, mergeMap, delay, tap, retry, timer } from 'rxjs'
+import {
+    OperatorFunction,
+    catchError,
+    Observable,
+    throwError,
+    mergeMap,
+    delay,
+    tap,
+    retry,
+    timer,
+} from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { AppState } from '../store'
 import { userSelectors } from '../store/user/user.selectors'
@@ -58,13 +68,14 @@ const interceptErrors = <T>(http: HttpService): OperatorFunction<T, T> => {
                             ...err,
                             error: {
                                 statusCode: '0 - SERVER DOWN',
-                                message: 'We may be experiencing some issues with the server. Please report it.',
+                                message:
+                                    'We may be experiencing some issues with the server. Please report it.',
                                 error: 'server error',
                             },
                         }))
-                    })
+                    }),
                 )
-            })
+            }),
         )
     }
 }
@@ -74,7 +85,9 @@ const interceptErrors = <T>(http: HttpService): OperatorFunction<T, T> => {
 })
 export class HttpService {
     constructor(public http: HttpClient, private store: Store<AppState>) {
-        this.store.select(userSelectors.selectAuthtoken).subscribe(authToken => (this.bearerToken = authToken))
+        this.store
+            .select(userSelectors.selectAuthtoken)
+            .subscribe(authToken => (this.bearerToken = authToken))
     }
 
     private bearerToken?: string | null

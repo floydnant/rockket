@@ -19,9 +19,10 @@ export class AuthGuard {
                 map(({ isLoggedIn, isLoading }) => {
                     if (isLoggedIn) return true
 
-                    if (isLoading) return this.router.parseUrl(`/auth/login-loading?callback=${routerState.url}`)
+                    if (isLoading)
+                        return this.router.parseUrl(`/auth/login-loading?callback=${routerState.url}`)
                     return this.router.parseUrl(`/auth?callback=${routerState.url}`)
-                })
+                }),
             )
     }
 }

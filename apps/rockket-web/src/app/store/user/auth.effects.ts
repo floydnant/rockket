@@ -19,7 +19,7 @@ export class AuthEffects {
         private authService: AuthService,
         private toast: HotToastService,
         private router: Router,
-        private dialogService: DialogService
+        private dialogService: DialogService,
     ) {}
 
     loginOrSignup = createEffect(() => {
@@ -40,9 +40,9 @@ export class AuthEffects {
                         if (callbackUrl) this.router.navigateByUrl(callbackUrl)
                     }),
                     map(res => authActions.loginOrSignupSuccess(res.user)),
-                    catchError((err: HttpServerErrorResponse) => of(authActions.loginOrSignupError(err)))
+                    catchError((err: HttpServerErrorResponse) => of(authActions.loginOrSignupError(err))),
                 )
-            })
+            }),
         )
     })
 
@@ -50,9 +50,9 @@ export class AuthEffects {
         () =>
             this.actions$.pipe(
                 ofType(authActions.loginOrSignupSuccess),
-                tap(({ authToken }) => this.authService.saveToken(authToken))
+                tap(({ authToken }) => this.authService.saveToken(authToken)),
             ),
-        { dispatch: false }
+        { dispatch: false },
     )
 
     loadSavedAuthToken = createEffect(() => {
@@ -62,14 +62,14 @@ export class AuthEffects {
                 const authToken = this.authService.getToken()
                 if (authToken) return authActions.loadAuthTokenSuccess({ authToken })
                 else return appActions.nothing()
-            })
+            }),
         )
     })
 
     forwardLoadTokenSuccess = createEffect(() => {
         return this.actions$.pipe(
             ofType(authActions.loadAuthTokenSuccess),
-            map(() => authActions.confirmLogin())
+            map(() => authActions.confirmLogin()),
         )
     })
     confirmLogin = createEffect(() => {
@@ -97,9 +97,9 @@ export class AuthEffects {
                         if (isOnAuthPage) this.router.navigateByUrl('/home', { replaceUrl: true })
                     }),
                     map(res => authActions.loginOrSignupSuccess(res.user)),
-                    catchError(() => of(authActions.confirmLoginError()))
+                    catchError(() => of(authActions.confirmLoginError())),
                 )
-            })
+            }),
         )
     })
 
@@ -118,9 +118,9 @@ export class AuthEffects {
                         if (res == 'Logout') return authActions.logoutProceed()
 
                         return authActions.logoutAbort()
-                    })
+                    }),
                 )
-            })
+            }),
         )
     })
 
@@ -131,9 +131,9 @@ export class AuthEffects {
                 tap(() => {
                     this.authService.deleteToken()
                     this.router.navigateByUrl('/auth')
-                })
+                }),
             )
         },
-        { dispatch: false }
+        { dispatch: false },
     )
 }

@@ -29,7 +29,7 @@ const setupComponent = (formOptions: FormBuilderOptions, options?: SetupComponen
             },
             declarations: [FormComponent, InputComponent],
             imports: [ReactiveFormsModule],
-        }
+        },
     )
 
     return submitStub
@@ -66,7 +66,7 @@ describe('FormComponent', () => {
                         control: [''],
                     },
                 },
-                { submitButton: 'Submit' }
+                { submitButton: 'Submit' },
             )
 
             cy.get('[data-test-name="input-username"]')
@@ -89,7 +89,7 @@ describe('FormComponent', () => {
                         control: ['', Validators.required],
                     },
                 },
-                { submitButton: 'Submit' }
+                { submitButton: 'Submit' },
             )
 
             // Not submitting the form
@@ -106,7 +106,7 @@ describe('FormComponent', () => {
                         control: ['', Validators.required],
                     },
                 },
-                { submitButton: 'Submit' }
+                { submitButton: 'Submit' },
             )
 
             cy.get('[data-test-name="submit-button"]').click()
@@ -124,7 +124,7 @@ describe('FormComponent', () => {
                     },
                     password: [''],
                 },
-                { submitButton: 'Submit' }
+                { submitButton: 'Submit' },
             )
 
             cy.get('[data-test-name="submit-button"]').click()
@@ -147,7 +147,7 @@ describe('FormComponent', () => {
                     extraErrorMessages: {
                         username: ['Sorry, this username is already taken.'],
                     },
-                }
+                },
             )
 
             cy.get('[data-test-name="validation-errors"]').should('have.length', 1)
@@ -166,7 +166,7 @@ describe('FormComponent', () => {
                         control: ['', Validators.required],
                     },
                 },
-                { submitButton: 'Submit' }
+                { submitButton: 'Submit' },
             )
 
             cy.get('[data-test-name="input-username"]').type('this is the username')
@@ -189,7 +189,7 @@ describe('FormComponent', () => {
                         control: ['', Validators.required],
                     },
                 },
-                { submitButton: 'Submit' }
+                { submitButton: 'Submit' },
             )
 
             cy.get('[data-test-name="input-username"]').type('this is the username')
@@ -215,7 +215,7 @@ describe('FormComponent', () => {
                         control: ['', Validators.required],
                     },
                 },
-                { submitButton: 'Submit', isLoading: true }
+                { submitButton: 'Submit', isLoading: true },
             )
 
             cy.get('[data-test-name="input-username"]').should('be.disabled')

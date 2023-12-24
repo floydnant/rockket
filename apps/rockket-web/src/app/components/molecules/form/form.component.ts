@@ -16,7 +16,7 @@ export class FormComponent implements OnInit, OnChanges {
             formOptionEntries.map(([inputKey, options]) => {
                 if (options instanceof Array) return [inputKey, new UntypedFormControl(...options)]
                 return [inputKey, new UntypedFormControl(...options.control)]
-            })
+            }),
         )
 
         this.formGroup = new UntypedFormGroup(formControlMap)
@@ -30,7 +30,8 @@ export class FormComponent implements OnInit, OnChanges {
                 name: options instanceof Array ? defaultName : options.name || defaultName,
                 type: options instanceof Array ? defaultType : options.type || defaultType,
                 control: formControlMap[inputKey],
-                errorMessages: options instanceof Array ? defaultErrors : options.errorMessages || defaultErrors,
+                errorMessages:
+                    options instanceof Array ? defaultErrors : options.errorMessages || defaultErrors,
             }
         })
     }

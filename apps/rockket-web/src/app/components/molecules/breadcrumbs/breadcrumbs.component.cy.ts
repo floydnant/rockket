@@ -32,7 +32,10 @@ describe('BreadcrumbsComponent', () => {
         setupComponent(breadcrumbs)
 
         cy.get(testName('breadcrumb')).should('have.length', 3)
-        cy.get(testName('breadcrumbs-container')).should('have.text', breadcrumbs.map(({ title }) => title).join('/'))
+        cy.get(testName('breadcrumbs-container')).should(
+            'have.text',
+            breadcrumbs.map(({ title }) => title).join('/'),
+        )
     })
 
     // @TODO: Navigation through clicking a breadcrumb must be tested in e2e
@@ -59,9 +62,24 @@ describe('BreadcrumbsComponent', () => {
             { title: '1. Nested list', icon: 'workspace', route: '/ne', contextMenuItems: menuItems },
             { title: '2. Nested list', icon: 'workspace', route: '/ne/ne', contextMenuItems: menuItems },
             { title: '3. Nested list', icon: 'workspace', route: '/ne/ne/ne', contextMenuItems: menuItems },
-            { title: '4. Nested list', icon: 'workspace', route: '/ne/ne/ne/ne', contextMenuItems: menuItems },
-            { title: '5. Nested list', icon: 'workspace', route: '/ne/ne/ne/ne/ne', contextMenuItems: menuItems },
-            { title: '6. Nested list', icon: 'workspace', route: '/ne/ne/ne/ne/ne/ne', contextMenuItems: menuItems },
+            {
+                title: '4. Nested list',
+                icon: 'workspace',
+                route: '/ne/ne/ne/ne',
+                contextMenuItems: menuItems,
+            },
+            {
+                title: '5. Nested list',
+                icon: 'workspace',
+                route: '/ne/ne/ne/ne/ne',
+                contextMenuItems: menuItems,
+            },
+            {
+                title: '6. Nested list',
+                icon: 'workspace',
+                route: '/ne/ne/ne/ne/ne/ne',
+                contextMenuItems: menuItems,
+            },
         ]
 
         it('truncates breadcrumbs on tablets', () => {

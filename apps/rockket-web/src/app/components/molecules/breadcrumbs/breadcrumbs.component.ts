@@ -90,7 +90,7 @@ export class BreadcrumbsComponent {
         coalesceWith(timer(100)),
         map(([screenWidth, sidebarWidth, isMobileScreen]) => {
             return (isMobileScreen ? screenWidth : screenWidth - sidebarWidth) - 170 // Extra space
-        })
+        }),
     )
 
     @Input() set breadcrumbs(breadcrumbs: Breadcrumb[]) {
@@ -122,7 +122,7 @@ export class BreadcrumbsComponent {
 
             return truncateBreadcrumbs(breadcrumbs, truncate)
         }),
-        distinctUntilChanged((a, b) => JSON.stringify(a) == JSON.stringify(b))
+        distinctUntilChanged((a, b) => JSON.stringify(a) == JSON.stringify(b)),
     )
 
     trackByFn(_index: number, crumb: BreadcrumbInternal): string {

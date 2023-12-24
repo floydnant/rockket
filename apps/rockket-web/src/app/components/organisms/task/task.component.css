@@ -31,7 +31,7 @@
 
 /* [task] */
 .task.titleHasFocus {
-    @apply border-transparent ring-2 ring-primary-400;
+    @apply ring-primary-400 border-transparent ring-2;
 }
 
 /* [ellipsis] opacity-0 */
@@ -50,12 +50,12 @@
 }
 /* [icon-group] -translate-x-8 */
 .task {
-    @apply [&_.icon-group]:hover:-translate-x-8
-        [&:is(.isSelected,.titleHasFocus,.descriptionIsActive)_.icon-group]:-translate-x-8;
+    @apply [&:is(.isSelected,.titleHasFocus,.descriptionIsActive)_.icon-group]:-translate-x-8
+        [&_.icon-group]:hover:-translate-x-8;
 }
 
 .second-row > button {
-    @apply text-md text-tinted-400 transition-colors hover:text-tinted-300;
+    @apply text-md text-tinted-400 hover:text-tinted-300 transition-colors;
 }
 .task.completed:not(.isActive) .second-row > * {
     @apply text-submit-500 hover:text-submit-300;

@@ -16,7 +16,11 @@ export class ComponentPlaygroundComponent {
         this.toast.close('confirm-login')
     }
 
-    fullnameControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(35)])
+    fullnameControl = new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(35),
+    ])
 
     formOptions: FormBuilderOptions = {
         username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(35)]],

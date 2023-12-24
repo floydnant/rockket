@@ -33,7 +33,9 @@ export type PathsConcatenated<T, S extends string = '.', D extends number = 10> 
     ? never
     : T extends object
     ? {
-          [K in keyof T]-?: K extends string | number ? `${K}` | Join<K, S, PathsConcatenated<T[K], S, Prev[D]>> : never
+          [K in keyof T]-?: K extends string | number
+              ? `${K}` | Join<K, S, PathsConcatenated<T[K], S, Prev[D]>>
+              : never
       }[keyof T]
     : ''
 

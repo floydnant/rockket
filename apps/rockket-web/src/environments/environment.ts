@@ -1,4 +1,10 @@
-import { APP_INSIGHTS_CONNECTION_STRING, AppEnvironment, contextMap, env, serverBaseUrls } from './environment-info'
+import {
+    APP_INSIGHTS_CONNECTION_STRING,
+    AppEnvironment,
+    contextMap,
+    env,
+    serverBaseUrls,
+} from './environment-info'
 
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.

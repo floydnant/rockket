@@ -72,13 +72,13 @@ export class ListRepository {
             )
             SELECT * FROM all_lists_cte
         `
-        const listIds = lists.map((l) => l.id)
+        const listIds = lists.map(list => list.id)
 
         const tasks = await this.prisma.task.findMany({
             where: { listId: { in: listIds } },
             select: { id: true, title: true, parentTaskId: true },
         })
-        const taskIds = tasks.map((t) => t.id)
+        const taskIds = tasks.map(task => task.id)
 
         const transactionResult = await this.prisma.$transaction([
             this.prisma.taskEvent.deleteMany({ where: { taskId: { in: taskIds } } }),
@@ -114,7 +114,7 @@ export class ListRepository {
 
         return lists.map(({ childLists, ...list }) => ({
             ...list,
-            childLists: childLists.map((l) => l.id),
+            childLists: childLists.map(l => l.id),
         }))
     }
 

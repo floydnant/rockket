@@ -6,36 +6,39 @@ import { getEntityById } from '../utils'
 import { listActions } from './list.actions'
 
 export const tasklistReducerOns: ReducerOns<EntitiesState> = [
-    on(listActions.createTaskListSuccess, (state, { createdList: { parentListId, ...createdList } }): EntitiesState => {
-        const listEntity: EntityPreviewRecursive = {
-            ...createdList,
-            entityType: EntityType.TASKLIST,
-            parentId: parentListId,
-            children: [],
-        }
-
-        if (!parentListId)
-            return {
-                ...state,
-                entityTree: [...(state.entityTree || []), listEntity],
+    on(
+        listActions.createTaskListSuccess,
+        (state, { createdList: { parentListId, ...createdList } }): EntitiesState => {
+            const listEntity: EntityPreviewRecursive = {
+                ...createdList,
+                entityType: EntityType.TASKLIST,
+                parentId: parentListId,
+                children: [],
             }
 
-        const entityTreeCopy = structuredClone(state.entityTree) || []
-        const parentList = getEntityById(entityTreeCopy, parentListId)
+            if (!parentListId)
+                return {
+                    ...state,
+                    entityTree: [...(state.entityTree || []), listEntity],
+                }
 
-        if (!parentList)
+            const entityTreeCopy = structuredClone(state.entityTree) || []
+            const parentList = getEntityById(entityTreeCopy, parentListId)
+
+            if (!parentList)
+                return {
+                    ...state,
+                    entityTree: [...(state.entityTree || []), listEntity],
+                }
+
+            parentList.children?.push(listEntity)
+
             return {
                 ...state,
-                entityTree: [...(state.entityTree || []), listEntity],
+                entityTree: entityTreeCopy,
             }
-
-        parentList.children?.push(listEntity)
-
-        return {
-            ...state,
-            entityTree: entityTreeCopy,
-        }
-    }),
+        },
+    ),
 
     on(listActions.updateDescriptionSuccess, (state, { id, newDescription }): EntitiesState => {
         const entityDetailsCopy = structuredClone(state.entityDetails) as EntitiesState['entityDetails']

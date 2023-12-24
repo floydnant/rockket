@@ -4,7 +4,10 @@
     data-test-name="breadcrumbs-container"
     #breadcrumbsContainer
 >
-    <div *rxFor="let breadcrumb of breadcrumbs$; let isLast = last; trackBy: trackByFn" class="flex max-w-[80%]">
+    <div
+        *rxFor="let breadcrumb of breadcrumbs$; let isLast = last; trackBy: trackByFn"
+        class="flex max-w-[80%]"
+    >
         <!-- @TODO: some fuckery is going on here with the cdkMenuItem, destroying the menu bar flow and not acting like a proper menu item -->
         <ng-container *ngIf="isTruncationBreadcrumb(breadcrumb)">
             <button
@@ -25,7 +28,11 @@
                 (overlayOutsideClick)="closeOverlayDelayed()"
             >
                 <app-tooltip class="bottom no-delay !border-tinted-800 !bg-tinted-900/70 !px-1">
-                    <div class="flex flex-col text-base" cdkMenu data-test-name="truncated-breadcrumbs-container">
+                    <div
+                        class="flex flex-col text-base"
+                        cdkMenu
+                        data-test-name="truncated-breadcrumbs-container"
+                    >
                         <div
                             *rxFor="
                                 let truncatedBreadcrumb of breadcrumb.truncated;
@@ -47,7 +54,9 @@
         </ng-container>
 
         <ng-container *ngIf="!isTruncationBreadcrumb(breadcrumb)">
-            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { breadcrumb, isLast }"></ng-container>
+            <ng-container
+                *ngTemplateOutlet="breadcrumbTemplate; context: { breadcrumb, isLast }"
+            ></ng-container>
         </ng-container>
 
         <span class="separator | text-tinted-500 mx-0.5" *ngIf="!isLast">/</span>
@@ -75,6 +84,9 @@
             ></app-drop-down>
         </ng-template>
 
-        <app-entity-page-label [pageTitle]="breadcrumb.title" [pageIcon]="breadcrumb.icon"></app-entity-page-label>
+        <app-entity-page-label
+            [pageTitle]="breadcrumb.title"
+            [pageIcon]="breadcrumb.icon"
+        ></app-entity-page-label>
     </button>
 </ng-template>

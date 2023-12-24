@@ -139,7 +139,9 @@ export const IndentationExtension = Extension.create({
                     const coords = getCoordinates(state.selection.$anchor)
                     if (!coords) return true
 
-                    return chain().insertContentAt(coords.firstChar.inDocument, '\t', { updateSelection: false }).run()
+                    return chain()
+                        .insertContentAt(coords.firstChar.inDocument, '\t', { updateSelection: false })
+                        .run()
                 }
             },
             outdent: options => {

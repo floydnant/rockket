@@ -1,52 +1,52 @@
 .tree-node {
-    @apply flex
+    @apply text-tinted-300
+        hover:bg-tinted-700
+        hover:text-tinted-100
+        [&.isSelected]:bg-tinted-700
+        [&.isSelected]:text-tinted-100
+        [&.active]:bg-tinted-700
+        flex
         w-full
         items-stretch
         justify-start
         rounded-md
-        text-tinted-300
         transition-colors
         duration-75
-        hover:bg-tinted-700
-        hover:text-tinted-100
         hover:outline-none
-        [&.isSelected]:bg-tinted-700
-        [&.isSelected]:text-tinted-100
-        [&.nested]:pl-2.5
-        [&.active]:bg-tinted-700;
+        [&.nested]:pl-2.5;
 
     line-height: 1.7;
 }
 
 .indent-line {
-    @apply ml-3.5
+    @apply border-tinted-700
+        ml-3.5
         border-l
-        border-tinted-700
         first:ml-1;
 }
 
 .content {
-    @apply flex
+    @apply [.active_&]:text-primary-300
+        [.active_&]:hover:text-primary-200
+        flex
         grow
         gap-1
         truncate
         py-0.5
         pr-1
         transition-colors
-        duration-[40ms]
-        [.active_&]:text-primary-300
-        [.active_&]:hover:text-primary-200;
+        duration-[40ms];
 }
 
 .node-toggle {
-    @apply aspect-square
+    @apply text-tinted-600
+        hover:text-tinted-400
+        aspect-square
         rounded
         pl-2.5
         pr-1.5
         text-sm
-        text-tinted-600
-        transition-colors
-        hover:text-tinted-400;
+        transition-colors;
 }
 
 .no-toggle-icon app-icon {

@@ -22,7 +22,7 @@ const setupComponent = (props: {
             imports: [RxModule],
             declarations: [InlineEditorComponent, MutationDirective, FocusableDirective, HighlightPipe],
             providers: [],
-        }
+        },
     )
 }
 

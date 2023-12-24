@@ -34,7 +34,7 @@ import { ENTITY_VIEW_DATA, EntityViewData } from '../../entity-view.component'
 export class TaskViewComponent {
     constructor(
         @Inject(ENTITY_VIEW_DATA) private viewData: EntityViewData<TaskDetail>,
-        private store: Store<AppState>
+        private store: Store<AppState>,
     ) {}
 
     taskEntity$ = this.viewData.entity$
@@ -46,7 +46,7 @@ export class TaskViewComponent {
             if (!detail) return null
             return detail.description || ''
         }),
-        distinctUntilChanged()
+        distinctUntilChanged(),
     )
     descriptionContext$ = this.taskEntity$.pipe(
         filter(Boolean),
@@ -54,7 +54,7 @@ export class TaskViewComponent {
         map(entity => ({
             id: entity.id,
             description$: this.description$.pipe(filter(isNotNullish)),
-        }))
+        })),
     )
 
     private descriptionUpdateInput$ = new Subject<string>()
@@ -62,7 +62,9 @@ export class TaskViewComponent {
         this.descriptionUpdateInput$.next(data.description)
 
         moveToMacroQueue(() => {
-            this.store.dispatch(taskActions.updateDescription({ id: data.id, newDescription: data.description }))
+            this.store.dispatch(
+                taskActions.updateDescription({ id: data.id, newDescription: data.description }),
+            )
         })
     }
 
@@ -87,10 +89,10 @@ export class TaskViewComponent {
         mergeWith(
             this.descriptionBlurInput$.pipe(
                 withLatestFrom(merge(this.descriptionUpdateInput$.pipe(startWith(null)), this.description$)),
-                map(([, description]) => Boolean(description))
-            )
+                map(([, description]) => Boolean(description)),
+            ),
         ),
-        share({ resetOnRefCountZero: true })
+        share({ resetOnRefCountZero: true }),
     )
 
     task$ = combineLatest([this.viewData.entity$, this.store.select(entitiesSelectors.taskTreeMap)]).pipe(
@@ -98,7 +100,7 @@ export class TaskViewComponent {
             if (!taskEntity || !taskTreeMap) return null
 
             return getTaskById(Object.values(taskTreeMap).flat(), taskEntity.id)
-        })
+        }),
     )
     createSubtask() {
         this.taskEntity$.pipe(first()).subscribe(entity => {

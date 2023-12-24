@@ -27,14 +27,15 @@ const isDigit = (char: string) => /\d/.test(char)
 export const parseCombo = (
     combo: string,
     /** Wether 'tiptap mode' is enabled and 'Mod-S' should become 'Mod-Shift-S' */
-    interpretUpperCaseAsShift = false
+    interpretUpperCaseAsShift = false,
 ) => {
     const keys = combo.split(/[-+]/)
     return keys
         .map(key => {
             const lowerCaseKey = key.toLowerCase()
             if (isModifier(lowerCaseKey)) return modifierKeyIconMap[lowerCaseKey]
-            if (interpretUpperCaseAsShift && isLetter(key) && isUpperCase(key)) return [modifierKeyIconMap.shift, key]
+            if (interpretUpperCaseAsShift && isLetter(key) && isUpperCase(key))
+                return [modifierKeyIconMap.shift, key]
 
             return key.toUpperCase()
         })
@@ -58,7 +59,7 @@ export const parseBindingInput = (input: string) => {
 export const parseComboWithType = (
     combo: string,
     /** Wether 'tiptap mode' is enabled and 'Mod-S' should be interpreted as 'Mod-Shift-S' */
-    interpretUpperCaseAsShift = false
+    interpretUpperCaseAsShift = false,
 ) => {
     const keys = combo.split(/[-+]/)
     return keys

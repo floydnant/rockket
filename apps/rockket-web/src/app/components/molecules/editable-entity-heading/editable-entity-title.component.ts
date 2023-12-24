@@ -40,7 +40,7 @@ export class EditableEntityTitleComponent {
         distinctUntilKeyChanged('id'),
         switchMap(({ id: entityId }) => {
             return this.loadingService.getEntityLoadingState(action => action.id == entityId)
-        })
+        }),
     )
 
     titleUpdatesSubscription = this.titleUpdates$
@@ -55,9 +55,9 @@ export class EditableEntityTitleComponent {
                         return this.isLoading$.pipe(
                             filter(isLoading => !isLoading),
                             first(),
-                            map(() => title)
+                            map(() => title),
                         )
-                    })
+                    }),
                 )
             }),
             switchMap(title => {
@@ -67,11 +67,11 @@ export class EditableEntityTitleComponent {
                         if (!entity) return
 
                         return entitiesActions.rename({ id: entity.id, entityType: entity.entityType, title })
-                    })
+                    }),
                 )
             }),
             filter(Boolean),
-            untilDestroyed(this)
+            untilDestroyed(this),
         )
         .subscribe(action => this.store.dispatch(action))
 
@@ -81,6 +81,6 @@ export class EditableEntityTitleComponent {
             if (!entity || !('status' in entity)) return null
 
             return this.taskStatusMenuItems.map(useTaskForActiveStatus(entity))
-        })
+        }),
     )
 }

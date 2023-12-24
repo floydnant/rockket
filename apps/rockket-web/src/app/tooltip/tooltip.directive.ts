@@ -87,7 +87,10 @@ export class TooltipDirective implements OnDestroy {
 
     @HostListener('click')
     onHostClick() {
-        if (this.tooltipOptions?.closeOnHostClick === undefined || this.tooltipOptions?.closeOnHostClick === true)
+        if (
+            this.tooltipOptions?.closeOnHostClick === undefined ||
+            this.tooltipOptions?.closeOnHostClick === true
+        )
             this.hideTooltip()
     }
 
@@ -120,9 +123,14 @@ export class TooltipDirective implements OnDestroy {
             .position()
             .flexibleConnectedTo(this.element)
             .withPositions([
-                ...(this.tooltipOptions?.preferredPosition ? [positions[this.tooltipOptions.preferredPosition]] : []),
+                ...(this.tooltipOptions?.preferredPosition
+                    ? [positions[this.tooltipOptions.preferredPosition]]
+                    : []),
                 ...Object.entries(positions)
-                    .filter(([name]) => !this.tooltipOptions?.avoidPositions?.includes(name as keyof typeof positions))
+                    .filter(
+                        ([name]) =>
+                            !this.tooltipOptions?.avoidPositions?.includes(name as keyof typeof positions),
+                    )
                     .map(([, position]) => position),
             ])
             .withTransformOriginOn('app-tooltip')

@@ -101,7 +101,9 @@ describe('SidebarLayoutComponent', () => {
 
         it('cannot resize the sidebar when resizing disabled', () => {
             cy.viewport('macbook-13')
-            setupComponent(`<app-sidebar-layout [enableResize]="false"> ${defaultContent} </app-sidebar-layout>`)
+            setupComponent(
+                `<app-sidebar-layout [enableResize]="false"> ${defaultContent} </app-sidebar-layout>`,
+            )
 
             cy.get(testName('resize-handle')).should('not.exist')
         })

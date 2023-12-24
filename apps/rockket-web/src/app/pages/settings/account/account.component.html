@@ -16,7 +16,11 @@
     ></app-input>
 </p>
 <p class="mt-4" *ngIf="usernameControl.dirty">
-    <button class="button button--submit | mr-2" (click)="onUsernameSubmit()" [disabled]="usernameFormLoading$ | async">
+    <button
+        class="button button--submit | mr-2"
+        (click)="onUsernameSubmit()"
+        [disabled]="usernameFormLoading$ | async"
+    >
         <app-loading-spinner *ngIf="usernameFormLoading$ | async"></app-loading-spinner> Update Username
     </button>
     <button class="button-naked" (click)="resetUsername()">Cancel</button>
@@ -30,7 +34,9 @@
 <h2 class="text-tinted-300 mb-2">Email address</h2>
 <p>
     <span class="email | mr-2">{{ (userState | async)?.me?.email || 'failed to load email' }}</span>
-    <button class="button-naked text-primary-200" (click)="openFormModal('email')">Change email address</button>
+    <button class="button-naked text-primary-200" (click)="openFormModal('email')">
+        Change email address
+    </button>
 </p>
 <p class="text-md text-tinted-500">
     <app-icon icon="far fa-info-circle"></app-icon>

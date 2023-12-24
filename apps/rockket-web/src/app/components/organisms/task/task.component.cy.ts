@@ -25,7 +25,7 @@ const setupComponent = (
         onStatusChange?: (status: TaskStatus) => void
         onTitleChange?: (title: string) => void
     },
-    menuItemStubsMap?: Record<string, ReturnType<typeof cy.stub>>
+    menuItemStubsMap?: Record<string, ReturnType<typeof cy.stub>>,
 ) => {
     cy.mount(
         `<app-task
@@ -42,8 +42,14 @@ const setupComponent = (
                 menuItems: taskMenuItems.map(useStubsForActions(menuItemStubsMap)),
             },
             imports: [CdkMenuModule, IconsModule, RxModule, DropdownModule, RichTextEditorModule],
-            declarations: [TaskComponent, InlineEditorComponent, FocusableDirective, MutationDirective, HighlightPipe],
-        }
+            declarations: [
+                TaskComponent,
+                InlineEditorComponent,
+                FocusableDirective,
+                MutationDirective,
+                HighlightPipe,
+            ],
+        },
     )
 }
 

@@ -1,4 +1,8 @@
-<div class="height-screen flex w-full flex-col" data-test-name="app-container" style="--bottom-nav-height: 3.5rem">
+<div
+    class="height-screen flex w-full flex-col"
+    data-test-name="app-container"
+    style="--bottom-nav-height: 3.5rem"
+>
     <div class="relative flex h-[calc(100%-var(--bottom-nav-height))] md:h-full">
         <aside
             #sidebar
@@ -55,7 +59,9 @@
         <button class="px-4 py-2" routerLink="/home" routerLinkActive="text-primary-300">
             <app-icon icon="fas fa-user"></app-icon>
         </button>
-        <button class="px-4 py-2" routerLink="/home/search"><app-icon icon="fas fa-search"></app-icon></button>
+        <button class="px-4 py-2" routerLink="/home/search">
+            <app-icon icon="fas fa-search"></app-icon>
+        </button>
         <app-menu-toggle></app-menu-toggle>
     </div>
 </div>

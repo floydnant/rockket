@@ -4,7 +4,10 @@ import { Task, Tasklist } from '@prisma/client'
 import superRequest from 'supertest'
 import { CreateTasklistDto } from '../../../rockket-backend/src/entities/list/list.dto'
 import { CreateTaskDto } from '../../../rockket-backend/src/entities/task/task.dto'
-import { LoginCredentialsDto, SignupCredentialsDto } from '../../../rockket-backend/src/user/dto/auth-credetials.dto'
+import {
+    LoginCredentialsDto,
+    SignupCredentialsDto,
+} from '../../../rockket-backend/src/user/dto/auth-credetials.dto'
 
 export const request = (app: INestApplication) => {
     return superRequest(app.getHttpServer())
@@ -17,7 +20,11 @@ export const login = (app: INestApplication, credentials: LoginCredentialsDto) =
 
 export const typeBearer = { type: 'bearer' } as const
 
-export const createTasklist = async (app: INestApplication, authToken: string, newList: CreateTasklistDto) => {
+export const createTasklist = async (
+    app: INestApplication,
+    authToken: string,
+    newList: CreateTasklistDto,
+) => {
     const res = await request(app).post('/list').auth(authToken, typeBearer).send(newList).expect(201)
     return res.body as Tasklist
 }

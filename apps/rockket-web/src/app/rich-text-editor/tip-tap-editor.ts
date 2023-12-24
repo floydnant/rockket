@@ -27,7 +27,7 @@ interface EditorStorage {
 export class TipTapEditor extends Editor {
     destroy$ = fromEventPattern<EditorEvents['destroy']>(
         handler => this.on('destroy', handler),
-        handler => this.off('destroy', handler)
+        handler => this.off('destroy', handler),
     ).pipe(first(), share({ resetOnRefCountZero: true }))
 
     override get storage() {
@@ -37,7 +37,7 @@ export class TipTapEditor extends Editor {
     private getEventStream<T extends keyof EditorEvents>(eventName: T): Observable<EditorEvents[T]> {
         return fromEvent(this, eventName, e => e as EditorEvents[T]).pipe(
             takeUntil(this.destroy$),
-            share({ resetOnRefCountZero: true })
+            share({ resetOnRefCountZero: true }),
         )
     }
 
@@ -58,7 +58,7 @@ export class TipTapEditor extends Editor {
                 html: isEmpty ? '' : editor.getHTML(),
             }
         }),
-        share({ resetOnRefCountZero: true })
+        share({ resetOnRefCountZero: true }),
     )
 
     resetState(content: Content, parseOptions?: ParseOptions) {
@@ -84,7 +84,7 @@ export class TipTapEditor extends Editor {
                     input,
                     currentState,
                     isFirst: index == 0,
-                }))
+                })),
             )
             .subscribe(({ input, currentState, isFirst }) => {
                 if (input == currentState?.html || input == currentState?.plainText) return
@@ -109,7 +109,7 @@ export class TipTapEditor extends Editor {
                 // This is needed because the editor will emit an update event when it is created
                 // in some cases. (only happend in the task description editor so far, not in the full page description editor)
                 skipUntil(input$),
-                takeUntil(this.unbind$)
+                takeUntil(this.unbind$),
             ),
             selectionUpdate$: this.selectionUpdate$.pipe(takeUntil(this.unbind$)),
             focus$: this.focus$.pipe(takeUntil(this.unbind$)),

@@ -6,10 +6,7 @@ import { ListRepository } from './list.repository'
 
 @Injectable()
 export class ListService {
-    constructor(
-        private listRepository: ListRepository,
-        private permissions: PermissionsService,
-    ) {}
+    constructor(private listRepository: ListRepository, private permissions: PermissionsService) {}
 
     createTaskList(userId: string, dto: CreateTasklistDto) {
         return this.listRepository.createTasklist(userId, dto)

@@ -31,13 +31,19 @@ export class InsightsService {
             .pipe(
                 ofType(authActions.loginOrSignupSuccess),
                 map(action => action.id),
-                distinctUntilChanged()
+                distinctUntilChanged(),
             )
             .subscribe(userId => this.appInsights.setAuthenticatedUserContext(userId, undefined, true))
 
         // Clear user context
         this.actions$
-            .pipe(ofType(authActions.logoutProceed, authActions.confirmLoginError, authActions.loginOrSignupError))
+            .pipe(
+                ofType(
+                    authActions.logoutProceed,
+                    authActions.confirmLoginError,
+                    authActions.loginOrSignupError,
+                ),
+            )
             .subscribe(() => this.appInsights.clearAuthenticatedUserContext())
     }
 

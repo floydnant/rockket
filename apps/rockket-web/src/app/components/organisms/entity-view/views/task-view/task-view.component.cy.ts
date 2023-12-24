@@ -43,7 +43,10 @@ const setupComponent = (viewData: EntityViewData<TaskDetail>, taskTreeMap: TaskT
         providers: [
             { provide: ENTITY_VIEW_DATA, useValue: viewData },
             store,
-            { provide: EntityViewComponent, useValue: { progress$: new BehaviorSubject<number | null>(null) } },
+            {
+                provide: EntityViewComponent,
+                useValue: { progress$: new BehaviorSubject<number | null>(null) },
+            },
             actionsMock,
         ],
     })

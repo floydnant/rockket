@@ -4,8 +4,8 @@ import { PromiseType } from '@prisma/client/extension'
 type NotPrefixedWith<T extends string | symbol, TPrefix extends string> = T extends symbol
     ? never
     : T extends `${TPrefix}${string}`
-      ? never
-      : T
+    ? never
+    : T
 
 export type PrismaEntity = NotPrefixedWith<keyof PrismaClient, '$'>
 
@@ -26,7 +26,7 @@ export const getSnapshot = async <TEntities extends Record<PrismaEntity, true>>(
     entities: TEntities,
 ) => {
     const backup = await Promise.all(
-        Object.keys(entities).map(async (entity) => {
+        Object.keys(entities).map(async entity => {
             return [entity, await listAll(prisma, entity as PrismaEntity)] as const
         }),
     )

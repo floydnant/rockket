@@ -41,7 +41,10 @@
         </button>
     </div>
 
-    <app-task-tree *ngIf="task.children && task.children.length; else noTasks" [tasks]="task.children"></app-task-tree>
+    <app-task-tree
+        *ngIf="task.children && task.children.length; else noTasks"
+        [tasks]="task.children"
+    ></app-task-tree>
 
     <ng-template #noTasks>
         <p class="text-tinted-400 text-center">No subtasks yet...</p>

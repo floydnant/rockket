@@ -38,7 +38,9 @@ export class DropDownComponent {
     }
     items$ = this.items$_.pipe(
         // @TODO: we should check wether the data is appropriate for route params
-        map(items => (!this.data ? items : items.map(useParamsForRoute(this.data as Record<string, string | number>))))
+        map(items =>
+            !this.data ? items : items.map(useParamsForRoute(this.data as Record<string, string | number>)),
+        ),
     )
 
     /** `data` is used for actions and route param interpolation */

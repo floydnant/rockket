@@ -1,6 +1,6 @@
 @media (max-width: 768px) {
     .sidebar--mobile {
-        @apply absolute inset-0 top-0 z-50 w-full bg-tinted-800 transition-transform;
+        @apply bg-tinted-800 absolute inset-0 top-0 z-50 w-full transition-transform;
     }
     .sidebar--mobile.hide {
         @apply -translate-x-full;

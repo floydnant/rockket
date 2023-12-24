@@ -23,18 +23,20 @@ export const mapByStatus = <T extends TaskPreview>(taskTree: T[]) => {
             ...acc,
             [status]: taskTree.filter(task => task.status == status),
         }),
-        {} as Record<TaskStatus, T[]>
+        {} as Record<TaskStatus, T[]>,
     )
     return statusCountMap
 }
 
 export const getStatusCountMapRecursive = (taskTree: TaskPreviewRecursive[]): Record<TaskStatus, number> => {
     const map = Object.fromEntries(
-        Object.entries(mapByStatus(taskTree)).map(([status, tasks]) => [status, tasks.length])
+        Object.entries(mapByStatus(taskTree)).map(([status, tasks]) => [status, tasks.length]),
     ) as Record<TaskStatus, number>
 
     const mapRecursive = taskTree.reduce<Record<TaskStatus, number>>((acc, task) => {
-        const childrenStatusCountMap = (task.children?.length && getStatusCountMapRecursive(task.children)) || null
+        // @TODO: this could be a ternary
+        const childrenStatusCountMap =
+            (task.children?.length && getStatusCountMapRecursive(task.children)) || null
 
         const statusCountEntries = Object.entries(acc).map(([status, taskCount]) => {
             const childrenCount = childrenStatusCountMap?.[status as TaskStatus] || 0
@@ -58,7 +60,7 @@ export const getStatusCountMapRecursive = (taskTree: TaskPreviewRecursive[]): Re
 export class PageProgressBarComponent {
     constructor(
         private entityView: EntityViewComponent, // Needed to update the secondary progress bar, @TODO: find a clearer way to do this
-        private uiStateService: UiStateService
+        private uiStateService: UiStateService,
     ) {}
 
     taskStatuses = Object.values(TaskStatus)
@@ -86,7 +88,8 @@ export class PageProgressBarComponent {
             const statusTaskCountMap = getStatusCountMapRecursive(tasks)
 
             const all = Object.values(statusTaskCountMap).reduce((acc, curr) => acc + curr)
-            const closed = statusTaskCountMap[TaskStatus.NOT_PLANNED] + statusTaskCountMap[TaskStatus.COMPLETED]
+            const closed =
+                statusTaskCountMap[TaskStatus.NOT_PLANNED] + statusTaskCountMap[TaskStatus.COMPLETED]
             const progress = (closed / all) * 100 || 0
 
             return {
@@ -99,7 +102,7 @@ export class PageProgressBarComponent {
                 progressRounded: Math.round(progress),
             }
         }),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     isProgressBarIncreasing$ = this.digest$.pipe(
@@ -110,15 +113,15 @@ export class PageProgressBarComponent {
                 prevProgress: progress,
                 isIncreasing: progress > prevProgress,
             }),
-            { prevProgress: 0, isIncreasing: false }
+            { prevProgress: 0, isIncreasing: false },
         ),
         filter(({ isIncreasing }) => isIncreasing),
         switchMap(() => {
             return timer(1000).pipe(
                 map(() => false),
-                startWith(true)
+                startWith(true),
             )
-        })
+        }),
     )
 
     isProgressBarVisible$ = new BehaviorSubject(true)
@@ -132,7 +135,7 @@ export class PageProgressBarComponent {
 
                 return progress
             }),
-            untilDestroyed(this)
+            untilDestroyed(this),
         )
         .subscribe(progress => this.entityView.progress$.next(progress))
 }

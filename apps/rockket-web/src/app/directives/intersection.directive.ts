@@ -17,7 +17,7 @@ export class IntersectionDirective implements AfterViewInit, OnDestroy {
                 this.intersectionEntry.emit(entry)
             })
         },
-        { threshold: [this.intersectionThreshold] }
+        { threshold: [this.intersectionThreshold] },
     )
 
     ngAfterViewInit(): void {

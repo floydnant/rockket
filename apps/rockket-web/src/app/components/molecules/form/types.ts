@@ -5,7 +5,7 @@ export type FormControlParams = [
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formState?: any,
     validatorOrOpts?: ValidatorFn | ValidatorFn[] | FormControlOptions | null,
-    asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
+    asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null,
 ]
 
 export interface FormBuilderOptions {

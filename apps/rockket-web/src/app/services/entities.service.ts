@@ -30,7 +30,9 @@ const entityServiceInjectorMap = {
     [EntityType.TASK]: TaskService,
 } // Satisfies Record<EntityType, EntityServiceConstructor> // @TODO: upgrade to typescript@4.9 => angular@15
 
-export const getEntityServiceInjector = <T extends EntityType>(entityType: T): EntityServiceInjectorMap[T] => {
+export const getEntityServiceInjector = <T extends EntityType>(
+    entityType: T,
+): EntityServiceInjectorMap[T] => {
     return entityServiceInjectorMap[entityType]
 }
 
@@ -49,7 +51,7 @@ export class EntitiesService {
     private entityServices = Object.fromEntries(
         Object.entries(entityServiceInjectorMap).map(([entityType, injectionToken]) => {
             return [entityType, inject(injectionToken as EntityServiceConstructor)]
-        })
+        }),
     ) as EntityServiceInstanceMap
 
     injectEntityService<T extends EntityType>(entityType: T) {

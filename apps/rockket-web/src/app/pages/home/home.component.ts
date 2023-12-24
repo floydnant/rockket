@@ -57,7 +57,7 @@ export class HomeComponent {
         private loadingService: LoadingStateService,
         private deviceService: DeviceService,
         private menuService: MenuService,
-        private uiStateService: UiStateService
+        private uiStateService: UiStateService,
     ) {}
 
     EntityType = EntityType
@@ -131,7 +131,7 @@ export class HomeComponent {
                 const [, ...entityTraceWithoutActive] = traceEntityIncludingTasks(
                     entityTree,
                     taskTreeMap || {},
-                    activeId
+                    activeId,
                 ).reverse()
 
                 return treeNodes.map<EntityTreeNode>(node => {
@@ -140,12 +140,12 @@ export class HomeComponent {
                         ...node,
                         isExpanded: this.entityExpandedMap.get(node.id) || isContainedInTrace,
                         menuItems: this.nodeMenuItemsMap[node.entityType].map(
-                            useTaskForActiveItems(node as EntityTreeNode & TaskPreview)
+                            useTaskForActiveItems(node as EntityTreeNode & TaskPreview),
                         ),
                     }
                 })
             }),
-            tap(transformed => (this.entityPreviewsTransformed = transformed))
+            tap(transformed => (this.entityPreviewsTransformed = transformed)),
         )
     private readonly nodeMenuItemsMap = getEntityMenuItemsMap(this.store)
 
@@ -161,7 +161,7 @@ export class HomeComponent {
     dataSource = new ArrayDataSource(this.entityPreviewsTransformed$)
     treeControl = new FlatTreeControl<EntityTreeNode>(
         node => node.path.length,
-        node => node.expandable
+        node => node.expandable,
     )
 
     createNewList(parentListId?: string) {

@@ -7,5 +7,12 @@
         "types": ["cypress", "node", "@total-typescript/ts-reset"],
         "sourceMap": false
     },
-    "include": ["**/*.ts", "**/*.js", "../cypress.config.ts", "../**/*.cy.ts", "../**/*.cy.js", "../**/*.d.ts"]
+    "include": [
+        "**/*.ts",
+        "**/*.js",
+        "../cypress.config.ts",
+        "../**/*.cy.ts",
+        "../**/*.cy.js",
+        "../**/*.d.ts"
+    ]
 }

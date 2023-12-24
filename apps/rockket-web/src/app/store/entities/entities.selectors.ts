@@ -10,7 +10,7 @@ export const entitiesSelectors = {
         const sortedTreeMap = Object.fromEntries(
             Object.entries(taskTreeMap).map(([listId, taskTree]) => {
                 return [listId, applySorters(taskTree, sortByPriority, sortByStatus)]
-            })
+            }),
         )
 
         return sortedTreeMap

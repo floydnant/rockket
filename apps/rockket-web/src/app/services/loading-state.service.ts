@@ -16,18 +16,18 @@ export class LoadingStateService {
     entityActions$ = this.bufferedActions$.pipe(ofType(...loadingStateActions))
     entityLoadingStates$ = this.entityActions$.pipe(
         interpretLoadingStates(),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     private entityLoadingStateMap$ = this.entityLoadingStates$.pipe(collectLoadingMap())
     getEntitiesLoadingStateMap(
         filterPredicate?: (
-            action: UnwrapObservable<LoadingStateService['entityLoadingStateMap$']>
-        ) => boolean | Observable<boolean>
+            action: UnwrapObservable<LoadingStateService['entityLoadingStateMap$']>,
+        ) => boolean | Observable<boolean>,
     ) {
         const loadingActions$ = this.entityLoadingStateMap$.pipe(
             filterPredicate ? filterWith(filterPredicate) : tap(),
-            shareReplay({ bufferSize: 1, refCount: true })
+            shareReplay({ bufferSize: 1, refCount: true }),
         )
 
         return Object.assign(loadingActions$.pipe(map(action => action.loadingStateMap)), {
@@ -37,12 +37,12 @@ export class LoadingStateService {
 
     getEntityLoadingState(
         filterPredicate: (
-            action: UnwrapObservable<LoadingStateService['entityLoadingStates$']>
-        ) => boolean | Observable<boolean>
+            action: UnwrapObservable<LoadingStateService['entityLoadingStates$']>,
+        ) => boolean | Observable<boolean>,
     ) {
         const loadingActions$ = this.entityLoadingStates$.pipe(
             filterWith(filterPredicate),
-            shareReplay({ bufferSize: 1, refCount: true })
+            shareReplay({ bufferSize: 1, refCount: true }),
         )
 
         return Object.assign(loadingActions$.pipe(map(action => action.isLoading)), {
@@ -54,7 +54,7 @@ export class LoadingStateService {
         const loadingActions$ = this.bufferedActions$.pipe(
             ofType(...actions),
             interpretLoadingStates(),
-            shareReplay({ bufferSize: 1, refCount: true })
+            shareReplay({ bufferSize: 1, refCount: true }),
         )
 
         return Object.assign(loadingActions$.pipe(map(action => action.isLoading)), {

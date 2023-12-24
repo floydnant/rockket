@@ -90,8 +90,16 @@ const routes: Routes = [
                 pathMatch: 'full',
                 redirectTo: 'general',
             },
-            { path: 'general', component: SettingsGeneralComponent, title: `General Settings ${APP_TITLE_SUFFIX}` },
-            { path: 'account', component: SettingsAccountComponent, title: `Account Settings ${APP_TITLE_SUFFIX}` },
+            {
+                path: 'general',
+                component: SettingsGeneralComponent,
+                title: `General Settings ${APP_TITLE_SUFFIX}`,
+            },
+            {
+                path: 'account',
+                component: SettingsAccountComponent,
+                title: `Account Settings ${APP_TITLE_SUFFIX}`,
+            },
             {
                 path: 'appearance',
                 component: SettingsAppearanceComponent,

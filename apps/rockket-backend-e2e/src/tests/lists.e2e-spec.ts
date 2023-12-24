@@ -114,7 +114,10 @@ describe('List CRUD (e2e)', () => {
             const annie = anniesRes.body.user
 
             // Jonathan shares the list with annie
-            await request(app).post(`/list/${createdList.id}/share/${annie.id}`).auth(authToken, typeBearer).expect(201)
+            await request(app)
+                .post(`/list/${createdList.id}/share/${annie.id}`)
+                .auth(authToken, typeBearer)
+                .expect(201)
 
             // Annie checks if she has access to the list
             await request(app).get(`/list/${createdList.id}`).auth(annie.authToken, typeBearer).expect(200)
@@ -131,7 +134,10 @@ describe('List CRUD (e2e)', () => {
                 // Jonathan doesn't share the list with annie
 
                 // annie checks if she has access to the list
-                await request(app).get(`/list/${createdList.id}`).auth(annie.authToken, typeBearer).expect(403)
+                await request(app)
+                    .get(`/list/${createdList.id}`)
+                    .auth(annie.authToken, typeBearer)
+                    .expect(403)
             })
 
             it('cannot edit a tasklist without Edit permissions', async () => {

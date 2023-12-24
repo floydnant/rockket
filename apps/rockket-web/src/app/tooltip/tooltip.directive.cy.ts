@@ -66,7 +66,7 @@ describe('TooltipDirective', () => {
         })
         it("doesn't hide the tooltip on click when prop is given", () => {
             setupComponent(
-                `<button appTooltip="${tooltipString}" [tooltipOptions]="{ closeOnHostClick: false }">This is a button</button>`
+                `<button appTooltip="${tooltipString}" [tooltipOptions]="{ closeOnHostClick: false }">This is a button</button>`,
             )
             cy.get('button').trigger('mouseenter')
             cy.get(testName('tooltip')).contains(tooltipString)

@@ -1,4 +1,10 @@
-import { APP_INSIGHTS_CONNECTION_STRING, AppEnvironment, contextMap, env, serverBaseUrls } from './environment-info'
+import {
+    APP_INSIGHTS_CONNECTION_STRING,
+    AppEnvironment,
+    contextMap,
+    env,
+    serverBaseUrls,
+} from './environment-info'
 
 const isTestingEnv = env.NG_APP_TESTING_ENV == 'true'
 const netlifyContext = env.NG_APP_NETLIFY_CONTEXT

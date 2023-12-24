@@ -9,10 +9,7 @@ import { ListService } from './list.service'
 @UseGuards(AuthGuard())
 @Controller()
 export class ListController {
-    constructor(
-        private listService: ListService,
-        private taskService: TaskService,
-    ) {}
+    constructor(private listService: ListService, private taskService: TaskService) {}
 
     @Post('list')
     createTasklist(@GetUser() user: User, @Body() dto: CreateTasklistDto) {

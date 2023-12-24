@@ -34,7 +34,7 @@ import { ENTITY_VIEW_DATA, EntityViewData } from '../../entity-view.component'
 export class TasklistViewComponent {
     constructor(
         @Inject(ENTITY_VIEW_DATA) private viewData: EntityViewData<TasklistDetail>,
-        private store: Store<AppState>
+        private store: Store<AppState>,
     ) {}
 
     EntityType = EntityType
@@ -48,7 +48,7 @@ export class TasklistViewComponent {
             if (!detail) return null
             return detail.description || ''
         }),
-        distinctUntilChanged()
+        distinctUntilChanged(),
     )
     descriptionContext$ = this.listEntity$.pipe(
         filter(Boolean),
@@ -56,7 +56,7 @@ export class TasklistViewComponent {
         map(entity => ({
             id: entity.id,
             description$: this.description$.pipe(filter(isNotNullish)),
-        }))
+        })),
     )
 
     private descriptionUpdateInput$ = new Subject<string>()
@@ -64,7 +64,9 @@ export class TasklistViewComponent {
         this.descriptionUpdateInput$.next(data.description)
 
         moveToMacroQueue(() => {
-            this.store.dispatch(listActions.updateDescription({ id: data.id, newDescription: data.description }))
+            this.store.dispatch(
+                listActions.updateDescription({ id: data.id, newDescription: data.description }),
+            )
         })
     }
 
@@ -89,14 +91,14 @@ export class TasklistViewComponent {
         mergeWith(
             this.descriptionBlurInput$.pipe(
                 withLatestFrom(merge(this.descriptionUpdateInput$.pipe(startWith(null)), this.description$)),
-                map(([, description]) => Boolean(description))
-            )
+                map(([, description]) => Boolean(description)),
+            ),
         ),
-        share({ resetOnRefCountZero: true })
+        share({ resetOnRefCountZero: true }),
     )
 
     children$ = this.listEntity$.pipe(
-        map(entity => entity?.children?.filter(child => child.entityType != EntityType.TASK))
+        map(entity => entity?.children?.filter(child => child.entityType != EntityType.TASK)),
     )
     createSublist() {
         this.listEntity$.pipe(first()).subscribe(entity => {
@@ -111,7 +113,7 @@ export class TasklistViewComponent {
 
             return taskTreeMap[entity.id] || []
         }),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
     createTask() {
         this.listEntity$.pipe(first()).subscribe(entity => {

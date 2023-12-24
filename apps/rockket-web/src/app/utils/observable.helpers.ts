@@ -7,14 +7,15 @@ export const filterWith = <T>(predicate: (value: T) => boolean | Observable<bool
         source.pipe(
             switchMap(value => {
                 const predicateResult = predicate(value)
-                const shouldPass$ = typeof predicateResult == 'boolean' ? of(predicateResult) : predicateResult
+                const shouldPass$ =
+                    typeof predicateResult == 'boolean' ? of(predicateResult) : predicateResult
 
                 return shouldPass$.pipe(
                     first(),
                     filter(shouldPass => shouldPass),
-                    map(() => value)
+                    map(() => value),
                 )
-            })
+            }),
         )
 }
 
@@ -27,11 +28,15 @@ export const debugObserver = <T>(
         error = true,
         complete = true,
         finalize = false,
-    }: Partial<Record<keyof TapObserver<unknown>, boolean>> = {} as never
+    }: Partial<Record<keyof TapObserver<unknown>, boolean>> = {} as never,
 ) =>
     tap<T>({
-        subscribe: !subscribe ? undefined : () => console.log(`🧩 %csubscribed to %c${name}`, 'color:gray', ''),
-        unsubscribe: !unsubscribe ? undefined : () => console.log(`👋 %cunsubscribed from %c${name}`, 'color:gray', ''),
+        subscribe: !subscribe
+            ? undefined
+            : () => console.log(`🧩 %csubscribed to %c${name}`, 'color:gray', ''),
+        unsubscribe: !unsubscribe
+            ? undefined
+            : () => console.log(`👋 %cunsubscribed from %c${name}`, 'color:gray', ''),
         next: !next ? undefined : value => console.log(`🚀 %cnext %c${name}`, 'color:gray', '', { value }),
         error: !error ? undefined : error => console.log(`🚨 %cerror %c${name}`, 'color:gray', '', { error }),
         complete: !complete ? undefined : () => console.log(`✅ %ccomplete %c${name}`, 'color:gray', ''),

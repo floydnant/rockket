@@ -32,7 +32,7 @@ export class SearchComponent {
         private actions$: Actions,
         private store: Store<AppState>,
         private router: Router,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
     ) {}
 
     routeQuery$ = this.activatedRoute.queryParamMap.pipe(map(params => params.get('q') || ''))
@@ -85,7 +85,7 @@ export class SearchComponent {
                           const details = entityDetails[entity.entityType][entity.id]
                           return matchEntity({ ...entity, ...details })
                       },
-                      entityMatches
+                      entityMatches,
                   )
                 : []
 
@@ -98,9 +98,9 @@ export class SearchComponent {
                     entityMatches: entityMatches.matches,
                 },
             }
-        })
+        }),
     )
     isLoading$ = this.actions$.pipe(
-        loadingUpdates([entitiesActions.search, entitiesActions.searchSuccess, entitiesActions.searchError])
+        loadingUpdates([entitiesActions.search, entitiesActions.searchSuccess, entitiesActions.searchError]),
     )
 }

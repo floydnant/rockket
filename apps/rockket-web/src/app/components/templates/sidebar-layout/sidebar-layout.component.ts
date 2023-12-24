@@ -1,6 +1,15 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { animationFrames, debounceTime, distinctUntilChanged, fromEvent, map, switchMap, takeUntil, tap } from 'rxjs'
+import {
+    animationFrames,
+    debounceTime,
+    distinctUntilChanged,
+    fromEvent,
+    map,
+    switchMap,
+    takeUntil,
+    tap,
+} from 'rxjs'
 import { DeviceService } from 'src/app/services/device.service'
 import { UiStateService } from 'src/app/services/ui-state.service'
 import { MenuService } from './menu.service'
@@ -16,7 +25,7 @@ export class SidebarLayoutComponent implements AfterViewInit {
     constructor(
         private menuService: MenuService,
         private deviceService: DeviceService,
-        private uiStateService: UiStateService
+        private uiStateService: UiStateService,
     ) {}
 
     @Input() enableResize = true
@@ -49,7 +58,9 @@ export class SidebarLayoutComponent implements AfterViewInit {
         fromEvent(this.resizeHandle.nativeElement, 'mousedown')
             .pipe(
                 switchMap(() =>
-                    fromEvent<MouseEvent>(document, 'mousemove').pipe(takeUntil(fromEvent(document, 'mouseup')))
+                    fromEvent<MouseEvent>(document, 'mousemove').pipe(
+                        takeUntil(fromEvent(document, 'mouseup')),
+                    ),
                 ),
                 coalesceWith(animationFrames()),
                 map(e => {
@@ -65,7 +76,7 @@ export class SidebarLayoutComponent implements AfterViewInit {
                 tap(width => this.menuService.sidebarWidth$.next(parseFloat(width))),
                 debounceTime(600),
                 tap(width => this.uiStateService.updateSidebarWidth(width)),
-                untilDestroyed(this)
+                untilDestroyed(this),
             )
             .subscribe()
 }

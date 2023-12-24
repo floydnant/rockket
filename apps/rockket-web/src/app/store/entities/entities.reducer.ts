@@ -178,5 +178,5 @@ export const entitiesReducer = createReducer(
             entityTree: entityTreeCopy,
             taskTreeMap: taskTreeMapCopy,
         }
-    })
+    }),
 )

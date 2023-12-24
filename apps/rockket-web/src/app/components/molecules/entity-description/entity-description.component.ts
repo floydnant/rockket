@@ -41,13 +41,15 @@ export class EntityDescriptionComponent {
 
     bindConfig$ = this.context$.pipe(
         distinctUntilKeyChanged('id'),
-        map(context => ({ input$: context.description$, context: context.id }))
+        map(context => ({ input$: context.description$, context: context.id })),
     )
 
     @Output('isActive') isActive$ = new ReplaySubject<boolean>()
 
     updateInput$ = new Subject<{ html: string; context: string }>()
-    @Output('update') update$ = this.updateInput$.pipe(map(({ html, context }) => ({ id: context, description: html })))
+    @Output('update') update$ = this.updateInput$.pipe(
+        map(({ html, context }) => ({ id: context, description: html })),
+    )
 
     blurInput$ = new Subject()
     @Output('blur') blur$ = this.blurInput$.pipe(
@@ -55,6 +57,6 @@ export class EntityDescriptionComponent {
         delay(0),
         map(() => this.ttEditor.editor.view.hasFocus()),
         filter(hasFocus => !hasFocus),
-        map(() => null)
+        map(() => null),
     )
 }

@@ -81,5 +81,5 @@ export const userReducer = createReducer<UserState>(
             ...state.me!,
             email,
         },
-    }))
+    })),
 )

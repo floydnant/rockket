@@ -25,7 +25,7 @@ export class SettingsAccountComponent implements OnDestroy {
         private toast: HotToastService,
         private actions$: Actions,
         private loadingService: LoadingStateService,
-        private dialogService: DialogService
+        private dialogService: DialogService,
     ) {
         this.store.dispatch(accountActions.loadEmail({}))
     }
@@ -39,8 +39,8 @@ export class SettingsAccountComponent implements OnDestroy {
             moveToMacroQueue(() => {
                 this.usernameFromStore = userState.me?.username || 'Failed to load username'
                 this.usernameControl.patchValue(this.usernameFromStore)
-            })
-        )
+            }),
+        ),
     )
 
     onUploadPhoto() {
@@ -98,7 +98,11 @@ export class SettingsAccountComponent implements OnDestroy {
         .subscribe(() => this.closeFormModal())
 
     /////////////////// Username Form ///////////////////
-    usernameControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(35)])
+    usernameControl = new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(35),
+    ])
     usernameFromStore!: string
     onUsernameSubmit() {
         if (this.usernameControl.invalid) return
@@ -120,7 +124,7 @@ export class SettingsAccountComponent implements OnDestroy {
             tap(isLoading => {
                 if (isLoading) this.usernameControl.disable()
                 else this.usernameControl.enable()
-            })
+            }),
         )
     usernameSuccessActionSubscription = this.actions$
         .pipe(ofType(accountActions.updateUsernameSuccess))

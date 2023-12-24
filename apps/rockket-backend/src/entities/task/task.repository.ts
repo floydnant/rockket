@@ -83,7 +83,7 @@ export class TaskRepository {
             SELECT * FROM all_tasks
         `
 
-        const taskIds = nestedChildren.map((child) => child.id)
+        const taskIds = nestedChildren.map(child => child.id)
 
         const transactionResult = await this.prisma.$transaction([
             this.prisma.taskEvent.deleteMany({ where: { taskId: { in: taskIds } } }),
@@ -121,7 +121,7 @@ export class TaskRepository {
                 - the previous value
         */
 
-        return events.map((event) => ({
+        return events.map(event => ({
             ...event,
             message: `${event.user.username} changed ${event.updatedField} from '${event.prevValue}' to '${event.newValue}' at ${event.timestamp}`,
         }))

@@ -14,6 +14,13 @@ import { EntitiesService } from './entities.service'
 @Module({
     imports: [UserModule, PrismaModule],
     controllers: [EntitiesController, ListController, TaskController],
-    providers: [EntitiesService, ListService, ListRepository, TaskService, TaskRepository, PermissionsService],
+    providers: [
+        EntitiesService,
+        ListService,
+        ListRepository,
+        TaskService,
+        TaskRepository,
+        PermissionsService,
+    ],
 })
 export class EntitiesModule {}

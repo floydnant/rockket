@@ -19,7 +19,7 @@ export class LoginLoadingComponent {
         private actions$: Actions,
         private router: Router,
         private store: Store<AppState>,
-        private toast: HotToastService
+        private toast: HotToastService,
     ) {
         this.toast.close('confirm-login')
     }
@@ -41,7 +41,11 @@ export class LoginLoadingComponent {
         })
 
     actionsSubscription = this.actions$
-        .pipe(ofType(authActions.confirmLoginError, authActions.loginOrSignupSuccess), first(), untilDestroyed(this))
+        .pipe(
+            ofType(authActions.confirmLoginError, authActions.loginOrSignupSuccess),
+            first(),
+            untilDestroyed(this),
+        )
         .subscribe(({ type }) => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (/success/.test(type)) this.router.navigateByUrl(this.callbackUrl!, { replaceUrl: true })

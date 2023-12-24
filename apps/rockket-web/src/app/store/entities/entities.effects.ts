@@ -23,7 +23,7 @@ export class EntitiesEffects {
         private store: Store<AppState>,
         private toast: HotToastService,
         private dialogService: DialogService,
-        private router: Router
+        private router: Router,
     ) {}
 
     activeEntityTrace$ = this.store
@@ -38,7 +38,7 @@ export class EntitiesEffects {
                 if (!entityTree || !taskTreeMap || !activeId) return null
 
                 return traceEntityIncludingTasks(entityTree, taskTreeMap, activeId)
-            })
+            }),
         )
 
     loadPreviews = createEffect(() => {
@@ -49,9 +49,9 @@ export class EntitiesEffects {
 
                 return res$.pipe(
                     map(listPreviews => entitiesActions.loadPreviewsSuccess({ previews: listPreviews })),
-                    catchError(err => of(entitiesActions.loadPreviewsError(err)))
+                    catchError(err => of(entitiesActions.loadPreviewsError(err))),
                 )
-            })
+            }),
         )
     })
 
@@ -67,14 +67,14 @@ export class EntitiesEffects {
                             if (entityDetail) return of(entityDetail)
 
                             return this.entitiesService.loadDetail(dto)
-                        })
+                        }),
                     )
 
                 return res$.pipe(
                     map(entityDetail => entitiesActions.loadDetailSuccess({ ...dto, entityDetail })),
-                    catchError(err => of(entitiesActions.loadDetailError({ ...err, id: dto.id })))
+                    catchError(err => of(entitiesActions.loadDetailError({ ...err, id: dto.id }))),
                 )
-            })
+            }),
         )
     })
 
@@ -97,9 +97,9 @@ export class EntitiesEffects {
                             if (!title) return entitiesActions.abortRenameDialog()
 
                             return entitiesActions.rename({ id, entityType, title, showToast: true })
-                        })
+                        }),
                     )
-            })
+            }),
         )
     })
     //
@@ -107,7 +107,9 @@ export class EntitiesEffects {
         return this.actions$.pipe(
             ofType(entitiesActions.rename),
             mergeMap(({ id, entityType, title, showToast }) => {
-                const res$ = this.entitiesService.rename({ entityType, id, title }) as Observable<Task | TaskList>
+                const res$ = this.entitiesService.rename({ entityType, id, title }) as Observable<
+                    Task | TaskList
+                >
 
                 return res$.pipe(
                     showToast
@@ -122,9 +124,9 @@ export class EntitiesEffects {
                         if (!showToast) this.toast.error(getMessageFromHttpError(err))
 
                         return of(entitiesActions.renameError({ ...err, id }))
-                    })
+                    }),
                 )
-            })
+            }),
         )
     })
 
@@ -156,18 +158,22 @@ export class EntitiesEffects {
                                 text:
                                     messages[entityType] ||
                                     `Are you sure you want to delete the ${entityType} '${entity.title}'?`,
-                                buttons: [{ text: 'Cancel' }, { text: 'Delete', className: 'button--danger' }],
+                                buttons: [
+                                    { text: 'Cancel' },
+                                    { text: 'Delete', className: 'button--danger' },
+                                ],
                             }).closed
 
                             return closed$.pipe(
                                 map(response => {
-                                    if (response == 'Delete') return entitiesActions.delete({ id, entityType })
+                                    if (response == 'Delete')
+                                        return entitiesActions.delete({ id, entityType })
                                     return entitiesActions.abortDeleteDialog()
-                                })
+                                }),
                             )
-                        })
+                        }),
                     )
-            })
+            }),
         )
     })
     //
@@ -196,12 +202,12 @@ export class EntitiesEffects {
 
                                 this.router.navigateByUrl(parentEntity ? `/home/${parentEntity.id}` : '/home')
                             }),
-                            map(() => entitiesActions.deleteSuccess({ id, entityType }))
+                            map(() => entitiesActions.deleteSuccess({ id, entityType })),
                         )
                     }),
-                    catchError(err => of(entitiesActions.deleteError({ ...err, id })))
+                    catchError(err => of(entitiesActions.deleteError({ ...err, id }))),
                 )
-            })
+            }),
         )
     })
 
@@ -214,9 +220,11 @@ export class EntitiesEffects {
 
                 return res$.pipe(
                     map(searchResults => entitiesActions.searchSuccess(searchResults)),
-                    catchError((error: HttpServerErrorResponse) => of(entitiesActions.searchError({ query, error })))
+                    catchError((error: HttpServerErrorResponse) =>
+                        of(entitiesActions.searchError({ query, error })),
+                    ),
                 )
-            })
+            }),
         )
     })
 }

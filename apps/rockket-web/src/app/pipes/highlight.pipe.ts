@@ -8,6 +8,9 @@ export class HighlightPipe implements PipeTransform {
         if (!highlight || !text) return text ?? ''
 
         // @TODO: ignore HTML syntax, but include hrefs
-        return text.replace(new RegExp(`${highlight}`, 'ig'), match => `<span class="highlight">${match}</span>`)
+        return text.replace(
+            new RegExp(`${highlight}`, 'ig'),
+            match => `<span class="highlight">${match}</span>`,
+        )
     }
 }
