@@ -7,22 +7,22 @@ on:
         branches: ['main', 'dev/*']
 
 jobs:
-    build-client-and-test:
+    run-linter:
         runs-on: ubuntu-latest
-
         steps:
             - uses: actions/checkout@v3
-            - name: Use Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 16.x
-                  cache: 'npm'
-                  cache-dependency-path: package-lock.json
+            - uses: ./.github/actions/setup-node
 
-            - run: npm ci
-            - run: npx nx run-many -t lint -p rockket-web,rockket-web-e2e --verbose
+            - run: npx nx run-many -t lint --verbose
+
+    build-frontend-and-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/setup-node
+
             - run: npx nx build rockket-web
-            - run: npx nx test rockket-web
+            - run: npx nx run rockket-web:test:ci
             - run: npx nx component-test rockket-web
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -35,7 +35,7 @@ jobs:
                   path: dist/cypress/apps/rockket-web
                   retention-days: 7
 
-    build-server-and-test:
+    build-backend-and-test:
         runs-on: ubuntu-latest
         env:
             DB_USER: app
@@ -46,15 +46,8 @@ jobs:
 
         steps:
             - uses: actions/checkout@v3
-            - name: Use Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 16.x
-                  cache: 'npm'
-                  cache-dependency-path: package-lock.json
+            - uses: ./.github/actions/setup-node
 
-            - run: npm ci
-            - run: npx nx run-many -t lint -p rockket-backend,rockket-backend-e2e --verbose
             - run: npx nx build rockket-backend
             - run: npx nx typecheck-snapshot-scripts rockket-backend
 
@@ -66,7 +59,7 @@ jobs:
                   app_user_password: ${{ env.DB_PWD }}
                   app_db: ${{ env.DB_NAME }}
             - run: npx nx run rockket-backend:db:migrate:deploy
-            - run: npx nx test rockket-backend
+            - run: npx nx run rockket-backend:test:ci
             - run: npx nx e2e rockket-backend-e2e
 
     run-full-e2e-tests:
@@ -80,12 +73,7 @@ jobs:
 
         steps:
             - uses: actions/checkout@v3
-            - name: Use Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 16.x
-                  cache: 'npm'
-                  cache-dependency-path: package-lock.json
+            - uses: ./.github/actions/setup-node
 
             - name: Setup Postgres
               uses: Daniel-Marynicz/postgresql-action@master
@@ -95,7 +83,6 @@ jobs:
                   app_user_password: ${{ env.DB_PWD }}
                   app_db: ${{ env.DB_NAME }}
 
-            - run: npm ci
             - run: npx nx run rockket-backend:db:migrate:deploy
             - run: npx nx e2e rockket-web-e2e
               env:
