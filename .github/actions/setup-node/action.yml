@@ -13,3 +13,4 @@ runs:
               cache-dependency-path: package-lock.json
 
         - run: npm ci
+          shell: bash
