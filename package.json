@@ -2,7 +2,14 @@
     "name": "@rockket/source",
     "version": "2.0.0",
     "scripts": {
-        "postinstall": "npx prisma generate --schema=./apps/rockket-backend/prisma/schema.prisma"
+        "postinstall": "npx prisma generate --schema=./apps/rockket-backend/prisma/schema.prisma",
+        "dev": "nx run-many -t serve -p rockket-web,rockket-backend",
+        "dev:lan": "npm run local-ip && NG_APP_SERVER_BASE_URL=http://$(ipconfig getifaddr en0):3000 npm run dev -- --configuration local-network",
+        "local-ip": "echo \"Local IP: $(ipconfig getifaddr en0), frontend listening on http://$(ipconfig getifaddr en0):4200, backend listening on http://$(ipconfig getifaddr en0)\"",
+        "lint": "nx run-many -t lint --verbose",
+        "lint:fix": "npm run lint -- --fix",
+        "format": "nx format",
+        "fix": "npm run format && npm run lint:fix"
     },
     "private": true,
     "dependencies": {
@@ -133,6 +140,6 @@
         "url": "git+https://github.com/floydnant/rockket.git"
     },
     "bugs": {
-        "url": "https://github.com/dein-ding/rockket/issues"
+        "url": "https://github.com/floydnant/rockket/issues"
     }
 }

@@ -55,17 +55,21 @@
         },
         "serve": {
             "executor": "@ngx-env/builder:dev-server",
+            "options": {
+                "proxyConfig": "apps/rockket-web/proxy.conf.json"
+            },
+            "defaultConfiguration": "development",
             "configurations": {
                 "production": {
                     "browserTarget": "rockket-web:build:production"
                 },
                 "development": {
                     "browserTarget": "rockket-web:build:development"
+                },
+                "local-network": {
+                    "browserTarget": "rockket-web:build:development",
+                    "host": "0.0.0.0"
                 }
-            },
-            "defaultConfiguration": "development",
-            "options": {
-                "proxyConfig": "apps/rockket-web/proxy.conf.json"
             }
         },
         "extract-i18n": {
