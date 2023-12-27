@@ -37,12 +37,12 @@ const rawEnvSchemaSuperRefinement = (
 }
 
 export const rawInlineEnvSchema = baseRawEnvSchema.superRefine(rawEnvSchemaSuperRefinement)
-export type RawInlineEnvironmentVariables = z.infer<typeof rawInlineEnvSchema>
+export type RawInlineEnvironmentVariables = Readonly<z.infer<typeof rawInlineEnvSchema>>
 
 export const rawEnvSchema = baseRawEnvSchema
     .extend({ NG_APP_PACKAGE_VERSION: z.string() })
     .superRefine(rawEnvSchemaSuperRefinement)
-export type RawEnvironmentVariables = z.infer<typeof rawEnvSchema>
+export type RawEnvironmentVariables = Readonly<z.infer<typeof rawEnvSchema>>
 
 export enum AppContext {
     Production = 'production',
@@ -55,14 +55,7 @@ export enum AppContext {
     Testing = 'testing',
 }
 
-export type TransformedEnvironmentVariables = {
-    PACKAGE_VERSION: string
-    CONTEXT: AppContext
-    SERVER_BASE_URL: string
-    REVIEW_ID?: string
-}
-
-export type AppEnvironment = {
+export type AppEnvironment = Readonly<{
     /** Wether the app is running in production, i.e. `CONTEXT == AppContext.Production` */
     isProduction: boolean
     /** Wether the app is deployed onto a remote machine, i.e. `CONTEXT == AppContext.Production | AppContext.Staging | AppContext.Review` */
@@ -76,4 +69,4 @@ export type AppEnvironment = {
     APP_INSIGHTS_CONNECTION_STRING: string
     /** Id of the pull request the environment is linked to (DEPLOYMENT ONLY) */
     REVIEW_ID: string | undefined
-}
+}>

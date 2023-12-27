@@ -4,8 +4,7 @@ import { AppModule } from './app/app.module'
 import { environment } from './environments/environment'
 
 if (!environment.isProduction) {
-    console.info('Context:', environment.CONTEXT)
-    console.info('Server base url:', environment.SERVER_BASE_URL)
+    console.info('environment:', environment)
 }
 
 platformBrowserDynamic()
