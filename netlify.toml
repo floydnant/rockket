@@ -3,13 +3,10 @@
     publish = "dist/apps/rockket-web"
     command = "npx nx run rockket-web:build:production"
 
-[[plugins]]
-    package = "@netlify/plugin-lighthouse"
-
 [[redirects]]
     from = "/*"
     to = "/index.html"
     status = 200
 
 [context.deploy-preview.build]
-    ignore = "bash ../scripts/check-dependencies-label-for-pr.sh $REVIEW_ID"
+    ignore = "bash ./scripts/check-dependencies-label-for-pr.sh $REVIEW_ID"
