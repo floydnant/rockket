@@ -21,7 +21,9 @@
     "ts-node": {
         "compilerOptions": {
             "module": "commonjs",
-            "types": ["node"]
+            "types": ["node"],
+            "esModuleInterop": true,
+            "noPropertyAccessFromIndexSignature": false
         }
     }
 }

@@ -60,6 +60,7 @@
         "rxjs": "~7.8.0",
         "tiptap-markdown": "^0.8.4",
         "tslib": "^2.3.0",
+        "zod": "^3.22.4",
         "zone.js": "~0.13.0"
     },
     "devDependencies": {

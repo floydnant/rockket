@@ -5,6 +5,15 @@
     "prefix": "app",
     "sourceRoot": "apps/rockket-web/src",
     "tags": [],
+    "namedInputs": {
+        "envVars": [
+            { "env": "CONTEXT" },
+            { "env": "REVIEW_ID" },
+            { "env": "NG_APP_SERVER_BASE_URL" },
+            { "env": "NG_APP_TESTING_ENV" },
+            { "runtime": "npm version | grep rockket" }
+        ]
+    },
     "targets": {
         "build": {
             "executor": "@ngx-env/builder:browser",
@@ -20,6 +29,7 @@
                 "scripts": [],
                 "allowedCommonJsDependencies": ["markdown-it-task-lists"]
             },
+            "dependsOn": ["prepare-env"],
             "configurations": {
                 "production": {
                     "budgets": [
@@ -58,6 +68,7 @@
             "options": {
                 "proxyConfig": "apps/rockket-web/proxy.conf.json"
             },
+            "dependsOn": ["prepare-env"],
             "defaultConfiguration": "development",
             "configurations": {
                 "production": {
@@ -70,6 +81,15 @@
                     "browserTarget": "rockket-web:build:development",
                     "host": "0.0.0.0"
                 }
+            }
+        },
+        "prepare-env": {
+            "executor": "nx:run-commands",
+            "cache": true,
+            "inputs": ["envVars"],
+            "outputs": ["{projectRoot}/src/environments/env.generated.ts"],
+            "options": {
+                "command": "ts-node {projectRoot}/tools/prepare-env.ts"
             }
         },
         "extract-i18n": {
@@ -92,6 +112,7 @@
                 "jestConfig": "apps/rockket-web/jest.config.ts",
                 "passWithNoTests": true
             },
+            "dependsOn": ["prepare-env"],
             "configurations": {
                 "ci": {
                     "ci": true,
@@ -106,7 +127,8 @@
                 "testingType": "component",
                 "skipServe": true,
                 "devServerTarget": "rockket-web:build"
-            }
+            },
+            "dependsOn": ["prepare-env"]
         },
         "serve-static": {
             "executor": "@nx/web:file-server",

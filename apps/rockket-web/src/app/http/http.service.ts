@@ -16,8 +16,9 @@ import { environment } from 'src/environments/environment'
 import { AppState } from '../store'
 import { userSelectors } from '../store/user/user.selectors'
 import { HttpClientOptions } from './types'
+import { AppContext } from 'src/environments/env.types'
 
-const useDelay = <T>(enable = environment.CONTEXT == 'Development') => {
+const useDelay = <T>(enable = environment.CONTEXT == AppContext.Development) => {
     if (!enable) return tap<T>()
     return delay<T>(500)
 }

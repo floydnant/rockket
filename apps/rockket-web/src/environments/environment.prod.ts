@@ -1,22 +1,19 @@
-import {
-    APP_INSIGHTS_CONNECTION_STRING,
-    AppEnvironment,
-    contextMap,
-    env,
-    serverBaseUrls,
-} from './environment-info'
-
-const isTestingEnv = env.NG_APP_TESTING_ENV == 'true'
-const netlifyContext = env.NG_APP_NETLIFY_CONTEXT
-
-const context = contextMap[isTestingEnv ? 'testing' : netlifyContext || 'dev']
-const serverBaseUrl = serverBaseUrls[isTestingEnv ? 'testing' : netlifyContext || 'dev']
+import { APP_INSIGHTS_CONNECTION_STRING } from './env.static'
+import { transformedEnv } from './env.transformed'
+import { AppContext, AppEnvironment } from './env.types'
 
 export const environment: AppEnvironment = {
-    production: true,
-    PACKAGE_VERSION: env.NG_APP_PACKAGE_VERSION,
-    SERVER_BASE_URL: env.NG_APP_SERVER_BASE_URL || serverBaseUrl,
-    CONTEXT: context,
-    REVIEW_ID: env.NG_APP_REVIEW_ID,
+    isDeployed:
+        transformedEnv.CONTEXT == AppContext.Production ||
+        transformedEnv.CONTEXT == AppContext.Staging ||
+        transformedEnv.CONTEXT == AppContext.Review,
+    isProduction: transformedEnv.CONTEXT == AppContext.Production,
+    isProductionBuild: true,
+
+    PACKAGE_VERSION: transformedEnv.PACKAGE_VERSION,
+    SERVER_BASE_URL: transformedEnv.SERVER_BASE_URL,
+    CONTEXT: transformedEnv.CONTEXT,
+    REVIEW_ID: transformedEnv.REVIEW_ID,
     APP_INSIGHTS_CONNECTION_STRING,
 }
+console.log('prod environment', environment)

@@ -1,27 +1,22 @@
-import {
-    APP_INSIGHTS_CONNECTION_STRING,
-    AppEnvironment,
-    contextMap,
-    env,
-    serverBaseUrls,
-} from './environment-info'
-
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-const isTestingEnv = env.NG_APP_TESTING_ENV == 'true'
-
-const context = contextMap[isTestingEnv ? 'testing' : 'dev']
-const serverBaseUrl = serverBaseUrls[isTestingEnv ? 'testing' : 'dev']
+import { APP_INSIGHTS_CONNECTION_STRING } from './env.static'
+import { transformedEnv } from './env.transformed'
+import { AppContext, AppEnvironment } from './env.types'
 
 export const environment: AppEnvironment = {
-    production: false,
-    PACKAGE_VERSION: env.NG_APP_PACKAGE_VERSION,
-    SERVER_BASE_URL: env.NG_APP_SERVER_BASE_URL || serverBaseUrl,
-    CONTEXT: context,
-    REVIEW_ID: undefined,
+    isDeployed:
+        transformedEnv.CONTEXT == AppContext.Production ||
+        transformedEnv.CONTEXT == AppContext.Staging ||
+        transformedEnv.CONTEXT == AppContext.Review,
+    isProduction: transformedEnv.CONTEXT == AppContext.Production,
+    isProductionBuild: false,
+
+    PACKAGE_VERSION: transformedEnv.PACKAGE_VERSION,
+    SERVER_BASE_URL: transformedEnv.SERVER_BASE_URL,
+    CONTEXT: transformedEnv.CONTEXT,
+    REVIEW_ID: transformedEnv.REVIEW_ID,
     APP_INSIGHTS_CONNECTION_STRING,
 }
+console.log('environment', environment)
 
 /*
  * For easier debugging in development mode, you can import the following file

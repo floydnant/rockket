@@ -1,39 +1,39 @@
 import { inject } from '@angular/core'
 import { Routes } from '@angular/router'
 import { Store } from '@ngrx/store'
+import { environment } from 'src/environments/environment'
 import { AuthGuard } from './guards/auth.guard'
 import { AuthComponent } from './pages/auth/auth.component'
 import { LoginLoadingComponent } from './pages/auth/login-loading/login-loading.component'
 import { LoginComponent } from './pages/auth/login/login.component'
 import { SignupComponent } from './pages/auth/signup/signup.component'
 import { ComponentPlaygroundComponent } from './pages/component-playground/component-playground.component'
+import { ContactComponent } from './pages/contact/contact.component'
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component'
 import { EntityPageComponent } from './pages/home/entity-page/entity-page.component'
 import { HomeComponent } from './pages/home/home.component'
+import { SearchComponent } from './pages/home/search/search.component'
 import { LandingPageComponent } from './pages/landing-page/landing-page.component'
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component'
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component'
 import { SettingsAccountComponent } from './pages/settings/account/account.component'
 import { SettingsAppearanceComponent } from './pages/settings/appearance/appearance.component'
 import { SettingsGeneralComponent } from './pages/settings/general/general.component'
 import { SettingsComponent } from './pages/settings/settings.component'
+import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-service.component'
 import { AppState } from './store'
 import { getEntityById } from './store/entities/utils'
-import { SearchComponent } from './pages/home/search/search.component'
-import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-service.component'
-import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component'
-import { ContactComponent } from './pages/contact/contact.component'
-import { environment } from 'src/environments/environment'
 
-const ENVIRONMENT_HINT = `[${environment.REVIEW_ID ? environment.REVIEW_ID + '-' : ''}${environment.CONTEXT}]`
-const APP_TITLE = `Rockket ${environment.CONTEXT == 'Production' ? '' : ENVIRONMENT_HINT}`
-const APP_TITLE_SUFFIX = `- ${APP_TITLE}`
+const environmentHint = `[${environment.REVIEW_ID ? environment.REVIEW_ID + '-' : ''}${environment.CONTEXT}]`
+const appTitle = 'Rockket' + environment.isProduction ? '' : ' ' + environmentHint
+const appTitleSuffix = `- ${appTitle}`
 
 export const routes: Routes = [
     {
         path: '',
         component: LandingPageComponent,
         pathMatch: 'full',
-        title: APP_TITLE,
+        title: appTitle,
     },
     {
         path: 'auth',
@@ -42,17 +42,17 @@ export const routes: Routes = [
             {
                 path: 'login',
                 component: LoginComponent,
-                title: `Login ${APP_TITLE_SUFFIX}`,
+                title: `Login ${appTitleSuffix}`,
             },
             {
                 path: 'signup',
                 component: SignupComponent,
-                title: `Signup ${APP_TITLE_SUFFIX}`,
+                title: `Signup ${appTitleSuffix}`,
             },
             {
                 path: 'login-loading',
                 component: LoginLoadingComponent,
-                title: `Confirming Login... ${APP_TITLE_SUFFIX}`,
+                title: `Confirming Login... ${appTitleSuffix}`,
             },
             {
                 path: '',
@@ -66,7 +66,7 @@ export const routes: Routes = [
         component: HomeComponent,
         canActivate: [AuthGuard],
         children: [
-            { path: 'search', component: SearchComponent, title: `Search ${APP_TITLE_SUFFIX}` },
+            { path: 'search', component: SearchComponent, title: `Search ${appTitleSuffix}` },
             {
                 path: ':id',
                 component: EntityPageComponent,
@@ -74,10 +74,10 @@ export const routes: Routes = [
                     inject(Store).select((state: AppState) => {
                         const activeEntityId = route.paramMap.get('id') as string
                         const activeEntity = getEntityById(state.entities.entityTree || [], activeEntityId)
-                        return activeEntity ? `${activeEntity.title} ${APP_TITLE_SUFFIX}` : APP_TITLE
+                        return activeEntity ? `${activeEntity.title} ${appTitleSuffix}` : appTitle
                     }),
             },
-            { path: '', component: DashboardComponent, title: `Dashboard ${APP_TITLE_SUFFIX}` },
+            { path: '', component: DashboardComponent, title: `Dashboard ${appTitleSuffix}` },
         ],
     },
     {
@@ -93,43 +93,43 @@ export const routes: Routes = [
             {
                 path: 'general',
                 component: SettingsGeneralComponent,
-                title: `General Settings ${APP_TITLE_SUFFIX}`,
+                title: `General Settings ${appTitleSuffix}`,
             },
             {
                 path: 'account',
                 component: SettingsAccountComponent,
-                title: `Account Settings ${APP_TITLE_SUFFIX}`,
+                title: `Account Settings ${appTitleSuffix}`,
             },
             {
                 path: 'appearance',
                 component: SettingsAppearanceComponent,
-                title: `Appearance Settings ${APP_TITLE_SUFFIX}`,
+                title: `Appearance Settings ${appTitleSuffix}`,
             },
         ],
     },
     {
         path: 'terms-of-service',
         component: TermsOfServiceComponent,
-        title: `Terms of Service ${APP_TITLE_SUFFIX}`,
+        title: `Terms of Service ${appTitleSuffix}`,
     },
     {
         path: 'privacy-policy',
         component: PrivacyPolicyComponent,
-        title: `Privacy Policy ${APP_TITLE_SUFFIX}`,
+        title: `Privacy Policy ${appTitleSuffix}`,
     },
     {
         path: 'contact',
         component: ContactComponent,
-        title: `Contact ${APP_TITLE_SUFFIX}`,
+        title: `Contact ${appTitleSuffix}`,
     },
     {
         path: 'playground',
         component: ComponentPlaygroundComponent,
-        title: `Component Playground ${APP_TITLE_SUFFIX}`,
+        title: `Component Playground ${appTitleSuffix}`,
     },
     {
         path: '**',
         component: NotFoundPageComponent,
-        title: `404 Not Found ${APP_TITLE_SUFFIX}`,
+        title: `404 Not Found ${appTitleSuffix}`,
     },
 ]

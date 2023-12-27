@@ -131,7 +131,7 @@ import { TooltipModule } from './tooltip/tooltip.module'
         HttpModule,
         StoreModule.forRoot(reducers, { metaReducers }),
         EffectsModule.forRoot(effects),
-        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.isProduction }),
         CdkMenuModule,
         IconsModule,
         ModalModule,

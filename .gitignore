@@ -44,6 +44,7 @@ Thumbs.db
 .netlify
 
 .env
+env.generated.ts
 
 # db snapshots
 apps/rockket-backend/**/snapshots
