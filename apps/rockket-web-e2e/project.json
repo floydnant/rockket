@@ -4,22 +4,6 @@
     "sourceRoot": "apps/rockket-web-e2e/src",
     "projectType": "application",
     "targets": {
-        "e2e-old": {
-            "executor": "@nx/cypress:cypress",
-            "options": {
-                "cypressConfig": "apps/rockket-web-e2e/cypress.config.ts",
-                "devServerTarget": "rockket-web:serve",
-                "testingType": "e2e"
-            },
-            "configurations": {
-                "production": {
-                    "devServerTarget": "rockket-web:serve:production"
-                },
-                "ci": {
-                    "devServerTarget": "rockket-web:serve:ci"
-                }
-            }
-        },
         "lint": {
             "executor": "@nx/linter:eslint",
             "outputs": ["{options.outputFile}"],
@@ -51,6 +35,7 @@
                 "devServerTarget": "rockket-web:serve:development",
                 "testingType": "e2e"
             },
+            "dependsOn": ["rockket-web:prepare-env"],
             "configurations": {
                 "watch": {
                     "watch": true
