@@ -1,0 +1,4 @@
+# https://github.com/marketplace/actions/auto-assign-action
+
+addAssignees: author
+runOnDraft: true

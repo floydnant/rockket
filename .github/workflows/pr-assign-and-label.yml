@@ -1,0 +1,21 @@
+name: 'Assign author and add labels'
+on:
+    workflow_dispatch:
+    pull_request:
+        types: [opened, synchronize]
+
+jobs:
+    add-assignee-and-labels:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Add labels
+              uses: actions/labeler@v5
+              with:
+                  sync-labels: true
+                  dot: true
+
+            - name: Assign PR author
+              uses: kentaro-m/auto-assign-action@v1.2.5
+              continue-on-error: true
