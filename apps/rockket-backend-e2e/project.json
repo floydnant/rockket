@@ -19,6 +19,13 @@
             "options": {
                 "lintFilePatterns": ["apps/rockket-backend-e2e/**/*.{js,ts}"]
             }
+        },
+        "init-env": {
+            "executor": "nx:run-commands",
+            "dependsOn": ["rockket-backend:init-env"],
+            "options": {
+                "command": "echo $(ln -v apps/rockket-backend/.env {projectRoot}/.env)"
+            }
         }
     }
 }

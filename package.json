@@ -9,7 +9,8 @@
         "lint": "nx run-many -t lint --verbose",
         "lint:fix": "npm run lint -- --fix",
         "format": "nx format",
-        "fix": "npm run format && npm run lint:fix"
+        "fix": "npm run format && npm run lint:fix",
+        "init-env": "nx run-many -t init-env"
     },
     "private": true,
     "dependencies": {

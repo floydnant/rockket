@@ -63,13 +63,10 @@ A list of known issues can be found here: [known-issues.md](../../docs/known-iss
 
 2. Create a database with the name `rockket` and the default credentials
 
-3. Fill in the environment variables in `apps/rockket-backend/.env`
+3. Add the environment variables by running `npm run init-env` which does the following:
 
-    ```env
-    DATABASE_URL="postgresql://postgres:postgres@localhost:5432/rockket?schema=public"
-
-    JWT_SECRET="This is the mysterious secret"
-    ```
+    - Copy `apps/rockket-backend/.env.sample` -> `apps/rockket-backend/.env`
+    - Link from `apps/rockket-backend-e2e/.env` to `apps/rockket-backend/.env`
 
 4. Run the db migrations
     ```sh
