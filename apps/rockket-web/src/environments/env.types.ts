@@ -8,6 +8,25 @@ import { z } from 'zod'
  */
 export type Roughly<T> = { [K in keyof T]: T[K] extends object ? Roughly<T[K]> : unknown }
 
+export enum AppContext {
+    Production = 'production',
+    Staging = 'staging',
+    /** Preview deploys (Pull Requests) */
+    Review = 'review',
+    /** When developing locally */
+    Development = 'development',
+    /** When running tests */
+    Testing = 'testing',
+}
+
+export const appContextValueToKey = {
+    [AppContext.Production]: 'Production',
+    [AppContext.Staging]: 'Staging',
+    [AppContext.Review]: 'Review',
+    [AppContext.Development]: 'Development',
+    [AppContext.Testing]: 'Testing',
+} satisfies Record<AppContext, keyof typeof AppContext>
+
 /** Returns `undefined` for unresolved shell variables (if the string starts with `$`) */
 const shellVarTransformer = (value: string | undefined) => {
     if (value?.startsWith('$')) return undefined
@@ -20,6 +39,7 @@ export type NetlifyContext = z.infer<typeof netlifyContextEnumSchema>
 const baseRawEnvSchema = z.object({
     NG_APP_TESTING_ENV: z.literal('true').optional(),
     NG_APP_SERVER_BASE_URL: z.string().optional().transform(shellVarTransformer),
+    NG_APP_APP_CONTEXT: z.nativeEnum(AppContext).optional(),
     NG_APP_NETLIFY_CONTEXT: netlifyContextEnumSchema.optional(),
     NG_APP_REVIEW_ID: z.string().optional().transform(shellVarTransformer),
 })
@@ -43,17 +63,6 @@ export const rawEnvSchema = baseRawEnvSchema
     .extend({ NG_APP_PACKAGE_VERSION: z.string() })
     .superRefine(rawEnvSchemaSuperRefinement)
 export type RawEnvironmentVariables = Readonly<z.infer<typeof rawEnvSchema>>
-
-export enum AppContext {
-    Production = 'production',
-    Staging = 'staging',
-    /** Preview deploys (Pull Requests) */
-    Review = 'review',
-    /** When developing locally */
-    Development = 'development',
-    /** When running tests */
-    Testing = 'testing',
-}
 
 export type AppEnvironment = Readonly<{
     /** Wether the app is running in production, i.e. `CONTEXT == AppContext.Production` */

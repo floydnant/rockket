@@ -40,7 +40,8 @@ const parsedEnv = getParsedEnv()
 
 const isTestingEnv = (parsedInlineEnv.NG_APP_TESTING_ENV || parsedEnv.NG_APP_TESTING_ENV) == 'true'
 const netlifyContext = parsedInlineEnv.NG_APP_NETLIFY_CONTEXT || parsedEnv.NG_APP_NETLIFY_CONTEXT
-const context: AppContext = isTestingEnv ? AppContext.Testing : appContextMap[netlifyContext || 'dev']
+const appContext = parsedInlineEnv.NG_APP_APP_CONTEXT || parsedEnv.NG_APP_APP_CONTEXT
+const context = appContext || (isTestingEnv ? AppContext.Testing : appContextMap[netlifyContext || 'dev'])
 
 const reviewId = parsedInlineEnv.NG_APP_REVIEW_ID || parsedEnv.NG_APP_REVIEW_ID
 if (context === AppContext.Review && !reviewId) {
