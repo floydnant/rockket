@@ -1,134 +1,178 @@
 <div align=center>
-<img src="./client-v2/src/assets/rockket-logo.png" height="100px">
+<img src="./apps/rockket-web/src/assets/rockket-logo.png" height="100px">
 
 # Rockket
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/f010880f-6648-4146-9d82-b7e050e637ce/deploy-status?branch=main)](https://app.netlify.com/sites/rockket/deploys)
-[![Build, Run linter and tests](https://github.com/dein-ding/rockket/actions/workflows/tests.yml/badge.svg)](https://github.com/dein-ding/rockket/actions/workflows/tests.yml)
-    
+[![Build, Run linter and tests](https://github.com/floydnant/rockket/actions/workflows/tests.yml/badge.svg)](https://github.com/floydnant/rockket/actions/workflows/tests.yml)
+
 A small, carefully crafted todo app with a focus on user experience, built with ❤️ and angular.
+
 </div>
 
 ## Concept
-Rockket is designed to _reward the user_ when he completes a task with satisfying behaviour and little easter eggs to create a _positive feedback loop_ and _increase motivation_. It is encouraged to break down a task into multiple **sub**-tasks so that you can cross of tasks more often and stay motivated.
 
-## Core features
-- Nest both tasks and tasklists indefinitely deep
-- Share lists with others and collaborate in real time[^1]
-- Take notes or write descriptions in rich text
-- Link tasks that are related to each other e.g. by blocking them based on another task's status
+Rockket is designed to _reward the user_ when they complete a task with satisfying behaviour and little easter eggs to create a _positive feedback loop_ and _increase motivation_. It is encouraged to break down a task into multiple **sub**-tasks so that you can cross of tasks more often and stay motivated.
+
+<!-- @TODO: make this section useful -->
+<!-- ## Core features
+
+-   Nest both tasks and tasklists indefinitely deep
+-   Share lists with others and collaborate in real time[^1]
+-   Take notes or write descriptions in rich text
+-   Link tasks that are related to each other e.g. by blocking them based on another task's status -->
 
 ## Usage
-Start using the [stable production version](https://rockket.netlify.app) or the [development branch](https://main--rockket.netlify.app) and [install it as a PWA](https://medium.com/progressivewebapps/how-to-install-a-pwa-to-your-device-68a8d37fadc1) on a desktop or mobile device.
-(native builds on the AppStore and PlayStore are on the roadmap)
 
-Or, if you're curious, check out [what I'm currently working on](https://github.com/dein-ding/rockket/pulls) or [what I'm planning to work on](https://github.com/dein-ding/rockket/issues).
+Create an account and start using the [web version](https://rockket.netlify.app) today!
+Desktop and mobile apps are on the roadmap.
+
+## Known issues
+
+A list of known issues can be found here: [known-issues.md](../../docs/known-issues.md).
 
 ## Contributing
-If you want your changes to be merged, [fork this repository and file a Pull-Request](https://www.youtube.com/watch?v=CML6vfKjQss) when you're ready.
+
+-   Base branch: `main`
+-   Only squash merging allowed to `main`
+-   Before merging
+    -   Ensure all linter warnings are resolved or ignored with a description
+    -   Ensure the changeset is easy to understand (describe the changes in the PR)
+-   Anything merged to `main` must be deployable
 
 ## Running the app locally
+
 ### Requirements
-- [PostgreSQL](https://www.postgresql.org/download/) database server
-- [Node.js](https://nodejs.org/en/download/) 14 or higher
+
+-   [PostgreSQL](https://www.postgresql.org/download/) database
+-   [Node.js](https://nodejs.org/en/download/) 14 or higher
 
 ### Installation & Preparation
-0. Clone the repo with 
+
+0. Clone the repo with
+
     ```sh
-    git clone git@github.com:dein-ding/rockket.git
+    git clone git@github.com:floydnant/rockket.git
     ```
 
 1. Install the dependencies
+
     ```sh
-    cd client
-    npm i
-    cd ../server
     npm i
     ```
 
-2. Create 2 databases with the names `rockket` and `rockket-testing` with the default credentials 
+2. Create a database with the name `rockket` and the default credentials
 
-3. Fill in the environment variables in `server/.env`
+3. Fill in the environment variables in `apps/rockket-backend/.env`
+
     ```env
     DATABASE_URL="postgresql://postgres:postgres@localhost:5432/rockket?schema=public"
-    TESTING_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/rockket-testing?schema=public"
 
     JWT_SECRET="This is the mysterious secret"
     ```
 
-4. Run the migrations in `server/`
+4. Run the db migrations
     ```sh
-    cd server
-    npx prisma migrate deploy
+    nx run rockket-backend:db:migrate:dev
     ```
 
 ### Running the app
-Ensure postgres is up and running, then run `npm run dev` in both client and server for a dev server
-- Frontend
-  ```sh
-  cd client
-  npm run dev
-  ```
-  Or run `npm run dev:lan` for running on your local network (e.g. on a mobile device) and navigate to `<Your local IP>:4200/`.
 
-- Backend
-  ```sh
-  cd server
-  npm run dev
-  ```
+Ensure postgres is up and running, then, to run the dev servers, run the `serve` targets for `rockket-web` and `rockket-backend` or simply `npm run dev` from the root to do both in one terminal.
 
-then navigate to `localhost:4200/`.
-The app will automatically reload if you change any of the source files in the `src/` directories.
+The frontend is listening on `localhost:4200` while the backend is listening on `localhost:3000`.
+
+```sh
+npm run dev
+```
+
+If you need to run the app on the local network (e.g. for testing on a different device, like a mobile phone) you can run the following and navigate to `<Your local IP>:4200/` on the other device.
+
+```sh
+npm run dev:lan
+```
+
+Please note that if you want to run the serve targets separately, you have to specify the backend base url as an env var manually, i.e.
+
+```sh
+NG_APP_SERVER_BASE_URL=http://$(ipconfig getifaddr en0):3000 nx run rockket-web:serve:local-network
+# and
+nx run rockket-backend:serve
+```
 
 ## Running tests
+
 You can run these commands in both the client and server directories.
 
-Append `:ci` to the respective command to run the tests only a single time, i.e. `npm run comp:ci`.
+All of the following commands support reruns on changes. Simply append `--watch` to the respective command and the tests rerun when the source code changes.
 
 ### Unit tests
+
 ```sh
-npm run unit
+nx test rockket-web
+nx test rockket-backend
 ```
 
 ### Component tests
+
 ```sh
-npm run comp
+nx component-test rockket-web
 ```
 
 ### End to end tests
+
 ```sh
-npm run e2e
+nx e2e rockket-web-e2e
+nx e2e rockket-backend-e2e
 ```
 
 ## Linting and Formatting
-You can run these commands in both the client and server directories.
 
-To check for code quality, run
+To run linting and formatting for the whole codebase:
+
 ```sh
-npm run lint
+npm run lint # only lint
+npm run lint:fix # lint and fix fixable linting issues
+
+npm run format # only format
+
+npm run fix # both format and fix linting issues
 ```
-To fix potential problems and/or format the code, run
+
+To run linting for a specific project:
+
 ```sh
-npm run lint:fix
+nx lint rockket-web
+nx lint rockket-backend
 ```
 
 ## Type checks
-For manual type checks without an LSP just run the `dev` or `build` commands.
 
-## Further info 
-- Client [README.md](./client-v2/README.md)
-- Server [README.md](./server/README.md)
+For manual type checks without an LSP just run `npm run dev` or the respective `serve` or `build` targets for the project.
+
+## Further info on each project
+
+-   [`rockket-web`](./apps/rockket-web/README.md)
+-   [`rockket-web-e2e`](./apps/rockket-web-e2e/README.md)
+-   [`rockket-backend`](./apps/rockket-backend/README.md)
+-   [`rockket-backend-e2e`](./apps/rockket-backend-e2e/README.md)
+
+You can also run `nx show project <projectName> --json false` for a list of targets (scripts to run).
+
 ### Relevant documentation
-- Frontend framework -> [Angular](https://angular.io/docs)
-    - State management -> [NgRx](https://ngrx.io/docs)
-- Styling -> [Tailwind](https://tailwindcss.com/docs/editor-setup)
-- Backend framework -> [NestJS](https://docs.nestjs.com)
-- ORM -> [Prisma](https://www.prisma.io/docs/)
+
+-   Build system: [Nx](https://nx.dev)
+-   Frontend framework: [Angular](https://angular.io/docs)
+    -   State management: [NgRx](https://ngrx.io/docs)
+-   Styling: [Tailwind](https://tailwindcss.com/docs/editor-setup)
+-   Backend framework: [NestJS](https://docs.nestjs.com)
+-   ORM: [Prisma](https://www.prisma.io/docs/)
 
 ## Get in touch
-Hi, I'm Floyd Haremsa and you can reach me through floyd.haremsa@berlin-bytes.de,
+
+Hi I'm Floyd Haremsa, you can reach me through floyd.haremsa@berlin-bytes.de,
 I'm happy to answer any questions you might have or just to have a chat.
 
 <br>
 
-[^1]: near realtime
+<!-- [^1]: near realtime -->

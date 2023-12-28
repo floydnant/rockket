@@ -76,6 +76,12 @@
                 "command": "npx prisma migrate deploy --schema {projectRoot}/prisma/schema.prisma"
             }
         },
+        "db:migrate:dev": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "npx prisma migrate dev --schema {projectRoot}/prisma/schema.prisma"
+            }
+        },
         "db:snapshot:pull": {
             "executor": "nx:run-commands",
             "options": {
