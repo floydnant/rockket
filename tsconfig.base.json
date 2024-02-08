@@ -7,15 +7,20 @@
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
         "importHelpers": true,
-        "target": "es2015",
+        "target": "es2022",
         "module": "esnext",
-        "lib": ["es2020", "dom"],
+        "lib": ["es2022", "dom"],
         "skipLibCheck": true,
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
-        "paths": {},
-        "types": ["@total-typescript/ts-reset"]
+        "types": ["@total-typescript/ts-reset"],
+        "paths": {
+            "@rockket/commons": ["packages/commons/src/index.ts"]
+        },
+        "strict": true
     },
     "exclude": ["node_modules", "tmp"],
     "ts-node": {

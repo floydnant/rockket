@@ -15,6 +15,15 @@ jobs:
 
             - run: npx nx run-many -t lint --verbose
 
+    build-libs-and-tests:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/setup-node
+
+            - run: npx nx run-many -t build --projects tag:type:lib
+            - run: npx nx run-many -t test --projects tag:type:lib
+
     build-frontend-and-test:
         runs-on: ubuntu-latest
         steps:
@@ -95,3 +104,11 @@ jobs:
                   name: rockket-web-e2e e2e test artifacts
                   path: dist/cypress/apps/rockket-web-e2e
                   retention-days: 7
+
+    dependency-review:
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        steps:
+            - uses: actions/checkout@v3
+            - name: 'Dependency Review'
+              uses: actions/dependency-review-action@v3

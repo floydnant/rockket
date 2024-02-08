@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # The repository in the format 'OWNER/REPO'
-repo='dein-ding/rockket'
+repo='floydnant/rockket'
 # The branch for which you want to get the pull request number
 branch=$1
 
