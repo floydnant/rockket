@@ -6,6 +6,7 @@
     "targets": {
         "build": {
             "executor": "@nx/webpack:webpack",
+            "inputs": ["default", "{workspaceRoot}/packages/commons"],
             "outputs": ["{options.outputPath}"],
             "defaultConfiguration": "production",
             "options": {
@@ -21,7 +22,8 @@
             "configurations": {
                 "development": {},
                 "production": {}
-            }
+            },
+            "dependsOn": ["^build"]
         },
         "serve": {
             "executor": "@nx/js:node",
@@ -29,6 +31,7 @@
             "options": {
                 "buildTarget": "rockket-backend:build"
             },
+            "dependsOn": ["^build"],
             "configurations": {
                 "development": {
                     "buildTarget": "rockket-backend:build:development"

@@ -29,7 +29,7 @@
                 "scripts": [],
                 "allowedCommonJsDependencies": ["markdown-it-task-lists"]
             },
-            "dependsOn": ["prepare-env"],
+            "dependsOn": ["^build", "prepare-env"],
             "configurations": {
                 "production": {
                     "budgets": [

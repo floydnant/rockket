@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
+import { LoginDto, SignupDto } from '@rockket/commons'
 import { HttpService } from '../http/http.service'
-import { SignupCredentialsDto, LoginCredentialsDto } from '../fullstack-shared-models/auth.model'
 import { AuthSuccessResponse } from '../shared/models'
 import { StorageItem } from '../utils/storage.helpers'
 
@@ -10,10 +10,10 @@ import { StorageItem } from '../utils/storage.helpers'
 export class AuthService {
     constructor(private http: HttpService) {}
 
-    signup(credentials: SignupCredentialsDto) {
+    signup(credentials: SignupDto) {
         return this.http.post<AuthSuccessResponse>('/auth/signup', credentials)
     }
-    login(credentials: LoginCredentialsDto) {
+    login(credentials: LoginDto) {
         return this.http.post<AuthSuccessResponse>('/auth/login', credentials)
     }
     confirmLogin() {

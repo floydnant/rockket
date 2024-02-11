@@ -9,6 +9,14 @@ import {
     ViewChild,
 } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
+import {
+    EntityType,
+    TaskPreview,
+    TaskPreviewFlattend,
+    TaskPreviewRecursive,
+    TaskPriority,
+    TaskStatus,
+} from '@rockket/commons'
 import { createDocument, getSchema } from '@tiptap/core'
 import {
     BehaviorSubject,
@@ -26,7 +34,6 @@ import {
     throttleTime,
     withLatestFrom,
 } from 'rxjs'
-import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import {
     createCounterWidget,
     updateCounterWidget,
@@ -43,13 +50,6 @@ import { colors, taskStatusColorMap } from 'src/app/shared/colors'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { insertElementAfter, moveToMacroQueue } from 'src/app/utils'
 import { MenuItem } from '../../../dropdown/drop-down/drop-down.component'
-import {
-    TaskPreview,
-    TaskPreviewFlattend,
-    TaskPreviewRecursive,
-    TaskPriority,
-    TaskStatus,
-} from '../../../fullstack-shared-models/task.model'
 import { EntityState } from '../../atoms/icons/icon/icons'
 import { getStatusCountMapRecursive } from '../../molecules/page-progress-bar/page-progress-bar.component'
 import { TaskTreeNode } from '../task-tree/task-tree.component'

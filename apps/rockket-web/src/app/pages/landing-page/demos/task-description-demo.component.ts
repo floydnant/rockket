@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { TaskPreviewRecursive, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import { TaskPreviewRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
 
 const listId = 'description-demo'
 const demoTasks: TaskPreviewRecursive[] = [

@@ -2,7 +2,12 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@n
 import { AuthGuard } from '@nestjs/passport'
 import { User } from '@prisma/client'
 import { GetUser } from '../../decorators/get-user.decorator'
-import { CreateTaskCommentDto, CreateTaskDto, UpdateTaskCommentDto, UpdateTaskDto } from './task.dto'
+import {
+    CreateTaskCommentZodDto,
+    CreateTaskZodDto,
+    UpdateTaskCommentZodDto,
+    UpdateTaskZodDto,
+} from './task.dto'
 import { TaskService } from './task.service'
 
 @UseGuards(AuthGuard())
@@ -16,7 +21,7 @@ export class TaskController {
     }
 
     @Post()
-    createTask(@GetUser() user: User, @Body() dto: CreateTaskDto) {
+    createTask(@GetUser() user: User, @Body() dto: CreateTaskZodDto) {
         return this.taskService.createTask(user.id, dto)
     }
     @Get(':taskId')
@@ -24,7 +29,7 @@ export class TaskController {
         return this.taskService.getTaskById(user.id, taskId)
     }
     @Patch(':taskId')
-    updateTask(@GetUser() user: User, @Param('taskId') taskId: string, @Body() dto: UpdateTaskDto) {
+    updateTask(@GetUser() user: User, @Param('taskId') taskId: string, @Body() dto: UpdateTaskZodDto) {
         return this.taskService.updateTask(user.id, taskId, dto)
     }
     @Delete(':taskId')
@@ -53,7 +58,7 @@ export class TaskController {
     createTaskComment(
         @GetUser() user: User,
         @Param('taskId') taskId: string,
-        @Body() dto: CreateTaskCommentDto,
+        @Body() dto: CreateTaskCommentZodDto,
     ) {
         return this.taskService.createTaskComment(user.id, taskId, dto)
     }
@@ -61,7 +66,7 @@ export class TaskController {
     updateTaskComment(
         @GetUser() user: User,
         @Param('commentId') commentId: string,
-        @Body() dto: UpdateTaskCommentDto,
+        @Body() dto: UpdateTaskCommentZodDto,
     ) {
         return this.taskService.updateTaskComment(user.id, commentId, dto)
     }

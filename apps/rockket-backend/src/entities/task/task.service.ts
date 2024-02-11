@@ -1,7 +1,12 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { ListPermission } from '@prisma/client'
 import { PermissionsService } from '../permissions/permissions.service'
-import { CreateTaskCommentDto, CreateTaskDto, UpdateTaskCommentDto, UpdateTaskDto } from './task.dto'
+import {
+    CreateTaskCommentZodDto,
+    CreateTaskZodDto,
+    UpdateTaskCommentZodDto,
+    UpdateTaskZodDto,
+} from './task.dto'
 import { TaskRepository } from './task.repository'
 
 @Injectable()
@@ -12,7 +17,7 @@ export class TaskService {
         return this.taskRepository.getAllTasks(userId)
     }
 
-    async createTask(userId: string, dto: CreateTaskDto) {
+    async createTask(userId: string, dto: CreateTaskZodDto) {
         const hasPermission = await this.permissions.hasPermissionForList(
             userId,
             dto.listId,
@@ -29,7 +34,7 @@ export class TaskService {
 
         return this.taskRepository.getTaskById(taskId)
     }
-    async updateTask(userId: string, taskId: string, dto: UpdateTaskDto) {
+    async updateTask(userId: string, taskId: string, dto: UpdateTaskZodDto) {
         const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.Edit)
         if (!hasPermission) throw new ForbiddenException("You don't have permission to update this task")
 
@@ -74,7 +79,7 @@ export class TaskService {
 
         return this.taskRepository.getTaskComments(taskId)
     }
-    async createTaskComment(userId: string, taskId: string, dto: CreateTaskCommentDto) {
+    async createTaskComment(userId: string, taskId: string, dto: CreateTaskCommentZodDto) {
         const hasPermission = await this.permissions.hasPermissionForTask(
             userId,
             taskId,
@@ -84,7 +89,7 @@ export class TaskService {
 
         return this.taskRepository.createTaskComment(userId, taskId, dto)
     }
-    async updateTaskComment(userId: string, commentId: string, dto: UpdateTaskCommentDto) {
+    async updateTaskComment(userId: string, commentId: string, dto: UpdateTaskCommentZodDto) {
         const hasPermission = await this.permissions.hasPermissionForComment(userId, commentId, true)
         if (!hasPermission) throw new ForbiddenException("You don't have permission to update this comment")
 

@@ -1,16 +1,16 @@
 import { Component } from '@angular/core'
 import {
-    convertToTaskTreeNode,
-    TaskTreeNode,
-} from 'src/app/components/organisms/task-tree/task-tree.component'
-import {
     prioritySortingMap,
     statusSortingMap,
     TaskPreview,
     TaskPreviewFlattend,
     TaskPriority,
     TaskStatus,
-} from '../../../fullstack-shared-models/task.model'
+} from '@rockket/commons'
+import {
+    convertToTaskTreeNode,
+    TaskTreeNode,
+} from 'src/app/components/organisms/task-tree/task-tree.component'
 
 type TaskSorter = (a: TaskPreview, b: TaskPreview) => number
 

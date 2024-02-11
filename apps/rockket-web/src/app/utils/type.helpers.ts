@@ -22,9 +22,9 @@ export type PathsTuples<T, D extends number = 10> = [D] extends [never]
       }[keyof T]
     : []
 
-type Join<K, S extends string, P> = K extends string | number
+type Join<TKey, TSeparator extends string, P> = TKey extends string | number
     ? P extends string | number
-        ? `${K}${'' extends P ? '' : S}${P}`
+        ? `${TKey}${'' extends P ? '' : TSeparator}${P}`
         : never
     : never
 

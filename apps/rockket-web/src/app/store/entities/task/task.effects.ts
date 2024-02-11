@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
+import { EntityType } from '@rockket/commons'
 import { catchError, first, map, mergeMap, of, switchMap } from 'rxjs'
-import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
-import { TaskService } from 'src/app/services/entity.services/task.service'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '../..'
 import { getTaskById } from '../utils'
 import { taskActions } from './task.actions'
+import { TaskService } from 'src/app/services/entity.services/task.service'
 
 @Injectable()
 export class TaskEffects {

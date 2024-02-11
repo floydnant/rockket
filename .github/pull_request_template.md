@@ -26,11 +26,8 @@
 
 -   [ ] All linter warnings are resolved and code is formatted (`npm run fix`)
 -   [ ] Nothing is broken
-    -   Affected builds run (`nx affected -t build`)
-    -   Affected tests run (`nx affected -t tests`)
-    -   Affected component tests run (`nx affected -t component-test`)
-    -   Affected e2e tests run (`nx affected -t e2e`)
-    -   Affected apps can be served (`nx affected -t serve`)
+    -   Affected projects build and test with successfully (`npm run affected`)
+    -   Apps can be served (`npm run dev`)
 -   [ ] Package/API versions incremented according to [semantic versioning](https://semver.org/), `package-lock.json` updated (`npm i`)
 -   [ ] Changes to ENV variables are reflected in the respective `env.sample` files
 -   [ ] Breaking changes flagged

@@ -1,13 +1,12 @@
 import { Store } from '@ngrx/store'
 import { MenuItem, MenuItemVariant } from '../dropdown/drop-down/drop-down.component'
-import { EntityType } from '../fullstack-shared-models/entities.model'
-import { TaskPriority, TaskStatus } from '../fullstack-shared-models/task.model'
+import { EntityType, TaskPriority, TaskStatus } from '@rockket/commons'
 import { EntityCrudDto } from '../services/entities.service'
 import { AppState } from '../store'
 import { entitiesActions } from '../store/entities/entities.actions'
 import { listActions } from '../store/entities/list/list.actions'
 import { taskActions } from '../store/entities/task/task.actions'
-import { wrapMenuItems, WrappedMenuItems } from '../utils/menu-item.helpers'
+import { WrappedMenuItems, wrapMenuItems } from '../utils/menu-item.helpers'
 
 export const getGeneralMenuItems = (store: Store<AppState>): MenuItem[] => [
     {

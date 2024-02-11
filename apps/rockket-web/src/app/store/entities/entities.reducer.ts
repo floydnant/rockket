@@ -1,13 +1,11 @@
 import { createReducer, on } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { EntityPreviewRecursive, EntityType, Task, TaskList, TaskPreviewRecursive } from '@rockket/commons'
+import { authActions } from '../user/user.actions'
 import { entitiesActions } from './entities.actions'
 import { EntitiesState, TaskTreeMap } from './entities.state'
-import { taskReducerOns } from './task/task.reducer'
 import { tasklistReducerOns } from './list/list.reducer'
+import { taskReducerOns } from './task/task.reducer'
 import { buildEntityTree, getEntityById, getParentEntityByChildIdIncludingTasks, getTaskById } from './utils'
-import { authActions } from '../user/user.actions'
-import { Task, TaskPreviewRecursive } from 'src/app/fullstack-shared-models/task.model'
-import { TaskList } from 'src/app/fullstack-shared-models/list.model'
 
 const initialState: EntitiesState = {
     entityTree: null,

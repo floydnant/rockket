@@ -1,5 +1,5 @@
 import { createActionGroup, props } from '@ngrx/store'
-import { CreateTasklistDto, TaskList } from 'src/app/fullstack-shared-models/list.model'
+import { CreateTasklistDto, TaskList } from '@rockket/commons'
 import { HttpServerErrorResponse, HttpServerErrorResponseWithMeta } from 'src/app/http/types'
 
 export const listActions = createActionGroup({

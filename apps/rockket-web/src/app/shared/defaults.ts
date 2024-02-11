@@ -1,4 +1,4 @@
-import { EntityType } from '../fullstack-shared-models/entities.model'
+import { EntityType } from '@rockket/commons'
 
 export const ENTITY_TITLE_DEFAULTS: Record<EntityType, string> = {
     [EntityType.TASKLIST]: 'Untitled tasklist',

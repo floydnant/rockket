@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
-import { EntitiesSearchResultDto, EntityPreview } from 'src/app/fullstack-shared-models/entities.model'
+import { EntitiesSearchResultDto, EntityPreview } from '@rockket/commons'
 import { HttpServerErrorResponse, HttpServerErrorResponseWithMeta } from '../../http/types'
 import { EntityCrudDto } from '../../services/entities.service'
 import { listActions } from './list/list.actions'

@@ -97,6 +97,12 @@ NG_APP_SERVER_BASE_URL=http://$(ipconfig getifaddr en0):3000 nx run rockket-web:
 nx run rockket-backend:serve
 ```
 
+## Monorepo structure @TODO
+
+-   Libraries are located in the `packages` directory
+-   Apps and e2e tests are located in the `apps` directory
+-   Libraries have the tag `type:lib`
+
 ## Running tests
 
 You can run these commands in both the client and server directories.

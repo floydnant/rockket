@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Actions, ofType } from '@ngrx/effects'
 import { environment } from 'src/environments/environment'
-import { EntityType } from '../fullstack-shared-models/entities.model'
+import { EntityType } from '@rockket/commons'
 import { entitiesActions } from '../store/entities/entities.actions'
 import { StorageItem } from '../utils/storage.helpers'
 

@@ -1,17 +1,13 @@
+import { z } from 'zod'
+
+// @TODO: Clean up this file
+
 export enum TaskStatus {
     IN_PROGRESS = 'In_Progress',
     OPEN = 'Open',
     BACKLOG = 'Backlog',
     COMPLETED = 'Completed',
     NOT_PLANNED = 'Not_Planned',
-}
-
-export const statusSortingMap: Record<TaskStatus, number> = {
-    [TaskStatus.IN_PROGRESS]: 0,
-    [TaskStatus.OPEN]: 1,
-    [TaskStatus.BACKLOG]: 2,
-    [TaskStatus.COMPLETED]: 3,
-    [TaskStatus.NOT_PLANNED]: 4,
 }
 
 export enum TaskPriority {
@@ -21,15 +17,19 @@ export enum TaskPriority {
     NONE = 'None',
     OPTIONAL = 'Optional',
 }
-export const prioritySortingMap: Record<TaskPriority, number> = {
-    [TaskPriority.URGENT]: 0,
-    [TaskPriority.HIGH]: 1,
-    [TaskPriority.MEDIUM]: 2,
-    [TaskPriority.NONE]: 3,
-    [TaskPriority.OPTIONAL]: 4,
-}
 
-export interface Task {
+export const taskSchema = z.object({
+    title: z.string().min(1),
+    description: z.string().optional(),
+    status: z.nativeEnum(TaskStatus),
+    priority: z.nativeEnum(TaskPriority),
+    listId: z.string(),
+    parentTaskId: z.string().optional(),
+    deadline: z.date().optional(),
+    blockedById: z.string().optional(),
+})
+
+export type Task = {
     id: string
     title: string
     description: string
@@ -58,20 +58,25 @@ export type TaskDetail = Task
 export type TaskPreviewRecursive = TaskPreview & { children: TaskPreviewRecursive[] | null }
 export type TaskPreviewFlattend = TaskPreviewRecursive & { path: string[] }
 
-// @TODO: ITaskEvent
+export const statusSortingMap: Record<TaskStatus, number> = {
+    [TaskStatus.IN_PROGRESS]: 0,
+    [TaskStatus.OPEN]: 1,
+    [TaskStatus.BACKLOG]: 2,
+    [TaskStatus.COMPLETED]: 3,
+    [TaskStatus.NOT_PLANNED]: 4,
+}
 
-type TaskUpdatable = Pick<
-    Task,
-    'title' | 'description' | 'status' | 'priority' | 'listId' | 'parentTaskId' | 'deadline' | 'blockedById'
->
-export type CreateTaskDto = Pick<TaskUpdatable, 'title' | 'listId'> & Partial<TaskUpdatable>
-export type UpdateTaskDto = Partial<TaskUpdatable>
+export const prioritySortingMap: Record<TaskPriority, number> = {
+    [TaskPriority.URGENT]: 0,
+    [TaskPriority.HIGH]: 1,
+    [TaskPriority.MEDIUM]: 2,
+    [TaskPriority.NONE]: 3,
+    [TaskPriority.OPTIONAL]: 4,
+}
 
 // Task comments
-export interface TaskComment {
+export type TaskComment = {
     id: string
     taskId: string
     text: string
 }
-export type CreateTaskCommentDto = Pick<TaskComment, 'text'>
-export type UpdateTaskCommentDto = CreateTaskCommentDto

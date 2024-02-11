@@ -1,6 +1,10 @@
-import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
-import { TasklistDetail } from 'src/app/fullstack-shared-models/list.model'
-import { TaskDetail, TaskPreviewRecursive } from 'src/app/fullstack-shared-models/task.model'
+import {
+    EntityPreviewRecursive,
+    EntityType,
+    TaskDetail,
+    TaskPreviewRecursive,
+    TasklistDetail,
+} from '@rockket/commons'
 
 export type TaskTreeMap = Record<string, TaskPreviewRecursive[]>
 

@@ -1,8 +1,38 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { TaskEventUpdateField } from '@prisma/client'
-import { SELECT_user_preview } from '../../prisma-abstractions/query-helpers'
+import { Prisma, Task, TaskEventUpdateField } from '@prisma/client'
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
-import { CreateTaskCommentDto, CreateTaskDto, UpdateTaskCommentDto, UpdateTaskDto } from './task.dto'
+import { SELECT_UserPreview } from '../../prisma-abstractions/query-helpers'
+import {
+    CreateTaskCommentZodDto,
+    CreateTaskZodDto,
+    UpdateTaskCommentZodDto,
+    UpdateTaskZodDto,
+} from './task.dto'
+
+const newUpdateEvents = (
+    dto: UpdateTaskZodDto,
+    task: Task,
+    userId: string,
+): Prisma.TaskEventUncheckedCreateWithoutTaskInput[] => {
+    const eventsToCreate = Object.keys(dto)
+        // Skip creating events for fields that are not tracked
+        .filter((key): key is keyof typeof TaskEventUpdateField => key in TaskEventUpdateField)
+        // Skip creating events when the value didn't actually change
+        .filter(key => task[key]?.toString() != dto[key]?.toString())
+        .map(key => {
+            // New value is guaranteed to exist, because we're looping over the dto
+            const newValue = dto[key]!.toString()
+
+            return {
+                updatedField: key,
+                prevValue: String(task[key]),
+                newValue: String(newValue),
+                userId,
+            } satisfies Prisma.TaskEventUncheckedCreateWithoutTaskInput
+        })
+
+    return eventsToCreate
+}
 
 @Injectable()
 export class TaskRepository {
@@ -25,7 +55,7 @@ export class TaskRepository {
         })
     }
 
-    async createTask(userId: string, dto: CreateTaskDto) {
+    async createTask(userId: string, dto: CreateTaskZodDto) {
         return this.prisma.task.create({
             data: {
                 ownerId: userId,
@@ -38,28 +68,15 @@ export class TaskRepository {
         return this.prisma.task.findUnique({ where: { id: taskId } })
     }
 
-    async updateTask(userId: string, taskId: string, dto: UpdateTaskDto) {
-        const eventRelatedUpdatedFields = Object.keys(dto).filter(
-            (key): key is keyof typeof TaskEventUpdateField => key in TaskEventUpdateField,
-        )
-
+    async updateTask(userId: string, taskId: string, dto: UpdateTaskZodDto) {
         const task = await this.prisma.task.findUnique({ where: { id: taskId } })
         if (!task) throw new NotFoundException('Could not find task')
-
-        const eventsToCreate = eventRelatedUpdatedFields
-            .filter(key => task[key]?.toString() != dto[key]) // Skip creating events when the value didn't actually change
-            .map(key => ({
-                updatedField: key,
-                prevValue: task[key]?.toString(),
-                newValue: dto[key],
-                userId,
-            }))
 
         const updatedTask = this.prisma.task.update({
             where: { id: taskId },
             data: {
                 ...dto,
-                events: { create: eventsToCreate },
+                events: { create: newUpdateEvents(dto, task, userId) },
             },
         })
 
@@ -67,7 +84,7 @@ export class TaskRepository {
     }
 
     async deleteTask(taskId: string) {
-        // @SCHEMA_CHANGE requires updating this query
+        // @SCHEMA_CHANGE: Task
         const nestedChildren: { id: string; parentTaskId: string }[] = await this.prisma.$queryRaw`
             WITH RECURSIVE all_tasks AS (
                 SELECT id, "parentTaskId"
@@ -106,7 +123,7 @@ export class TaskRepository {
         const events = await this.prisma.taskEvent.findMany({
             where: { taskId },
             select: {
-                user: SELECT_user_preview,
+                user: SELECT_UserPreview,
                 updatedField: true,
                 newValue: true,
                 prevValue: true,
@@ -133,7 +150,7 @@ export class TaskRepository {
             // OrderBy: { commentedAt: 'asc' }, // maybe this won't be nececcary, let's see
         })
     }
-    async createTaskComment(userId: string, taskId: string, dto: CreateTaskCommentDto) {
+    async createTaskComment(userId: string, taskId: string, dto: CreateTaskCommentZodDto) {
         return this.prisma.taskComment.create({
             data: {
                 userId,
@@ -142,7 +159,7 @@ export class TaskRepository {
             },
         })
     }
-    async updateTaskComment(commentId: string, dto: UpdateTaskCommentDto) {
+    async updateTaskComment(commentId: string, dto: UpdateTaskCommentZodDto) {
         return this.prisma.taskComment.update({
             where: { id: commentId },
             data: { ...dto, wasEdited: true },

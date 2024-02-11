@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
 import { UntilDestroy } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
+import { TaskDetail } from '@rockket/commons'
 import {
     Subject,
     combineLatest,
@@ -16,7 +17,6 @@ import {
     withLatestFrom,
 } from 'rxjs'
 import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
-import { TaskDetail } from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
 import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { taskActions } from 'src/app/store/entities/task/task.actions'

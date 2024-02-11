@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { EntityPreview, EntityType } from '../fullstack-shared-models/entities.model'
+import { EntityPreview, EntityType } from '@rockket/commons'
 import { ListService } from './list/list.service'
 import { TaskService } from './task/task.service'
 

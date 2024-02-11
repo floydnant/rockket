@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
+import { EntitiesSearchResultDto, EntityPreview, EntityType } from '@rockket/commons'
 import { HttpService } from '../http/http.service'
 import { HttpSuccessResponse } from '../http/types'
-import { EntitiesSearchResultDto, EntityPreview, EntityType } from '../fullstack-shared-models/entities.model'
 import { ListService } from './entity.services/list.service'
 import { TaskService } from './entity.services/task.service'
 

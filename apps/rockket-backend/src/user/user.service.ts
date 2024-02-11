@@ -10,11 +10,15 @@ import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 import { PrismaService } from '../prisma-abstractions/prisma.service'
-import { LoginCredentialsDto, SignupCredentialsDto } from './dto/auth-credetials.dto'
-import { UpdateEmailDto, UpdatePasswordDto, UpdateUserDto } from './dto/update-user.dto'
+import { LoginZodDto } from './user.dto'
+import { SignupZodDto } from './user.dto'
+import { UpdateEmailZodDto, UpdatePasswordZodDto, UpdateUserZodDto } from './user.dto'
 import { IJwtPayload } from './jwt-payload.interface'
-import { IUserPreview, IUserSearchResult } from '../shared/index.model'
-import { SELECT_user_preview } from '../prisma-abstractions/query-helpers'
+import { SELECT_UserPreview } from '../prisma-abstractions/query-helpers'
+import { z } from 'zod'
+import { UserPreview, UserSearchResult } from '@rockket/commons'
+
+const prismaErrorSchema = z.object({ code: z.string() })
 
 @Injectable()
 export class UserService {
@@ -22,7 +26,7 @@ export class UserService {
 
     private logger = new Logger('UsersService')
 
-    async signup(credetials: SignupCredentialsDto) {
+    async signup(credetials: SignupZodDto) {
         const createdUser = await this.createUser(credetials)
 
         return {
@@ -31,7 +35,7 @@ export class UserService {
         }
     }
 
-    async login({ password, email }: LoginCredentialsDto) {
+    async login({ password, email }: LoginZodDto) {
         const foundUser = await this.prisma.user.findUnique({
             where: { email },
             select: {
@@ -43,13 +47,10 @@ export class UserService {
         if (!foundUser) throw new UnauthorizedException("email:Couldn't find that account")
         await this.validatePassword(password, foundUser.password)
 
-        return {
-            user: this.getValidatedUser(foundUser),
-            successMessage: `Logged in as '${foundUser.username}'.`,
-        }
+        return this.newAuthTokenResponse(foundUser)
     }
 
-    renewAuthToken(user: IUserPreview) {
+    newAuthTokenResponse(user: UserPreview) {
         return {
             user: this.getValidatedUser(user),
             successMessage: `Logged in as '${user.username}'.`,
@@ -80,7 +81,7 @@ export class UserService {
         }
     }
 
-    async updateUser(user: User, { username: newUsername }: UpdateUserDto) {
+    async updateUser(user: User, { username: newUsername }: UpdateUserZodDto) {
         const updatedUser = await this.prisma.user.update({
             where: { id: user.id },
             data: { username: newUsername },
@@ -91,7 +92,7 @@ export class UserService {
             successMessage: `Updated username to '${newUsername}'.`,
         }
     }
-    async updateEmail(user: User, { email: newEmail, password }: UpdateEmailDto) {
+    async updateEmail(user: User, { email: newEmail, password }: UpdateEmailZodDto) {
         try {
             await this.validatePassword(password, user.password)
 
@@ -110,7 +111,9 @@ export class UserService {
                 successMessage: `Updated email to '${newEmail}'.`,
             }
         } catch (err) {
-            if (err.code != 'P2002') throw err
+            const result = prismaErrorSchema.safeParse(err)
+            if (result.success && result.data.code != 'P2002') throw err
+
             // Conflict: duplicate email
 
             this.logger.verbose(`update user failed => '${newEmail}' already exists`)
@@ -119,8 +122,8 @@ export class UserService {
     }
 
     async updatePassword(
-        user: IUserPreview & { password: string },
-        { password, newPassword }: UpdatePasswordDto,
+        user: UserPreview & { password: string },
+        { password, newPassword }: UpdatePasswordZodDto,
     ) {
         await this.validatePassword(password, user.password)
 
@@ -146,7 +149,7 @@ export class UserService {
         else throw new InternalServerErrorException('Failed to delete your account.')
     }
 
-    private getValidatedUser({ username, id }: IUserPreview) {
+    private getValidatedUser({ username, id }: UserPreview) {
         return {
             id,
             username,
@@ -165,7 +168,7 @@ export class UserService {
         }
     }
 
-    private async createUser({ password, username, email }: SignupCredentialsDto) {
+    private async createUser({ password, username, email }: SignupZodDto) {
         const hashedPassword = await this.hashPassword(password)
 
         try {
@@ -173,7 +176,8 @@ export class UserService {
                 data: { password: hashedPassword, username, email },
             })
         } catch (err) {
-            if (err.code != 'P2002') throw new InternalServerErrorException(err)
+            const result = prismaErrorSchema.safeParse(err)
+            if (result.success && result.data.code != 'P2002') throw new InternalServerErrorException(err)
             // Conflict: duplicate email
 
             this.logger.verbose(`update user failed => '${email}' already exists`)
@@ -192,7 +196,7 @@ export class UserService {
             const requestedUser = await this.prisma.user.findFirst({
                 // @TODO: maybe this should only be accesible to users who are friends with the requested user
                 where: { id: requestedUserId },
-                ...SELECT_user_preview,
+                ...SELECT_UserPreview,
             })
             return requestedUser
         } catch (err) {
@@ -200,7 +204,7 @@ export class UserService {
         }
     }
 
-    async searchUsers(userId: string, query: string /* , options: {} */): Promise<IUserSearchResult[]> {
+    async searchUsers(userId: string, query: string): Promise<UserSearchResult[]> {
         // This is where a full text search engine would come in handy
         const users = await this.prisma.user.findMany({
             where: {
@@ -209,7 +213,7 @@ export class UserService {
                 },
                 NOT: { id: userId },
             },
-            ...SELECT_user_preview,
+            ...SELECT_UserPreview,
         })
         return users
     }

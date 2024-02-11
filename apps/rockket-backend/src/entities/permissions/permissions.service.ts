@@ -13,6 +13,8 @@ const permissionMatches = (permission: ListPermission, requiredPermission: ListP
     return permissonsRankingMap[permission] >= permissonsRankingMap[requiredPermission]
 }
 
+// @TODO: each entity should have their own `...AuthorizationService` instead
+
 @Injectable()
 export class PermissionsService {
     constructor(private prisma: PrismaService) {}

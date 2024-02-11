@@ -1,5 +1,6 @@
 {
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
+    "defaultProject": "root",
     "targetDefaults": {
         "build": {
             "cache": true,
@@ -69,5 +70,10 @@
             "style": "css"
         }
     },
-    "nxCloudAccessToken": "YmIyYTJiM2ItODQ2Mi00NmE1LTkxMTUtNjUyMDE4NmYxMTAyfHJlYWQtd3JpdGU="
+    "nxCloudAccessToken": "YmIyYTJiM2ItODQ2Mi00NmE1LTkxMTUtNjUyMDE4NmYxMTAyfHJlYWQtd3JpdGU=",
+    "pluginsConfig": {
+        "@nx/js": {
+            "analyzeSourceFiles": true
+        }
+    }
 }

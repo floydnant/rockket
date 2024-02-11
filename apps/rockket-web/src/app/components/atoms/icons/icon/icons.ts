@@ -1,5 +1,4 @@
-import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
-import { TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
+import { EntityType, TaskPriority, TaskStatus } from '@rockket/commons'
 import { concatMatchingKeys, flattenObject } from 'src/app/utils'
 import { taskPriorityColorMap, taskStatusColorMap } from '../../../../shared/colors'
 

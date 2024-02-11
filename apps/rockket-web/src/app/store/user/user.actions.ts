@@ -1,17 +1,13 @@
 import { UrlTree } from '@angular/router'
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
+import { LoggedInUser, LoginDto, SignupDto } from '@rockket/commons'
 import { HttpServerErrorResponse } from 'src/app/http/types'
-import {
-    SignupCredentialsDto,
-    LoginCredentialsDto,
-    LoggedInUser,
-} from 'src/app/fullstack-shared-models/auth.model'
 
 export const authActions = createActionGroup({
     source: 'User/Auth',
     events: {
-        signup: props<{ credentials: SignupCredentialsDto; callbackUrl?: string | UrlTree }>(),
-        login: props<{ credentials: LoginCredentialsDto; callbackUrl?: string | UrlTree }>(),
+        signup: props<{ credentials: SignupDto; callbackUrl?: string | UrlTree }>(),
+        login: props<{ credentials: LoginDto; callbackUrl?: string | UrlTree }>(),
         'login or signup success': props<LoggedInUser>(),
         'login or signup error': props<HttpServerErrorResponse>(),
 

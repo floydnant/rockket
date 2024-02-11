@@ -1,6 +1,6 @@
+import { TaskPreview } from '@rockket/commons'
 import { interpolateParams } from '.'
 import { MenuItem } from '../dropdown/drop-down/drop-down.component'
-import { TaskPreview } from '../fullstack-shared-models/task.model'
 
 export interface WrappedMenuItems<T> extends Array<MenuItem<T>> {
     applyOperators(...operator: ((item: MenuItem<T>) => MenuItem<T>)[]): WrappedMenuItems<T>

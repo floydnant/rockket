@@ -1,14 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { ListPermission } from '@prisma/client'
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
-import { SELECT_list_participant } from '../../prisma-abstractions/query-helpers'
-import { CreateTasklistDto, ShareTasklistDto, UpdatePermissionsDto, UpdateTasklistDto } from './list.dto'
+import { SELECT_ListParticipant } from '../../prisma-abstractions/query-helpers'
+import {
+    CreateTasklistZodDto,
+    ShareTasklistZodDto,
+    UpdatePermissionsZodDto,
+    UpdateTasklistZodDto,
+} from './list.dto'
 
 @Injectable()
 export class ListRepository {
     constructor(private prisma: PrismaService) {}
 
-    async createTasklist(userId: string, { parentListId, ...dto }: CreateTasklistDto) {
+    async createTasklist(userId: string, { parentListId, ...dto }: CreateTasklistZodDto) {
         if (parentListId) await this.getTasklistById(parentListId) // Throw if parentList not found
 
         return await this.prisma.tasklist.create({
@@ -35,7 +40,7 @@ export class ListRepository {
                 description: true,
                 ownerId: true,
                 createdAt: true,
-                participants: SELECT_list_participant,
+                participants: SELECT_ListParticipant,
                 childLists: { select: { id: true } },
                 _count: { select: { tasks: true } },
             },
@@ -49,7 +54,7 @@ export class ListRepository {
         }
     }
 
-    async updateTasklist(listId: string, dto: UpdateTasklistDto) {
+    async updateTasklist(listId: string, dto: UpdateTasklistZodDto) {
         return this.prisma.tasklist.update({
             where: { id: listId },
             data: dto,
@@ -139,7 +144,7 @@ export class ListRepository {
         })
     }
 
-    async shareTasklist(listId: string, userId: string, dto: ShareTasklistDto) {
+    async shareTasklist(listId: string, userId: string, dto: ShareTasklistZodDto) {
         const listParticipant = await this.prisma.listParticipant.create({
             data: { listId, userId, ...dto },
         })
@@ -148,7 +153,7 @@ export class ListRepository {
     async updateParticipantPermissions(
         listId: string,
         participantUserId: string,
-        { permission }: UpdatePermissionsDto,
+        { permission }: UpdatePermissionsZodDto,
     ) {
         const listParticipant = await this.prisma.listParticipant.findFirst({
             where: { userId: participantUserId, listId },

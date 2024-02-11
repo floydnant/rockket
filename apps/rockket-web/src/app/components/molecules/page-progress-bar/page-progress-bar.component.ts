@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
+import { TaskPreview, TaskPreviewRecursive, TaskStatus } from '@rockket/commons'
 import {
     BehaviorSubject,
     combineLatest,
@@ -12,9 +13,8 @@ import {
     switchMap,
     timer,
 } from 'rxjs'
-import { TaskPreview, TaskPreviewRecursive, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
 import { UiStateService } from 'src/app/services/ui-state.service'
-import { taskStatusColorMap, TwColorClass } from 'src/app/shared/colors'
+import { TwColorClass, taskStatusColorMap } from 'src/app/shared/colors'
 import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
 
 export const mapByStatus = <T extends TaskPreview>(taskTree: T[]) => {

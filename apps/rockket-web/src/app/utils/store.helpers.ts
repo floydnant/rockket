@@ -51,16 +51,12 @@ export const getErrorMapUpdates = ({
     const errorActions = actions$.pipe(
         ofType(errorAction),
         map(action => {
-            let messages: string[]
-            if (action.error.message instanceof Array) messages = action.error.message
-            else messages = [action.error.message]
+            const errorMap = [action.error.message].flat().reduce((acc, message) => {
+                const fieldName = fields.find(field => new RegExp(field, 'i').test(message))
+                if (fieldName) acc[fieldName] = [...acc[fieldName], message.replace(/^\w+:/, '')]
 
-            const errorMap: Record<string, string[]> = {}
-            messages.forEach(msg => {
-                const fieldName = fields.find(field => new RegExp(field, 'i').test(msg))
-                if (fieldName)
-                    errorMap[fieldName] = [...(errorMap[fieldName] || []), msg.replace(/^\w+:/, '')]
-            })
+                return acc
+            }, {} as Record<string, string[]>)
 
             return errorMap
         }),

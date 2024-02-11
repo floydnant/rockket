@@ -3,14 +3,12 @@ import {
     EntityPreviewFlattend,
     EntityPreviewRecursive,
     EntityType,
-} from 'src/app/fullstack-shared-models/entities.model'
-import {
-    prioritySortingMap,
-    statusSortingMap,
     TaskPreview,
     TaskPreviewFlattend,
     TaskPreviewRecursive,
-} from 'src/app/fullstack-shared-models/task.model'
+    prioritySortingMap,
+    statusSortingMap,
+} from '@rockket/commons'
 import { TaskTreeMap } from './entities.state'
 
 export const buildEntityTree = (allEntities: EntityPreview[]) => {

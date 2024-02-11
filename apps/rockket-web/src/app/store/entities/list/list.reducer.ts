@@ -1,5 +1,5 @@
 import { on } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
+import { EntityPreviewRecursive, EntityType } from '@rockket/commons'
 import { ReducerOns } from 'src/app/utils/store.helpers'
 import { EntitiesState } from '../entities.state'
 import { getEntityById } from '../utils'

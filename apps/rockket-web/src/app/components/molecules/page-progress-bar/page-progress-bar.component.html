@@ -52,9 +52,7 @@
                     <td class="pl-4 text-center">{{ digest.byStatus[status] }}</td>
                     <td class="text-tinted-300 text-right">
                         <span class="pl-4" [class.hidden]="!digest.byStatus[status]">
-                            {{
-                                ((digest.byStatus[status] / digest.all) * 100).toFixed(2).replace('.00', '')
-                            }}
+                            {{ ((digest.byStatus[status] / digest.all) * 100).toFixed(2).replace('.00', '') }}
                             %
                         </span>
                     </td>

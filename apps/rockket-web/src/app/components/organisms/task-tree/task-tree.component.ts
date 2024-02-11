@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Store } from '@ngrx/store'
-import { BehaviorSubject, combineLatestWith, map, shareReplay, tap } from 'rxjs'
-import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 import {
+    EntityType,
     TaskPreviewFlattend,
     TaskPreviewRecursive,
     TaskPriority,
     TaskStatus,
-} from 'src/app/fullstack-shared-models/task.model'
+} from '@rockket/commons'
+import { BehaviorSubject, combineLatestWith, map, shareReplay, tap } from 'rxjs'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { UiStateService } from 'src/app/services/ui-state.service'
 import { uiDefaults } from 'src/app/shared/defaults'

@@ -1,36 +1,12 @@
-import { ListPermission } from '@prisma/client'
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator'
-import { enumInvalidMessage } from '../../utilities/validation'
+import {
+    createTasklistDtoSchema,
+    shareTasklistDtoSchema,
+    updatePermissionsDtoSchema,
+    updateTasklistDtoSchema,
+} from '@rockket/commons'
+import { createZodDto } from 'nestjs-zod'
 
-export class CreateTasklistDto {
-    @IsNotEmpty()
-    @IsString()
-    title: string
-
-    @IsOptional()
-    @IsString()
-    description?: string
-
-    @IsOptional()
-    @IsString()
-    parentListId?: string
-}
-export class UpdateTasklistDto {
-    @IsOptional()
-    @IsString()
-    title?: string
-
-    @IsOptional()
-    @IsString()
-    description?: string
-}
-export class ShareTasklistDto {
-    @IsOptional()
-    @IsEnum(ListPermission, enumInvalidMessage('permission', ListPermission))
-    permission?: ListPermission
-}
-
-export class UpdatePermissionsDto {
-    @IsEnum(ListPermission, enumInvalidMessage('permission', ListPermission))
-    permission: ListPermission
-}
+export class CreateTasklistZodDto extends createZodDto(createTasklistDtoSchema) {}
+export class UpdateTasklistZodDto extends createZodDto(updateTasklistDtoSchema) {}
+export class ShareTasklistZodDto extends createZodDto(shareTasklistDtoSchema) {}
+export class UpdatePermissionsZodDto extends createZodDto(updatePermissionsDtoSchema) {}

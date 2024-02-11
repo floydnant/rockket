@@ -1,5 +1,5 @@
-import { TaskList } from './list.model'
-import { Task } from './task.model'
+import { TaskList } from './list/list.model'
+import { Task } from './task/task.model'
 
 export enum EntityType {
     TASKLIST = 'Tasklist',
@@ -8,7 +8,7 @@ export enum EntityType {
     // VIEW = 'View',
 }
 
-export interface EntityPreview {
+export type EntityPreview = {
     id: string
     entityType: EntityType
     title: string
@@ -22,7 +22,7 @@ export type EntityPreviewFlattend = Omit<EntityPreviewRecursive, 'children'> & {
     childrenCount: number | undefined
 }
 
-export interface EntitiesSearchResultDto extends Record<EntityType, unknown> {
+export type EntitiesSearchResultDto = Record<EntityType, unknown> & {
     [EntityType.TASK]: Task[]
     [EntityType.TASKLIST]: TaskList[]
 }

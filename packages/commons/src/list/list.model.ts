@@ -1,4 +1,4 @@
-export interface TaskList {
+export type TaskList = {
     id: string
     title: string
     description: string | null
@@ -15,19 +15,7 @@ export type TasklistPreview = Pick<TaskList, 'id' | 'title' | 'childLists' | 'pa
 
 export type TasklistDetail = Pick<TaskList, 'description' | 'ownerId' | 'createdAt'>
 
-export type CreateTasklistDto = {
-    title: string
-    description?: string
-    parentListId?: string
-}
-export type UpdateTasklistDto = Partial<CreateTasklistDto>
-
-export interface PermissionsDto {
-    permission: ListPermissions
-}
-export type ShareTasklistDto = Partial<PermissionsDto>
-
-export enum ListPermissions {
+export enum ListPermission {
     Manage = 'Manage',
     Edit = 'Edit',
     Comment = 'Comment',

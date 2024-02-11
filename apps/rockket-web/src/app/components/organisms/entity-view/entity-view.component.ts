@@ -10,6 +10,7 @@ import {
 } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
+import { EntityPreviewRecursive, EntityType, TaskPreview } from '@rockket/commons'
 import {
     BehaviorSubject,
     Observable,
@@ -21,8 +22,6 @@ import {
     shareReplay,
     tap,
 } from 'rxjs'
-import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
-import { TaskPreview } from 'src/app/fullstack-shared-models/task.model'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'

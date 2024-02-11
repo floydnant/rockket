@@ -1,9 +1,4 @@
-import {
-    EntityPreview,
-    EntityPreviewFlattend,
-    EntityPreviewRecursive,
-    EntityType,
-} from 'src/app/fullstack-shared-models/entities.model'
+import { EntityPreview, EntityPreviewFlattend, EntityPreviewRecursive, EntityType } from '@rockket/commons'
 import { buildEntityTree, flattenEntityTree, getParentEntityByChildId, traceEntity } from './utils'
 
 const entityPreviewsFixture: EntityPreview[] = [

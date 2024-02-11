@@ -1,4 +1,5 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
+import { EntityPreviewRecursive, EntityType, TaskDetail, TaskPriority, TaskStatus } from '@rockket/commons'
 import { testName } from 'cypress/support/helpers'
 import { BehaviorSubject, of } from 'rxjs'
 import { EntityPageLabelComponent } from 'src/app/components/atoms/entity-page-label/entity-page-label.component'
@@ -7,15 +8,13 @@ import { EditableEntityTitleComponent } from 'src/app/components/molecules/edita
 import { PageProgressBarComponent } from 'src/app/components/molecules/page-progress-bar/page-progress-bar.component'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
-import { EntityPreviewRecursive, EntityType } from 'src/app/fullstack-shared-models/entities.model'
-import { TaskDetail, TaskPriority, TaskStatus } from 'src/app/fullstack-shared-models/task.model'
-import { TaskTreeMap } from 'src/app/store/entities/entities.state'
-import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
-import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
-import { TaskViewComponent } from './task-view.component'
+import { DropdownModule } from 'src/app/dropdown/dropdown.module'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
 import { RxModule } from 'src/app/rx/rx.module'
-import { DropdownModule } from 'src/app/dropdown/dropdown.module'
+import { TaskTreeMap } from 'src/app/store/entities/entities.state'
+import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
+import { ENTITY_VIEW_DATA, EntityViewComponent, EntityViewData } from '../../entity-view.component'
+import { TaskViewComponent } from './task-view.component'
 
 const setupComponent = (viewData: EntityViewData<TaskDetail>, taskTreeMap: TaskTreeMap = {}) => {
     const store = {

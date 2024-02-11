@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Query, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { User } from '@prisma/client'
-import { UpdateEmailDto, UpdatePasswordDto, UpdateUserDto } from './dto/update-user.dto'
 import { GetUser } from '../decorators/get-user.decorator'
+import { UpdateEmailZodDto, UpdatePasswordZodDto, UpdateUserZodDto } from './user.dto'
 import { UserService } from './user.service'
 
 @UseGuards(AuthGuard())
@@ -13,17 +13,17 @@ export class UsersController {
     private logger = new Logger('UserController')
 
     @Patch('/email')
-    updateEmail(@GetUser() user: User, @Body() updateEmailDto: UpdateEmailDto) {
+    updateEmail(@GetUser() user: User, @Body() updateEmailDto: UpdateEmailZodDto) {
         this.logger.verbose(`${user.username} wants to change email`)
         return this.usersService.updateEmail(user, updateEmailDto)
     }
     @Patch('/password')
-    updatePassword(@GetUser() user: User, @Body() updatePasswordDto: UpdatePasswordDto) {
+    updatePassword(@GetUser() user: User, @Body() updatePasswordDto: UpdatePasswordZodDto) {
         this.logger.verbose(`${user.username} wants to change the password`)
         return this.usersService.updatePassword(user, updatePasswordDto)
     }
     @Patch()
-    updateUser(@GetUser() user: User, @Body() updateUserDto: UpdateUserDto) {
+    updateUser(@GetUser() user: User, @Body() updateUserDto: UpdateUserZodDto) {
         this.logger.verbose(`${user.username} wants to change username`)
         return this.usersService.updateUser(user, updateUserDto)
     }

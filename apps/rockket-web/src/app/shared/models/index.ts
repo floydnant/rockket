@@ -1,4 +1,4 @@
-import { LoggedInUser } from 'src/app/fullstack-shared-models/auth.model'
+import { LoggedInUser } from '@rockket/commons'
 import { HttpSuccessResponse } from 'src/app/http/types'
 
 export type AuthSuccessResponse = HttpSuccessResponse<{ user: LoggedInUser }>

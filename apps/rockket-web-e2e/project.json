@@ -2,6 +2,7 @@
     "name": "rockket-web-e2e",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "apps/rockket-web-e2e/src",
+    "implicitDependencies": ["rockket-web", "rockket-backend"],
     "projectType": "application",
     "targets": {
         "lint": {
@@ -14,21 +15,21 @@
         "e2e": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "start-server-and-test \"nx run rockket-backend:serve-testing\" 3001 \"NG_APP_TESTING_ENV=true nx run rockket-web-e2e:_e2e\""
+                "command": "start-server-and-test \"nx run rockket-backend:serve-testing\" 3001 \"NG_APP_TESTING_ENV=true nx run rockket-web-e2e:e2e_internal\""
             },
             "configurations": {
                 "watch": {
-                    "command": "start-server-and-test \"nx run rockket-backend:serve-testing\" 3001 \"NG_APP_TESTING_ENV=true nx run rockket-web-e2e:_e2e:watch\""
+                    "command": "start-server-and-test \"nx run rockket-backend:serve-testing\" 3001 \"NG_APP_TESTING_ENV=true nx run rockket-web-e2e:e2e_internal:watch\""
                 },
                 "production": {
-                    "command": "start-server-and-test \"nx run rockket-backend:serve-testing:production\" 3001 \"NG_APP_TESTING_ENV=true nx run rockket-web-e2e:_e2e:production\""
+                    "command": "start-server-and-test \"nx run rockket-backend:serve-testing:production\" 3001 \"NG_APP_TESTING_ENV=true nx run rockket-web-e2e:e2e_internal:production\""
                 },
                 "ci": {
-                    "command": "start-server-and-test \"nx run rockket-backend:serve-testing:production\" 3001 \"NG_APP_TESTING_ENV=true nx run rockket-web-e2e:_e2e:ci\""
+                    "command": "start-server-and-test \"nx run rockket-backend:serve-testing:production\" 3001 \"NG_APP_TESTING_ENV=true nx run rockket-web-e2e:e2e_internal:ci\""
                 }
             }
         },
-        "_e2e": {
+        "e2e_internal": {
             "executor": "@nx/cypress:cypress",
             "options": {
                 "cypressConfig": "apps/rockket-web-e2e/cypress.config.ts",
@@ -49,6 +50,5 @@
             }
         }
     },
-    "tags": [],
-    "implicitDependencies": ["rockket-web", "rockket-backend"]
+    "tags": []
 }

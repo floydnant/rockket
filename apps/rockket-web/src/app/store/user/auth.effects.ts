@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
+import { SignupDto } from '@rockket/commons'
 import { catchError, map, mergeMap, Observable, of, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { DialogService } from 'src/app/modal/dialog.service'
-import { SignupCredentialsDto } from 'src/app/fullstack-shared-models/auth.model'
 import { AuthService } from 'src/app/services/auth.service'
+import { AuthSuccessResponse } from 'src/app/shared/models'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { appActions } from '../app.actions'
 import { authActions } from './user.actions'
-import { AuthSuccessResponse } from 'src/app/shared/models'
 
 @Injectable()
 export class AuthEffects {
@@ -29,7 +29,7 @@ export class AuthEffects {
                 const isLogin = /login/.test(type)
                 const res$: Observable<AuthSuccessResponse> = isLogin
                     ? this.authService.login(credentials)
-                    : this.authService.signup(credentials as SignupCredentialsDto)
+                    : this.authService.signup(credentials as SignupDto)
 
                 return res$.pipe(
                     this.toast.observe({

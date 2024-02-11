@@ -3,7 +3,12 @@ import { AuthGuard } from '@nestjs/passport'
 import { User } from '@prisma/client'
 import { GetUser } from '../../decorators/get-user.decorator'
 import { TaskService } from '../task/task.service'
-import { CreateTasklistDto, UpdateTasklistDto, ShareTasklistDto, UpdatePermissionsDto } from './list.dto'
+import {
+    CreateTasklistZodDto,
+    ShareTasklistZodDto,
+    UpdatePermissionsZodDto,
+    UpdateTasklistZodDto,
+} from './list.dto'
 import { ListService } from './list.service'
 
 @UseGuards(AuthGuard())
@@ -12,7 +17,7 @@ export class ListController {
     constructor(private listService: ListService, private taskService: TaskService) {}
 
     @Post('list')
-    createTasklist(@GetUser() user: User, @Body() dto: CreateTasklistDto) {
+    createTasklist(@GetUser() user: User, @Body() dto: CreateTasklistZodDto) {
         return this.listService.createTaskList(user.id, dto)
     }
     @Get('list/:listId')
@@ -20,7 +25,11 @@ export class ListController {
         return this.listService.getTasklist(user.id, listId)
     }
     @Patch('list/:listId')
-    updateTasklist(@GetUser() user: User, @Param('listId') listId: string, @Body() dto: UpdateTasklistDto) {
+    updateTasklist(
+        @GetUser() user: User,
+        @Param('listId') listId: string,
+        @Body() dto: UpdateTasklistZodDto,
+    ) {
         return this.listService.updateTasklist(user.id, listId, dto)
     }
     @Delete('list/:listId')
@@ -46,7 +55,7 @@ export class ListController {
         @GetUser() user: User,
         @Param('listId') listId: string,
         @Param('userId') userId: string,
-        @Body() dto: ShareTasklistDto,
+        @Body() dto: ShareTasklistZodDto,
     ) {
         return this.listService.shareTasklist(user.id, listId, userId, dto)
     }
@@ -55,7 +64,7 @@ export class ListController {
         @GetUser() user: User,
         @Param('listId') listId: string,
         @Param('userId') userId: string,
-        @Body() dto: UpdatePermissionsDto,
+        @Body() dto: UpdatePermissionsZodDto,
     ) {
         return this.listService.updateParticipantPermissions(user.id, listId, userId, dto)
     }

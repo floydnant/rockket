@@ -2,10 +2,10 @@ import { Component } from '@angular/core'
 import { Validators } from '@angular/forms'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
+import { LoginDto } from '@rockket/commons'
 import { map } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator } from 'src/app/components/molecules/form/validators'
-import { LoginCredentialsDto } from 'src/app/fullstack-shared-models/auth.model'
 import { AppState } from 'src/app/store'
 import { authActions } from 'src/app/store/user/user.actions'
 import { userSelectors } from 'src/app/store/user/user.selectors'
@@ -46,7 +46,7 @@ export class LoginComponent {
 
     callbackUrl?: string
 
-    onSubmit(credentials: LoginCredentialsDto) {
+    onSubmit(credentials: LoginDto) {
         this.store.dispatch(authActions.login({ credentials, callbackUrl: this.callbackUrl }))
     }
 }

@@ -1,10 +1,9 @@
 import { on } from '@ngrx/store'
-import { TaskPreviewRecursive } from 'src/app/fullstack-shared-models/task.model'
+import { EntityType, TaskPreviewRecursive } from '@rockket/commons'
 import { ReducerOns } from 'src/app/utils/store.helpers'
 import { EntitiesState, TaskTreeMap } from '../entities.state'
-import { buildTaskTreeMap, buildTaskTree, getTaskById } from '../utils'
+import { buildTaskTree, buildTaskTreeMap, getTaskById } from '../utils'
 import { taskActions } from './task.actions'
-import { EntityType } from 'src/app/fullstack-shared-models/entities.model'
 
 export const taskReducerOns: ReducerOns<EntitiesState> = [
     on(taskActions.loadTaskPreviewsSuccess, (state, { previews }): EntitiesState => {

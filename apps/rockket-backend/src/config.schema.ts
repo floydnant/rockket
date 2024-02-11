@@ -1,5 +1,6 @@
 import * as Joi from 'joi'
 
+// @TODO: migrate to zod and get rid of Joi
 export const configValidationSchema = Joi.object({
     PORT: Joi.number().default(3000),
     DATABASE_URL: Joi.string().required(),

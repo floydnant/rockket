@@ -2,10 +2,10 @@ import { Component } from '@angular/core'
 import { Validators } from '@angular/forms'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
+import { SignupDto } from '@rockket/commons'
 import { map } from 'rxjs'
 import { FormBuilderOptions } from 'src/app/components/molecules/form/types'
 import { betterEmailValidator, matchSibling } from 'src/app/components/molecules/form/validators'
-import { SignupCredentialsDto } from 'src/app/fullstack-shared-models/auth.model'
 import { AppState } from 'src/app/store'
 import { authActions } from 'src/app/store/user/user.actions'
 import { userSelectors } from 'src/app/store/user/user.selectors'
@@ -50,7 +50,7 @@ export class SignupComponent {
 
     callbackUrl?: string
 
-    onSubmit(credentials: SignupCredentialsDto) {
+    onSubmit(credentials: SignupDto) {
         this.store.dispatch(authActions.signup({ credentials, callbackUrl: this.callbackUrl }))
     }
 }

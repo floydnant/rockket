@@ -1,14 +1,19 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { ListPermission } from '@prisma/client'
 import { PermissionsService } from '../permissions/permissions.service'
-import { CreateTasklistDto, ShareTasklistDto, UpdatePermissionsDto, UpdateTasklistDto } from './list.dto'
+import {
+    CreateTasklistZodDto,
+    ShareTasklistZodDto,
+    UpdatePermissionsZodDto,
+    UpdateTasklistZodDto,
+} from './list.dto'
 import { ListRepository } from './list.repository'
 
 @Injectable()
 export class ListService {
     constructor(private listRepository: ListRepository, private permissions: PermissionsService) {}
 
-    createTaskList(userId: string, dto: CreateTasklistDto) {
+    createTaskList(userId: string, dto: CreateTasklistZodDto) {
         return this.listRepository.createTasklist(userId, dto)
     }
     async getTasklist(userId: string, listId: string) {
@@ -21,7 +26,7 @@ export class ListService {
 
         return this.listRepository.getTasklistById(listId)
     }
-    async updateTasklist(userId: string, listId: string, dto: UpdateTasklistDto) {
+    async updateTasklist(userId: string, listId: string, dto: UpdateTasklistZodDto) {
         const hasPermissions = await this.permissions.hasPermissionForList(
             userId,
             listId,
@@ -75,7 +80,7 @@ export class ListService {
         return this.listRepository.getChildTasklists(listId)
     }
 
-    async shareTasklist(userId: string, listId: string, newParticipantId: string, dto: ShareTasklistDto) {
+    async shareTasklist(userId: string, listId: string, newParticipantId: string, dto: ShareTasklistZodDto) {
         const hasPermissions = await this.permissions.hasPermissionForList(
             userId,
             listId,
@@ -89,7 +94,7 @@ export class ListService {
         userId: string,
         listId: string,
         participantUserId: string,
-        dto: UpdatePermissionsDto,
+        dto: UpdatePermissionsZodDto,
     ) {
         const hasPermissions = await this.permissions.isListOwner(userId, listId)
         if (!hasPermissions)

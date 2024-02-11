@@ -1,10 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
-import {
-    TaskPreview,
-    CreateTaskDto,
-    TaskStatus,
-    TaskPriority,
-} from 'src/app/fullstack-shared-models/task.model'
+import { CreateTaskDto, TaskPreview, TaskPriority, TaskStatus } from '@rockket/commons'
 import { HttpServerErrorResponse, HttpServerErrorResponseWithMeta } from 'src/app/http/types'
 
 export const taskActions = createActionGroup({
