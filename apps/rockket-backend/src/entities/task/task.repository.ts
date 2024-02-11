@@ -21,12 +21,13 @@ const newUpdateEvents = (
         .filter(key => task[key]?.toString() != dto[key]?.toString())
         .map(key => {
             // New value is guaranteed to exist, because we're looping over the dto
-            const newValue = dto[key]!.toString()
+            const value = dto[key]!
+            const newValue = value instanceof Date ? value.toISOString() : value.toString()
 
             return {
                 updatedField: key,
                 prevValue: String(task[key]),
-                newValue: String(newValue),
+                newValue: newValue,
                 userId,
             } satisfies Prisma.TaskEventUncheckedCreateWithoutTaskInput
         })

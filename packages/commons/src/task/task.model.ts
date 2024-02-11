@@ -25,7 +25,7 @@ export const taskSchema = z.object({
     priority: z.nativeEnum(TaskPriority),
     listId: z.string(),
     parentTaskId: z.string().optional(),
-    deadline: z.date().optional(),
+    deadline: z.date({ coerce: true }).optional(),
     blockedById: z.string().optional(),
 })
 
