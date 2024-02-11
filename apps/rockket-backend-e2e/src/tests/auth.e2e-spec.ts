@@ -1,10 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { INestApplication } from '@nestjs/common'
-import { userFixtures } from '../fixtures/users.fixture'
-import { signup, login, request, typeBearer } from '../utils/requests.e2e-util'
-import { initApplication } from '../utils/init-app.e2e-util'
-import { DbHelper } from '../../../rockket-backend/src/prisma-abstractions/db-helper'
 import { PrismaClient } from '@prisma/client'
+import { DbHelper } from '../../../rockket-backend/src/prisma-abstractions/db-helper'
+import { userFixtures } from '../fixtures/users.fixture'
+import { initApplication } from '../utils/init-app.e2e-util'
+import { login, request, signup, typeBearer } from '../utils/requests.e2e-util'
 
 const dbHelper = new DbHelper(new PrismaClient(), { cacheTableNames: true })
 
@@ -91,6 +91,7 @@ describe('Authentication (e2e)', () => {
                     .send({ password: userFixtures.jonathan.password, email: 'new-email@example.com' })
                     .expect(200)
             })
+
             it('cannot change email with wrong credentials', async () => {
                 await request(app)
                     .patch('/user/email')

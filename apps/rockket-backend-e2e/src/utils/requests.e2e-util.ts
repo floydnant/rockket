@@ -1,21 +1,18 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { INestApplication } from '@nestjs/common'
 import { Task, Tasklist } from '@prisma/client'
+import { CreateTasklistZodDto } from 'apps/rockket-backend/src/entities/list/list.dto'
+import { CreateTaskZodDto } from 'apps/rockket-backend/src/entities/task/task.dto'
+import { SignupZodDto, LoginZodDto } from 'apps/rockket-backend/src/user/user.dto'
 import superRequest from 'supertest'
-import { CreateTasklistDto } from '../../../rockket-backend/src/entities/list/list.dto'
-import { CreateTaskDto } from '../../../rockket-backend/src/entities/task/task.dto'
-import {
-    LoginCredentialsDto,
-    SignupCredentialsDto,
-} from '../../../rockket-backend/src/user/dto/auth-credetials.dto'
 
 export const request = (app: INestApplication) => {
     return superRequest(app.getHttpServer())
 }
 
-export const signup = (app: INestApplication, credentials: SignupCredentialsDto) =>
+export const signup = (app: INestApplication, credentials: SignupZodDto) =>
     request(app).post('/auth/signup').send(credentials)
-export const login = (app: INestApplication, credentials: LoginCredentialsDto) =>
+export const login = (app: INestApplication, credentials: LoginZodDto) =>
     request(app).post('/auth/login').send(credentials)
 
 export const typeBearer = { type: 'bearer' } as const
@@ -23,7 +20,7 @@ export const typeBearer = { type: 'bearer' } as const
 export const createTasklist = async (
     app: INestApplication,
     authToken: string,
-    newList: CreateTasklistDto,
+    newList: CreateTasklistZodDto,
 ) => {
     const res = await request(app).post('/list').auth(authToken, typeBearer).send(newList).expect(201)
     return res.body as Tasklist
@@ -32,7 +29,7 @@ export const createTasklist = async (
 export const createTask = async (
     app: INestApplication,
     authToken: string,
-    taskPayload: Partial<CreateTaskDto> & Pick<CreateTaskDto, 'title' | 'listId'>,
+    taskPayload: Partial<CreateTaskZodDto> & Pick<CreateTaskZodDto, 'title' | 'listId'>,
 ) => {
     const res = await request(app).post(`/task`).auth(authToken, typeBearer).send(taskPayload).expect(201)
     return res.body as Task

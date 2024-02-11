@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { INestApplication } from '@nestjs/common'
 import { PrismaClient, Tasklist, TaskStatus } from '@prisma/client'
-import { UpdateTasklistDto } from '../../../rockket-backend/src/entities/list/list.dto'
+import { UpdateTasklistZodDto } from '../../../rockket-backend/src/entities/list/list.dto'
 import { createTask, createTasklist, request, signup, typeBearer } from '../utils/requests.e2e-util'
 import { userFixtures } from '../fixtures/users.fixture'
 import { initApplication } from '../utils/init-app.e2e-util'
@@ -30,7 +30,7 @@ describe('List CRUD (e2e)', () => {
     it('can update a tasklist', async () => {
         const createdList = await createTasklist(app, authToken, createListDtoFixture)
 
-        const updatedListData: UpdateTasklistDto = {
+        const updatedListData: UpdateTasklistZodDto = {
             description: 'A new description',
         }
         const res = await request(app)
