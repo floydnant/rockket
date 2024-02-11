@@ -112,12 +112,13 @@ export class UserService {
             }
         } catch (err) {
             const result = prismaErrorSchema.safeParse(err)
-            if (result.success && result.data.code != 'P2002') throw err
+            if (result.success && result.data.code == 'P2002') {
+                throw new ConflictException(
+                    `email:There is already an account associated with '${newEmail}'.`,
+                )
+            }
 
-            // Conflict: duplicate email
-
-            this.logger.verbose(`update user failed => '${newEmail}' already exists`)
-            throw new ConflictException(`email:There is already an account associated with '${newEmail}'.`)
+            throw err
         }
     }
 
@@ -208,9 +209,7 @@ export class UserService {
         // This is where a full text search engine would come in handy
         const users = await this.prisma.user.findMany({
             where: {
-                username: {
-                    contains: query,
-                },
+                OR: [{ username: { contains: query } }, { email: { contains: query } }],
                 NOT: { id: userId },
             },
             ...SELECT_UserPreview,

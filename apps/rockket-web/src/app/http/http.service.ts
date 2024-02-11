@@ -30,7 +30,10 @@ const interceptErrors = <T>(http: HttpService): OperatorFunction<T, T> => {
             retry({
                 count: 4,
                 delay: (err: HttpErrorResponse) => {
-                    if (!navigator.onLine) throwError(() => err)
+                    if (!navigator.onLine) return throwError(() => err)
+                    if (err.status == 401) return throwError(() => err)
+                    if (err.status == 409) return throwError(() => err)
+
                     return timer(300)
                 },
             }),
