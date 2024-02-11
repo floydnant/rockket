@@ -21,7 +21,7 @@
             bg-submit-800
            text-submit-200;
 
-        @apply [&_double-ellipsis-icon]:text-submit-300;
+        @apply [&_app-double-ellipsis-icon]:text-submit-300;
     }
     .task.completed:not(.isActive, :has(.description:hover), :has(app-toolbar:hover)) {
         /* when title (.inline-editor) is hovered */
@@ -38,7 +38,7 @@
 .task {
     @apply ring-2 ring-transparent;
     @apply [&.isSelected]:bg-tinted-700;
-    @apply [&:not(.isSelected,.isActive)_double-ellipsis-icon]:not-hover:opacity-0;
+    @apply [&:not(.isSelected,.isActive)_app-double-ellipsis-icon]:not-hover:opacity-0;
 }
 .task.completed {
     @apply border-opacity-60;
