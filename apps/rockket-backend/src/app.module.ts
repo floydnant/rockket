@@ -14,6 +14,7 @@ import { HttpLoggerMiddleware } from './middleware/logger.middleware'
 
 @Module({
     imports: [
+        // @TODO: Implement custom config service
         ConfigModule.forRoot({
             envFilePath: [`.env`, `.env.${process.env.RAILWAY_ENVIRONMENT?.toLowerCase()}`],
             validationSchema: configValidationSchema,
