@@ -33,7 +33,7 @@ const demoTasks: TaskPreviewRecursive[] = [
 ]
 
 @Component({
-    selector: 'app-task-nesting-demo',
+    selector: 'app-task-description-demo',
     template: `<app-task-tree [tasks]="tasks" [readonly]="true" [expandAll]="true"></app-task-tree>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

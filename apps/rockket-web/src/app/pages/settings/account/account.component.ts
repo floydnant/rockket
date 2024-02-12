@@ -16,6 +16,7 @@ import { moveToMacroQueue } from 'src/app/utils'
 import { getErrorMapUpdates } from '../../../utils/store.helpers'
 
 @Component({
+    selector: 'app-settings-account',
     templateUrl: './account.component.html',
     styles: [],
 })
