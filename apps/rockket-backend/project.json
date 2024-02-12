@@ -1,0 +1,121 @@
+{
+    "name": "rockket-backend",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/rockket-backend/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "@nx/webpack:webpack",
+            "inputs": ["default", "{workspaceRoot}/packages/commons"],
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
+            "options": {
+                "target": "node",
+                "compiler": "tsc",
+                "outputPath": "dist/apps/rockket-backend",
+                "main": "apps/rockket-backend/src/main.ts",
+                "tsConfig": "apps/rockket-backend/tsconfig.app.json",
+                "assets": ["apps/rockket-backend/src/assets"],
+                "isolatedConfig": true,
+                "webpackConfig": "apps/rockket-backend/webpack.config.js"
+            },
+            "configurations": {
+                "development": {},
+                "production": {}
+            },
+            "dependsOn": ["^build"]
+        },
+        "serve": {
+            "executor": "@nx/js:node",
+            "defaultConfiguration": "development",
+            "options": {
+                "buildTarget": "rockket-backend:build"
+            },
+            "dependsOn": ["^build"],
+            "configurations": {
+                "development": {
+                    "buildTarget": "rockket-backend:build:development"
+                },
+                "production": {
+                    "buildTarget": "rockket-backend:build:production"
+                }
+            }
+        },
+        "serve-production": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "nx run rockket-backend:serve:production"
+            },
+            "dependsOn": ["rockket-backend:db:migrate:deploy"]
+        },
+        "serve-testing": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "PORT=3001 TESTING_ENV=true nx run rockket-backend:serve:development"
+            },
+            "configurations": {
+                "production": {
+                    "command": "PORT=3001 TESTING_ENV=true nx run rockket-backend:serve:production"
+                }
+            },
+            "dependsOn": ["rockket-backend:db:snapshot:pull"]
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["apps/rockket-backend/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "apps/rockket-backend/jest.config.ts"
+            }
+        },
+        "typecheck-snapshot-scripts": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "tsc --esModuleInterop --skipLibCheck --noEmit {projectRoot}/prisma/backups/pull-snapshot.ts {projectRoot}/prisma/backups/push-snapshot.ts"
+            }
+        },
+        "db:migrate:deploy": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "npx prisma migrate deploy --schema {projectRoot}/prisma/schema.prisma"
+            }
+        },
+        "db:migrate:dev": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "npx prisma migrate dev --schema {projectRoot}/prisma/schema.prisma"
+            }
+        },
+        "db:snapshot:pull": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "ts-node {projectRoot}/prisma/backups/pull-snapshot.ts"
+            }
+        },
+        "db:snapshot:push": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "ts-node {projectRoot}/prisma/backups/push-snapshot.ts"
+            }
+        },
+        "db:reset": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "npx prisma migrate reset --schema {projectRoot}/prisma/schema.prisma --force"
+            }
+        },
+        "init-env":{
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "echo $(cp -n -v {projectRoot}/.env.sample {projectRoot}/.env)"
+            }
+        }
+    },
+    "tags": []
+}

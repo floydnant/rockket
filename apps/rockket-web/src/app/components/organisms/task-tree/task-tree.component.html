@@ -1,0 +1,43 @@
+<div class="flex w-full flex-col gap-2">
+    <div class="tree-container | flex flex-col">
+        <ng-container
+            *ngFor="let taskNode of treeWithUiChanges$ | async; let nodeIndex = index; trackBy: trackByFn"
+        >
+            <div
+                *ngIf="shouldRender(taskNode)"
+                class="tree-node | flex h-fit"
+                data-test-name="task-tree-node"
+                [attr.data-test-node-level]="taskNode.path.length"
+            >
+                <div
+                    class="indent-line"
+                    *ngFor="
+                        let lineIndex of range(taskNode.path.length).reverse();
+                        let isMostInnerIndentLine = last
+                    "
+                    [class.first-after-higher-level]="
+                        isPreviousLineSpotATask(nodeIndex, lineIndex, taskNode.path.length)
+                    "
+                    [class.last-before-higher-level]="
+                        isNextLineSpotATask(nodeIndex, lineIndex, taskNode.path.length)
+                    "
+                ></div>
+
+                <app-task
+                    [data]="taskNode"
+                    class="mt-2 grow"
+                    [searchTerm]="highlightQuery"
+                    [menuItems]="(menuItemsMap$ | async)?.[taskNode.taskPreview.id] || []"
+                    [isLoading]="(isLoadingMap$ | async)?.[taskNode.taskPreview.id] || false"
+                    [readonly]="readonly"
+                    (descriptionExpansionChange)="toggleDescriptionExpansion(taskNode, $event)"
+                    (expansionChange)="toggleExpansion(taskNode, $event)"
+                    (titleChange)="onTitleChange(taskNode.taskPreview.id, $event)"
+                    (descriptionChange)="onDescriptionChange(taskNode.taskPreview.id, $event)"
+                    (statusChange)="onStatusChange(taskNode.taskPreview.id, $event)"
+                    (priorityChange)="onPriorityChange(taskNode.taskPreview.id, $event)"
+                ></app-task>
+            </div>
+        </ng-container>
+    </div>
+</div>

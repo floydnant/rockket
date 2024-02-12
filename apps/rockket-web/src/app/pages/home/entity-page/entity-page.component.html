@@ -1,0 +1,18 @@
+<app-entity-view
+    [entity]="activeEntity$ | async"
+    [entityOptionsMap]="entityOptionsMap$ | async"
+    data-test-name="entity-page"
+>
+    <ng-container headerBeforeOptions>
+        <div class="flex items-center">
+            <button class="icon-btn | hover:bg-tinted-700 ml-3" (click)="goBack()">
+                <app-icon icon="chevronLeft" class="font-bold"></app-icon>
+            </button>
+            <app-breadcrumbs [breadcrumbs]="(breadcrumbs$ | async) || []"></app-breadcrumbs>
+        </div>
+    </ng-container>
+
+    <ng-container headerAfterOptions>
+        <!-- <app-menu-toggle></app-menu-toggle> -->
+    </ng-container>
+</app-entity-view>

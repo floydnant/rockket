@@ -1,0 +1,3 @@
+button.isActive {
+    @apply !bg-primary-650 text-primary-200 font-bold;
+}

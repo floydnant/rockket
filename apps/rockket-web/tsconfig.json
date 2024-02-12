@@ -1,0 +1,41 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        // @TODO: @floydnant: Migrate all `src/**` import paths and remove the base url and paths
+        "baseUrl": "./",
+        "target": "es2022",
+        "useDefineForClassFields": false,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noImplicitReturns": true,
+        "resolveJsonModule": true,
+        "noFallthroughCasesInSwitch": true,
+        "paths": {
+            "@rockket/commons": ["../../packages/commons/src/index.ts"]
+        }
+    },
+    "files": [],
+    "include": [],
+    "references": [
+        {
+            "path": "./tsconfig.app.json"
+        },
+        {
+            "path": "./tsconfig.spec.json"
+        },
+        {
+            "path": "./tsconfig.editor.json"
+        },
+        {
+            "path": "./cypress/tsconfig.json"
+        }
+    ],
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
+    }
+}
