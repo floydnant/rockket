@@ -1,8 +1,8 @@
 [environments.production.deploy]
-startCommand = 'DATABASE_URL=$DATABASE_BASE_URL/prod npx nx run rockket-backend:serve:production'
+startCommand = 'DATABASE_URL=$DATABASE_BASE_URL/prod npx nx run rockket-backend:serve-production'
 
 [environments.Staging.deploy]
-startCommand = 'DATABASE_URL=$DATABASE_BASE_URL/main npx nx run rockket-backend:serve:production'
+startCommand = 'DATABASE_URL=$DATABASE_BASE_URL/main npx nx run rockket-backend:serve-production'
 
 [environments.pr.deploy]
-startCommand = 'DATABASE_URL=$DATABASE_BASE_URL/pr-$(bash ../scripts/get-pull-number-from-branch.sh $RAILWAY_GIT_BRANCH) npx nx run rockket-backend:serve:production'
+startCommand = 'DATABASE_URL=$DATABASE_BASE_URL/pr-$(bash ../scripts/get-pull-number-from-branch.sh $RAILWAY_GIT_BRANCH) npx nx run rockket-backend:serve-production'

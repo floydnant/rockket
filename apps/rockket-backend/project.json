@@ -41,6 +41,13 @@
                 }
             }
         },
+        "serve-production": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "nx run rockket-backend:serve:production"
+            },
+            "dependsOn": ["rockket-backend:db:migrate:deploy"]
+        },
         "serve-testing": {
             "executor": "nx:run-commands",
             "options": {
