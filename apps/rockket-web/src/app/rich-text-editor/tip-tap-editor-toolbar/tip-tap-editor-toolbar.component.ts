@@ -29,6 +29,7 @@ import {
     isSeparator,
 } from '../editor.types'
 import { TipTapEditorComponent } from '../tip-tap-editor/tip-tap-editor.component'
+import { isTruthy } from '@rockket/commons'
 
 const resolveControlsLayout = (
     controls: EditorControl[],
@@ -127,12 +128,12 @@ export class TipTapEditorToolbarComponent implements AfterViewInit {
 
     controls$ = this.layoutInput$.pipe(
         map(layoutInput => {
-            const controls = this.features.flatMap(feature => feature.controls).filter(Boolean)
+            const controls = this.features.flatMap(feature => feature.controls).filter(isTruthy)
             const layout =
                 layoutInput ||
                 this.features
                     .flatMap(feature => feature.layout || feature.controls?.map(control => control.controlId))
-                    .filter(Boolean)
+                    .filter(isTruthy)
 
             const resolvedControls = resolveControlsLayout(controls, layout, {
                 resolveTitle: this.resolveTitle.bind(this),
