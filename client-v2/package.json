@@ -43,7 +43,7 @@
         "@ngrx/store-devtools": "^16.3.0",
         "@rx-angular/cdk": "^16.0.0",
         "@rx-angular/template": "^16.1.1",
-        "@tiptap/core": "^2.1.12",
+        "@tiptap/core": "^2.2.4",
         "@tiptap/extension-link": "^2.1.12",
         "@tiptap/extension-placeholder": "^2.1.12",
         "@tiptap/extension-task-item": "^2.1.12",
