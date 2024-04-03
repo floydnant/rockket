@@ -1,10 +1,12 @@
-name: Build, Run linter and tests
+name: Build, lint, test
 
 on:
     push:
         branches: ['main']
     pull_request:
-        branches: ['main', 'dev/*']
+
+env:
+    NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
 jobs:
     run-linter:
