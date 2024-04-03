@@ -45,6 +45,7 @@ Thumbs.db
 
 .env
 env.generated.ts
+*.env
 
 # db snapshots
 apps/rockket-backend/**/snapshots
