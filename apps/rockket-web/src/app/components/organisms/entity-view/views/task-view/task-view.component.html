@@ -39,6 +39,24 @@
             <app-icon icon="fas fa-plus" class="mr-1"></app-icon>
             New subtask
         </button>
+
+        <button
+            class="priority-button | button-naked text-tinted-200 hover:text-tinted-100"
+            appTooltip="Priority"
+            data-test-name="create-subtask"
+            appTooltip="Priority"
+            [tooltipOptions]="{ avoidPositions: ['left'] }"
+            [cdkMenuTriggerFor]="priorityMenu"
+        >
+            <app-icon [icon]="task.priority"></app-icon>
+            <span>
+                {{ taskPriorityLabelMap[task.priority] }}
+            </span>
+            <app-icon icon="caretDown"></app-icon>
+        </button>
+        <ng-template #priorityMenu>
+            <app-drop-down [items]="priorityMenuItems" [data]="task"></app-drop-down>
+        </ng-template>
     </div>
 
     <app-task-tree

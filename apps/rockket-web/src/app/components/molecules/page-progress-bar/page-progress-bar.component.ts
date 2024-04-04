@@ -16,6 +16,7 @@ import {
 import { UiStateService } from 'src/app/services/ui-state.service'
 import { TwColorClass, taskStatusColorMap } from 'src/app/shared/colors'
 import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
+import { taskStatusLabelMap } from '../../atoms/icons/icon/icons'
 
 export const mapByStatus = <T extends TaskPreview>(taskTree: T[]) => {
     const statusCountMap = Object.values(TaskStatus).reduce(
@@ -64,6 +65,7 @@ export class PageProgressBarComponent {
     ) {}
 
     taskStatuses = Object.values(TaskStatus)
+    statusLabelMap = taskStatusLabelMap
     statusColorMap: Record<TaskStatus, TwColorClass> = {
         ...taskStatusColorMap,
         [TaskStatus.OPEN]: 'text-tinted-100',

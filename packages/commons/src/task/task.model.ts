@@ -3,19 +3,21 @@ import { z } from 'zod'
 // @TODO: Clean up this file
 
 export enum TaskStatus {
-    IN_PROGRESS = 'In_Progress',
-    OPEN = 'Open',
-    BACKLOG = 'Backlog',
-    COMPLETED = 'Completed',
-    NOT_PLANNED = 'Not_Planned',
+    IN_PROGRESS = 'IN_PROGRESS',
+    IN_REVIEW = 'IN_REVIEW',
+    OPEN = 'OPEN',
+    BACKLOG = 'BACKLOG',
+    COMPLETED = 'COMPLETED',
+    NOT_PLANNED = 'DISCARDED',
 }
 
 export enum TaskPriority {
-    URGENT = 'Urgent',
-    HIGH = 'High',
-    MEDIUM = 'Medium',
-    NONE = 'None',
-    OPTIONAL = 'Optional',
+    URGENT = 'URGENT',
+    HIGH = 'HIGH',
+    MEDIUM = 'MEDIUM',
+    NONE = 'NONE',
+    LOW = 'LOW',
+    OPTIONAL = 'OPTIONAL',
 }
 
 export const taskSchema = z.object({
@@ -60,10 +62,11 @@ export type TaskPreviewFlattend = TaskPreviewRecursive & { path: string[] }
 
 export const statusSortingMap: Record<TaskStatus, number> = {
     [TaskStatus.IN_PROGRESS]: 0,
-    [TaskStatus.OPEN]: 1,
-    [TaskStatus.BACKLOG]: 2,
-    [TaskStatus.COMPLETED]: 3,
-    [TaskStatus.NOT_PLANNED]: 4,
+    [TaskStatus.IN_REVIEW]: 1,
+    [TaskStatus.OPEN]: 2,
+    [TaskStatus.BACKLOG]: 3,
+    [TaskStatus.COMPLETED]: 4,
+    [TaskStatus.NOT_PLANNED]: 5,
 }
 
 export const prioritySortingMap: Record<TaskPriority, number> = {
@@ -71,7 +74,8 @@ export const prioritySortingMap: Record<TaskPriority, number> = {
     [TaskPriority.HIGH]: 1,
     [TaskPriority.MEDIUM]: 2,
     [TaskPriority.NONE]: 3,
-    [TaskPriority.OPTIONAL]: 4,
+    [TaskPriority.LOW]: 4,
+    [TaskPriority.OPTIONAL]: 5,
 }
 
 // Task comments

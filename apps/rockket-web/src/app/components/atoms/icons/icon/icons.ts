@@ -8,6 +8,51 @@ export enum EntityState {
     ERROR = 'Error',
 }
 
+export const entityStateIcons = {
+    [EntityState.LOADING]: 'far fa-spinner-third animate-spin text-tinted-200',
+    [EntityState.ERROR]: 'fas fa-times-circle text-danger-400',
+} as const
+
+export const taskStatusIconMap: Record<TaskStatus, string> = concatMatchingKeys(
+    {
+        [TaskStatus.OPEN]: 'far fa-circle',
+        [TaskStatus.IN_PROGRESS]: 'far fa-clock',
+        [TaskStatus.IN_REVIEW]: 'far fa-record-vinyl',
+        [TaskStatus.BACKLOG]: 'fal fa-bullseye',
+        [TaskStatus.COMPLETED]: 'fas fa-check-circle',
+        [TaskStatus.NOT_PLANNED]: 'fas fa-minus-circle',
+    } satisfies Record<TaskStatus, string>,
+    taskStatusColorMap,
+)
+export const taskStatusLabelMap = {
+    [TaskStatus.OPEN]: 'Open',
+    [TaskStatus.IN_PROGRESS]: 'In Progress',
+    [TaskStatus.IN_REVIEW]: 'In Review',
+    [TaskStatus.BACKLOG]: 'Backlog',
+    [TaskStatus.COMPLETED]: 'Done',
+    [TaskStatus.NOT_PLANNED]: 'Discarded',
+} as const satisfies Record<TaskStatus, string>
+
+export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingKeys(
+    {
+        [TaskPriority.URGENT]: 'fas fa-chevron-double-up',
+        [TaskPriority.HIGH]: 'fas fa-chevron-up',
+        [TaskPriority.MEDIUM]: 'fas fa-equals',
+        [TaskPriority.NONE]: 'fas fa-minus',
+        [TaskPriority.LOW]: 'fas fa-chevron-down',
+        [TaskPriority.OPTIONAL]: 'fas fa-chevron-double-down',
+    } satisfies Record<TaskPriority, string>,
+    taskPriorityColorMap,
+)
+export const taskPriorityLabelMap = {
+    [TaskPriority.URGENT]: 'Urgent',
+    [TaskPriority.HIGH]: 'High',
+    [TaskPriority.MEDIUM]: 'Medium',
+    [TaskPriority.NONE]: 'None',
+    [TaskPriority.LOW]: 'Low',
+    [TaskPriority.OPTIONAL]: 'Nice To Have',
+} as const satisfies Record<TaskPriority, string>
+
 const extraIcons = {
     blocking: 'far fa-ban text-tinted-300',
     description: 'far fa-sticky-note',
@@ -19,7 +64,7 @@ const extraIcons = {
     close: 'fas fa-times',
     expand: 'far fa-expand-alt',
     priority: 'far fa-exclamation',
-    status: 'far fa-dot-circle',
+    status: 'far fa-circle',
     settings: 'fas fa-cog',
     user: 'fas fa-user',
     eye: 'fas fa-eye',
@@ -64,33 +109,6 @@ const extraIcons = {
     },
 }
 
-export const entityStateIcons = {
-    [EntityState.LOADING]: 'far fa-spinner-third animate-spin text-tinted-200',
-    [EntityState.ERROR]: 'fas fa-times-circle text-danger-400',
-} as const
-
-export const taskStatusIconMap: Record<TaskStatus, string> = concatMatchingKeys(
-    {
-        [TaskStatus.OPEN]: 'far fa-circle',
-        [TaskStatus.IN_PROGRESS]: 'far fa-clock',
-        [TaskStatus.BACKLOG]: 'fal fa-stroopwafel',
-        [TaskStatus.COMPLETED]: 'fas fa-check-circle',
-        [TaskStatus.NOT_PLANNED]: 'fas fa-times-circle',
-    } as const,
-    taskStatusColorMap,
-)
-
-export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingKeys(
-    {
-        [TaskPriority.URGENT]: 'fas fa-exclamation-square',
-        [TaskPriority.HIGH]: 'fas fa-exclamation-circle',
-        [TaskPriority.MEDIUM]: 'fas fa-exclamation',
-        [TaskPriority.NONE]: 'far fa-minus',
-        [TaskPriority.OPTIONAL]: 'far fa-diamond',
-    } as const,
-    taskPriorityColorMap,
-)
-
 export const defaultEntityIcons: Record<EntityType, string> = {
     [EntityType.TASKLIST]: 'far fa-tasks text-tinted-400',
     [EntityType.TASK]: extraIcons.status,
@@ -107,7 +125,7 @@ export const entityIcons = {
         ...entityStateIcons,
         ...taskStatusIconMap,
     } as const,
-} // @TODO: satisfies Record<EntityType, Record<PageEntityState, string>>
+} satisfies Record<EntityType, Record<EntityState, string>>
 
 export const iconClassesNested = {
     ...entityStateIcons,
