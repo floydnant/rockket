@@ -43,7 +43,7 @@
         "@rx-angular/template": "^16.1.1",
         "@tiptap/core": "^2.1.12",
         "@tiptap/extension-link": "^2.1.12",
-        "@tiptap/extension-placeholder": "^2.1.12",
+        "@tiptap/extension-placeholder": "^2.2.4",
         "@tiptap/extension-task-item": "^2.1.12",
         "@tiptap/extension-task-list": "^2.1.12",
         "@tiptap/extension-typography": "^2.1.12",
