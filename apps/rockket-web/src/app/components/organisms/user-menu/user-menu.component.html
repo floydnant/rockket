@@ -1,0 +1,27 @@
+<ng-container *ngIf="userState$ | async as userState; else ngContent">
+    <ng-container *ngIf="userState.isLoggedIn; else ngContent">
+        <div cdkMenuBar>
+            <button
+                cdkMenuItem
+                [cdkMenuTriggerFor]="menu"
+                #menuTrigger="cdkMenuTriggerFor"
+                class="menu-item | text-tinted-100 hover:bg-tinted-700 flex w-full px-4 py-2.5 text-left transition-colors"
+                data-test-name="user-menu-toggle"
+                [attr.data-logged-in]="userState.isLoggedIn"
+            >
+                <img
+                    class="avatar | bg-tinted-500 mr-2 aspect-square h-6 w-6 rounded-md"
+                    src="assets/rockket-logo.png"
+                    [class.rounded-[50%]="false"
+                />
+                <span class="truncate">{{ userState.me?.username || 'Not logged in' }}</span>
+                <app-icon icon="fas fa-caret-down | ml-2"></app-icon>
+            </button>
+        </div>
+        <ng-template #menu>
+            <app-drop-down [items]="menuItems" [rootTrigger]="menuTrigger"></app-drop-down>
+        </ng-template>
+    </ng-container>
+</ng-container>
+
+<ng-template #ngContent><ng-content></ng-content></ng-template>

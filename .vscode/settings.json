@@ -1,3 +1,6 @@
 {
-    "workbench.colorTheme": "Tokyo Night Horizon"
+    // "eslint.validate": ["html", "javascript", "typescript"],
+    "workbench.colorTheme": "Tokyo Night",
+    "css.customData": [".vscode/tailwind.json"],
+    "window.title": "${activeEditorShort}${separator}${rootName}${separator}${activeRepositoryBranchName}"
 }

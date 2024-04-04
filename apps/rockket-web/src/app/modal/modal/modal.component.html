@@ -1,0 +1,21 @@
+<header *ngIf="enableHeader" class="flex justify-between p-3">
+    <div class="header-content | grow">
+        <ng-content select="[header]"></ng-content>
+    </div>
+    <button
+        *ngIf="enableCloseButton"
+        class="button-icon-naked"
+        (click)="close.emit()"
+        data-test-name="modal-close-btn"
+    >
+        <app-icon icon="fas fa-times" class="text-tinted-300"></app-icon>
+    </button>
+</header>
+
+<div class="main | grow overflow-y-scroll overscroll-contain p-3">
+    <ng-content></ng-content>
+</div>
+
+<div *ngIf="enableFooter" class="footer | p-3">
+    <ng-content select="[footer]"></ng-content>
+</div>

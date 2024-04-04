@@ -1,0 +1,118 @@
+name: Build, lint, test
+
+on:
+    push:
+        branches: ['main']
+    pull_request:
+
+env:
+    NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+jobs:
+    run-linter:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/setup-node
+
+            - run: npx nx run-many -t lint --verbose
+
+    build-libs-and-tests:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/setup-node
+
+            - run: npx nx run-many -t build --projects tag:type:lib
+            - run: npx nx run-many -t test --projects tag:type:lib
+
+    build-frontend-and-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/setup-node
+
+            - run: npx nx build rockket-web
+            - run: npx nx run rockket-web:test:ci
+            - run: npx nx component-test rockket-web
+              env:
+                  CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+            - name: Upload component test artifacts
+              uses: actions/upload-artifact@v3
+              if: failure()
+              with:
+                  name: rockket-web component test artifacts
+                  path: dist/cypress/apps/rockket-web
+                  retention-days: 7
+
+    build-backend-and-test:
+        runs-on: ubuntu-latest
+        env:
+            DB_USER: app
+            DB_PWD: develop
+            DB_NAME: rockket-testing
+            DATABASE_URL: postgresql://app:develop@localhost:5432/rockket-testing?schema=public
+            JWT_SECRET: this is the secret that nobody should know
+
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/setup-node
+
+            - run: npx nx build rockket-backend
+            - run: npx nx typecheck-snapshot-scripts rockket-backend
+
+            - name: Setup Postgres
+              uses: Daniel-Marynicz/postgresql-action@master
+              with:
+                  postgres_image_tag: 12-alpine
+                  app_user: ${{ env.DB_USER }}
+                  app_user_password: ${{ env.DB_PWD }}
+                  app_db: ${{ env.DB_NAME }}
+            - run: npx nx run rockket-backend:db:migrate:deploy
+            - run: npx nx run rockket-backend:test:ci
+            - run: npx nx e2e rockket-backend-e2e
+
+    run-full-e2e-tests:
+        runs-on: ubuntu-latest
+        env:
+            DB_USER: app
+            DB_PWD: develop
+            DB_NAME: rockket-testing
+            DATABASE_URL: postgresql://app:develop@localhost:5432/rockket-testing?schema=public
+            JWT_SECRET: this is the secret that nobody should know
+
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/setup-node
+
+            - name: Setup Postgres
+              uses: Daniel-Marynicz/postgresql-action@master
+              with:
+                  postgres_image_tag: 12-alpine
+                  app_user: ${{ env.DB_USER }}
+                  app_user_password: ${{ env.DB_PWD }}
+                  app_db: ${{ env.DB_NAME }}
+
+            - run: npx nx run rockket-backend:db:migrate:deploy
+            - run: npx nx e2e rockket-web-e2e
+              env:
+                  CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+            - name: Upload e2e test artifacts
+              uses: actions/upload-artifact@v3
+              if: failure()
+              with:
+                  name: rockket-web-e2e e2e test artifacts
+                  path: dist/cypress/apps/rockket-web-e2e
+                  retention-days: 7
+
+    dependency-review:
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        steps:
+            - uses: actions/checkout@v3
+            - name: 'Dependency Review'
+              uses: actions/dependency-review-action@v3
+              with:
+                fail-on-severity: critical

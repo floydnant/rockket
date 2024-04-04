@@ -1,0 +1,21 @@
+<app-centered-layout data-test-name="login-page">
+    <h1>Login</h1>
+
+    <app-form
+        [formOptions]="formOptions"
+        submitButton="Login"
+        (formSubmit)="onSubmit($event)"
+        [extraErrorMessages]="(errorMap$ | async) || {}"
+        [isLoading]="(isLoading$ | async) || false"
+        containerClasses="grid gap-3"
+        gridAreas="
+        'email    email    email    email'
+        'password password password password'
+        'auto     submit   submit   fill'
+        "
+    ></app-form>
+
+    <p class="text-tinted-400 mt-4 text-center">
+        Don't have an account yet? <a routerLink="/auth/signup" data-test-name="signup-link">Signup</a>
+    </p>
+</app-centered-layout>

@@ -1,0 +1,143 @@
+{
+    "name": "rockket-web",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "prefix": "app",
+    "sourceRoot": "apps/rockket-web/src",
+    "tags": [],
+    "namedInputs": {
+        "envVars": [
+            { "env": "CONTEXT" },
+            { "env": "REVIEW_ID" },
+            { "env": "NG_APP_SERVER_BASE_URL" },
+            { "env": "NG_APP_TESTING_ENV" },
+            { "runtime": "npm version | grep rockket" }
+        ]
+    },
+    "targets": {
+        "build": {
+            "executor": "@ngx-env/builder:browser",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/apps/rockket-web",
+                "index": "apps/rockket-web/src/index.html",
+                "main": "apps/rockket-web/src/main.ts",
+                "polyfills": ["zone.js"],
+                "tsConfig": "apps/rockket-web/tsconfig.app.json",
+                "assets": ["apps/rockket-web/src/favicon.ico", "apps/rockket-web/src/assets"],
+                "styles": ["apps/rockket-web/src/main.css"],
+                "scripts": [],
+                "allowedCommonJsDependencies": ["markdown-it-task-lists"]
+            },
+            "dependsOn": ["^build", "prepare-env"],
+            "configurations": {
+                "production": {
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "500kb",
+                            "maximumError": "1.5mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "2kb",
+                            "maximumError": "6kb"
+                        }
+                    ],
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/rockket-web/src/environments/environment.ts",
+                            "with": "apps/rockket-web/src/environments/environment.prod.ts"
+                        }
+                    ],
+                    "outputHashing": "all"
+                },
+                "development": {
+                    "buildOptimizer": false,
+                    "optimization": false,
+                    "vendorChunk": true,
+                    "extractLicenses": false,
+                    "sourceMap": true,
+                    "namedChunks": true
+                }
+            },
+            "defaultConfiguration": "production"
+        },
+        "serve": {
+            "executor": "@ngx-env/builder:dev-server",
+            "options": {
+                "proxyConfig": "apps/rockket-web/proxy.conf.json"
+            },
+            "dependsOn": ["prepare-env"],
+            "defaultConfiguration": "development",
+            "configurations": {
+                "production": {
+                    "browserTarget": "rockket-web:build:production"
+                },
+                "development": {
+                    "browserTarget": "rockket-web:build:development"
+                },
+                "local-network": {
+                    "browserTarget": "rockket-web:build:development",
+                    "host": "0.0.0.0"
+                }
+            }
+        },
+        "prepare-env": {
+            "executor": "nx:run-commands",
+            "cache": true,
+            "inputs": ["envVars"],
+            "outputs": ["{projectRoot}/src/environments/env.generated.ts"],
+            "options": {
+                "command": "ts-node {projectRoot}/tools/prepare-env.ts"
+            }
+        },
+        "extract-i18n": {
+            "executor": "@angular-devkit/build-angular:extract-i18n",
+            "options": {
+                "browserTarget": "rockket-web:build"
+            }
+        },
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["apps/rockket-web/**/*.ts", "apps/rockket-web/**/*.html"]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "apps/rockket-web/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "dependsOn": ["prepare-env"],
+            "configurations": {
+                "ci": {
+                    "ci": true,
+                    "codeCoverage": true
+                }
+            }
+        },
+        "component-test": {
+            "executor": "@nx/cypress:cypress",
+            "options": {
+                "cypressConfig": "apps/rockket-web/cypress.config.ts",
+                "testingType": "component",
+                "skipServe": true,
+                "devServerTarget": "rockket-web:build"
+            },
+            "dependsOn": ["prepare-env"]
+        },
+        "serve-static": {
+            "executor": "@nx/web:file-server",
+            "options": {
+                "buildTarget": "rockket-web:build"
+            }
+        },
+        "update-colors": {
+            "command": "ts-node {projectRoot}/tools/update-colors.ts"
+        }
+    }
+}

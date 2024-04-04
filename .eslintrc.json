@@ -1,0 +1,62 @@
+{
+    "root": true,
+    "ignorePatterns": ["**/*"],
+    "plugins": ["@nx", "tailwindcss"],
+    "extends": ["plugin:tailwindcss/recommended", "prettier"],
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+            "rules": {
+                "@nx/enforce-module-boundaries": [
+                    "error",
+                    {
+                        "enforceBuildableLibDependency": true,
+                        "allow": [],
+                        "depConstraints": [
+                            {
+                                "sourceTag": "*",
+                                "onlyDependOnLibsWithTags": ["*"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "files": ["*.ts", "*.tsx", "*.js", "*.jsx", "*.html"],
+            "rules": {
+                "tailwindcss/no-custom-classname": "off",
+                "capitalized-comments": [
+                    "warn",
+                    "always",
+                    {
+                        "ignoreConsecutiveComments": true
+                    }
+                ]
+            }
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "extends": ["plugin:@nx/typescript"],
+            "rules": {}
+        },
+        {
+            "files": ["*.js", "*.jsx"],
+            "extends": ["plugin:@nx/javascript"],
+            "rules": {}
+        },
+        {
+            "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+            "rules": {
+                "@typescript-eslint/no-unused-vars": ["warn", { "ignoreRestSiblings": true }]
+            }
+        },
+        {
+            "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+            "env": {
+                "jest": true
+            },
+            "rules": {}
+        }
+    ]
+}

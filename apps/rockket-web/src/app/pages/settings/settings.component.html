@@ -1,0 +1,27 @@
+<app-sidebar-layout [enableResize]="false" data-test-name="settings-page">
+    <ng-container sidebarHeader>
+        <div class="text-tinted-300 flex flex-col items-start gap-1 px-2 pb-2 pt-0.5" cdkMenu>
+            <button
+                cdkMenuItem
+                *ngFor="let page of settingsPages"
+                class="menu-item | w-full text-left"
+                [routerLink]="page.route"
+                routerLinkActive="text-primary-300"
+            >
+                <app-icon [icon]="page.icon"></app-icon>{{ page.title }}
+            </button>
+        </div>
+    </ng-container>
+
+    <app-main-pane>
+        <ng-container header>
+            <app-breadcrumbs [breadcrumbs]="(breadcrumbs$ | async) || []"></app-breadcrumbs>
+
+            <app-menu-toggle></app-menu-toggle>
+        </ng-container>
+
+        <ng-container main>
+            <router-outlet></router-outlet>
+        </ng-container>
+    </app-main-pane>
+</app-sidebar-layout>

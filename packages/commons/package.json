@@ -1,0 +1,11 @@
+{
+    "name": "@rockket/commons",
+    "version": "0.0.1",
+    "dependencies": {
+        "tslib": "*",
+        "zod": "*"
+    },
+    "type": "commonjs",
+    "main": "./src/index.js",
+    "typings": "./src/index.d.ts"
+}

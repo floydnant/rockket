@@ -1,0 +1,18 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "allowJs": true,
+        "outDir": "../../dist/out-tsc",
+        "module": "commonjs",
+        "types": ["cypress", "node", "@total-typescript/ts-reset"],
+        "sourceMap": false
+    },
+    "include": [
+        "**/*.ts",
+        "**/*.js",
+        "../cypress.config.ts",
+        "../**/*.cy.ts",
+        "../**/*.cy.js",
+        "../**/*.d.ts"
+    ]
+}

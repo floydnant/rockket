@@ -1,0 +1,57 @@
+<ng-template #label>
+    <label
+        [for]="id"
+        [class.hidden]="!enableLabel"
+        class="placeholder | text-tinted-300 pointer-events-none absolute left-3 top-[50%] translate-y-[-50%] transition-all"
+        [attr.data-test-name]="'input-placeholder-' + (controlName || id)"
+    >
+        {{ name }}
+    </label>
+</ng-template>
+
+<div class="relative block" [class.mt-7]="enableLabel" *ngIf="!controlName && !parentControl">
+    <input
+        #input
+        [id]="id"
+        [type]="type"
+        class="input w-full"
+        [class]="{
+            'ring-danger-400': (control.invalid && control.dirty) || extraErrorMessages?.length,
+            pristine: control.pristine && !input.value
+        }"
+        [formControl]="formControl"
+        focusable
+        [attr.data-test-name]="'input-' + id"
+    />
+    <ng-container [ngTemplateOutlet]="label"></ng-container>
+</div>
+<div class="relative mt-5 block" *ngIf="controlName && parentControl" [formGroup]="parentControl">
+    <input
+        #input
+        [id]="id"
+        [type]="type"
+        class="input w-full"
+        [class]="{
+            'ring-danger-400': (control.invalid && control.dirty) || extraErrorMessages?.length,
+            pristine: control.pristine && !input.value
+        }"
+        [formControlName]="controlName"
+        focusable
+        [attr.data-test-name]="'input-' + controlName"
+    />
+    <ng-container [ngTemplateOutlet]="label"></ng-container>
+</div>
+
+<div
+    class="errors | text-danger-400 mt-1 text-sm"
+    *ngIf="(control.invalid && control.dirty) || extraErrorMessages?.length"
+    data-test-name="validation-errors"
+>
+    <div *ngFor="let err of errors">
+        <span
+            *ngIf="control.errors?.[err] || control.errors?.[err.toLowerCase()]"
+            >{{ getErrorMessage(err, control.errors?.[err] || control.errors?.[err.toLowerCase()]) }}</span
+        >
+    </div>
+    <div *ngFor="let err of extraErrorMessages">{{ err.replace('$name', name) }}</div>
+</div>

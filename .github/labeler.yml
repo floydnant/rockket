@@ -1,0 +1,91 @@
+# https://github.com/actions/labeler#readme
+
+backend:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        # Apps
+        - apps/rockket-backend/**
+        - apps/rockket-backend-e2e/**
+
+web:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        # Apps
+        - apps/rockket-web/**
+        - apps/rockket-web-e2e/**
+
+documentation:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        - docs/**
+        - README.md
+        - '**/README.md'
+        - .github/pull_request_template.md
+
+# Add 'ci' label to any change to .github/** files EXCEPT for the pr template
+ci:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        - '.github/**'
+        - '**/netlify.toml'
+        - '**/railway.toml'
+      - all-globs-to-all-files: '!.github/pull_request_template.md'
+
+config:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        # Build
+        - 'nx.json'
+        - '**/project.json'
+        - '**/tsconfig.*'
+        - '**/.eslint*'
+        - '**/.prettier*'
+        - '**/jest*'
+        - '**/cypress*'
+
+        ## Scripts
+        - '**/scripts/**'
+
+        ## Frontend
+        - '**/postcss*'
+        - '**/tailwind*'
+
+        # Misc
+        - '**/.editorconfig*'
+        - '.npm*'
+        - '**/.git*'
+        - '**/.vscode/**'
+
+        # Infra
+        - '**/netlify.toml'
+        - '**/railway.toml'
+
+dependencies:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        - 'package.json'
+
+env-updated:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        - '**/.env.sample'
+
+db-schema-updated:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        - '**/schema.prisma'
+        - '**/prisma/migrations/**'
+
+refactor:
+  - any:
+    - head-branch:
+      - '^refactor'
+      - '^refactro'

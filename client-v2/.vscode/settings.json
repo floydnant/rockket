@@ -1,4 +1,0 @@
-{
-    "eslint.validate": ["html", "javascript", "typescript"],
-    "css.customData": [".vscode/tailwind.json"]
-}

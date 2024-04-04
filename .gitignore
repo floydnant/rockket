@@ -1,10 +1,53 @@
-.DS_Store
-node_modules
-.env
+# compiled output
+dist
+tmp
+/out-tsc
 
-# jetbrains IDE
-.idea
-# Local Netlify folder
-.netlify
-# Cypress artifacts folder
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/tailwind.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+.DS_Store
+
+# System Files
+.DS_Store
+Thumbs.db
+
+.nx/cache
+.angular
 .cypress
+.netlify
+
+.env
+env.generated.ts
+*.env
+
+# db snapshots
+apps/rockket-backend/**/snapshots
+
+todo.md

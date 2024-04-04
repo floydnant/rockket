@@ -1,0 +1,223 @@
+<li
+    *rxIf="task$; let task; strategy: 'native'"
+    class="task | border-tinted-700/75 bg-tinted-800 shadow-tinted-900 relative flex w-full max-w-full list-none flex-col rounded-xl border px-1 py-2 pb-1 shadow transition-colors duration-75"
+    [ngClass]="{
+        completed: task.status == TaskStatus.COMPLETED,
+        isActive: inlineEditor.isFocused || isDescriptionActive$ | push,
+        titleHasFocus: inlineEditor.isFocused,
+        isSelected,
+        descriptionIsActive: isDescriptionActive$ | push
+    }"
+    [cdkContextMenuTriggerFor]="menu"
+    (cdkContextMenuOpened)="isSelected = true"
+    (cdkContextMenuClosed)="isSelected = false"
+>
+    <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
+        <div class="max-w-[calc(100%-1.7rem)]">
+            <div class="first-row | flex items-center">
+                <button
+                    class="status-btn | icon-btn | -ml-1 mr-2.5 text-lg"
+                    [appTooltip]="statusTooltip"
+                    [tooltipOptions]="{ avoidPositions: ['right'] }"
+                    [cdkMenuTriggerFor]="statusMenu"
+                    (cdkMenuOpened)="isSelected = true"
+                    (cdkMenuClosed)="isSelected = false"
+                    data-test-name="task-status-button"
+                >
+                    <ng-template #statusTooltip>
+                        <span class="text-tinted-300 decoration-[3px]">Status: </span>
+                        <span [class]="statusColorMap[task.status]">{{ task.status.replace('_', ' ') }}</span>
+                    </ng-template>
+
+                    <app-icon [icon]="loading || task.status"></app-icon>
+                </button>
+                <ng-template #statusMenu>
+                    <app-drop-down
+                        *ngIf="statusMenuItems$ | push as items"
+                        [items]="items"
+                        [data]="{ id: task.id }"
+                    ></app-drop-down>
+                </ng-template>
+
+                <app-inline-editor
+                    #inlineEditor
+                    [textInput]="task.title"
+                    [placeholder]="PLACEHOLDER"
+                    [placeholderColor]="placeholderColorMap[task.status]"
+                    [highlight]="searchTerm$ | push"
+                    [editorClass]="{
+                        'line-through': task.status == TaskStatus.NOT_PLANNED,
+                        'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED,
+                        'decoration-[3px]': task.status == TaskStatus.NOT_PLANNED,
+                        'pr-12': true
+                    }"
+                    [enableDebouncedUpdates]="false"
+                    (update)="titleChange.emit($event || '')"
+                    [readonly]="readonly"
+                    data-test-name="task-title"
+                ></app-inline-editor>
+            </div>
+
+            <div
+                class="second-row | ml-0.5 flex flex-wrap gap-4"
+                [class.mt-1]="
+                    (nodeData$ | async)?.hasChildren || task.description || (isDescriptionExpanded$ | async)
+                "
+            >
+                <ng-container *ngIf="nodeData$ | async as nodeData">
+                    <ng-container *ngIf="nodeData.hasChildren">
+                        <button
+                            class="subtask-toggle | [&_.count]:hover:text-tinted-300 [&_:has(.checklist-counter.counter-complete)_.count]:!text-submit-400 inline-flex gap-1 [&_.count]:transition-all"
+                            (click)="expansionChange.emit(!nodeData.isExpanded)"
+                            data-test-name="subtask-toggle"
+                        >
+                            <app-icon
+                                icon="chevronRight"
+                                class="mr-1 inline-block transition-transform"
+                                [class.rotate-90]="nodeData.isExpanded"
+                            ></app-icon>
+                            <!-- @TODO: Pluralisation needs to account for nested subtasks too -->
+                            Subtask{{ task.children?.length == 1 ? '' : 's' }}
+
+                            <app-elem-container
+                                [elem]="getTaskCounterWidget()"
+                                class="text-md text-tinted-400 ml-1"
+                            ></app-elem-container>
+                        </button>
+                    </ng-container>
+
+                    <ng-container *ngIf="task.description || (isDescriptionExpanded$ | async)">
+                        <button
+                            class="description-toggle | [&_.count]:hover:text-tinted-300 [&_:has(.checklist-counter.counter-complete)_.count]:!text-submit-400 inline-flex gap-1 [&_.count]:transition-all"
+                            (click)="toggleDescription()"
+                            data-test-name="description-toggle"
+                        >
+                            <app-icon
+                                icon="chevronRight"
+                                class="mr-1 inline-block transition-transform"
+                                [class.rotate-90]="isDescriptionExpanded$ | async"
+                            ></app-icon>
+                            <!-- <app-icon icon="description" class="mx-1"></app-icon> -->
+                            Description
+
+                            <app-elem-container
+                                [elem]="getChecklistCounterWidget()"
+                                class="text-md text-tinted-400 ml-1"
+                            ></app-elem-container>
+                        </button>
+                        <!-- <button class="expand-description">
+                            <app-icon icon="expand"></app-icon>
+                        </button> -->
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+        <div class="relative -mr-1 max-w-max">
+            <div
+                class="icon-group | flex max-w-max flex-wrap items-center justify-end gap-3 transition-transform"
+            >
+                <app-icon
+                    *ngIf="isOverdue"
+                    class="overdue-icon | animate-ping"
+                    icon="fas fa-exclamation-triangle text-danger-400"
+                    data-test-name="overdue-icon"
+                ></app-icon>
+
+                <ng-container
+                    *ngIf="
+                        task.status != TaskStatus.COMPLETED &&
+                        task.status != TaskStatus.NOT_PLANNED &&
+                        task.priority != TaskPriority.NONE
+                    "
+                >
+                    <ng-container *ngTemplateOutlet="priorityButton"></ng-container>
+                </ng-container>
+            </div>
+            <button
+                class="| icon-btn | text-tinted-200 absolute right-0 top-[50%] translate-y-[-50%] transition-opacity"
+                [cdkMenuTriggerFor]="menu"
+                (cdkMenuOpened)="isSelected = true"
+                (cdkMenuClosed)="isSelected = false"
+                #trigger="cdkMenuTriggerFor"
+                data-test-name="task-menu-button"
+            >
+                <app-double-ellipsis-icon></app-double-ellipsis-icon>
+            </button>
+
+            <ng-template #menu>
+                <app-drop-down
+                    *ngIf="menuItems$ | push as items"
+                    [items]="items"
+                    [rootTrigger]="trigger"
+                    [data]="{ id: task.id, entityType: EntityType.TASK }"
+                ></app-drop-down>
+            </ng-template>
+        </div>
+    </div>
+
+    <ng-template #priorityButton>
+        <button
+            class="priority-button | icon-btn keep-editor-focus"
+            [appTooltip]="priorityTooltip"
+            [tooltipOptions]="{ avoidPositions: ['left'] }"
+            [cdkMenuTriggerFor]="priorityMenu"
+            (cdkMenuOpened)="isSelected = true"
+            (cdkMenuClosed)="isSelected = false"
+            data-test-name="task-priority-button"
+        >
+            <app-icon [icon]="task.priority"></app-icon>
+        </button>
+    </ng-template>
+    <ng-template #priorityTooltip>
+        <span class="text-tinted-300">Priority: </span>
+        <span>{{ task.priority }}</span>
+    </ng-template>
+    <ng-template #priorityMenu>
+        <app-drop-down
+            *ngIf="priorityMenuItems$ | push as items"
+            [items]="items"
+            [data]="{ id: task.id }"
+        ></app-drop-down>
+    </ng-template>
+
+    <ng-container
+        *rxLet="
+            { isExpanded: isDescriptionExpanded$ | push, isActive: isDescriptionActive$ | push };
+            let props
+        "
+    >
+        <div *ngIf="props.isExpanded || props.isActive" [class.relative]="false">
+            <div class="absolute inset-x-0 bottom-[calc(100%-.5rem)] z-20 flex justify-center px-4">
+                <app-toolbar
+                    [hide]="!props.isActive"
+                    cdkMenuBar
+                    class="max-w-full overflow-x-auto sm:max-w-[70vw]"
+                >
+                    <app-tt-editor-toolbar
+                        [ttEditor]="descriptionEditor"
+                        [layout]="toolbarLayout$ | push"
+                        openAsPageRoute="/home/{{ task.id }}"
+                        class="pointer-events-auto w-max"
+                    ></app-tt-editor-toolbar>
+                </app-toolbar>
+            </div>
+            <app-tt-editor
+                #descriptionEditor
+                class="description | bg-tinted-900 child-focus-ring mt-1 max-h-72 overflow-y-auto rounded-lg px-2.5 py-1.5 ring-2 ring-transparent transition-colors duration-75"
+                [ngClass]="{
+                    'isActive !ring-primary-400': props.isActive,
+                    'hover:ring-tinted-600': true,
+                    '[.task.completed:not(.isActive)_&]:hover:ring-submit-700': true
+                }"
+                [editable]="!readonly"
+                [searchTerm]="searchTerm$ | push"
+                [bind]="(bindConfig$ | push)!"
+                (isActive)="isDescriptionActive$.next($event)"
+                (blur)="descriptionBlur$.next()"
+                (update)="descriptionUpdates$.next($event.html)"
+                (updateOnBlur)="this.descriptionUpdateOnBlur$.next($event.html)"
+                data-test-name="task-description"
+            ></app-tt-editor>
+        </div>
+    </ng-container>
+</li>
