@@ -25,7 +25,7 @@ export const taskStatusIconMap: Record<TaskStatus, string> = concatMatchingKeys(
     taskStatusColorMap,
 )
 export const taskStatusLabelMap = {
-    [TaskStatus.OPEN]: 'Open',
+    [TaskStatus.OPEN]: 'To Do',
     [TaskStatus.IN_PROGRESS]: 'In Progress',
     [TaskStatus.IN_REVIEW]: 'In Review',
     [TaskStatus.BACKLOG]: 'Backlog',
