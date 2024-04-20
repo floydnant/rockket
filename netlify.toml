@@ -1,7 +1,7 @@
 [build]
     base = "./"
     publish = "dist/apps/rockket-web"
-    command = "npx nx run rockket-web:build:production"
+    command = "npx nx run rockket-web:build:production --skipNxCache"
 
 [[redirects]]
     from = "/*"
