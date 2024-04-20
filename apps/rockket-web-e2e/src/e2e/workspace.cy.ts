@@ -1,4 +1,7 @@
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { taskPriorityLabelMap } from '../../../../apps/rockket-web/src/app/components/atoms/icons/icon/icons'
 import { testName } from '../support/helpers'
+import { TaskPriority } from '@rockket/commons'
 
 beforeEach(() => {
     cy.clearDb()
@@ -237,6 +240,18 @@ describe('Workspace', () => {
                 cy.get(testName('task-tree-node')).should('exist')
                 cy.wait('@createTask').its('response.statusCode').should('equal', 201)
             })
+            it('can update the priority', () => {
+                cy.get(testName('task-priority')).click()
+                // Priority menu
+                cy.get(testName('drop-down-menu'))
+                    .last()
+                    .within(() => {
+                        cy.get(testName('menu-item'))
+                            .contains(taskPriorityLabelMap[TaskPriority.URGENT])
+                            .click()
+                        cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
+                    })
+            })
         })
 
         describe('Tasks', () => {
@@ -278,7 +293,7 @@ describe('Workspace', () => {
                     .within(() => {
                         cy.intercept('PATCH', '/task/*').as('updateTask')
                         cy.get(testName('menu-item'))
-                            .contains(/Urgent/)
+                            .contains(taskPriorityLabelMap[TaskPriority.URGENT])
                             .click()
                         cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
                     })

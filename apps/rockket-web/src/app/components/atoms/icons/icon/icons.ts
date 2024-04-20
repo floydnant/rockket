@@ -1,5 +1,5 @@
 import { EntityType, TaskPriority, TaskStatus } from '@rockket/commons'
-import { concatMatchingKeys, flattenObject } from 'src/app/utils'
+import { concatMatchingKeys, flattenObject } from '../../../../utils'
 import { taskPriorityColorMap, taskStatusColorMap } from '../../../../shared/colors'
 
 export enum EntityState {

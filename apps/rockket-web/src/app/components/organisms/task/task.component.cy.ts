@@ -14,6 +14,7 @@ import { IconsModule } from '../../atoms/icons/icons.module'
 import { InlineEditorComponent } from '../../atoms/inline-editor/inline-editor.component'
 import { TaskTreeNode } from '../task-tree/task-tree.component'
 import { TaskComponent } from './task.component'
+import { taskStatusLabelMap } from '../../atoms/icons/icon/icons'
 
 const taskMenuItems = getEntityMenuItemsMap({} as unknown as Store<AppState>)[EntityType.TASK]
 
@@ -103,7 +104,7 @@ describe('TaskComponent', () => {
     describe('Status', () => {
         it('emits status updates', () => {
             const onStatusChange = cy.stub().as('onStatusChange')
-            const status = TaskStatus.IN_PROGRESS.replace('_', ' ')
+            const status = taskStatusLabelMap[TaskStatus.IN_PROGRESS]
             setupComponent(taskTreeNodeFixture, { onStatusChange }, { [status]: onStatusChange })
 
             cy.get(testName('task-status-button')).click()

@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { INestApplication } from '@nestjs/common'
-import { PrismaClient, TaskComment, TaskEvent, Tasklist, TaskStatus } from '@prisma/client'
+import { PrismaClient, TaskComment, TaskEvent, Tasklist, TaskPriority, TaskStatus } from '@prisma/client'
 import { createTask, createTasklist, request, signup, typeBearer } from '../utils/requests.e2e-util'
 import { userFixtures } from '../fixtures/users.fixture'
 import { initApplication } from '../utils/init-app.e2e-util'
@@ -103,8 +103,8 @@ describe('Task CRUD (e2e)', () => {
 
     describe('TaskEvents', () => {
         it.each([
-            ['status', 'In_Progress'],
-            ['priority', 'High'],
+            ['status', TaskStatus.IN_PROGRESS],
+            ['priority', TaskPriority.HIGH],
             ['deadline', new Date().toISOString()],
             // BlockedById event is tested seperately, because it is too specific and needs special care
         ])("can update a task's %s -> verify task event", async (key, value) => {
@@ -139,7 +139,7 @@ describe('Task CRUD (e2e)', () => {
             await request(app)
                 .patch(`/task/${createdTask.id}`)
                 .auth(authToken, typeBearer)
-                .send({ status: TaskStatus.Completed })
+                .send({ status: TaskStatus.COMPLETED })
                 .expect(200)
 
             await request(app).delete(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(200)

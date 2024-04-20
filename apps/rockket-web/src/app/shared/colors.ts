@@ -1,5 +1,5 @@
-import * as colorsJson from 'colors.json'
-import { LeavesConcatenated } from 'src/app/utils/type.helpers'
+import * as colorsJson from '../../../colors.json'
+import { LeavesConcatenated } from '../utils/type.helpers'
 import { TaskPriority, TaskStatus } from '@rockket/commons'
 
 export const colors = colorsJson
