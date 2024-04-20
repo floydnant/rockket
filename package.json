@@ -52,7 +52,7 @@
         "applicationinsights-native-metrics": "^0.0.10",
         "bcrypt": "^5.1.1",
         "express": "~4.19.2",
-        "joi": "^17.11.0",
+        "joi": "^17.12.3",
         "nestjs-zod": "^3.0.0",
         "ngx-tiptap": "^9.1.0",
         "passport": "^0.6.0",
