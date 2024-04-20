@@ -46,11 +46,11 @@ import {
 import { ChecklistCount, countChecklistItems } from 'src/app/rich-text-editor/editor.helpers'
 import { TipTapEditorComponent } from 'src/app/rich-text-editor/tip-tap-editor/tip-tap-editor.component'
 import { DeviceService } from 'src/app/services/device.service'
-import { colors, taskStatusColorMap } from 'src/app/shared/colors'
+import { colors, taskPriorityColorMap, taskStatusColorMap } from 'src/app/shared/colors'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { insertElementAfter, moveToMacroQueue } from 'src/app/utils'
 import { MenuItem } from '../../../dropdown/drop-down/drop-down.component'
-import { EntityState } from '../../atoms/icons/icon/icons'
+import { EntityState, taskPriorityLabelMap, taskStatusLabelMap } from '../../atoms/icons/icon/icons'
 import { getStatusCountMapRecursive } from '../../molecules/page-progress-bar/page-progress-bar.component'
 import { TaskTreeNode } from '../task-tree/task-tree.component'
 
@@ -83,17 +83,20 @@ export class TaskComponent {
     constructor(private deviceService: DeviceService) {}
 
     EntityType = EntityType
-    TaskStatus = TaskStatus
-    TaskPriority = TaskPriority
     PLACEHOLDER = ENTITY_TITLE_DEFAULTS[EntityType.TASK]
 
     toolbarLayout$ = this.deviceService.isTouchPrimary$.pipe(map(getDefaultEditorLayout))
 
+    TaskStatus = TaskStatus
+    taskStatusLabelMap = taskStatusLabelMap
     statusColorMap = {
         ...taskStatusColorMap,
         [TaskStatus.OPEN]: 'text-tinted-100',
         [TaskStatus.BACKLOG]: 'text-tinted-100',
     }
+    TaskPriority = TaskPriority
+    taskPriorityLabelMap = taskPriorityLabelMap
+    priorityColorMap = taskPriorityColorMap
 
     placeholderColorMap = {
         ...(Object.fromEntries(
@@ -183,7 +186,7 @@ export class TaskComponent {
     @Output() isDescriptionActive$ = new BehaviorSubject<boolean>(false)
     descriptionBlur$ = new Subject<void>()
 
-    // This is where explicit toggles land
+    // This is where explicit toggles by the user land
     isDescriptionExpandedInput$ = new Subject<{
         emit: boolean
         isExpanded: boolean

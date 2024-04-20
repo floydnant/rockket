@@ -7,6 +7,7 @@ import { entitiesActions } from '../store/entities/entities.actions'
 import { listActions } from '../store/entities/list/list.actions'
 import { taskActions } from '../store/entities/task/task.actions'
 import { WrappedMenuItems, wrapMenuItems } from '../utils/menu-item.helpers'
+import { taskPriorityLabelMap, taskStatusLabelMap } from '../components/atoms/icons/icon/icons'
 
 export const getGeneralMenuItems = (store: Store<AppState>): MenuItem[] => [
     {
@@ -27,18 +28,18 @@ export const getDangerMenuItems = (store: Store<AppState>): MenuItem[] => [
 
 export const getTaskStatusMenuItems = (store: Store<AppState>) =>
     Object.values(TaskStatus).map<MenuItem<TaskMenuItemData>>(status => ({
-        title: status.replace(/_/g, ' '),
+        title: taskStatusLabelMap[status],
         icon: status,
-        isActive: data => data.status !== status,
+        isActive: data => data.status == status,
         action: (dto: { id: string }) => {
             store.dispatch(taskActions.updateStatus({ id: dto.id, status }))
         },
     }))
 export const getTaskPriorityMenuItems = (store: Store<AppState>) =>
     Object.values(TaskPriority).map<MenuItem<TaskMenuItemData>>(priority => ({
-        title: priority.replace(/_/g, ' '),
+        title: taskPriorityLabelMap[priority],
         icon: priority,
-        isActive: data => data.priority !== priority,
+        isActive: data => data.priority == priority,
         action: (dto: { id: string }) => {
             store.dispatch(taskActions.updatePriority({ id: dto.id, priority }))
         },

@@ -62,27 +62,29 @@ model ListParticipant {
 }
 
 enum TaskStatus {
-    Backlog
-    Open
-    In_Progress
-    Completed
-    Not_Planned
+    BACKLOG
+    OPEN
+    IN_PROGRESS
+    IN_REVIEW
+    COMPLETED
+    DISCARDED
 }
 
 enum TaskPriority {
-    Optional
-    None
-    Medium
-    High
-    Urgent
+    URGENT
+    HIGH
+    MEDIUM
+    NONE
+    LOW
+    OPTIONAL
 }
 
 model Task {
     id          String       @id @default(uuid())
     title       String
     description String?
-    status      TaskStatus   @default(Open)
-    priority    TaskPriority @default(None)
+    status      TaskStatus   @default(OPEN)
+    priority    TaskPriority @default(NONE)
 
     createdAt       DateTime  @default(now())
     openedAt        DateTime?

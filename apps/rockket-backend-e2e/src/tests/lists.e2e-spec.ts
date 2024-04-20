@@ -61,7 +61,7 @@ describe('List CRUD (e2e)', () => {
             // Updating a task, will create a `TaskEvent` which needs to be deleted as well
             await request(app)
                 .patch(`/task/${createdTask.id}`)
-                .send({ status: TaskStatus.Completed })
+                .send({ status: TaskStatus.COMPLETED })
                 .auth(authToken, typeBearer)
                 .expect(200)
             // @TODO: test for task comments

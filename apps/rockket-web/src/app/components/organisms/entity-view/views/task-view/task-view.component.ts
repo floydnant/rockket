@@ -16,7 +16,10 @@ import {
     startWith,
     withLatestFrom,
 } from 'rxjs'
+import { taskPriorityLabelMap } from 'src/app/components/atoms/icons/icon/icons'
 import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
+import { taskPriorityColorMap } from 'src/app/shared/colors'
+import { getTaskPriorityMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
@@ -36,6 +39,10 @@ export class TaskViewComponent {
         @Inject(ENTITY_VIEW_DATA) private viewData: EntityViewData<TaskDetail>,
         private store: Store<AppState>,
     ) {}
+
+    taskPriorityLabelMap = taskPriorityLabelMap
+    priorityColorMap = taskPriorityColorMap
+    priorityMenuItems = getTaskPriorityMenuItems(this.store)
 
     taskEntity$ = this.viewData.entity$
     detail$ = this.viewData.detail$
