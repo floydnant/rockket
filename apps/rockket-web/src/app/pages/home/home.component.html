@@ -71,6 +71,7 @@
                 [dataSource]="dataSource"
                 [treeControl]="treeControl"
                 class="tree-container | flex flex-col px-2"
+                translate="no"
             >
                 <cdk-tree-node *cdkTreeNodeDef="let node" [class.hidden]="!shouldRender(node)">
                     <button
@@ -93,7 +94,7 @@
                     >
                         <ng-template #tooltip>
                             <app-icon [icon]="node.status || node.entityType"></app-icon>
-                            {{ node.title }}
+                            <span translate="no">{{ node.title }}</span>
                         </ng-template>
 
                         <div class="indent-line" *ngFor="let line of range(node.path.length)">&nbsp;</div>
