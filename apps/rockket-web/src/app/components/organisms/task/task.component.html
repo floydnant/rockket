@@ -1,6 +1,6 @@
 <li
     *rxIf="task$; let task; strategy: 'native'"
-    class="task | border-tinted-700/75 bg-tinted-800 shadow-tinted-900 relative flex w-full max-w-full list-none flex-col rounded-xl border px-1 py-2 pb-1 shadow transition-colors duration-75"
+    class="task | border-tinted-700/75 bg-tinted-800 shadow-tinted-900 relative flex list-none flex-col rounded-xl border px-1 py-2 pb-1 shadow transition-colors duration-75"
     [ngClass]="{
         completed: task.status == TaskStatus.COMPLETED,
         isActive: inlineEditor.isFocused || isDescriptionActive$ | push,
@@ -13,7 +13,7 @@
     (cdkContextMenuClosed)="isSelected = false"
 >
     <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
-        <div class="max-w-[calc(100%-1.7rem)]">
+        <div>
             <div class="first-row | flex items-center">
                 <button
                     class="status-btn | icon-btn | -ml-1 mr-2.5 text-lg"
