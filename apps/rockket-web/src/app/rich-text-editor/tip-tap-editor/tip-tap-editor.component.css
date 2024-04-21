@@ -1,6 +1,6 @@
 .ProseMirror,
 .rendered-content {
-    @apply pb-6 outline-none;
+    @apply wrap-nicely pb-6 outline-none;
 }
 
 :is(.ProseMirror, .rendered-content) :is(p, ul, ol, blockquote) {

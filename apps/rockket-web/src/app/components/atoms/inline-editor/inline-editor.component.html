@@ -1,5 +1,5 @@
 <span
-    class="inline-editor | inline-block cursor-text overflow-x-auto outline-none"
+    class="inline-editor | wrap-nicely inline-block cursor-text outline-none"
     [innerHTML]="text$ | push | highlight : (highlight$ | push)"
     [class.show-placeholder]="!(textDomState$ | async)"
     [class]="editorClass"

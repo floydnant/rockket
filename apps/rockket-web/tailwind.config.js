@@ -60,6 +60,16 @@ module.exports = {
                         '--tw-ring-color': `${colors.primary[400]} !important`,
                     },
                 },
+
+                '.wrap-nicely': {
+                    'min-width': '0',
+
+                    'overflow-wrap': 'break-word',
+                    'word-wrap': 'break-word',
+                    'word-break': 'break-word',
+
+                    hyphens: 'auto',
+                },
             })
         }),
     ],

@@ -40,7 +40,7 @@
             "extends": ["plugin:@nx/angular-template"],
             "rules": {
                 "@angular-eslint/template/eqeqeq": "off",
-                "@angular-eslint/template/no-negated-async": "warn"
+                "@angular-eslint/template/no-negated-async": "off"
             }
         }
     ]
