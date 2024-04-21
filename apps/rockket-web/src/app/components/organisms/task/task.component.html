@@ -14,9 +14,9 @@
 >
     <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
         <div>
-            <div class="first-row | flex items-center">
+            <div class="first-row | flex">
                 <button
-                    class="status-btn | icon-btn | -ml-1 mr-2.5 text-lg"
+                    class="status-btn | icon-btn | -ml-1 mr-2 text-lg"
                     [appTooltip]="statusTooltip"
                     [tooltipOptions]="{ avoidPositions: ['right'] }"
                     [cdkMenuTriggerFor]="statusMenu"
@@ -42,6 +42,7 @@
                 </ng-template>
 
                 <app-inline-editor
+                    class="translate-y-0.5"
                     #inlineEditor
                     [textInput]="task.title"
                     [placeholder]="PLACEHOLDER"
@@ -50,8 +51,8 @@
                     [editorClass]="{
                         'line-through': task.status == TaskStatus.NOT_PLANNED,
                         'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED,
-                        'decoration-[3px]': task.status == TaskStatus.NOT_PLANNED,
-                        'pr-12': true
+                        'decoration-[2px]': task.status == TaskStatus.NOT_PLANNED,
+                        'pr-12': true,
                     }"
                     [enableDebouncedUpdates]="false"
                     (update)="titleChange.emit($event || '')"

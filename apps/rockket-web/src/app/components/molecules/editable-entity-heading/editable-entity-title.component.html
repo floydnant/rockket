@@ -1,8 +1,4 @@
-<div
-    class="inline-flex items-center"
-    *ngIf="entity$ | async as entity"
-    data-test-name="entity-name-container"
->
+<div class="inline-flex" *ngIf="entity$ | async as entity" data-test-name="entity-name-container">
     <ng-template #icon>
         <!-- @TODO: see if this strategy really needs to be 'native' -->
         <app-icon
@@ -14,7 +10,7 @@
         </app-icon>
     </ng-template>
 
-    <div class="mr-2.5 inline-block -translate-y-0.5">
+    <div class="mr-2.5 inline-block translate-y-[-0.1875rem]">
         <button
             *ngIf="taskStatusMenuItems$ | async as statusItems; else elseBlock"
             [cdkMenuTriggerFor]="statusMenu"
