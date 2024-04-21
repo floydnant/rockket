@@ -10,6 +10,7 @@
     focusable
     #editorFocusable="focusable"
     [spellcheck]="editorFocusable.isFocused"
+    translate="no"
     [mutationOptions]="{ plainOnly: true, observe: editorFocusable.isFocused && !this.readonly }"
     (textChanges)="textChanges$.next($event)"
     (keydown)="keydownEvents$.next($event)"

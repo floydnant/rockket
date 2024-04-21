@@ -51,7 +51,7 @@
                                 <div class="px-2 py-1">
                                     <app-icon [icon]="entity.entityType" class="mr-3"></app-icon>
                                     <span
-                                        class="title"
+                                        class="title | wrap-nicely"
                                         [innerHTML]="entity.title | highlight : search.query"
                                     ></span>
                                 </div>
