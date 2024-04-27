@@ -170,15 +170,16 @@ export class TaskTreeComponent {
 
         return node
     }
-    /** Is first elem in the current hierarchy */
-    isPreviousLineSpotATask(nodeIndex: number, lineIndex: number, nodeLevel: number) {
+
+    /** Whether the given indentation line is the FIRST in it's hierarchy */
+    isFirstInHierarchy(nodeIndex: number, lineIndex: number, nodeLevel: number) {
         const previousNode = this.getNodeAt(nodeIndex - 1)
         const previousNodeLevel = previousNode?.path?.length || 0
 
         return previousNodeLevel + lineIndex < nodeLevel
     }
-    /** Is last elem in the current hierarchy */
-    isNextLineSpotATask(nodeIndex: number, lineIndex: number, nodeLevel: number) {
+    /** Whether the given indentation line is the LAST in it's hierarchy */
+    isLastInHierarchy(nodeIndex: number, lineIndex: number, nodeLevel: number) {
         const nextNode = this.getNodeAt(nodeIndex + 1, true)
         const nextNodeLevel = nextNode?.path?.length || 0
 
