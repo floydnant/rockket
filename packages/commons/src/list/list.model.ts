@@ -11,7 +11,7 @@ export type TaskList = {
     // Participants: string[] // maybe this one as well
 }
 
-export type TasklistPreview = Pick<TaskList, 'id' | 'title' | 'childLists' | 'parentListId'>
+export type TasklistPreview = Pick<TaskList, 'id' | 'title' | 'childLists' | 'parentListId' | 'createdAt'>
 
 export type TasklistDetail = Pick<TaskList, 'description' | 'ownerId' | 'createdAt'>
 

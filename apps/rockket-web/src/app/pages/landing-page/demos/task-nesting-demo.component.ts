@@ -11,6 +11,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         status: TaskStatus.OPEN,
         priority: TaskPriority.NONE,
         parentTaskId: '',
+        closedAt: null,
+        createdAt: new Date().toISOString(),
         children: [
             {
                 id: listId + 'task-one-zero',
@@ -21,6 +23,8 @@ const demoTasks: TaskPreviewRecursive[] = [
                 priority: TaskPriority.NONE,
                 parentTaskId: '',
                 children: [],
+                createdAt: new Date().toISOString(),
+                closedAt: null,
             },
             {
                 id: listId + 'task-one-one',
@@ -30,6 +34,8 @@ const demoTasks: TaskPreviewRecursive[] = [
                 status: TaskStatus.OPEN,
                 priority: TaskPriority.NONE,
                 parentTaskId: '',
+                closedAt: null,
+                createdAt: new Date().toISOString(),
                 children: [
                     {
                         id: listId + 'task-one-one-one',
@@ -40,6 +46,8 @@ const demoTasks: TaskPreviewRecursive[] = [
                         priority: TaskPriority.NONE,
                         parentTaskId: '',
                         children: [],
+                        createdAt: new Date().toISOString(),
+                        closedAt: null,
                     },
                     {
                         id: listId + 'task-one-one-two',
@@ -50,6 +58,8 @@ const demoTasks: TaskPreviewRecursive[] = [
                         priority: TaskPriority.NONE,
                         parentTaskId: '',
                         children: [],
+                        createdAt: new Date().toISOString(),
+                        closedAt: null,
                     },
                 ],
             },
@@ -70,6 +80,8 @@ const demoTasks: TaskPreviewRecursive[] = [
                 priority: TaskPriority.NONE,
                 parentTaskId: '',
                 children: [],
+                createdAt: new Date().toISOString(),
+                closedAt: null,
             },
         ],
     },

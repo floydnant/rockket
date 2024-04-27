@@ -114,7 +114,9 @@ export class ListRepository {
                 id: true,
                 title: true,
                 childLists: { select: { id: true } },
+                createdAt: true,
             },
+            orderBy: { createdAt: 'desc' },
         })
 
         return lists.map(({ childLists, ...list }) => ({
@@ -132,7 +134,9 @@ export class ListRepository {
                 id: true,
                 parentListId: true,
                 title: true,
+                createdAt: true,
             },
+            orderBy: { createdAt: 'desc' },
         })
 
         return lists
@@ -141,6 +145,7 @@ export class ListRepository {
     async getChildTasklists(listId: string) {
         return await this.prisma.tasklist.findMany({
             where: { parentListId: listId },
+            orderBy: { createdAt: 'desc' },
         })
     }
 

@@ -16,22 +16,25 @@ export const tasklistReducerOns: ReducerOns<EntitiesState> = [
                 children: [],
             }
 
-            if (!parentListId)
+            if (!parentListId) {
                 return {
                     ...state,
-                    entityTree: [...(state.entityTree || []), listEntity],
+                    entityTree: [listEntity, ...(state.entityTree || [])],
                 }
+            }
 
             const entityTreeCopy = structuredClone(state.entityTree) || []
             const parentList = getEntityById(entityTreeCopy, parentListId)
 
-            if (!parentList)
+            if (!parentList) {
                 return {
                     ...state,
-                    entityTree: [...(state.entityTree || []), listEntity],
+                    entityTree: [listEntity, ...(state.entityTree || [])],
                 }
+            }
 
-            parentList.children?.push(listEntity)
+            parentList.children ??= []
+            parentList.children.unshift(listEntity)
 
             return {
                 ...state,

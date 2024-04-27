@@ -8,6 +8,7 @@ import {
     UpdateTaskCommentZodDto,
     UpdateTaskZodDto,
 } from './task.dto'
+import { TaskStatus } from '@rockket/commons'
 
 const newUpdateEvents = (
     dto: UpdateTaskZodDto,
@@ -52,7 +53,10 @@ export class TaskRepository {
                 status: true,
                 priority: true,
                 description: true,
+                createdAt: true,
+                closedAt: true,
             },
+            orderBy: { createdAt: 'desc' },
         })
     }
 
@@ -73,11 +77,25 @@ export class TaskRepository {
         const task = await this.prisma.task.findUnique({ where: { id: taskId } })
         if (!task) throw new NotFoundException('Could not find task')
 
+        // @TODO: move this to commons
+        const closedStateStatuses: TaskStatus[] = [TaskStatus.COMPLETED, TaskStatus.NOT_PLANNED]
+
+        const closedAt = dto.status
+            ? // If the dto changes the status
+              closedStateStatuses.includes(dto.status)
+                ? // If the new status is a closed state => set closedAt to now
+                  new Date()
+                : // If the new status is not a closed state => set closedAt to null
+                  null
+            : // If the dto does not change the status => keep the current closedAt
+              task.closedAt
+
         const updatedTask = this.prisma.task.update({
             where: { id: taskId },
             data: {
                 ...dto,
                 events: { create: newUpdateEvents(dto, task, userId) },
+                closedAt,
             },
         })
 

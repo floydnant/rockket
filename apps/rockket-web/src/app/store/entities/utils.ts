@@ -191,9 +191,23 @@ export const getTaskById = (taskTree: TaskPreviewRecursive[], id: string) => {
 
 export type TaskSorter = (a: TaskPreview, b: TaskPreview) => number
 
-export const sortByStatus: TaskSorter = (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status]
-export const sortByPriority: TaskSorter = (a, b) =>
-    prioritySortingMap[a.priority] - prioritySortingMap[b.priority]
+export const sortTasks = {
+    byStatus: (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status],
+
+    byPriority: (a, b) => prioritySortingMap[a.priority] - prioritySortingMap[b.priority],
+
+    byCreatedAtAsc: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    byCreatedAtDesc: (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+
+    byClosedAtAsc: (a, b) => {
+        if (!a.closedAt || !b.closedAt) return 0
+        return new Date(a.closedAt).getTime() - new Date(b.closedAt).getTime()
+    },
+    byClosedAtDesc: (a, b) => {
+        if (!a.closedAt || !b.closedAt) return 0
+        return new Date(b.closedAt).getTime() - new Date(a.closedAt).getTime()
+    },
+} satisfies Record<string, TaskSorter>
 
 export const applySorters = (
     taskTree: TaskPreviewRecursive[],

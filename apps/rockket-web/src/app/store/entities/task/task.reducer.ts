@@ -29,12 +29,12 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
         if (!newTaskTreeMap[createdTask.listId]) newTaskTreeMap[createdTask.listId] = []
 
         const createdTaskRecursive: TaskPreviewRecursive = { ...createdTask, children: null }
-        if (!createdTask.parentTaskId) newTaskTreeMap[createdTask.listId].push(createdTaskRecursive)
+        if (!createdTask.parentTaskId) newTaskTreeMap[createdTask.listId].unshift(createdTaskRecursive)
         else {
             const parentTask = getTaskById(newTaskTreeMap[createdTask.listId], createdTask.parentTaskId)
             if (!parentTask) throw new Error('Could not find parent task')
 
-            if (parentTask.children) parentTask.children.push(createdTaskRecursive)
+            if (parentTask.children) parentTask.children.unshift(createdTaskRecursive)
             else parentTask.children = [createdTaskRecursive]
         }
 
