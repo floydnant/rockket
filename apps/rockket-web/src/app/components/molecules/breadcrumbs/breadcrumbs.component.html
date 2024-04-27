@@ -27,7 +27,7 @@
                 [cdkConnectedOverlayOpen]="(isOverlayOpen$ | async) ?? false"
                 (overlayOutsideClick)="closeOverlayDelayed()"
             >
-                <app-tooltip class="bottom no-delay !border-tinted-800 !bg-tinted-900/70 !px-1">
+                <app-tooltip class="bottom no-delay !border-tinted-800 !bg-tinted-900/70 rounded-xl !px-1">
                     <div
                         class="flex flex-col text-base"
                         cdkMenu
@@ -44,7 +44,11 @@
                             <ng-container
                                 *ngTemplateOutlet="
                                     breadcrumbTemplate;
-                                    context: { breadcrumb: truncatedBreadcrumb, isLast: false }
+                                    context: {
+                                        breadcrumb: truncatedBreadcrumb,
+                                        isLast: false,
+                                        isInsideTruncationPopover: true
+                                    }
                                 "
                             ></ng-container>
                         </div>
@@ -55,7 +59,10 @@
 
         <ng-container *ngIf="!isTruncationBreadcrumb(breadcrumb)">
             <ng-container
-                *ngTemplateOutlet="breadcrumbTemplate; context: { breadcrumb, isLast }"
+                *ngTemplateOutlet="
+                    breadcrumbTemplate;
+                    context: { breadcrumb, isLast, isInsideTruncationPopover: false }
+                "
             ></ng-container>
         </ng-container>
 
@@ -63,7 +70,12 @@
     </div>
 </div>
 
-<ng-template #breadcrumbTemplate let-breadcrumb="breadcrumb" let-isLast="isLast">
+<ng-template
+    #breadcrumbTemplate
+    let-breadcrumb="breadcrumb"
+    let-isLast="isLast"
+    let-isInsideTruncationPopover="isInsideTruncationPopover"
+>
     <button
         *ngIf="!isTruncationBreadcrumb(breadcrumb)"
         class="breadcrumb | menu-item | max-w-[20ch] truncate px-1.5 py-0.5"
@@ -71,11 +83,15 @@
         cdkMenuItem
         [cdkContextMenuTriggerFor]="menu"
         [routerLink]="breadcrumb.route"
+        [appTooltip]="tooltip"
+        [tooltipOptions]="{
+            preferredPosition: isInsideTruncationPopover ? 'left' : 'bottom',
+            avoidPositions: isInsideTruncationPopover ? ['top', 'bottom'] : ['left', 'right'],
+        }"
         (click)="closeOverlayDelayed()"
         #trigger="cdkContextMenuTriggerFor"
         data-test-name="breadcrumb"
     >
-        <!-- appTooltip="Here will be more information" -->
         <ng-template #menu>
             <app-drop-down
                 *ngIf="breadcrumb.contextMenuItems?.length"
@@ -89,4 +105,8 @@
             [pageIcon]="breadcrumb.icon"
         ></app-entity-page-label>
     </button>
+    <ng-template #tooltip>
+        <app-icon [icon]="breadcrumb.icon" class="mr-2"></app-icon>
+        <span class="wrap-nicely" translate="no">{{ breadcrumb.title }}</span>
+    </ng-template>
 </ng-template>

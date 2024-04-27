@@ -109,7 +109,7 @@ export class HomeComponent {
         return new Array(number)
     }
 
-    // @TODO: Add trackByFn to improve UX + Performance
+    // @TODO: Add trackByFn
 
     entityPreviewsTransformed: EntityTreeNode[] = []
     entityPreviewsTransformed$ = this.store

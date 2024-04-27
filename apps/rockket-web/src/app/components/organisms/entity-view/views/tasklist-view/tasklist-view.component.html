@@ -58,13 +58,13 @@
     </div>
 
     <div
-        class="children | mt-3 flex flex-wrap gap-2"
+        class="children | mt-3 flex flex-col items-start gap-2"
         *ngIf="entity.children?.length"
         cdkMenuBar
         data-test-name="entity-children"
     >
         <button
-            class="child | button-m text-tinted-200 truncate"
+            class="child | button-m text-tinted-200 max-w-full truncate"
             *ngFor="let child of children$ | async"
             routerLink="/home/{{ child.id }}"
             cdkMenuItem

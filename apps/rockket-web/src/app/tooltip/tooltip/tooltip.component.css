@@ -1,7 +1,7 @@
-:host-context(.no-delay) {
+app-tooltip.no-delay {
     --reveal-delay: 0ms;
 }
-:host {
+app-tooltip {
     @apply border-tinted-600/60
         bg-tinted-700
         text-tinted-100
@@ -29,15 +29,15 @@
     }
 }
 
-:host-context(.top) {
+.cdk-overlay-pane.top {
     @apply mb-2;
 }
-:host-context(.bottom) {
+.cdk-overlay-pane.bottom {
     @apply mt-2;
 }
-:host-context(.right) {
+.cdk-overlay-pane.right {
     @apply ml-2;
 }
-:host-context(.left) {
-    @apply mr-2;
+.cdk-overlay-pane.left {
+    @apply mr-6;
 }
