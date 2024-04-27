@@ -29,6 +29,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         priority: TaskPriority.NONE,
         parentTaskId: '',
         children: [],
+        closedAt: null,
+        createdAt: new Date().toISOString(),
     },
 ]
 

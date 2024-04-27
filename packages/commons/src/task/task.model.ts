@@ -42,7 +42,7 @@ export type Task = {
     openedAt: string
     deadline: string
     inProgressSince: string
-    closedAt: string
+    closedAt: string | null
 
     ownerId: string
     listId: string
@@ -52,7 +52,10 @@ export type Task = {
     subtaskIds: string[]
 }
 
-export type TaskPreview = Pick<Task, 'id' | 'title' | 'status' | 'priority' | 'listId' | 'parentTaskId'> & {
+export type TaskPreview = Pick<
+    Task,
+    'id' | 'title' | 'status' | 'priority' | 'listId' | 'parentTaskId' | 'closedAt' | 'createdAt'
+> & {
     description: string | null
 }
 export type TaskDetail = Task
