@@ -15,20 +15,20 @@
         from-[var(--line-color)]
         to-[var(--line-color)];
 }
-.indent-line.first-after-higher-level::before {
+.indent-line.isFirstInHierarchy::before {
     @apply mt-2
         h-[calc(100%-0.5rem)]
         from-transparent
         to-[var(--line-color)];
 }
-.indent-line.last-before-higher-level::before {
+.indent-line.isLastInHierarchy::before {
     @apply to-transparent;
 }
-.indent-line.last-before-higher-level.first-after-higher-level::before {
+.indent-line.isLastInHierarchy.isFirstInHierarchy::before {
     @apply h-1/2
         to-[var(--line-color)];
 }
-.indent-line.last-before-higher-level.first-after-higher-level::after {
+.indent-line.isLastInHierarchy.isFirstInHierarchy::after {
     content: '';
     @apply bottom-0
         block
