@@ -15,6 +15,12 @@ web:
         # Apps
         - apps/rockket-web/**
         - apps/rockket-web-e2e/**
+commons:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        # Commons package
+        - packages/commons/**
 
 documentation:
   - all:
