@@ -102,7 +102,7 @@ model Task {
     parentTask   Task?    @relation("task-parent-child", fields: [parentTaskId], references: [id])
     parentTaskId String?
     subtasks     Task[]   @relation("task-parent-child")
-
+    //
     events   TaskEvent[]
     comments TaskComment[]
 }
