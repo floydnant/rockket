@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType, TaskPreview } from '@rockket/commons'
+import { EntityPreviewRecursive, EntityType, Task } from '@rockket/commons'
 import { BehaviorSubject, distinctUntilKeyChanged, filter, first, map, of, switchMap } from 'rxjs'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
@@ -26,10 +26,10 @@ export class EditableEntityTitleComponent {
     ENTITY_TITLE_DEFAULTS = ENTITY_TITLE_DEFAULTS
 
     entity$ = new BehaviorSubject<
-        (EntityPreviewRecursive & Pick<TaskPreview, 'status' | 'priority'>) | undefined | null
+        (EntityPreviewRecursive & Pick<Task, 'status' | 'priority'>) | undefined | null
     >(null)
     @Input() set entity(activeEntity: EntityPreviewRecursive | undefined | null) {
-        this.entity$.next(activeEntity as EntityPreviewRecursive & Pick<TaskPreview, 'status' | 'priority'>)
+        this.entity$.next(activeEntity as EntityPreviewRecursive & Pick<Task, 'status' | 'priority'>)
     }
 
     titleUpdates$ = new BehaviorSubject<string | null>(null)

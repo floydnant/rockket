@@ -1,5 +1,5 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
-import { TaskPreviewRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
+import { TaskRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
 import { testName } from 'cypress/support/helpers'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
@@ -13,7 +13,7 @@ import { InlineEditorComponent } from '../../atoms/inline-editor/inline-editor.c
 import { TaskComponent } from '../task/task.component'
 import { TaskTreeComponent } from './task-tree.component'
 
-const setupComponent = (taskTree: TaskPreviewRecursive[]) => {
+const setupComponent = (taskTree: TaskRecursive[]) => {
     cy.mount(`<app-task-tree [tasks]="taskTree"></app-task-tree>`, {
         componentProperties: { taskTree },
         imports: [IconsModule, CdkMenuModule, RxModule, RichTextEditorModule, DropdownModule],
@@ -29,7 +29,7 @@ const setupComponent = (taskTree: TaskPreviewRecursive[]) => {
     })
 }
 
-const newTaskRecursive = (args?: { children: TaskPreviewRecursive[] }): TaskPreviewRecursive => ({
+const newTaskRecursive = (args?: { children: TaskRecursive[] }): TaskRecursive => ({
     id: Math.random().toString(),
     title: 'A Task title',
     listId: '1',
@@ -38,9 +38,13 @@ const newTaskRecursive = (args?: { children: TaskPreviewRecursive[] }): TaskPrev
     priority: TaskPriority.OPTIONAL,
     status: TaskStatus.BACKLOG,
     children: args?.children || [],
+    createdAt: new Date(),
+    deadline: null,
+    ownerId: '5',
+    statusUpdatedAt: new Date(),
 })
 
-const taskTreeFixture: TaskPreviewRecursive[] = [
+const taskTreeFixture: TaskRecursive[] = [
     newTaskRecursive({
         children: [newTaskRecursive(), newTaskRecursive()],
     }),

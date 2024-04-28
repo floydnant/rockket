@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType, Task, TaskList, TaskPreviewRecursive } from '@rockket/commons'
+import { EntityPreviewRecursive, EntityType, Task, TaskList, TaskRecursive } from '@rockket/commons'
 import { authActions } from '../user/user.actions'
 import { entitiesActions } from './entities.actions'
 import { EntitiesState, TaskTreeMap } from './entities.state'
@@ -116,7 +116,7 @@ export const entitiesReducer = createReducer(
                 // update task tree
                 if (entityType == EntityType.TASK) {
                     const task = entity as Task
-                    let containingArr: TaskPreviewRecursive[]
+                    let containingArr: TaskRecursive[]
 
                     if (!task.parentTaskId) {
                         taskTreeMapCopy[task.listId] ??= []

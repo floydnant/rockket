@@ -1,5 +1,5 @@
 import { on } from '@ngrx/store'
-import { EntityType, TaskPreviewRecursive, getTaskStatusUpdatedAt } from '@rockket/commons'
+import { TaskRecursive, getTaskStatusUpdatedAt } from '@rockket/commons'
 import { ReducerOns } from 'src/app/utils/store.helpers'
 import { EntitiesState, TaskTreeMap } from '../entities.state'
 import { buildTaskTree, buildTaskTreeMap, getTaskById } from '../utils'
@@ -28,7 +28,7 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
         const newTaskTreeMap = structuredClone(state.taskTreeMap || {}) as TaskTreeMap
         if (!newTaskTreeMap[createdTask.listId]) newTaskTreeMap[createdTask.listId] = []
 
-        const createdTaskRecursive: TaskPreviewRecursive = { ...createdTask, children: null }
+        const createdTaskRecursive: TaskRecursive = { ...createdTask, children: null }
         if (!createdTask.parentTaskId) newTaskTreeMap[createdTask.listId].unshift(createdTaskRecursive)
         else {
             const parentTask = getTaskById(newTaskTreeMap[createdTask.listId], createdTask.parentTaskId)
@@ -77,7 +77,6 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
 
     on(taskActions.updateDescriptionSuccess, (state, { id, newDescription }) => {
         const taskTreeMapCopy = structuredClone(state.taskTreeMap || {}) as TaskTreeMap
-        const taskDetailsCopy = structuredClone(state.entityDetails[EntityType.TASK] || {})
 
         // @TODO: This could be optimized by using the `listId` to reduce the number of tasks to iterate over
         const task = getTaskById(Object.values(taskTreeMapCopy).flat(), id)
@@ -85,15 +84,9 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
             task.description = newDescription
         }
 
-        if (taskDetailsCopy[id]) taskDetailsCopy[id].description = newDescription
-
         return {
             ...state,
             taskTreeMap: taskTreeMapCopy,
-            entityDetails: {
-                ...state.entityDetails,
-                [EntityType.TASK]: taskDetailsCopy,
-            },
         }
     }),
 ]

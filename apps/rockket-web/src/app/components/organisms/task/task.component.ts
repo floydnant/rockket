@@ -9,14 +9,7 @@ import {
     ViewChild,
 } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import {
-    EntityType,
-    TaskPreview,
-    TaskPreviewFlattend,
-    TaskPreviewRecursive,
-    TaskPriority,
-    TaskStatus,
-} from '@rockket/commons'
+import { EntityType, Task, TaskFlattend, TaskRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
 import { createDocument, getSchema } from '@tiptap/core'
 import {
     BehaviorSubject,
@@ -110,7 +103,7 @@ export class TaskComponent {
         this.searchTerm$.next(value)
     }
 
-    task$ = new BehaviorSubject<TaskPreviewFlattend | null>(null)
+    task$ = new BehaviorSubject<TaskFlattend | null>(null)
     nodeData$ = new BehaviorSubject<Omit<TaskTreeNode, 'taskPreview'> | null>(null)
     @Input() set data({ taskPreview, ...data }: TaskTreeNode) {
         this.nodeData$.next(data)
@@ -165,7 +158,6 @@ export class TaskComponent {
     get loading() {
         return this.isLoading ? EntityState.LOADING : false
     }
-    blocked = false // Disabled for now
 
     @Input() readonly = false
 
@@ -279,7 +271,7 @@ export class TaskComponent {
         return this.counterWidget
     }
 
-    getTaskProgress(task: { children?: TaskPreview[] | null }): ChecklistCount {
+    getTaskProgress(task: { children?: Task[] | null }): ChecklistCount {
         const totalItems = task.children?.length || 0
         const checkedItems =
             task.children?.filter(
@@ -289,7 +281,7 @@ export class TaskComponent {
 
         return { totalItems, checkedItems, progress }
     }
-    getTaskProgressRecursive(task: { children?: TaskPreviewRecursive[] | null }): ChecklistCount {
+    getTaskProgressRecursive(task: { children?: TaskRecursive[] | null }): ChecklistCount {
         const statusTaskCountMap = getStatusCountMapRecursive(task.children || [])
 
         const totalItems = Object.values(statusTaskCountMap).reduce((acc, curr) => acc + curr)

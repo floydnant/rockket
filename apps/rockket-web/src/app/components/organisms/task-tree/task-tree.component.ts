@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Store } from '@ngrx/store'
 import {
     EntityType,
-    TaskPreviewFlattend,
-    TaskPreviewRecursive,
+    TaskFlattend,
+    TaskRecursive,
     TaskPriority,
     TaskStatus,
     TaskStatusGroup,
@@ -21,14 +21,14 @@ import { applyMapperRecursive, flattenTaskTree, sortTasks } from 'src/app/store/
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 
 export interface TaskTreeNode {
-    taskPreview: TaskPreviewFlattend
+    taskPreview: TaskFlattend
     hasChildren: boolean
     isExpanded: boolean
     isDescriptionExpanded: boolean
     path: string[]
 }
 
-export const convertToTaskTreeNode = (task: TaskPreviewFlattend, expand?: boolean): TaskTreeNode => {
+export const convertToTaskTreeNode = (task: TaskFlattend, expand?: boolean): TaskTreeNode => {
     return {
         taskPreview: task,
         hasChildren: (task.children?.length || 0) > 0,
@@ -51,8 +51,8 @@ export class TaskTreeComponent {
         private uiStateService: UiStateService,
     ) {}
 
-    tasks$ = new BehaviorSubject<TaskPreviewRecursive[] | null>(null)
-    @Input() set tasks(tasks: TaskPreviewRecursive[]) {
+    tasks$ = new BehaviorSubject<TaskRecursive[] | null>(null)
+    @Input() set tasks(tasks: TaskRecursive[]) {
         this.tasks$.next(tasks)
     }
     @Input() highlightQuery = ''

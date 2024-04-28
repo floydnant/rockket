@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { Action } from '@ngrx/store/src/models'
-import { EntityPreviewFlattend, EntityType, TaskPreview } from '@rockket/commons'
+import { EntityPreviewFlattend, EntityType, Task } from '@rockket/commons'
 import { combineLatestWith, map, tap } from 'rxjs'
 import { MenuService } from 'src/app/components/templates/sidebar-layout/menu.service'
 import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
@@ -139,7 +139,7 @@ export class HomeComponent {
                         ...node,
                         isExpanded: this.entityExpandedMap.get(node.id) || isContainedInTrace,
                         menuItems: this.nodeMenuItemsMap[node.entityType].map(
-                            useTaskForActiveItems(node as EntityTreeNode & TaskPreview),
+                            useTaskForActiveItems(node as EntityTreeNode & Task),
                         ),
                     }
                 })

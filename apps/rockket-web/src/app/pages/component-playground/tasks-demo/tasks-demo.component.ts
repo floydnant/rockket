@@ -2,8 +2,8 @@ import { Component } from '@angular/core'
 import {
     prioritySortingMap,
     statusSortingMap,
-    TaskPreview,
-    TaskPreviewFlattend,
+    Task,
+    TaskFlattend,
     TaskPriority,
     TaskStatus,
 } from '@rockket/commons'
@@ -12,14 +12,14 @@ import {
     TaskTreeNode,
 } from 'src/app/components/organisms/task-tree/task-tree.component'
 
-type TaskSorter = (a: TaskPreview, b: TaskPreview) => number
+type TaskSorter = (a: Task, b: Task) => number
 
 const sortByStatus: TaskSorter = (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status]
 const sortByPriority: TaskSorter = (a, b) => prioritySortingMap[a.priority] - prioritySortingMap[b.priority]
 
 const tasklist = Object.values(TaskStatus)
     .map(status =>
-        Object.values(TaskPriority).map<TaskPreview>((priority, i) => ({
+        Object.values(TaskPriority).map<Task>((priority, i) => ({
             title: `This is a task (${status}, ${priority})`,
             description:
                 i % 2 == 0
@@ -32,11 +32,13 @@ const tasklist = Object.values(TaskStatus)
             parentTaskId: '',
             createdAt: new Date(),
             statusUpdatedAt: new Date(),
+            deadline: null,
+            ownerId: '5',
         })),
     )
     .flat()
 
-const sortTasklist = (tasklist: TaskPreview[]) => {
+const sortTasklist = (tasklist: Task[]) => {
     const openTasks = tasklist
         .filter(
             // Prettier-ignore
@@ -62,7 +64,7 @@ const sortTasklist = (tasklist: TaskPreview[]) => {
 })
 export class TasksDemoComponent {
     tasks: TaskTreeNode[] = sortTasklist(tasklist)
-        .map<TaskPreviewFlattend>(task => ({
+        .map<TaskFlattend>(task => ({
             ...task,
             path: [],
             children: [],

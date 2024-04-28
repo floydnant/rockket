@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { TaskPreviewRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
+import { TaskRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
 
 const listId = 'nesting-demo'
-const demoTasks: TaskPreviewRecursive[] = [
+const demoTasks: TaskRecursive[] = [
     {
         id: listId + 'task-one',
         title: 'Plan birthday party for sarah',
@@ -13,6 +13,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         parentTaskId: '',
         createdAt: new Date(),
         statusUpdatedAt: new Date(),
+        ownerId: '5',
+        deadline: null,
         children: [
             {
                 id: listId + 'task-one-zero',
@@ -25,6 +27,8 @@ const demoTasks: TaskPreviewRecursive[] = [
                 children: [],
                 createdAt: new Date(),
                 statusUpdatedAt: new Date(),
+                ownerId: '5',
+                deadline: null,
             },
             {
                 id: listId + 'task-one-one',
@@ -36,6 +40,8 @@ const demoTasks: TaskPreviewRecursive[] = [
                 parentTaskId: '',
                 createdAt: new Date(),
                 statusUpdatedAt: new Date(),
+                ownerId: '5',
+                deadline: null,
                 children: [
                     {
                         id: listId + 'task-one-one-one',
@@ -48,6 +54,8 @@ const demoTasks: TaskPreviewRecursive[] = [
                         children: [],
                         createdAt: new Date(),
                         statusUpdatedAt: new Date(),
+                        ownerId: '5',
+                        deadline: null,
                     },
                     {
                         id: listId + 'task-one-one-two',
@@ -60,6 +68,8 @@ const demoTasks: TaskPreviewRecursive[] = [
                         children: [],
                         createdAt: new Date(),
                         statusUpdatedAt: new Date(),
+                        ownerId: '5',
+                        deadline: null,
                     },
                 ],
             },
@@ -82,6 +92,8 @@ const demoTasks: TaskPreviewRecursive[] = [
                 children: [],
                 createdAt: new Date(),
                 statusUpdatedAt: new Date(),
+                ownerId: '5',
+                deadline: null,
             },
         ],
     },

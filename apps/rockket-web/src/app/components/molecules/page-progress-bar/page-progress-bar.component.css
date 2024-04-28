@@ -3,7 +3,7 @@
     transition: box-shadow 100ms, width 800ms ease-in-out;
 }
 .progress {
-    transition: box-shadow 450ms, width 800ms ease-in-out;
+    transition: box-shadow 450ms, width 800ms ease-out;
 }
 .progress-container.glow span {
     @apply text-submit-400;

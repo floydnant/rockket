@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { TaskPreviewFlattend, TaskPriority, TaskStatus } from '@rockket/commons'
+import { TaskFlattend, TaskPriority, TaskStatus } from '@rockket/commons'
 import { BehaviorSubject } from 'rxjs'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
@@ -22,23 +22,21 @@ describe('TaskComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(TaskComponent)
         component = fixture.componentInstance
-        component.task$ = new BehaviorSubject({
+        component.task$ = new BehaviorSubject<TaskFlattend | null>({
             id: '',
             title: 'Task title here',
             priority: TaskPriority.NONE,
             status: TaskStatus.OPEN,
             description: '',
             listId: '',
-            // OwnerId: '',
-            // closedAt: '',
-            // deadline: '',
-            // openedAt: '',
-            // createdAt: '',
-            // subtaskIds: [],
-            // blockedById: '',
+            ownerId: '5',
+            deadline: null,
+            createdAt: new Date(),
+            statusUpdatedAt: new Date(),
             parentTaskId: '',
-            // InProgressSince: '',
-        } as null | TaskPreviewFlattend)
+            children: [],
+            path: [],
+        })
         fixture.detectChanges()
     })
 

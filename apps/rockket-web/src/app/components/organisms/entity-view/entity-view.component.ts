@@ -10,7 +10,7 @@ import {
 } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType, TaskPreview } from '@rockket/commons'
+import { EntityPreviewRecursive, EntityType, Task } from '@rockket/commons'
 import {
     BehaviorSubject,
     Observable,
@@ -77,7 +77,7 @@ export class EntityViewComponent {
             if (!entity) return null
 
             return optionsMap?.[entity.entityType].map(
-                useTaskForActiveItems(entity as EntityPreviewRecursive & TaskPreview),
+                useTaskForActiveItems(entity as EntityPreviewRecursive & Task),
             )
         }),
         shareReplay({ bufferSize: 1, refCount: true }),
