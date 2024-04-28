@@ -81,10 +81,10 @@
                         [class.nested]="node.path.length > 0"
                         [appTooltip]="tooltip"
                         [tooltipOptions]="{ preferredPosition: 'right' }"
-                        routerLink="/home/{{ node.id }}"
-                        (click)="closeMobileMenu()"
-                        routerLinkActive="active"
                         #nodeTooltip="appTooltip"
+                        routerLink="/home/{{ node.id }}"
+                        routerLinkActive="active"
+                        (click)="closeMobileMenu()"
                         [cdkContextMenuTriggerFor]="nodeDropDown"
                         (cdkContextMenuOpened)="isSelected[node.id] = true"
                         (cdkContextMenuClosed)="isSelected[node.id] = false"
@@ -93,8 +93,8 @@
                         [attr.data-level]="node.path.length"
                     >
                         <ng-template #tooltip>
-                            <app-icon [icon]="node.status || node.entityType"></app-icon>
-                            <span translate="no">{{ node.title }}</span>
+                            <app-icon [icon]="node.status || node.entityType" class="mr-2"></app-icon>
+                            <span class="wrap-nicely" translate="no">{{ node.title }}</span>
                         </ng-template>
 
                         <div class="indent-line" *ngFor="let line of range(node.path.length)">&nbsp;</div>

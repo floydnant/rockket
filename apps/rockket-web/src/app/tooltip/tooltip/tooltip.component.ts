@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Inject, Optional, TemplateRef } from '@angular/core'
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Inject,
+    Optional,
+    TemplateRef,
+    ViewEncapsulation,
+} from '@angular/core'
 import { InjectionToken } from '@angular/core'
 
 export type TooltipData = TemplateRef<void> | string
@@ -8,7 +15,9 @@ export const TOOLTIP_DATA = new InjectionToken<TooltipData>('tooltip.data')
     selector: 'app-tooltip',
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.component.css'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    // eslint-disable-next-line @angular-eslint/no-host-metadata-property
     host: {
         'data-test-name': 'tooltip',
     },

@@ -122,6 +122,7 @@ export class TooltipDirective implements OnDestroy {
         return this.overlay
             .position()
             .flexibleConnectedTo(this.element)
+            .withFlexibleDimensions(true)
             .withPositions([
                 ...(this.tooltipOptions?.preferredPosition
                     ? [positions[this.tooltipOptions.preferredPosition]]
