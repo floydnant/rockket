@@ -44,11 +44,10 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
         }
     }),
 
-    on(taskActions.updateStatusSuccess, (state, { id, status }) => {
+    on(taskActions.updateStatusSuccess, (state, { id, status, listId }) => {
         const taskTreeMapCopy = structuredClone(state.taskTreeMap || {}) as TaskTreeMap
 
-        // @TODO: This could be optimized by using the `listId` to reduce the number of tasks to iterate over
-        const task = getTaskById(Object.values(taskTreeMapCopy).flat(), id)
+        const task = getTaskById(taskTreeMapCopy[listId], id)
         if (task) {
             task.statusUpdatedAt = getTaskStatusUpdatedAt(task, status)
             task.status = status
@@ -60,11 +59,10 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
         }
     }),
 
-    on(taskActions.updatePrioritySuccess, (state, { id, priority }) => {
+    on(taskActions.updatePrioritySuccess, (state, { id, priority, listId }) => {
         const taskTreeMapCopy = structuredClone(state.taskTreeMap || {}) as TaskTreeMap
 
-        // @TODO: This could be optimized by using the `listId` to reduce the number of tasks to iterate over
-        const task = getTaskById(Object.values(taskTreeMapCopy).flat(), id)
+        const task = getTaskById(taskTreeMapCopy[listId], id)
         if (task) {
             task.priority = priority
         }
@@ -75,11 +73,10 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
         }
     }),
 
-    on(taskActions.updateDescriptionSuccess, (state, { id, newDescription }) => {
+    on(taskActions.updateDescriptionSuccess, (state, { id, newDescription, listId }) => {
         const taskTreeMapCopy = structuredClone(state.taskTreeMap || {}) as TaskTreeMap
 
-        // @TODO: This could be optimized by using the `listId` to reduce the number of tasks to iterate over
-        const task = getTaskById(Object.values(taskTreeMapCopy).flat(), id)
+        const task = getTaskById(taskTreeMapCopy[listId], id)
         if (task) {
             task.description = newDescription
         }
