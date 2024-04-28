@@ -20,7 +20,7 @@ commons:
     - changed-files:
       - any-glob-to-any-file:
         # Commons package
-        - packages/commons**
+        - packages/commons/**
 
 documentation:
   - all:
