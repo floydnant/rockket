@@ -1,63 +1,64 @@
 import { z } from 'zod'
+import { ValuesOf } from '../utils'
 
 // @TODO: Clean up this file
 
-export enum TaskStatus {
-    IN_PROGRESS = 'IN_PROGRESS',
-    IN_REVIEW = 'IN_REVIEW',
-    OPEN = 'OPEN',
-    BACKLOG = 'BACKLOG',
-    COMPLETED = 'COMPLETED',
-    NOT_PLANNED = 'DISCARDED',
-}
+export const TaskStatus = {
+    IN_PROGRESS: 'IN_PROGRESS',
+    IN_REVIEW: 'IN_REVIEW',
+    OPEN: 'OPEN',
+    BACKLOG: 'BACKLOG',
+    COMPLETED: 'COMPLETED',
+    NOT_PLANNED: 'DISCARDED',
+} as const
+export type TaskStatus = ValuesOf<typeof TaskStatus>
+export const taskStatusSchema = z.nativeEnum(TaskStatus)
 
-export enum TaskPriority {
-    URGENT = 'URGENT',
-    HIGH = 'HIGH',
-    MEDIUM = 'MEDIUM',
-    NONE = 'NONE',
-    LOW = 'LOW',
-    OPTIONAL = 'OPTIONAL',
-}
+export const TaskPriority = {
+    URGENT: 'URGENT',
+    HIGH: 'HIGH',
+    MEDIUM: 'MEDIUM',
+    NONE: 'NONE',
+    LOW: 'LOW',
+    OPTIONAL: 'OPTIONAL',
+} as const
+export type TaskPriority = ValuesOf<typeof TaskPriority>
+export const taskPrioritySchema = z.nativeEnum(TaskPriority)
 
 export const taskSchema = z.object({
+    id: z.string(),
     title: z.string().min(1),
-    description: z.string().optional(),
-    status: z.nativeEnum(TaskStatus),
-    priority: z.nativeEnum(TaskPriority),
+    description: z.string().nullable(),
+    status: taskStatusSchema,
+    priority: taskPrioritySchema,
+
     listId: z.string(),
-    parentTaskId: z.string().optional(),
-    deadline: z.date({ coerce: true }).optional(),
-    blockedById: z.string().optional(),
+    ownerId: z.string(),
+    parentTaskId: z.string().nullable(),
+
+    createdAt: z.date({ coerce: true }),
+    statusUpdatedAt: z.date({ coerce: true }),
+
+    deadline: z.date({ coerce: true }).nullable(),
+    blockedById: z.string().nullable(),
 })
 
-export type Task = {
-    id: string
-    title: string
-    description: string
-    status: TaskStatus
-    priority: TaskPriority
+export type Task = z.infer<typeof taskSchema>
 
-    createdAt: string
-    openedAt: string
-    deadline: string
-    inProgressSince: string
-    closedAt: string | null
+// @TODO: Remove this, everything can just be the complete task
+export const taskPreviewSchema = taskSchema.pick({
+    id: true,
+    title: true,
+    status: true,
+    priority: true,
+    listId: true,
+    parentTaskId: true,
+    createdAt: true,
+    statusUpdatedAt: true,
+    description: true,
+})
 
-    ownerId: string
-    listId: string
-    parentTaskId: string
-    blockedById: string
-
-    subtaskIds: string[]
-}
-
-export type TaskPreview = Pick<
-    Task,
-    'id' | 'title' | 'status' | 'priority' | 'listId' | 'parentTaskId' | 'closedAt' | 'createdAt'
-> & {
-    description: string | null
-}
+export type TaskPreview = z.infer<typeof taskPreviewSchema>
 export type TaskDetail = Task
 
 export type TaskPreviewRecursive = TaskPreview & { children: TaskPreviewRecursive[] | null }
@@ -71,6 +72,19 @@ export const statusSortingMap: Record<TaskStatus, number> = {
     [TaskStatus.COMPLETED]: 4,
     [TaskStatus.NOT_PLANNED]: 5,
 }
+export enum TaskStatusGroup {
+    Open = 'OPEN',
+    Closed = 'CLOSED',
+    InProgress = 'IN_PROGRESS',
+}
+export const taskStatusGroupMap = {
+    [TaskStatus.IN_PROGRESS]: TaskStatusGroup.InProgress,
+    [TaskStatus.IN_REVIEW]: TaskStatusGroup.InProgress,
+    [TaskStatus.OPEN]: TaskStatusGroup.Open,
+    [TaskStatus.BACKLOG]: TaskStatusGroup.Open,
+    [TaskStatus.COMPLETED]: TaskStatusGroup.Closed,
+    [TaskStatus.NOT_PLANNED]: TaskStatusGroup.Closed,
+} satisfies Record<TaskStatus, TaskStatusGroup>
 
 export const prioritySortingMap: Record<TaskPriority, number> = {
     [TaskPriority.URGENT]: 0,

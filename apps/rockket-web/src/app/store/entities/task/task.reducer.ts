@@ -1,5 +1,5 @@
 import { on } from '@ngrx/store'
-import { EntityType, TaskPreviewRecursive } from '@rockket/commons'
+import { EntityType, TaskPreviewRecursive, getTaskStatusUpdatedAt } from '@rockket/commons'
 import { ReducerOns } from 'src/app/utils/store.helpers'
 import { EntitiesState, TaskTreeMap } from '../entities.state'
 import { buildTaskTree, buildTaskTreeMap, getTaskById } from '../utils'
@@ -50,6 +50,7 @@ export const taskReducerOns: ReducerOns<EntitiesState> = [
         // @TODO: This could be optimized by using the `listId` to reduce the number of tasks to iterate over
         const task = getTaskById(Object.values(taskTreeMapCopy).flat(), id)
         if (task) {
+            task.statusUpdatedAt = getTaskStatusUpdatedAt(task, status)
             task.status = status
         }
 

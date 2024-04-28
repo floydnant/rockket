@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { Prisma, Task, TaskEventUpdateField } from '@prisma/client'
+import { getTaskStatusUpdatedAt } from 'packages/commons/src/task/task-update.utils'
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
 import { SELECT_UserPreview } from '../../prisma-abstractions/query-helpers'
 import {
@@ -8,7 +9,6 @@ import {
     UpdateTaskCommentZodDto,
     UpdateTaskZodDto,
 } from './task.dto'
-import { TaskStatus } from '@rockket/commons'
 
 const newUpdateEvents = (
     dto: UpdateTaskZodDto,
@@ -40,62 +40,40 @@ const newUpdateEvents = (
 export class TaskRepository {
     constructor(private prisma: PrismaService) {}
 
-    async getAllTasks(userId: string) {
+    async getAllTasks(userId: string): Promise<Task[]> {
         return this.prisma.task.findMany({
             /* @TODO: We are not fetching tasks for nested lists that the user has indirect access to 
                       (lists that the user has not explicitly permission for, but can access due to having permission for ancestor lists) */
             where: { list: { participants: { some: { userId } } } },
-            select: {
-                id: true,
-                title: true,
-                listId: true,
-                parentTaskId: true,
-                status: true,
-                priority: true,
-                description: true,
-                createdAt: true,
-                closedAt: true,
-            },
             orderBy: { createdAt: 'desc' },
         })
     }
 
-    async createTask(userId: string, dto: CreateTaskZodDto) {
+    async createTask(userId: string, dto: CreateTaskZodDto): Promise<Task> {
         return this.prisma.task.create({
             data: {
-                ownerId: userId,
                 ...dto,
+                ownerId: userId,
+                createdAt: new Date(),
+                statusUpdatedAt: new Date(),
             },
         })
     }
 
-    async getTaskById(taskId: string) {
+    async getTaskById(taskId: string): Promise<Task | null> {
         return this.prisma.task.findUnique({ where: { id: taskId } })
     }
 
-    async updateTask(userId: string, taskId: string, dto: UpdateTaskZodDto) {
+    async updateTask(userId: string, taskId: string, dto: UpdateTaskZodDto): Promise<Task> {
         const task = await this.prisma.task.findUnique({ where: { id: taskId } })
         if (!task) throw new NotFoundException('Could not find task')
-
-        // @TODO: move this to commons
-        const closedStateStatuses: TaskStatus[] = [TaskStatus.COMPLETED, TaskStatus.NOT_PLANNED]
-
-        const closedAt = dto.status
-            ? // If the dto changes the status
-              closedStateStatuses.includes(dto.status)
-                ? // If the new status is a closed state => set closedAt to now
-                  new Date()
-                : // If the new status is not a closed state => set closedAt to null
-                  null
-            : // If the dto does not change the status => keep the current closedAt
-              task.closedAt
 
         const updatedTask = this.prisma.task.update({
             where: { id: taskId },
             data: {
                 ...dto,
                 events: { create: newUpdateEvents(dto, task, userId) },
-                closedAt,
+                statusUpdatedAt: getTaskStatusUpdatedAt(task, dto.status),
             },
         })
 
@@ -134,7 +112,7 @@ export class TaskRepository {
         }
     }
 
-    async getSubtasks(taskId: string) {
+    async getSubtasks(taskId: string): Promise<Task[]> {
         return this.prisma.task.findMany({ where: { parentTaskId: taskId } })
     }
 
@@ -188,13 +166,13 @@ export class TaskRepository {
         return this.prisma.taskComment.delete({ where: { id: commentId } })
     }
 
-    async getRootLevelTasks(listId: string) {
+    async getRootLevelTasks(listId: string): Promise<Task[]> {
         return this.prisma.task.findMany({
             where: { listId, parentTaskId: null },
         })
     }
 
-    async search(userId: string, query: string) {
+    async search(userId: string, query: string): Promise<Task[]> {
         // @TODO: search for comments as well
         return this.prisma.task.findMany({
             where: {

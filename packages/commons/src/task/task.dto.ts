@@ -1,15 +1,22 @@
 import { z } from 'zod'
-import { Task, TaskComment, taskSchema } from './task.model'
+import { TaskComment, taskSchema } from './task.model'
 
-export const createTaskDtoSchema = taskSchema.partial({ status: true, priority: true })
-export const updateTaskDtoSchema = taskSchema.partial()
+const updatableTask = taskSchema.pick({
+    title: true,
+    description: true,
+    status: true,
+    priority: true,
 
-type TaskUpdatable = Pick<
-    Task,
-    'title' | 'description' | 'status' | 'priority' | 'listId' | 'parentTaskId' | 'deadline' | 'blockedById'
->
-export type CreateTaskDto = Pick<TaskUpdatable, 'title' | 'listId'> & Partial<TaskUpdatable>
-export type UpdateTaskDto = Partial<TaskUpdatable>
+    listId: true,
+    parentTaskId: true,
+    blockedById: true,
+    deadline: true,
+})
+export const createTaskDtoSchema = updatableTask.partial().required({ title: true, listId: true })
+export const updateTaskDtoSchema = updatableTask.partial()
+
+export type CreateTaskDto = z.infer<typeof createTaskDtoSchema>
+export type UpdateTaskDto = z.infer<typeof updateTaskDtoSchema>
 
 export const createTaskCommentDtoSchema = z.object({
     text: z.string(),
