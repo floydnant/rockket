@@ -107,7 +107,6 @@ model Task {
     comments TaskComment[]
 }
 
-
 enum TaskEventUpdateField {
     status
     priority
