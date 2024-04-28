@@ -19,15 +19,15 @@ export const taskActions = createActionGroup({
         'create error': props<HttpServerErrorResponseWithMeta>(),
 
         'update status': props<{ id: string; status: TaskStatus }>(),
-        'update status success': props<{ id: string; status: TaskStatus }>(),
+        'update status success': props<{ id: string; status: TaskStatus; listId: string }>(),
         'update status error': props<HttpServerErrorResponseWithMeta>(),
 
         'update priority': props<{ id: string; priority: TaskPriority }>(),
-        'update priority success': props<{ id: string; priority: TaskPriority }>(),
+        'update priority success': props<{ id: string; priority: TaskPriority; listId: string }>(),
         'update priority error': props<HttpServerErrorResponseWithMeta>(),
 
         'update description': props<{ id: string; newDescription: string }>(),
-        'update description success': props<{ id: string; newDescription: string }>(),
+        'update description success': props<{ id: string; newDescription: string; listId: string }>(),
         'update description error': props<HttpServerErrorResponseWithMeta>(),
     },
 })

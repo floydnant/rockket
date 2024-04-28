@@ -24,9 +24,9 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(taskActions.loadTaskPreviews, taskActions.reloadTaskPreviews),
             mergeMap(() => {
-                const res$ = this.taskService.loadAllTaskPreviews()
+                const tasks$ = this.taskService.loadAllTaskPreviews()
 
-                return res$.pipe(
+                return tasks$.pipe(
                     map(tasks => taskActions.loadTaskPreviewsSuccess({ previews: tasks })),
                     catchError(err => {
                         this.toast.error('Failed to load task previews.')
@@ -41,9 +41,9 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(taskActions.loadRootLevelTasks),
             mergeMap(({ listId: id }) => {
-                const res$ = this.taskService.loadRootLevelTasks(id)
+                const tasks$ = this.taskService.loadRootLevelTasks(id)
 
-                return res$.pipe(
+                return tasks$.pipe(
                     map(tasks => taskActions.loadRootLevelTasksSuccess({ listId: id, tasks })),
                     catchError(err => {
                         this.toast.error('Failed to load tasks for this list.')
@@ -101,14 +101,18 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(taskActions.updateDescription),
             mergeMap(({ id, newDescription }) => {
-                const res$ = this.taskService.update(id, { description: newDescription })
+                const updatedTask$ = this.taskService.update(id, { description: newDescription })
 
-                return res$.pipe(
-                    map(() => taskActions.updateDescriptionSuccess({ id, newDescription })),
-                    catchError(err => {
-                        this.toast.error('Failed to update the newDescription of this task.')
-                        return of(taskActions.updateDescriptionError({ ...err, id }))
-                    }),
+                return updatedTask$.pipe(
+                    map(updatedTask =>
+                        taskActions.updateDescriptionSuccess({
+                            id,
+                            newDescription,
+                            listId: updatedTask.listId,
+                        }),
+                    ),
+                    this.toast.observe({ error: 'Failed to update the description of this task.' }),
+                    catchError(err => of(taskActions.updateDescriptionError({ ...err, id }))),
                 )
             }),
         )
@@ -118,14 +122,13 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(taskActions.updateStatus),
             mergeMap(({ id, status }) => {
-                const res$ = this.taskService.update(id, { status })
+                const updatedTask$ = this.taskService.update(id, { status })
 
-                return res$.pipe(
-                    this.toast.observe({
-                        // Success: `Updated status to ${status}`,
-                        error: 'Failed to update the status of this task.',
-                    }),
-                    map(() => taskActions.updateStatusSuccess({ id, status })),
+                return updatedTask$.pipe(
+                    map(updatedTask =>
+                        taskActions.updateStatusSuccess({ id, status, listId: updatedTask.listId }),
+                    ),
+                    this.toast.observe({ error: 'Failed to update the status of this task.' }),
                     catchError(err => of(taskActions.updateStatusError({ ...err, id }))),
                 )
             }),
@@ -136,14 +139,14 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(taskActions.updatePriority),
             mergeMap(({ id, priority }) => {
-                const res$ = this.taskService.update(id, { priority })
+                const updatedTask$ = this.taskService.update(id, { priority })
 
-                return res$.pipe(
-                    map(() => taskActions.updatePrioritySuccess({ id, priority })),
-                    catchError(err => {
-                        this.toast.error('Failed to update the priority of this task.')
-                        return of(taskActions.updatePriorityError({ ...err, id }))
-                    }),
+                return updatedTask$.pipe(
+                    map(updatedTask =>
+                        taskActions.updatePrioritySuccess({ id, priority, listId: updatedTask.listId }),
+                    ),
+                    this.toast.observe({ error: 'Failed to update the priority of this task.' }),
+                    catchError(err => of(taskActions.updatePriorityError({ ...err, id }))),
                 )
             }),
         )
