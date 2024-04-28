@@ -6,6 +6,8 @@ import {
     TaskPreviewRecursive,
     TaskPriority,
     TaskStatus,
+    TaskStatusGroup,
+    taskStatusGroupMap,
 } from '@rockket/commons'
 import { BehaviorSubject, combineLatestWith, map, shareReplay, tap } from 'rxjs'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
@@ -15,7 +17,7 @@ import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
-import { flattenTaskTree } from 'src/app/store/entities/utils'
+import { applyMapperRecursive, flattenTaskTree, sortTasks } from 'src/app/store/entities/utils'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 
 export interface TaskTreeNode {
@@ -59,9 +61,22 @@ export class TaskTreeComponent {
     @Input() readonly = false
 
     flattendTaskTree$ = this.tasks$.pipe(
+        // @TODO: this is running too often, we should only run this when the tasks change
         map(tasks => {
             if (!tasks) return []
-            const treeNodes = flattenTaskTree(tasks).map(task => {
+
+            const sorted = applyMapperRecursive(tasks, tasks_ => {
+                const nonClosedTasks = tasks_.filter(
+                    task => taskStatusGroupMap[task.status] != TaskStatusGroup.Closed,
+                )
+                const closedTasks = tasks_
+                    .filter(task => taskStatusGroupMap[task.status] == TaskStatusGroup.Closed)
+                    .sort(sortTasks.byStatusUpdatedAtDesc)
+
+                return [...nonClosedTasks, ...closedTasks]
+            })
+
+            const treeNodes = flattenTaskTree(sorted).map(task => {
                 const treeNode = convertToTaskTreeNode(task, this.expandAll)
 
                 treeNode.isExpanded =

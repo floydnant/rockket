@@ -12,8 +12,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         priority: TaskPriority.URGENT,
         parentTaskId: '',
         children: [],
-        createdAt: new Date().toISOString(),
-        closedAt: null,
+        createdAt: new Date(),
+        statusUpdatedAt: new Date(),
     },
     {
         id: listId + 'task-two',
@@ -24,8 +24,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         priority: TaskPriority.HIGH,
         parentTaskId: '',
         children: [],
-        createdAt: new Date().toISOString(),
-        closedAt: null,
+        createdAt: new Date(),
+        statusUpdatedAt: new Date(),
     },
     {
         id: listId + 'task-three',
@@ -36,8 +36,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         priority: TaskPriority.MEDIUM,
         parentTaskId: '',
         children: [],
-        createdAt: new Date().toISOString(),
-        closedAt: null,
+        createdAt: new Date(),
+        statusUpdatedAt: new Date(),
     },
     {
         id: listId + 'task-four',
@@ -48,8 +48,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         priority: TaskPriority.NONE,
         parentTaskId: '',
         children: [],
-        createdAt: new Date().toISOString(),
-        closedAt: null,
+        createdAt: new Date(),
+        statusUpdatedAt: new Date(),
     },
     {
         id: listId + 'task-five',
@@ -60,8 +60,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         priority: TaskPriority.OPTIONAL,
         parentTaskId: '',
         children: [],
-        createdAt: new Date().toISOString(),
-        closedAt: null,
+        createdAt: new Date(),
+        statusUpdatedAt: new Date(),
     },
 ]
 

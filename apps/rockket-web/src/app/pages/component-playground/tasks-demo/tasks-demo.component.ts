@@ -30,8 +30,8 @@ const tasklist = Object.values(TaskStatus)
             id: '',
             listId: '',
             parentTaskId: '',
-            closedAt: null,
-            createdAt: new Date().toISOString(),
+            createdAt: new Date(),
+            statusUpdatedAt: new Date(),
         })),
     )
     .flat()

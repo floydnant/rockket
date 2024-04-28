@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core'
-import { CreateTaskDto, Task, TaskPreview, UpdateTaskDto } from '@rockket/commons'
+import { CreateTaskDto, Task, UpdateTaskDto, fnContext, taskSchema } from '@rockket/commons'
+import { Observable } from 'rxjs'
 import { HttpService } from 'src/app/http/http.service'
+import { validateWith } from 'src/app/http/http.utils'
 import { HttpSuccessResponse } from 'src/app/http/types'
 import { EntityService } from '../entities.service'
 
@@ -10,27 +12,37 @@ import { EntityService } from '../entities.service'
 export class TaskService implements EntityService {
     constructor(private http: HttpService) {}
 
-    create(dto: CreateTaskDto) {
-        return this.http.post<Task>('/task', dto)
+    create(dto: CreateTaskDto): Observable<Task> {
+        return this.http
+            .post('/task', dto)
+            .pipe(validateWith(taskSchema, fnContext(TaskService, this.create)))
     }
 
-    update(id: string, dto: UpdateTaskDto) {
-        return this.http.patch<Task>('/task/' + id, dto)
+    update(id: string, dto: UpdateTaskDto): Observable<Task> {
+        return this.http
+            .patch('/task/' + id, dto)
+            .pipe(validateWith(taskSchema, fnContext(TaskService, this.update)))
     }
 
     delete(id: string) {
         return this.http.delete<HttpSuccessResponse>('/task/' + id)
     }
 
-    loadDetail(id: string) {
-        return this.http.get<Task>('/task/' + id)
+    loadDetail(id: string): Observable<Task> {
+        return this.http
+            .get('/task/' + id)
+            .pipe(validateWith(taskSchema, fnContext(TaskService, this.loadDetail)))
     }
 
-    loadRootLevelTasks(listId: string) {
-        return this.http.get<TaskPreview[]>(`/list/${listId}/tasks`)
+    loadRootLevelTasks(listId: string): Observable<Task[]> {
+        return this.http
+            .get(`/list/${listId}/tasks`)
+            .pipe(validateWith(taskSchema.array(), fnContext(TaskService, this.loadRootLevelTasks)))
     }
 
-    loadAllTaskPreviews() {
-        return this.http.get<TaskPreview[]>(`/task/previews`)
+    loadAllTaskPreviews(): Observable<Task[]> {
+        return this.http
+            .get(`/task/previews`)
+            .pipe(validateWith(taskSchema.array(), fnContext(TaskService, this.loadAllTaskPreviews)))
     }
 }

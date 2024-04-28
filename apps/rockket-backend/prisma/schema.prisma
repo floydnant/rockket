@@ -79,6 +79,7 @@ enum TaskPriority {
     OPTIONAL
 }
 
+// @TODO: migrate away from db defaults, everything should come from core services
 model Task {
     id          String       @id @default(uuid())
     title       String
@@ -87,10 +88,8 @@ model Task {
     priority    TaskPriority @default(NONE)
 
     createdAt       DateTime  @default(now())
-    openedAt        DateTime?
+    statusUpdatedAt DateTime
     deadline        DateTime?
-    inProgressSince DateTime?
-    closedAt        DateTime?
     // @TODO: store sorting information
 
     // relations

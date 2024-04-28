@@ -192,33 +192,43 @@ export const getTaskById = (taskTree: TaskPreviewRecursive[], id: string) => {
 export type TaskSorter = (a: TaskPreview, b: TaskPreview) => number
 
 export const sortTasks = {
-    byStatus: (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status],
+    byStatusAsc: (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status],
+    byStatusDesc: (a, b) => statusSortingMap[b.status] - statusSortingMap[a.status],
 
-    byPriority: (a, b) => prioritySortingMap[a.priority] - prioritySortingMap[b.priority],
+    byPriorityAsc: (a, b) => prioritySortingMap[a.priority] - prioritySortingMap[b.priority],
+    byPriorityDesc: (a, b) => prioritySortingMap[b.priority] - prioritySortingMap[a.priority],
 
-    byCreatedAtAsc: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-    byCreatedAtDesc: (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    byCreatedAtAsc: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+    byCreatedAtDesc: (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
 
-    byClosedAtAsc: (a, b) => {
-        if (!a.closedAt || !b.closedAt) return 0
-        return new Date(a.closedAt).getTime() - new Date(b.closedAt).getTime()
-    },
-    byClosedAtDesc: (a, b) => {
-        if (!a.closedAt || !b.closedAt) return 0
-        return new Date(b.closedAt).getTime() - new Date(a.closedAt).getTime()
-    },
+    byStatusUpdatedAtAsc: (a, b) => a.statusUpdatedAt.getTime() - b.statusUpdatedAt.getTime(),
+    byStatusUpdatedAtDesc: (a, b) => b.statusUpdatedAt.getTime() - a.statusUpdatedAt.getTime(),
 } satisfies Record<string, TaskSorter>
 
-export const applySorters = (
+export const applySortersRecursive = (
     taskTree: TaskPreviewRecursive[],
     ...sorters: TaskSorter[]
 ): TaskPreviewRecursive[] => {
     const mappedTree = taskTree.map(({ children, ...task }) => ({
         ...task,
-        children: children && applySorters(children, ...sorters),
+        children: children && applySortersRecursive(children, ...sorters),
     }))
 
     return sorters.reduce((acc, sorter) => acc.sort(sorter), mappedTree)
+}
+
+export const applyMapperRecursive = (
+    taskTree: TaskPreviewRecursive[],
+    mapper: (tasks: TaskPreviewRecursive[]) => TaskPreviewRecursive[],
+): TaskPreviewRecursive[] => {
+    return mapper(taskTree).map(task => {
+        if (!task.children) return task
+
+        return {
+            ...task,
+            children: applyMapperRecursive(task.children, mapper),
+        }
+    })
 }
 
 export const traceEntityIncludingTasks = (

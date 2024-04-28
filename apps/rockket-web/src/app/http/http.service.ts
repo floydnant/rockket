@@ -1,88 +1,13 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Store } from '@ngrx/store'
-import {
-    OperatorFunction,
-    catchError,
-    Observable,
-    throwError,
-    mergeMap,
-    delay,
-    tap,
-    retry,
-    timer,
-} from 'rxjs'
+import { Observable } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { AppState } from '../store'
 import { userSelectors } from '../store/user/user.selectors'
 import { HttpClientOptions } from './types'
-import { AppContext } from 'src/environments/env.types'
-
-const useDelay = <T>(enable = environment.CONTEXT == AppContext.Development) => {
-    if (!enable) return tap<T>()
-    return delay<T>(500)
-}
-
-/** Catches errors and re-throws an `HttpServerErrorResponse` */
-const interceptErrors = <T>(http: HttpService): OperatorFunction<T, T> => {
-    return <T>(source: Observable<T>) => {
-        return source.pipe(
-            retry({
-                count: 4,
-                delay: (err: HttpErrorResponse) => {
-                    if (!navigator.onLine) return throwError(() => err)
-                    if (err.status == 401) return throwError(() => err)
-                    if (err.status == 409) return throwError(() => err)
-
-                    return timer(300)
-                },
-            }),
-            catchError<T, Observable<T>>(({ type, ...err }: HttpErrorResponse) => {
-                if (err.status !== 0) return throwError(() => err)
-
-                // Check if client is connected to internet
-                if (!navigator.onLine)
-                    return throwError(() => ({
-                        ...err,
-                        error: {
-                            statusCode: '0 - OFFLINE',
-                            message: 'You are offline. Please connect to the internet and try again.',
-                            error: 'network error',
-                        },
-                    }))
-
-                // Check if the server is even up
-                return http.get('/health', { disableErrorInterception: true }).pipe(
-                    // Server is up
-                    mergeMap(() => {
-                        return throwError(() => ({
-                            ...err,
-                            error: {
-                                statusCode: 0,
-                                message:
-                                    'An unknown error occurred. Please refresh and try again. If the problem presists, please report it.',
-                                error: 'unknown',
-                            },
-                        }))
-                    }),
-                    // Server is down
-                    catchError<T, Observable<T>>(err => {
-                        console.warn('second catchError catched:', err)
-                        return throwError(() => ({
-                            ...err,
-                            error: {
-                                statusCode: '0 - SERVER DOWN',
-                                message:
-                                    'We may be experiencing some issues with the server. Please report it.',
-                                error: 'server error',
-                            },
-                        }))
-                    }),
-                )
-            }),
-        )
-    }
-}
+import { interceptErrors } from './http.utils'
+import { useDelay } from './http.utils'
 
 @Injectable({
     providedIn: 'root',
