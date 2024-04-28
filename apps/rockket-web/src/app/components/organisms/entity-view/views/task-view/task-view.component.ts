@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
 import { UntilDestroy } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { TaskDetail } from '@rockket/commons'
+import { EntityPreviewRecursive, EntityType, TaskDetail, TaskEntityPreview } from '@rockket/commons'
 import {
     Subject,
     combineLatest,
@@ -48,11 +48,12 @@ export class TaskViewComponent {
     detail$ = this.viewData.detail$
     options$ = this.viewData.options$
 
-    description$ = this.detail$.pipe(
-        map(detail => {
-            if (!detail) return null
-            return detail.description || ''
-        }),
+    description$ = this.taskEntity$.pipe(
+        filter(
+            (taskEntity): taskEntity is EntityPreviewRecursive & TaskEntityPreview =>
+                taskEntity?.entityType == EntityType.TASK,
+        ),
+        map(detail => detail.description || ''),
         distinctUntilChanged(),
     )
     descriptionContext$ = this.taskEntity$.pipe(

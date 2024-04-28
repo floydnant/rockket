@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType, TaskPreviewRecursive } from '@rockket/commons'
+import { EntityPreview, EntityPreviewRecursive, EntityType, TaskRecursive } from '@rockket/commons'
 import { combineLatestWith, filter, map } from 'rxjs'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
@@ -13,7 +13,7 @@ import { loadingUpdates } from 'src/app/utils/store.helpers'
 import { filterTree } from 'src/app/utils/tree.helpers'
 
 const matchQuery = (query: string) => {
-    return <T extends { title: string; description: string | null }>(entity: T) => {
+    return <T extends { title: string; description: string | null | undefined }>(entity: T) => {
         const regex = new RegExp(query, 'i')
         return Boolean(regex.test(entity.title) || (entity.description && regex.test(entity.description)))
     }
@@ -51,8 +51,10 @@ export class SearchComponent {
         this.router.navigate([], { queryParams: { q } })
     }
 
-    getEntityDetail(entitiesState: EntitiesState, entityType: EntityType, entityId: string) {
-        return entitiesState.entityDetails[entityType][entityId]
+    getEntityDescription(entitiesState: EntitiesState, entity: EntityPreview) {
+        if (entity.entityType == EntityType.TASK) return entity.description
+
+        return entitiesState.entityDetails[entity.entityType][entity.id]?.description
     }
 
     entitiesState$ = this.store.select(entitiesFeature)
@@ -63,7 +65,7 @@ export class SearchComponent {
                 return {
                     query,
                     result: {
-                        tasks: [] as TaskPreviewRecursive[],
+                        tasks: [] as TaskRecursive[],
                         taskMatches: 0,
                         entities: [] as EntityPreviewRecursive[],
                         entityMatches: 0,
@@ -82,7 +84,17 @@ export class SearchComponent {
                       entityTree,
                       entity => {
                           const details = entityDetails[entity.entityType][entity.id]
-                          return matchEntity({ ...entity, ...details })
+                          // prettier-ignore
+                          const description =
+                              // There should not be any task entities in the entity tree here,
+                              // this is only to make TS happy
+                              entity.entityType == EntityType.TASK
+                                  ? entity.description
+                                  : details && 'description' in details
+                                    ? details.description
+                                    : null
+
+                          return matchEntity({ title: entity.title, description })
                       },
                       entityMatches,
                   )

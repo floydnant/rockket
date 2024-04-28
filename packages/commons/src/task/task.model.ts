@@ -40,29 +40,16 @@ export const taskSchema = z.object({
     statusUpdatedAt: z.date({ coerce: true }),
 
     deadline: z.date({ coerce: true }).nullable(),
-    blockedById: z.string().nullable(),
 })
 
 export type Task = z.infer<typeof taskSchema>
 
-// @TODO: Remove this, everything can just be the complete task
-export const taskPreviewSchema = taskSchema.pick({
-    id: true,
-    title: true,
-    status: true,
-    priority: true,
-    listId: true,
-    parentTaskId: true,
-    createdAt: true,
-    statusUpdatedAt: true,
-    description: true,
-})
+export const taskDetailSchema = z.object({})
+// @TODO: TaskDetail should (instead of just duplicating the task again) contain relationsTo, relationsFrom, comments, events
+export type TaskDetail = z.infer<typeof taskDetailSchema>
 
-export type TaskPreview = z.infer<typeof taskPreviewSchema>
-export type TaskDetail = Task
-
-export type TaskPreviewRecursive = TaskPreview & { children: TaskPreviewRecursive[] | null }
-export type TaskPreviewFlattend = TaskPreviewRecursive & { path: string[] }
+export type TaskRecursive = Task & { children: TaskRecursive[] | null }
+export type TaskFlattend = TaskRecursive & { path: string[] }
 
 export const statusSortingMap: Record<TaskStatus, number> = {
     [TaskStatus.IN_PROGRESS]: 0,

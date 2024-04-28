@@ -2,11 +2,11 @@ import {
     EntityPreviewRecursive,
     EntityType,
     TaskDetail,
-    TaskPreviewRecursive,
+    TaskRecursive,
     TasklistDetail,
 } from '@rockket/commons'
 
-export type TaskTreeMap = Record<string, TaskPreviewRecursive[]>
+export type TaskTreeMap = Record<string, TaskRecursive[]>
 
 export interface EntitiesState {
     entityTree: EntityPreviewRecursive[] | null

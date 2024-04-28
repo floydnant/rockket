@@ -1,4 +1,4 @@
-import { TaskPreview } from '@rockket/commons'
+import { Task } from '@rockket/commons'
 import { interpolateParams } from '.'
 import { MenuItem } from '../dropdown/drop-down/drop-down.component'
 
@@ -81,7 +81,7 @@ export const useParamsForRoute = <T>(params: Record<string, string | number>) =>
 }
 
 /** Used to take a tasks status and set the respective status-item as `isActive` */
-export const useTaskForActiveStatus = (task: Pick<TaskPreview, 'status'>) => {
+export const useTaskForActiveStatus = (task: Pick<Task, 'status'>) => {
     return (taskStatusItem: MenuItem): MenuItem => ({
         ...taskStatusItem,
         // @TODO: this will break once the icon is not equl to the status anymore
@@ -89,7 +89,7 @@ export const useTaskForActiveStatus = (task: Pick<TaskPreview, 'status'>) => {
     })
 }
 /** Used to take a tasks priority and set the respective priority-item as `isActive` */
-export const useTaskForActivePriority = (task: Pick<TaskPreview, 'priority'>) => {
+export const useTaskForActivePriority = (task: Pick<Task, 'priority'>) => {
     return (taskPriorityItem: MenuItem): MenuItem => ({
         ...taskPriorityItem,
         // @TODO: this will break once the icon is not equl to the status anymore
@@ -97,7 +97,7 @@ export const useTaskForActivePriority = (task: Pick<TaskPreview, 'priority'>) =>
     })
 }
 /** Used to take a tasks status and priority and set the respective status/priority-items as `isActive` */
-export const useTaskForActiveItems = (task: Pick<TaskPreview, 'status' | 'priority'>) => {
+export const useTaskForActiveItems = (task: Pick<Task, 'status' | 'priority'>) => {
     return (item: MenuItem): MenuItem => {
         // Define mappers for the children of specific items
         const machine = {

@@ -101,29 +101,16 @@ model Task {
     //
     parentTask   Task?    @relation("task-parent-child", fields: [parentTaskId], references: [id])
     parentTaskId String?
+    subtasks     Task[]   @relation("task-parent-child")
     //
-    blockedBy    Task?    @relation("blocking", fields: [blockedById], references: [id])
-    blockedById  String?
-    //   ||
-    //   ||
-    //  _||_
-    //  \  /
-    //   \/
-    // dependencies Task[] @relation("dependencies")
-    // dependendents Task[] @relation("dependencies")
-
-    subtasks     Task[]        @relation("task-parent-child")
-    tasksBlocked Task[]        @relation("blocking")
-    events       TaskEvent[]
-    comments     TaskComment[]
+    events   TaskEvent[]
+    comments TaskComment[]
 }
 
 enum TaskEventUpdateField {
     status
     priority
     deadline
-    blockedById
-    // ...and labels, once we introduce them
 }
 
 model TaskEvent {

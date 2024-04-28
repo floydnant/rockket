@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
-import { CreateTaskDto, Task, UpdateTaskDto, fnContext, taskSchema } from '@rockket/commons'
-import { Observable } from 'rxjs'
+import { CreateTaskDto, Task, TaskDetail, UpdateTaskDto, fnContext, taskSchema } from '@rockket/commons'
+import { Observable, of } from 'rxjs'
 import { HttpService } from 'src/app/http/http.service'
 import { validateWith } from 'src/app/http/http.utils'
 import { HttpSuccessResponse } from 'src/app/http/types'
@@ -28,10 +28,10 @@ export class TaskService implements EntityService {
         return this.http.delete<HttpSuccessResponse>('/task/' + id)
     }
 
-    loadDetail(id: string): Observable<Task> {
-        return this.http
-            .get('/task/' + id)
-            .pipe(validateWith(taskSchema, fnContext(TaskService, this.loadDetail)))
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    loadDetail(id: string): Observable<TaskDetail> {
+        // Noop for now
+        return of({})
     }
 
     loadRootLevelTasks(listId: string): Observable<Task[]> {

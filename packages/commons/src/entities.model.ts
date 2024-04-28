@@ -8,12 +8,18 @@ export enum EntityType {
     // VIEW = 'View',
 }
 
-export type EntityPreview = {
+type BaseEntityPreview = {
     id: string
     entityType: EntityType
     title: string
     parentId: string | undefined
 }
+
+export type TaskEntityPreview = BaseEntityPreview & { entityType: EntityType.TASK } & Task
+export type TasklistEntityPreview = BaseEntityPreview & { entityType: EntityType.TASKLIST }
+
+export type EntityPreview = TaskEntityPreview | TasklistEntityPreview
+
 export type EntityPreviewRecursive = EntityPreview & {
     children: EntityPreviewRecursive[] | undefined
 }

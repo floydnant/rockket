@@ -57,24 +57,17 @@ const entityFixture: EntityPreviewRecursive = {
     title: 'The mock title',
     children: [],
     parentId: '',
-}
-const taskDetailFixture: TaskDetail = {
     description: '',
-    createdAt: '',
-    ownerId: '',
-    title: 'The mock title',
-    blockedById: '',
-    closedAt: '',
-    deadline: '',
-    id: 'the mock id',
-    inProgressSince: '',
+    createdAt: new Date(),
+    statusUpdatedAt: new Date(),
+    ownerId: '5',
+    deadline: null,
     listId: '',
-    openedAt: '',
     parentTaskId: '',
     priority: TaskPriority.MEDIUM,
     status: TaskStatus.OPEN,
-    subtaskIds: [],
 }
+const taskDetailFixture: TaskDetail = {}
 
 describe('TaskViewComponent', () => {
     it('renders the task', () => {

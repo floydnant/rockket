@@ -3,7 +3,7 @@ import { Component } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { UntilDestroy } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType, TaskPreview } from '@rockket/commons'
+import { EntityPreviewRecursive, EntityType, Task } from '@rockket/commons'
 import { combineLatestWith, map, of, shareReplay, switchMap } from 'rxjs'
 import { IconKey } from 'src/app/components/atoms/icons/icon/icons'
 import { Breadcrumb } from 'src/app/components/molecules/breadcrumbs/breadcrumbs.component'
@@ -70,20 +70,20 @@ export class EntityPageComponent {
         map(([trace, loadingMap]) =>
             trace?.map<Breadcrumb>(({ entityType, ...entity }) => {
                 const loadingIcon: false | IconKey = loadingMap[entity.id] && 'Loading'
-                const statusIcon = (entity as EntityPreviewRecursive & Pick<TaskPreview, 'status'>).status
+                const statusIcon = (entity as EntityPreviewRecursive & Pick<Task, 'status'>).status
 
                 let contextMenuItems: Breadcrumb['contextMenuItems']
 
                 if (entityType == EntityType.TASK) {
                     const taskEntity: TaskMenuItemData = {
-                        ...(entity as EntityPreviewRecursive & TaskPreview),
+                        ...(entity as EntityPreviewRecursive & Task),
                         entityType,
                     }
 
                     // @TODO: we must add the data for the tasks in the dropdown
                     contextMenuItems = this.entityOptionsMap[entityType].applyOperators(
                         useDataForAction(taskEntity),
-                        useTaskForActiveItems(taskEntity as EntityPreviewRecursive & TaskPreview),
+                        useTaskForActiveItems(taskEntity as EntityPreviewRecursive & Task),
                         useParamsForRoute({ id: entity.id }),
                     )
                 } else

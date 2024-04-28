@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { TaskPreview, TaskPreviewRecursive, TaskStatus } from '@rockket/commons'
+import { Task, TaskRecursive, TaskStatus } from '@rockket/commons'
 import {
     BehaviorSubject,
     combineLatest,
@@ -18,7 +18,7 @@ import { TwColorClass, taskStatusColorMap } from 'src/app/shared/colors'
 import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
 import { taskStatusLabelMap } from '../../atoms/icons/icon/icons'
 
-export const mapByStatus = <T extends TaskPreview>(taskTree: T[]) => {
+export const mapByStatus = <T extends Task>(taskTree: T[]) => {
     const statusCountMap = Object.values(TaskStatus).reduce(
         (acc, status) => ({
             ...acc,
@@ -29,7 +29,7 @@ export const mapByStatus = <T extends TaskPreview>(taskTree: T[]) => {
     return statusCountMap
 }
 
-export const getStatusCountMapRecursive = (taskTree: TaskPreviewRecursive[]): Record<TaskStatus, number> => {
+export const getStatusCountMapRecursive = (taskTree: TaskRecursive[]): Record<TaskStatus, number> => {
     const map = Object.fromEntries(
         Object.entries(mapByStatus(taskTree)).map(([status, tasks]) => [status, tasks.length]),
     ) as Record<TaskStatus, number>
@@ -72,8 +72,8 @@ export class PageProgressBarComponent {
         [TaskStatus.BACKLOG]: 'text-tinted-200',
     }
 
-    taskTree$ = new BehaviorSubject<TaskPreviewRecursive[]>([])
-    @Input() set taskTree(tasks: TaskPreviewRecursive[]) {
+    taskTree$ = new BehaviorSubject<TaskRecursive[]>([])
+    @Input() set taskTree(tasks: TaskRecursive[]) {
         this.taskTree$.next(tasks)
     }
 

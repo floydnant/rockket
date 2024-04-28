@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { TaskPreviewRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
+import { TaskRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
 
 const listId = 'priority-demo'
-const demoTasks: TaskPreviewRecursive[] = [
+const demoTasks: TaskRecursive[] = [
     {
         id: listId + 'task-one',
         title: 'Do that extremely urgent thing',
@@ -14,6 +14,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         children: [],
         createdAt: new Date(),
         statusUpdatedAt: new Date(),
+        ownerId: '5',
+        deadline: null,
     },
     {
         id: listId + 'task-two',
@@ -26,6 +28,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         children: [],
         createdAt: new Date(),
         statusUpdatedAt: new Date(),
+        ownerId: '5',
+        deadline: null,
     },
     {
         id: listId + 'task-three',
@@ -38,6 +42,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         children: [],
         createdAt: new Date(),
         statusUpdatedAt: new Date(),
+        ownerId: '5',
+        deadline: null,
     },
     {
         id: listId + 'task-four',
@@ -50,6 +56,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         children: [],
         createdAt: new Date(),
         statusUpdatedAt: new Date(),
+        ownerId: '5',
+        deadline: null,
     },
     {
         id: listId + 'task-five',
@@ -62,6 +70,8 @@ const demoTasks: TaskPreviewRecursive[] = [
         children: [],
         createdAt: new Date(),
         statusUpdatedAt: new Date(),
+        ownerId: '5',
+        deadline: null,
     },
 ]
 

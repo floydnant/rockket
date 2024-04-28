@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { Store } from '@ngrx/store'
-import { EntityType, TaskPreviewFlattend, TaskPriority, TaskStatus } from '@rockket/commons'
+import { EntityType, TaskFlattend, TaskPriority, TaskStatus } from '@rockket/commons'
 import { testName, useStubsForActions } from 'cypress/support/helpers'
 import { FocusableDirective } from 'src/app/directives/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
@@ -53,7 +53,7 @@ const setupComponent = (
     )
 }
 
-const taskFixture: TaskPreviewFlattend = {
+const taskFixture: TaskFlattend = {
     title: 'The title',
     children: [],
     description: '',
@@ -63,6 +63,10 @@ const taskFixture: TaskPreviewFlattend = {
     path: [],
     priority: TaskPriority.NONE,
     status: TaskStatus.OPEN,
+    createdAt: new Date(),
+    ownerId: '5',
+    statusUpdatedAt: new Date(),
+    deadline: null,
 }
 const taskTreeNodeFixture: TaskTreeNode = {
     hasChildren: false,
