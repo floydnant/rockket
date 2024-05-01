@@ -61,17 +61,12 @@ export class TaskRepository {
 
         const taskIds = nestedChildren.map(child => child.id)
 
-        const transactionResult = await this.prisma.$transaction([
-            this.prisma.entityEvent.deleteMany({ where: { taskId: { in: taskIds } } }),
+        const [{ count: affectedComments }, { count: affectedTasks }] = await this.prisma.$transaction([
             this.prisma.taskComment.deleteMany({ where: { taskId: { in: taskIds } } }),
             this.prisma.task.deleteMany({ where: { id: { in: taskIds } } }),
         ])
 
-        return {
-            taskEvents: transactionResult[0].count,
-            taskComments: transactionResult[1].count,
-            tasks: transactionResult[2].count,
-        }
+        return { affectedComments, affectedTasks }
     }
 
     async getSubtasks(taskId: string): Promise<DbTask[]> {

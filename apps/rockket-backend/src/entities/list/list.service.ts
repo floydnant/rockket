@@ -62,19 +62,22 @@ export class ListService {
         )
         if (!hasPermissions) throw new ForbiddenException("You don't have permission to delete this tasklist")
 
-        const { tasks, taskComments, lists, listComments } = await this.listRepository.deleteTasklist(listId)
-        const comments = taskComments + listComments
+        const { affectedTasks, affectedComments, affectedLists } = await this.listRepository.deleteTasklist(
+            listId,
+        )
 
-        const tasksPlural = tasks == 1 ? '' : 's'
-        const tasksMessage = `${tasks} task${tasksPlural}`
+        const tasksPlural = affectedTasks == 1 ? '' : 's'
+        const tasksMessage = `${affectedTasks} task${tasksPlural}`
 
-        const listsPlural = lists == 1 ? '' : 's'
+        const listsPlural = affectedLists == 1 ? '' : 's'
 
-        const commentsPlural = comments == 1 ? '' : 's'
-        const commentsMessage = comments ? ` and ${comments} related comment${commentsPlural}` : ''
+        const commentsPlural = affectedComments == 1 ? '' : 's'
+        const commentsMessage = affectedComments
+            ? ` and ${affectedComments} related comment${commentsPlural}`
+            : ''
 
         return {
-            successMessage: `Deleted ${lists} list${listsPlural}${
+            successMessage: `Deleted ${affectedLists} list${listsPlural}${
                 commentsMessage ? ',' : ' and'
             } ${tasksMessage}${commentsMessage}.`,
         }

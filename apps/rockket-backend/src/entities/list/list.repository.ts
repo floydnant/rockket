@@ -70,8 +70,12 @@ export class ListRepository {
         })
         const taskIds = tasks.map(task => task.id)
 
-        const transactionResult = await this.prisma.$transaction([
-            this.prisma.entityEvent.deleteMany({ where: { taskId: { in: taskIds } } }),
+        const [
+            { count: affectedComments },
+            { count: affectedTasks },
+            { count: affectedListParticipants },
+            { count: affectedLists },
+        ] = await this.prisma.$transaction([
             this.prisma.taskComment.deleteMany({ where: { taskId: { in: taskIds } } }),
             this.prisma.task.deleteMany({ where: { id: { in: taskIds } } }),
             this.prisma.listParticipant.deleteMany({ where: { listId: { in: listIds } } }),
@@ -79,13 +83,10 @@ export class ListRepository {
         ])
 
         return {
-            tasks: transactionResult[2].count,
-            taskEvents: transactionResult[0].count,
-            taskComments: transactionResult[1].count,
-
-            lists: transactionResult[4].count,
-            listParticipants: transactionResult[3].count,
-            listComments: 0,
+            affectedTasks: affectedTasks,
+            affectedComments: affectedComments,
+            affectedLists: affectedLists,
+            affectedListParticipants: affectedListParticipants,
         }
     }
 
