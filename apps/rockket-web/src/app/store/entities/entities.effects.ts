@@ -3,8 +3,8 @@ import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { EntityType, Task, TaskList } from '@rockket/commons'
-import { Observable, catchError, concatMap, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
+import { EntityType } from '@rockket/commons'
+import { catchError, concatMap, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { DialogService } from 'src/app/modal/dialog.service'
 import { EntitiesService } from 'src/app/services/entities.service'
@@ -105,9 +105,7 @@ export class EntitiesEffects {
         return this.actions$.pipe(
             ofType(entitiesActions.rename),
             mergeMap(({ id, entityType, title, showToast }) => {
-                const res$ = this.entitiesService.rename({ entityType, id, title }) as Observable<
-                    Task | TaskList
-                >
+                const res$ = this.entitiesService.rename({ entityType, id, title })
 
                 return res$.pipe(
                     showToast

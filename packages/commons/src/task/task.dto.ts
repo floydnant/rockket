@@ -1,7 +1,8 @@
 import { z } from 'zod'
-import { TaskComment, taskSchema } from './task.model'
+import { taskSchema } from './task.schema'
+import { entityEventSchema } from '../entity-event/entity-event.schemas'
 
-const updatableTask = taskSchema.pick({
+const mutableTask = taskSchema.pick({
     title: true,
     description: true,
     status: true,
@@ -9,21 +10,19 @@ const updatableTask = taskSchema.pick({
 
     listId: true,
     parentTaskId: true,
-    blockedById: true,
     deadline: true,
 })
-export const createTaskDtoSchema = updatableTask.partial().required({ title: true, listId: true })
-export const updateTaskDtoSchema = updatableTask.partial()
 
-export type CreateTaskDto = z.infer<typeof createTaskDtoSchema>
+////////// Update Task //////////
+export const updateTaskDtoSchema = mutableTask.partial()
 export type UpdateTaskDto = z.infer<typeof updateTaskDtoSchema>
+//
+export const updateTaskResponseSchema = z.object({ task: taskSchema, newEvents: entityEventSchema.array() })
+export type UpdateTaskResponse = z.infer<typeof updateTaskResponseSchema>
 
-export const createTaskCommentDtoSchema = z.object({
-    text: z.string(),
-})
-export const updateTaskCommentDtoSchema = z.object({
-    text: z.string().optional(),
-})
-
-export type CreateTaskCommentDto = Pick<TaskComment, 'text'>
-export type UpdateTaskCommentDto = CreateTaskCommentDto
+////////// Create Task //////////
+export const createTaskDtoSchema = mutableTask.partial().required({ title: true, listId: true })
+export type CreateTaskDto = z.infer<typeof createTaskDtoSchema>
+//
+export const createTaskResponseSchema = taskSchema
+export type CreateTaskResponse = z.infer<typeof createTaskResponseSchema>

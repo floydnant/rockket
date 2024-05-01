@@ -18,11 +18,11 @@ import { AppContext } from 'src/environments/env.types'
 import { environment } from 'src/environments/environment'
 
 /**
- * Validates incoming data with the given schema. If the data is invalid, an http like error is thrown.
+ * Validates/parses incoming data with the given schema. If the data is invalid, an http like error is thrown.
  * @param schema
  * @param logContext A string that describes the context of the validation. This is used for debugging.
  */
-export const validateWith = <TOutput>(
+export const parseWith = <TOutput>(
     schema: z.Schema<TOutput>,
     logContext: string,
 ): OperatorFunction<unknown, TOutput> => {
@@ -35,7 +35,8 @@ export const validateWith = <TOutput>(
         return throwError(() => ({
             error: {
                 statusCode: 0,
-                message: 'An unknown error occurred. Please refresh the page and try again.',
+                message:
+                    'A validation error occurred. You might be running an older version of Rockket. Please refresh the page and try again.',
                 error: 'validation error',
             },
         }))

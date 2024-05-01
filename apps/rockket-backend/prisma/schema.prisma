@@ -20,7 +20,7 @@ model User {
     tasklistsOwned      Tasklist[]
     tasksOwned          Task[]
     listsParticipating  ListParticipant[]
-    taskEventsCreated   TaskEvent[]
+    entityEventsCreated EntityEvent[]
     taskCommentsWritten TaskComment[]
 }
 
@@ -31,15 +31,16 @@ model Tasklist {
     createdAt   DateTime @default(now())
 
     // relations
-    owner        User      @relation(fields: [ownerId], references: [id])
+    owner        User              @relation(fields: [ownerId], references: [id])
     ownerId      String
     //
-    parentList   Tasklist? @relation("list-parent-child", fields: [parentListId], references: [id])
+    parentList   Tasklist?         @relation("list-parent-child", fields: [parentListId], references: [id])
     parentListId String?
-
     childLists   Tasklist[]        @relation("list-parent-child")
+    //
     tasks        Task[]
     participants ListParticipant[]
+    events       EntityEvent[]
 }
 
 enum ListPermission {
@@ -93,38 +94,49 @@ model Task {
     // @TODO: store sorting information
 
     // relations
-    owner        User     @relation(fields: [ownerId], references: [id])
+    owner        User          @relation(fields: [ownerId], references: [id])
     ownerId      String
     //
-    list         Tasklist @relation(fields: [listId], references: [id])
+    list         Tasklist      @relation(fields: [listId], references: [id])
     listId       String
     //
-    parentTask   Task?    @relation("task-parent-child", fields: [parentTaskId], references: [id])
+    parentTask   Task?         @relation("task-parent-child", fields: [parentTaskId], references: [id])
     parentTaskId String?
-    subtasks     Task[]   @relation("task-parent-child")
+    subtasks     Task[]        @relation("task-parent-child")
     //
-    events   TaskEvent[]
-    comments TaskComment[]
+    events       EntityEvent[]
+    comments     TaskComment[]
 }
 
-enum TaskEventUpdateField {
-    status
-    priority
-    deadline
+enum EntityEventType {
+    // Any entity
+    TITLE_CHANGED
+
+    // Tasklist
+    LIST_PARENT_LIST_CHANGED
+
+    // Task
+    TASK_PARENT_LIST_CHANGED
+    TASK_PARENT_TASK_CHANGED
+    TASK_STATUS_CHANGED
+    TASK_PRIORITY_CHANGED
+    TASK_DEADLINE_CHANGED
 }
 
-model TaskEvent {
-    id           String               @id @default(uuid())
-    updatedField TaskEventUpdateField
-    timestamp    DateTime             @default(now())
-    prevValue    String?
-    newValue     String
+model EntityEvent {
+    id        String          @id
+    type      EntityEventType
+    timestamp DateTime
+    metaData  Json
 
     // relations
-    task   Task   @relation(fields: [taskId], references: [id])
-    taskId String
+    task   Task?     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+    taskId String?
     //
-    user   User   @relation(fields: [userId], references: [id])
+    list   Tasklist? @relation(fields: [listId], references: [id], onDelete: Cascade)
+    listId String?
+    //
+    user   User      @relation(fields: [userId], references: [id])
     userId String
 }
 

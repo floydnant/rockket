@@ -1,5 +1,6 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { ListPermission } from '@prisma/client'
+import { CreateTasklistResponse, UpdateTasklistResponse, buildTasklistEventsFromDto } from '@rockket/commons'
 import { PermissionsService } from '../permissions/permissions.service'
 import {
     CreateTasklistZodDto,
@@ -13,7 +14,7 @@ import { ListRepository } from './list.repository'
 export class ListService {
     constructor(private listRepository: ListRepository, private permissions: PermissionsService) {}
 
-    createTaskList(userId: string, dto: CreateTasklistZodDto) {
+    createTaskList(userId: string, dto: CreateTasklistZodDto): Promise<CreateTasklistResponse> {
         return this.listRepository.createTasklist(userId, dto)
     }
     async getTasklist(userId: string, listId: string) {
@@ -26,7 +27,11 @@ export class ListService {
 
         return this.listRepository.getTasklistById(listId)
     }
-    async updateTasklist(userId: string, listId: string, dto: UpdateTasklistZodDto) {
+    async updateTasklist(
+        userId: string,
+        listId: string,
+        dto: UpdateTasklistZodDto,
+    ): Promise<UpdateTasklistResponse> {
         const hasPermissions = await this.permissions.hasPermissionForList(
             userId,
             listId,
@@ -34,7 +39,20 @@ export class ListService {
         )
         if (!hasPermissions) throw new ForbiddenException("You don't have permission to update this tasklist")
 
-        return this.listRepository.updateTasklist(listId, dto)
+        const tasklist = await this.listRepository.getTasklistById(listId)
+        if (!tasklist) throw new NotFoundException('Could not find task')
+
+        const tasklistEvents = buildTasklistEventsFromDto(tasklist, dto, userId)
+
+        await this.listRepository.updateTasklist(listId, dto, tasklistEvents)
+
+        return {
+            tasklist: {
+                ...tasklist,
+                ...dto,
+            },
+            newEvents: tasklistEvents,
+        }
     }
     async deletelist(userId: string, listId: string) {
         const hasPermissions = await this.permissions.hasPermissionForList(

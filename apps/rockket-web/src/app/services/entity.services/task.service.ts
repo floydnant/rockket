@@ -1,8 +1,19 @@
 import { Injectable } from '@angular/core'
-import { CreateTaskDto, Task, TaskDetail, UpdateTaskDto, fnContext, taskSchema } from '@rockket/commons'
+import {
+    CreateTaskDto,
+    CreateTaskResponse,
+    Task,
+    TaskDetail,
+    UpdateTaskDto,
+    UpdateTaskResponse,
+    createTaskResponseSchema,
+    fnNames,
+    taskSchema,
+    updateTaskResponseSchema,
+} from '@rockket/commons'
 import { Observable, of } from 'rxjs'
 import { HttpService } from 'src/app/http/http.service'
-import { validateWith } from 'src/app/http/http.utils'
+import { parseWith } from 'src/app/http/http.utils'
 import { HttpSuccessResponse } from 'src/app/http/types'
 import { EntityService } from '../entities.service'
 
@@ -12,37 +23,36 @@ import { EntityService } from '../entities.service'
 export class TaskService implements EntityService {
     constructor(private http: HttpService) {}
 
-    create(dto: CreateTaskDto): Observable<Task> {
+    create(dto: CreateTaskDto): Observable<CreateTaskResponse> {
         return this.http
             .post('/task', dto)
-            .pipe(validateWith(taskSchema, fnContext(TaskService, this.create)))
+            .pipe(parseWith(createTaskResponseSchema, fnNames(TaskService, this.create)))
     }
 
-    update(id: string, dto: UpdateTaskDto): Observable<Task> {
+    update(id: string, dto: UpdateTaskDto): Observable<UpdateTaskResponse> {
         return this.http
             .patch('/task/' + id, dto)
-            .pipe(validateWith(taskSchema, fnContext(TaskService, this.update)))
+            .pipe(parseWith(updateTaskResponseSchema, fnNames(TaskService, this.update)))
     }
 
-    delete(id: string) {
-        return this.http.delete<HttpSuccessResponse>('/task/' + id)
+    delete(id: string): Observable<HttpSuccessResponse> {
+        return this.http.delete('/task/' + id)
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    loadDetail(id: string): Observable<TaskDetail> {
-        // Noop for now
+    // Noop for now
+    loadDetail(_id: string): Observable<TaskDetail> {
         return of({})
     }
 
     loadRootLevelTasks(listId: string): Observable<Task[]> {
         return this.http
             .get(`/list/${listId}/tasks`)
-            .pipe(validateWith(taskSchema.array(), fnContext(TaskService, this.loadRootLevelTasks)))
+            .pipe(parseWith(taskSchema.array(), fnNames(TaskService, this.loadRootLevelTasks)))
     }
 
     loadAllTaskPreviews(): Observable<Task[]> {
         return this.http
             .get(`/task/previews`)
-            .pipe(validateWith(taskSchema.array(), fnContext(TaskService, this.loadAllTaskPreviews)))
+            .pipe(parseWith(taskSchema.array(), fnNames(TaskService, this.loadAllTaskPreviews)))
     }
 }

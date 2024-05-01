@@ -1,2 +1,2 @@
 export * from './list.dto'
-export * from './list.model'
+export * from './list.schema'

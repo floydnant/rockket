@@ -34,3 +34,9 @@ export type MaskOf<T> = {
     [K in keyof T]: true
 }
 export type PartialMaskOf<T> = Partial<MaskOf<T>>
+
+// prettier-ignore
+export type ExtractWithMask<
+    TObj extends Record<string, string>,
+    TMask extends Partial<MaskOf<TObj>>
+> = Pick<TObj, Extract<keyof TObj, ToString<keyof TMask>>>

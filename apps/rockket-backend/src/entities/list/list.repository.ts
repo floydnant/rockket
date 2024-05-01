@@ -1,13 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { ListPermission } from '@prisma/client'
+import { EntityEvent, Tasklist } from '@rockket/commons'
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
-import { SELECT_ListParticipant } from '../../prisma-abstractions/query-helpers'
-import {
-    CreateTasklistZodDto,
-    ShareTasklistZodDto,
-    UpdatePermissionsZodDto,
-    UpdateTasklistZodDto,
-} from './list.dto'
+import { CreateTasklistZodDto, ShareTasklistZodDto, UpdatePermissionsZodDto } from './list.dto'
 
 @Injectable()
 export class ListRepository {
@@ -31,38 +26,28 @@ export class ListRepository {
         })
     }
 
-    async getTasklistById(listId: string) {
+    async getTasklistById(listId: string): Promise<Tasklist> {
         const list = await this.prisma.tasklist.findUnique({
             where: { id: listId },
-            select: {
-                id: true,
-                title: true,
-                description: true,
-                ownerId: true,
-                createdAt: true,
-                participants: SELECT_ListParticipant,
-                childLists: { select: { id: true } },
-                _count: { select: { tasks: true } },
-            },
         })
         if (!list) throw new NotFoundException('Could not find tasklist')
 
-        const { _count, ...restList } = list
-        return {
-            ...restList,
-            taskCount: _count.tasks,
-        }
+        return list
     }
 
-    async updateTasklist(listId: string, dto: UpdateTasklistZodDto) {
-        return this.prisma.tasklist.update({
+    async updateTasklist(
+        listId: string,
+        updatedTasklist: Partial<Tasklist>,
+        events: EntityEvent[],
+    ): Promise<void> {
+        await this.prisma.tasklist.update({
             where: { id: listId },
-            data: dto,
+            data: { ...updatedTasklist, events: { create: events } },
         })
     }
 
     async deleteTasklist(listId: string) {
-        // @SCHEMA_CHANGE requires updating this query
+        // @SCHEMA_CHANGE: Tasklist
         const lists: { id: string; parentListId: string }[] = await this.prisma.$queryRaw`
             WITH RECURSIVE all_lists_cte AS (
                 SELECT id, "parentListId"
@@ -81,12 +66,12 @@ export class ListRepository {
 
         const tasks = await this.prisma.task.findMany({
             where: { listId: { in: listIds } },
-            select: { id: true, title: true, parentTaskId: true },
+            select: { id: true },
         })
         const taskIds = tasks.map(task => task.id)
 
         const transactionResult = await this.prisma.$transaction([
-            this.prisma.taskEvent.deleteMany({ where: { taskId: { in: taskIds } } }),
+            this.prisma.entityEvent.deleteMany({ where: { taskId: { in: taskIds } } }),
             this.prisma.taskComment.deleteMany({ where: { taskId: { in: taskIds } } }),
             this.prisma.task.deleteMany({ where: { id: { in: taskIds } } }),
             this.prisma.listParticipant.deleteMany({ where: { listId: { in: listIds } } }),

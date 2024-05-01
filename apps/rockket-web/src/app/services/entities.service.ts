@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core'
+import { EntitiesSearchResultDto, EntityEvent, EntityPreview, EntityType } from '@rockket/commons'
 import { Observable } from 'rxjs'
-import { EntitiesSearchResultDto, EntityPreview, EntityType } from '@rockket/commons'
 import { HttpService } from '../http/http.service'
 import { HttpSuccessResponse } from '../http/types'
 import { ListService } from './entity.services/list.service'
@@ -11,7 +11,7 @@ export interface EntityService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     create(dto: Record<string, any>): Observable<Record<string, any>>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    update(id: string, dto: Record<string, any>): Observable<Record<string, any>>
+    update(id: string, dto: Record<string, any>): Observable<{ newEvents: EntityEvent[] }>
 
     delete(id: string): Observable<HttpSuccessResponse>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,7 +28,7 @@ export type EntityServiceInstanceMap = {
 const entityServiceInjectorMap = {
     [EntityType.TASKLIST]: ListService,
     [EntityType.TASK]: TaskService,
-} // Satisfies Record<EntityType, EntityServiceConstructor> // @TODO: upgrade to typescript@4.9 => angular@15
+} satisfies Record<EntityType, EntityServiceConstructor>
 
 export const getEntityServiceInjector = <T extends EntityType>(
     entityType: T,
@@ -54,7 +54,7 @@ export class EntitiesService {
         }),
     ) as EntityServiceInstanceMap
 
-    injectEntityService<T extends EntityType>(entityType: T) {
+    injectEntityService(entityType: EntityType): EntityService {
         return this.entityServices[entityType]
     }
 

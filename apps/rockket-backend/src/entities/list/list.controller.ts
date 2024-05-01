@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { User } from '@prisma/client'
+import { CreateTasklistResponse, UpdateTasklistResponse } from '@rockket/commons'
 import { GetUser } from '../../decorators/get-user.decorator'
 import { TaskService } from '../task/task.service'
 import {
@@ -17,7 +18,10 @@ export class ListController {
     constructor(private listService: ListService, private taskService: TaskService) {}
 
     @Post('list')
-    createTasklist(@GetUser() user: User, @Body() dto: CreateTasklistZodDto) {
+    createTasklist(
+        @GetUser() user: User,
+        @Body() dto: CreateTasklistZodDto,
+    ): Promise<CreateTasklistResponse> {
         return this.listService.createTaskList(user.id, dto)
     }
     @Get('list/:listId')
@@ -29,7 +33,7 @@ export class ListController {
         @GetUser() user: User,
         @Param('listId') listId: string,
         @Body() dto: UpdateTasklistZodDto,
-    ) {
+    ): Promise<UpdateTasklistResponse> {
         return this.listService.updateTasklist(user.id, listId, dto)
     }
     @Delete('list/:listId')
