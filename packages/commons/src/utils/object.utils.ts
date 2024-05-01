@@ -35,8 +35,39 @@ export type MaskOf<T> = {
 }
 export type PartialMaskOf<T> = Partial<MaskOf<T>>
 
+export const keysOf = <TObj extends Record<string, unknown>>(obj: TObj): (keyof TObj)[] => {
+    return Object.keys(obj)
+}
+export const valuesOf = <TObj extends Record<string, unknown>>(obj: TObj): ValuesOf<TObj>[] => {
+    return Object.values(obj) as ValuesOf<TObj>[]
+}
+
 // prettier-ignore
 export type ExtractWithMask<
     TObj extends Record<string, string>,
     TMask extends Partial<MaskOf<TObj>>
 > = Pick<TObj, Extract<keyof TObj, ToString<keyof TMask>>>
+
+export const extractFromObj = <TObj extends Record<string, string>, TMask extends Partial<MaskOf<TObj>>>(
+    obj: TObj,
+    mask: TMask,
+): ExtractWithMask<TObj, TMask> => {
+    const newEnumObj = {} as TObj
+    for (const maskKey in mask) {
+        if (maskKey in obj) newEnumObj[maskKey] = obj[maskKey]
+    }
+
+    return newEnumObj as ExtractWithMask<TObj, TMask>
+}
+
+export const pickFromObj = <TObj extends Record<string, string>, TKeys extends keyof TObj>(
+    obj: TObj,
+    keys: TKeys[],
+): Pick<TObj, TKeys> => {
+    const newEnumObj = {} as Pick<TObj, TKeys>
+    for (const key of keys) {
+        if (key in obj) newEnumObj[key] = obj[key]
+    }
+
+    return newEnumObj
+}
