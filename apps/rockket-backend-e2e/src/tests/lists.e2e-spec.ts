@@ -7,6 +7,7 @@ import { userFixtures } from '../fixtures/users.fixture'
 import { initApplication } from '../utils/init-app.e2e-util'
 import { createListDtoFixture } from '../fixtures/lists.fixture'
 import { DbHelper } from 'apps/rockket-backend/src/prisma-abstractions/db-helper'
+import { UpdateTasklistResponse } from '@rockket/commons'
 
 const dbHelper = new DbHelper(new PrismaClient(), { cacheTableNames: true })
 
@@ -38,8 +39,8 @@ describe('List CRUD (e2e)', () => {
             .auth(authToken, typeBearer)
             .send(updatedListData)
             .expect(200)
-        const updatedList = res.body as Tasklist
-        expect(updatedList.description).toEqual(updatedListData.description)
+        const updatedList = res.body as UpdateTasklistResponse
+        expect(updatedList.tasklist.description).toEqual(updatedListData.description)
     })
 
     describe('Deletion', () => {
@@ -98,8 +99,11 @@ describe('List CRUD (e2e)', () => {
             parentListId: createdList.id,
         })
 
-        const res = await request(app).get(`/list/${createdList.id}`).auth(authToken, typeBearer).expect(200)
-        expect(res.body.childLists.length).toEqual(1)
+        const res = await request(app)
+            .get(`/list/${createdList.id}/child-lists`)
+            .auth(authToken, typeBearer)
+            .expect(200)
+        expect(res.body.length).toEqual(1)
     })
 
     it.todo('test moving lists around the hierarchy')

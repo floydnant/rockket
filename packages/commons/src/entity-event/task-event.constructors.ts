@@ -1,4 +1,4 @@
-import { Task } from '@prisma/client'
+import { Task } from '../task'
 import { UpdateTaskDto } from '../task/task.dto'
 import {
     createEntityEventsBuilder,
