@@ -1,4 +1,5 @@
-import { Task, TaskStatus } from './task.model'
+import { Task } from './task.schema'
+import { TaskStatus } from './task-status.schemas'
 
 export const getTaskStatusUpdatedAt = (
     task: Pick<Task, 'statusUpdatedAt' | 'status'>,

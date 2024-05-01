@@ -1,11 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { INestApplication } from '@nestjs/common'
-import { PrismaClient, TaskComment, TaskEvent, Tasklist, TaskPriority, TaskStatus } from '@prisma/client'
+import { PrismaClient, TaskComment, Tasklist, TaskPriority, TaskStatus } from '@prisma/client'
 import { createTask, createTasklist, request, signup, typeBearer } from '../utils/requests.e2e-util'
 import { userFixtures } from '../fixtures/users.fixture'
 import { initApplication } from '../utils/init-app.e2e-util'
 import { createListDtoFixture } from '../fixtures/lists.fixture'
 import { DbHelper } from '../../../rockket-backend/src/prisma-abstractions/db-helper'
+import { EntityEvent, TaskEventType, UpdateTaskResponse } from '@rockket/commons'
 
 // @TODO: look into socket testing https://socket.io/docs/v4/testing/#example-with-jest
 
@@ -48,9 +49,10 @@ describe('Task CRUD (e2e)', () => {
             .auth(authToken, typeBearer)
             .send({ description: 'This is a description', title: 'The new, updated title' })
             .expect(200)
+        const resBody = res.body as UpdateTaskResponse
 
-        expect(res.body.description).toBe('This is a description')
-        expect(res.body.title).toBe('The new, updated title')
+        expect(resBody.task.description).toBe('This is a description')
+        expect(resBody.task.title).toBe('The new, updated title')
     })
 
     it('can delete a task', async () => {
@@ -99,15 +101,13 @@ describe('Task CRUD (e2e)', () => {
         await request(app).get(`/task/${createdSubTask.id}`).auth(authToken, typeBearer).expect(404)
     })
 
-    it.todo('test blocking tasks')
-
-    describe('TaskEvents', () => {
+    describe('task events', () => {
         it.each([
-            ['status', TaskStatus.IN_PROGRESS],
-            ['priority', TaskPriority.HIGH],
-            ['deadline', new Date().toISOString()],
-            // BlockedById event is tested seperately, because it is too specific and needs special care
-        ])("can update a task's %s -> verify task event", async (key, value) => {
+            [TaskEventType.TitleChanged, { key: 'title', value: 'The updated title' }],
+            [TaskEventType.TaskStatusChanged, { key: 'status', value: TaskStatus.IN_PROGRESS }],
+            [TaskEventType.TaskPriorityChanged, { key: 'priority', value: TaskPriority.HIGH }],
+            [TaskEventType.TaskDeadlineChanged, { key: 'deadline', value: new Date().toISOString() }],
+        ])("can trigger a task's %s event", async (eventType, { key, value }) => {
             const createdTask = await createTask(app, authToken, {
                 title: 'This is the task title',
                 listId: createdList.id,
@@ -123,11 +123,11 @@ describe('Task CRUD (e2e)', () => {
                 .get(`/task/${createdTask.id}/events`)
                 .auth(authToken, typeBearer)
                 .expect(200)
-            const taskEvents: TaskEvent[] = res.body
+            const taskEvents: EntityEvent[] = res.body
 
             expect(taskEvents.length).toEqual(1)
-            expect(taskEvents[0].updatedField).toBe(key)
-            expect(taskEvents[0].newValue).toBe(value)
+            expect(taskEvents[0].type).toBe(eventType)
+            expect(taskEvents[0].metaData.newValue).toBe(value)
         })
 
         it('can delete a task that has events', async () => {

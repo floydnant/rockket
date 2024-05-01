@@ -9,6 +9,7 @@ import {
     UpdateTaskZodDto,
 } from './task.dto'
 import { TaskService } from './task.service'
+import { CreateTaskResponse, Task, UpdateTaskResponse } from '@rockket/commons'
 
 @UseGuards(AuthGuard())
 @Controller('task')
@@ -21,15 +22,19 @@ export class TaskController {
     }
 
     @Post()
-    createTask(@GetUser() user: User, @Body() dto: CreateTaskZodDto) {
+    createTask(@GetUser() user: User, @Body() dto: CreateTaskZodDto): Promise<CreateTaskResponse> {
         return this.taskService.createTask(user.id, dto)
     }
     @Get(':taskId')
-    getTaskById(@GetUser() user: User, @Param('taskId') taskId: string) {
+    getTaskById(@GetUser() user: User, @Param('taskId') taskId: string): Promise<Task> {
         return this.taskService.getTaskById(user.id, taskId)
     }
     @Patch(':taskId')
-    updateTask(@GetUser() user: User, @Param('taskId') taskId: string, @Body() dto: UpdateTaskZodDto) {
+    updateTask(
+        @GetUser() user: User,
+        @Param('taskId') taskId: string,
+        @Body() dto: UpdateTaskZodDto,
+    ): Promise<UpdateTaskResponse> {
         return this.taskService.updateTask(user.id, taskId, dto)
     }
     @Delete(':taskId')

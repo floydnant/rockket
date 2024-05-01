@@ -12,7 +12,7 @@ const main = async () => {
         tasklist: true,
         listParticipant: true,
         task: true,
-        taskEvent: true,
+        entityEvent: true,
         taskComment: true,
     })
 

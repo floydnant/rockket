@@ -1,12 +1,12 @@
 import { createActionGroup, props } from '@ngrx/store'
-import { CreateTasklistDto, TaskList } from '@rockket/commons'
+import { CreateTasklistDto, Tasklist } from '@rockket/commons'
 import { HttpServerErrorResponse, HttpServerErrorResponseWithMeta } from 'src/app/http/types'
 
 export const listActions = createActionGroup({
     source: 'Entity/Lists',
     events: {
         'create task list': props<Partial<CreateTasklistDto>>(),
-        'create task list success': props<{ createdList: TaskList }>(),
+        'create task list success': props<{ createdList: Tasklist }>(),
         'create task list error': props<HttpServerErrorResponse>(),
 
         'update description': props<{ id: string; newDescription: string }>(),
