@@ -1,15 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { User } from '@prisma/client'
-import { GetUser } from '../../decorators/get-user.decorator'
-import {
-    CreateTaskCommentZodDto,
-    CreateTaskZodDto,
-    UpdateTaskCommentZodDto,
-    UpdateTaskZodDto,
-} from './task.dto'
-import { TaskService } from './task.service'
 import { CreateTaskResponse, Task, UpdateTaskResponse } from '@rockket/commons'
+import { GetUser } from '../../decorators/get-user.decorator'
+import { CreateTaskZodDto, UpdateTaskZodDto } from './task.dto'
+import { TaskService } from './task.service'
 
 @UseGuards(AuthGuard())
 @Controller('task')
@@ -52,31 +47,5 @@ export class TaskController {
     @Get(':taskId/events')
     getTaskEvents(@GetUser() user: User, @Param('taskId') taskId: string) {
         return this.taskService.getTaskEvents(user.id, taskId)
-    }
-
-    // Task comments
-    @Get(':taskId/comments')
-    getTaskComments(@GetUser() user: User, @Param('taskId') taskId: string) {
-        return this.taskService.getTaskComments(user.id, taskId)
-    }
-    @Post(':taskId/comment')
-    createTaskComment(
-        @GetUser() user: User,
-        @Param('taskId') taskId: string,
-        @Body() dto: CreateTaskCommentZodDto,
-    ) {
-        return this.taskService.createTaskComment(user.id, taskId, dto)
-    }
-    @Patch('comment/:commentId')
-    updateTaskComment(
-        @GetUser() user: User,
-        @Param('commentId') commentId: string,
-        @Body() dto: UpdateTaskCommentZodDto,
-    ) {
-        return this.taskService.updateTaskComment(user.id, commentId, dto)
-    }
-    @Delete('comment/:commentId')
-    deleteTaskComment(@GetUser() user: User, @Param('commentId') commentId: string) {
-        return this.taskService.deleteTaskComment(user.id, commentId)
     }
 }

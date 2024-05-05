@@ -1,7 +1,3 @@
-export * from './task-comment/task-comment.dto'
-export * from './task-comment/task-comment.schema'
-export * from '../entity-event/entity-event.constructors'
-export * from '../entity-event/entity-event.schemas'
 export * from './task-priority.schemas'
 export * from './task-status.schemas'
 export * from './task-update.utils'

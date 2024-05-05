@@ -1,3 +1,4 @@
+export * from './comment'
 export * from './entities.model'
 export * from './entity-event'
 export * from './list'

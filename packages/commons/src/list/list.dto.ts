@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { ListPermission, tasklistSchema } from './list.schema'
-import { entityEventSchema } from '../task'
+import { entityEventSchema } from '../entity-event'
 
 const mutableTasklist = tasklistSchema.pick({
     title: true,

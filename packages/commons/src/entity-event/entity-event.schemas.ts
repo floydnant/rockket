@@ -1,9 +1,8 @@
+import { EntityEventType as DbEntityEventType } from '@prisma/client'
 import { z } from 'zod'
 import { taskPriorityBackwardsCompatibleSchema } from '../task/task-priority.schemas'
 import { taskStatusBackwardsCompatibleSchema } from '../task/task-status.schemas'
-import { ValuesOf } from '../utils'
-import { TaskEventType } from './task-event.schemas'
-import { EntityEventType as DbEntityEventType } from '@prisma/client'
+import { ValueOf } from '../utils'
 
 export const EntityEventType = {
     // Any entity
@@ -33,7 +32,7 @@ export const EntityEventType = {
     // TaskRelationFromUpdated = 'TASK_RELATION_FROM_UPDATED',
     // TaskRelationFromRemoved = 'TASK_RELATION_FROM_REMOVED',
 } as const
-export type EntityEventType = ValuesOf<typeof EntityEventType>
+export type EntityEventType = ValueOf<typeof EntityEventType>
 export const entityEventTypeSchema = z.nativeEnum(EntityEventType)
 
 // This is to ensure that the `EntityEventType` is compatible with the `DbEntityEventType`
@@ -118,7 +117,7 @@ export type EntityEvent = z.infer<typeof entityEventSchema>
 
 // This is to ensure that the `EntityEventType` is exhaustively matched in the `entityEventSchema` union
 const _entityEventTypeAssertion = {} as Record<EntityEvent['type'], never> satisfies Record<
-    TaskEventType,
+    EntityEventType,
     never
 >
 

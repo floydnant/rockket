@@ -39,6 +39,7 @@ const createAll = <TEntity extends PrismaEntity>(
     entity: TEntity,
     data: EntityModelType<TEntity>[],
 ) => {
+    console.log(`Creating ${entity}s...`)
     const createMany = prisma[entity].createMany as unknown as (args: {
         data: typeof data
         skipDuplicates?: boolean

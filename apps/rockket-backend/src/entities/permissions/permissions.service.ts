@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { ListPermission } from '@prisma/client'
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
+import { CommentService } from '../comment/comment.service'
 
 const permissonsRankingMap: Record<ListPermission, number> = {
     [ListPermission.Manage]: 4,
@@ -17,7 +18,7 @@ const permissionMatches = (permission: ListPermission, requiredPermission: ListP
 
 @Injectable()
 export class PermissionsService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService, private commentsService: CommentService) {}
 
     async hasPermissionForList(userId: string, listId: string, requiredPermission: ListPermission) {
         const list = await this.prisma.tasklist.findUnique({
@@ -63,23 +64,20 @@ export class PermissionsService {
         return true
     }
 
-    async hasPermissionForComment(userId: string, commentId: string, requiresAuthorship = false) {
-        const comment = await this.prisma.taskComment.findUnique({
-            where: { id: commentId },
-            select: {
-                userId: true,
-                taskId: true,
-            },
-        })
-
+    async hasPermissionForComment(userId: string, commentId: string, permission?: ListPermission) {
+        const comment = await this.commentsService.getCommentById(commentId)
         if (!comment) throw new NotFoundException('Could not find comment')
 
-        // If user is the author of the comment
+        // If user is the author of the comment, they can do what ever they want
         if (comment.userId == userId) return true
-        if (requiresAuthorship) return false
 
-        // If the user is not the author, he must have Managing permissions for the task
-        return this.hasPermissionForTask(userId, comment.taskId, ListPermission.Manage)
+        // If the user is not the author, they must have permissions for the task/list
+        if (!permission) return false
+        if (comment.taskId) return await this.hasPermissionForTask(userId, comment.taskId, permission)
+        if (comment.listId) return await this.hasPermissionForList(userId, comment.listId, permission)
+
+        // @TODO: throw db integrity/inconsistency exception here
+        throw new InternalServerErrorException('Comment does not belong to a task or list')
     }
 
     async isListOwner(userId: string, listId: string) {

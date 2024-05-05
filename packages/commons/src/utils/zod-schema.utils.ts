@@ -12,3 +12,15 @@ export const pickFromZodNativeEnum = <TEnumObj extends Record<string, string>, T
 ): z.ZodNativeEnum<Pick<TEnumObj, TKeys>> => {
     return z.nativeEnum(pickFromObj(zodNativeEnumSchema.enum, keys))
 }
+
+export const mapUnionOptions = <
+    TDiscriminator extends string,
+    TOption extends z.ZodDiscriminatedUnionOption<TDiscriminator>,
+    TMappedOption extends z.ZodDiscriminatedUnionOption<TDiscriminator>,
+>(
+    union: z.ZodDiscriminatedUnion<TDiscriminator, TOption[]>,
+    mapper: (option: TOption) => TMappedOption,
+): z.ZodDiscriminatedUnion<TDiscriminator, TMappedOption[]> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return z.discriminatedUnion(union.discriminator, union.options.map(mapper) as any)
+}

@@ -1,14 +1,9 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { ListPermission, Task } from '@prisma/client'
+import { EntityEvent, buildTaskEventsFromDto, getTaskStatusUpdatedAt } from '@rockket/commons'
 import { PermissionsService } from '../permissions/permissions.service'
-import {
-    CreateTaskCommentZodDto,
-    CreateTaskZodDto,
-    UpdateTaskCommentZodDto,
-    UpdateTaskZodDto,
-} from './task.dto'
+import { CreateTaskZodDto, UpdateTaskZodDto } from './task.dto'
 import { TaskRepository } from './task.repository'
-import { getTaskStatusUpdatedAt, buildTaskEventsFromDto, EntityEvent } from '@rockket/commons'
 
 @Injectable()
 export class TaskService {
@@ -98,37 +93,6 @@ export class TaskService {
         if (!hasPermission) throw new ForbiddenException("You don't have permission to view this task")
 
         return await this.taskRepository.getTaskEvents(taskId)
-    }
-
-    // Task comments
-    async getTaskComments(userId: string, taskId: string) {
-        const hasPermission = await this.permissions.hasPermissionForTask(userId, taskId, ListPermission.View)
-        if (!hasPermission)
-            throw new ForbiddenException("You don't have permission to view comments on this task")
-
-        return await this.taskRepository.getTaskComments(taskId)
-    }
-    async createTaskComment(userId: string, taskId: string, dto: CreateTaskCommentZodDto) {
-        const hasPermission = await this.permissions.hasPermissionForTask(
-            userId,
-            taskId,
-            ListPermission.Comment,
-        )
-        if (!hasPermission) throw new ForbiddenException("You don't have permission to comment on this task")
-
-        return await this.taskRepository.createTaskComment(userId, taskId, dto)
-    }
-    async updateTaskComment(userId: string, commentId: string, dto: UpdateTaskCommentZodDto) {
-        const hasPermission = await this.permissions.hasPermissionForComment(userId, commentId, true)
-        if (!hasPermission) throw new ForbiddenException("You don't have permission to update this comment")
-
-        return await this.taskRepository.updateTaskComment(commentId, dto)
-    }
-    async deleteTaskComment(userId: string, commentId: string) {
-        const hasPermission = await this.permissions.hasPermissionForComment(userId, commentId)
-        if (!hasPermission) throw new ForbiddenException("You don't have permission to delete this comment")
-
-        return await this.taskRepository.deleteTaskComment(commentId)
     }
 
     async getRootLevelTasks(userId: string, listId: string) {

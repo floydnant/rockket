@@ -10,16 +10,21 @@ import { PermissionsService } from './permissions/permissions.service'
 import { TaskController } from './task/task.controller'
 import { TaskRepository } from './task/task.repository'
 import { TaskService } from './task/task.service'
+import { CommentController } from './comment/comment.controller'
+import { CommentRepository } from './comment/comment.repository'
+import { CommentService } from './comment/comment.service'
 
 @Module({
     imports: [UserModule, PrismaModule],
-    controllers: [EntitiesController, ListController, TaskController],
+    controllers: [EntitiesController, ListController, TaskController, CommentController],
     providers: [
         EntitiesService,
         ListService,
         ListRepository,
         TaskService,
         TaskRepository,
+        CommentService,
+        CommentRepository,
         PermissionsService,
     ],
 })
