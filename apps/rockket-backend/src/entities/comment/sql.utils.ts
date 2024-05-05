@@ -9,7 +9,6 @@ export const wrapInDoubleQuotes = <T extends string>(value: T): DoubleQuoted<T> 
 export type FlippedMapping<T extends Record<string, string>> = {
     [K in keyof T as ToString<T[K]>]: ToString<K>
 }
-
 export const flipMapping = <T extends Record<string, string>>(mapping: T): FlippedMapping<T> => {
     const flipped = {} as Record<string, string>
     for (const [key, value] of entriesOf(mapping)) {
