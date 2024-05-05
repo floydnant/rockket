@@ -1,6 +1,14 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { INestApplication } from '@nestjs/common'
-import { PrismaClient, TaskComment, Tasklist, TaskPriority, TaskStatus } from '@prisma/client'
+import {
+    PrismaClient,
+    EntityComment,
+    Tasklist,
+    TaskPriority,
+    TaskStatus,
+    EntityCommentType,
+    ListPermission,
+} from '@prisma/client'
 import { createTask, createTasklist, request, signup, typeBearer } from '../utils/requests.e2e-util'
 import { userFixtures } from '../fixtures/users.fixture'
 import { initApplication } from '../utils/init-app.e2e-util'
@@ -148,7 +156,7 @@ describe('Task CRUD (e2e)', () => {
         })
     })
 
-    describe('TaskComments', () => {
+    describe('EntityComments', () => {
         it('can comment on a task', async () => {
             const createdTask = await createTask(app, authToken, {
                 title: 'This is the task title',
@@ -156,16 +164,22 @@ describe('Task CRUD (e2e)', () => {
             })
 
             await request(app)
-                .post(`/task/${createdTask.id}/comment`)
+                .post(`/comments`)
                 .auth(authToken, typeBearer)
-                .send({ text: 'This is the comment text' })
+                .send({
+                    data: {
+                        text: 'This is the comment text',
+                        taskId: createdTask.id,
+                        type: EntityCommentType.TASK_COMMENT,
+                    },
+                })
                 .expect(201)
 
             const res = await request(app)
-                .get(`/task/${createdTask.id}/comments`)
+                .get(`/comments?taskId=${createdTask.id}`)
                 .auth(authToken, typeBearer)
                 .expect(200)
-            const comments: TaskComment[] = res.body
+            const comments: EntityComment[] = res.body
 
             expect(comments.length).toEqual(1)
             expect(comments[0].text).toEqual('This is the comment text')
@@ -178,9 +192,15 @@ describe('Task CRUD (e2e)', () => {
             })
 
             await request(app)
-                .post(`/task/${createdTask.id}/comment`)
+                .post(`/comments`)
                 .auth(authToken, typeBearer)
-                .send({ text: 'This is the comment text' })
+                .send({
+                    data: {
+                        text: 'This is the comment text',
+                        taskId: createdTask.id,
+                        type: EntityCommentType.TASK_COMMENT,
+                    },
+                })
                 .expect(201)
 
             await request(app).delete(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(200)
@@ -200,21 +220,27 @@ describe('Task CRUD (e2e)', () => {
             await request(app)
                 .post(`/list/${createdList.id}/share/${annie.id}`)
                 .auth(authToken, typeBearer)
-                .send({ permission: 'View' })
+                .send({ permission: ListPermission.View })
                 .expect(201)
 
             // Annie tries to comment
             await request(app)
-                .post(`/task/${createdTask.id}/comment`)
+                .post(`/comments`)
                 .auth(annie.authToken, typeBearer)
-                .send({ text: 'This is the comment text' })
+                .send({
+                    data: {
+                        text: 'This is the comment text',
+                        taskId: createdTask.id,
+                        type: EntityCommentType.TASK_COMMENT,
+                    },
+                })
                 .expect(403)
 
             const res = await request(app)
-                .get(`/task/${createdTask.id}/comments`)
+                .get(`/comments?taskId=${createdTask.id}`)
                 .auth(annie.authToken, typeBearer)
                 .expect(200)
-            const comments: TaskComment[] = res.body
+            const comments: EntityComment[] = res.body
 
             expect(comments.length).toEqual(0)
         })
@@ -225,21 +251,26 @@ describe('Task CRUD (e2e)', () => {
                 listId: createdList.id,
             })
 
-            // Annie comments
             const createRes = await request(app)
-                .post(`/task/${createdTask.id}/comment`)
+                .post(`/comments`)
                 .auth(authToken, typeBearer)
-                .send({ text: 'This is the comment text' })
+                .send({
+                    data: {
+                        text: 'This is the comment text',
+                        taskId: createdTask.id,
+                        type: EntityCommentType.TASK_COMMENT,
+                    },
+                })
                 .expect(201)
-            const comment = createRes.body as TaskComment
+            const comment = createRes.body as EntityComment
 
             const updateRes = await request(app)
-                .patch(`/task/comment/${comment.id}`)
+                .patch(`/comments/${comment.id}`)
                 .auth(authToken, typeBearer)
                 .send({ text: 'The new text' })
                 .expect(200)
 
-            expect(updateRes.body.text).toEqual('The new text')
+            expect(updateRes.body.comment.text).toEqual('The new text')
         })
 
         it('can update a comment only as author', async () => {
@@ -258,15 +289,21 @@ describe('Task CRUD (e2e)', () => {
 
             // Annie comments
             const res = await request(app)
-                .post(`/task/${createdTask.id}/comment`)
+                .post(`/comments`)
                 .auth(annie.authToken, typeBearer)
-                .send({ text: 'This is the comment text' })
+                .send({
+                    data: {
+                        text: 'This is the comment text',
+                        taskId: createdTask.id,
+                        type: EntityCommentType.TASK_COMMENT,
+                    },
+                })
                 .expect(201)
-            const comment = res.body as TaskComment
+            const comment = res.body as EntityComment
 
             // Jonathan tries to update the comment
             await request(app)
-                .patch(`/task/comment/${comment.id}`)
+                .patch(`/comments/${comment.id}`)
                 .auth(authToken, typeBearer)
                 .send({ text: 'The new text' })
                 .expect(403)
@@ -279,14 +316,20 @@ describe('Task CRUD (e2e)', () => {
             })
 
             const res = await request(app)
-                .post(`/task/${createdTask.id}/comment`)
+                .post(`/comments`)
                 .auth(authToken, typeBearer)
-                .send({ text: 'This is the comment text' })
+                .send({
+                    data: {
+                        text: 'This is the comment text',
+                        taskId: createdTask.id,
+                        type: EntityCommentType.TASK_COMMENT,
+                    },
+                })
                 .expect(201)
-            const comment = res.body as TaskComment
+            const comment = res.body as EntityComment
 
             // Jonathan deletes the comment
-            await request(app).delete(`/task/comment/${comment.id}`).auth(authToken, typeBearer).expect(200)
+            await request(app).delete(`/comments/${comment.id}`).auth(authToken, typeBearer).expect(200)
         })
 
         it('anyone with Manage permissions can delete a comment', async () => {
@@ -297,25 +340,28 @@ describe('Task CRUD (e2e)', () => {
                 listId: createdList.id,
             })
 
-            // Jonathan shares the list with annie (Edit permissions)
+            // Jonathan shares the list with annie (Manage permissions)
             await request(app)
                 .post(`/list/${createdList.id}/share/${annie.id}`)
                 .auth(authToken, typeBearer)
-                .send({ permission: 'Manage' })
+                .send({ permission: ListPermission.Manage })
                 .expect(201)
 
             const res = await request(app)
-                .post(`/task/${createdTask.id}/comment`)
+                .post(`/comments`)
                 .auth(authToken, typeBearer)
-                .send({ text: 'This is the comment text' })
+                .send({
+                    data: {
+                        text: 'This is the comment text',
+                        taskId: createdTask.id,
+                        type: EntityCommentType.TASK_COMMENT,
+                    },
+                })
                 .expect(201)
-            const comment = res.body as TaskComment
+            const comment = res.body as EntityComment
 
             // Annie deletes the comment
-            await request(app)
-                .delete(`/task/comment/${comment.id}`)
-                .auth(annie.authToken, typeBearer)
-                .expect(200)
+            await request(app).delete(`/comments/${comment.id}`).auth(annie.authToken, typeBearer).expect(200)
         })
     })
 })
