@@ -6,6 +6,8 @@ import { TaskService } from '../task/task.service'
 import { ListController } from './list.controller'
 import { ListRepository } from './list.repository'
 import { ListService } from './list.service'
+import { CommentRepository } from '../comment/comment.repository'
+import { CommentService } from '../comment/comment.service'
 
 describe('ListController', () => {
     let controller: ListController
@@ -13,7 +15,15 @@ describe('ListController', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [PrismaModule],
-            providers: [ListRepository, ListService, TaskService, TaskRepository, PermissionsService],
+            providers: [
+                ListRepository,
+                ListService,
+                TaskService,
+                TaskRepository,
+                PermissionsService,
+                CommentService,
+                CommentRepository,
+            ],
             controllers: [ListController],
         }).compile()
 

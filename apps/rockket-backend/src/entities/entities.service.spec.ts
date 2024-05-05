@@ -6,6 +6,8 @@ import { ListService } from './list/list.service'
 import { PermissionsService } from './permissions/permissions.service'
 import { TaskRepository } from './task/task.repository'
 import { TaskService } from './task/task.service'
+import { CommentRepository } from './comment/comment.repository'
+import { CommentService } from './comment/comment.service'
 
 describe('EntitiesService', () => {
     let service: EntitiesService
@@ -20,6 +22,8 @@ describe('EntitiesService', () => {
                 ListService,
                 ListRepository,
                 PermissionsService,
+                CommentService,
+                CommentRepository,
             ],
         }).compile()
 
