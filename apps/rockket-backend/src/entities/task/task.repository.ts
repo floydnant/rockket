@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { Task as DbTask } from '@prisma/client'
-import { Task, EntityEvent, entityEventSchema } from '@rockket/commons'
+import { EntityEvent, Task, entityEventSchema } from '@rockket/commons'
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
-import { CreateTaskCommentZodDto, CreateTaskZodDto, UpdateTaskCommentZodDto } from './task.dto'
+import { CommentService } from '../comment/comment.service'
+import { CreateTaskZodDto } from './task.dto'
 
 @Injectable()
 export class TaskRepository {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService, private commentsService: CommentService) {}
 
     async getAllTasks(userId: string): Promise<DbTask[]> {
         return this.prisma.task.findMany({
@@ -62,7 +63,7 @@ export class TaskRepository {
         const taskIds = nestedChildren.map(child => child.id)
 
         const [{ count: affectedComments }, { count: affectedTasks }] = await this.prisma.$transaction([
-            this.prisma.taskComment.deleteMany({ where: { taskId: { in: taskIds } } }),
+            this.prisma.entityComment.deleteMany({ where: { taskId: { in: taskIds } } }),
             this.prisma.task.deleteMany({ where: { id: { in: taskIds } } }),
         ])
 
@@ -81,31 +82,6 @@ export class TaskRepository {
 
         // @TODO: throw db inconsistency exception here
         return entityEventSchema.array().parse(events)
-    }
-
-    async getTaskComments(taskId: string) {
-        return this.prisma.taskComment.findMany({
-            where: { taskId },
-            // OrderBy: { commentedAt: 'asc' }, // maybe this won't be nececcary, let's see
-        })
-    }
-    async createTaskComment(userId: string, taskId: string, dto: CreateTaskCommentZodDto) {
-        return this.prisma.taskComment.create({
-            data: {
-                userId,
-                taskId,
-                ...dto,
-            },
-        })
-    }
-    async updateTaskComment(commentId: string, dto: UpdateTaskCommentZodDto) {
-        return this.prisma.taskComment.update({
-            where: { id: commentId },
-            data: { ...dto, wasEdited: true },
-        })
-    }
-    async deleteTaskComment(commentId: string) {
-        return this.prisma.taskComment.delete({ where: { id: commentId } })
     }
 
     async getRootLevelTasks(listId: string): Promise<DbTask[]> {

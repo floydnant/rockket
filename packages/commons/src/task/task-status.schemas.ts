@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ValuesOf, objKeysToEnumSchema } from '../utils'
+import { ValueOf, objKeysToEnumSchema } from '../utils'
 
 export const TaskStatus = {
     IN_PROGRESS: 'IN_PROGRESS',
@@ -9,7 +9,7 @@ export const TaskStatus = {
     COMPLETED: 'COMPLETED',
     NOT_PLANNED: 'DISCARDED',
 } as const
-export type TaskStatus = ValuesOf<typeof TaskStatus>
+export type TaskStatus = ValueOf<typeof TaskStatus>
 export const taskStatusSchema = z.nativeEnum(TaskStatus)
 
 // For backwards compatibility with the old task status values

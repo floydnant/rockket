@@ -13,7 +13,7 @@ const main = async () => {
         listParticipant: true,
         task: true,
         entityEvent: true,
-        taskComment: true,
+        entityComment: true,
     })
 
     const lastMigrationQueryRes: { migration_name: string }[] = await prisma.$queryRaw`

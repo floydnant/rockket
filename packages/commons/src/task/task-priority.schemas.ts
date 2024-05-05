@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ValuesOf, objKeysToEnumSchema } from '../utils'
+import { ValueOf, objKeysToEnumSchema } from '../utils'
 
 export const TaskPriority = {
     URGENT: 'URGENT',
@@ -9,7 +9,7 @@ export const TaskPriority = {
     LOW: 'LOW',
     OPTIONAL: 'OPTIONAL',
 } as const
-export type TaskPriority = ValuesOf<typeof TaskPriority>
+export type TaskPriority = ValueOf<typeof TaskPriority>
 export const taskPrioritySchema = z.nativeEnum(TaskPriority)
 
 // For backwards compatibility with the old task priority values

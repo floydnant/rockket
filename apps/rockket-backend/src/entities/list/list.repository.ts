@@ -76,7 +76,7 @@ export class ListRepository {
             { count: affectedListParticipants },
             { count: affectedLists },
         ] = await this.prisma.$transaction([
-            this.prisma.taskComment.deleteMany({ where: { taskId: { in: taskIds } } }),
+            this.prisma.entityComment.deleteMany({ where: { taskId: { in: taskIds } } }),
             this.prisma.task.deleteMany({ where: { id: { in: taskIds } } }),
             this.prisma.listParticipant.deleteMany({ where: { listId: { in: listIds } } }),
             this.prisma.tasklist.deleteMany({ where: { id: { in: listIds } } }),
