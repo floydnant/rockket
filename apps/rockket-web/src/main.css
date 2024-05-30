@@ -169,16 +169,19 @@ pre {
     .dropdown-menu {
         min-width: 180px;
         max-width: 280px;
-        @apply border-tinted-700/70 bg-tinted-900 glass mx-2 flex flex-col gap-0.5 rounded-xl border p-1.5 shadow-lg;
-    }
-    .dropdown-menu .menu-item {
-        @apply pl-2.5;
+        @apply border-tinted-700 bg-tinted-800 glass mx-2 flex flex-col gap-0.5 rounded-xl border bg-opacity-80 p-1.5 shadow-lg;
     }
 
     .menu-item {
         @apply button-naked text-left outline-none;
     }
 
+    .dropdown-menu .menu-item {
+        @apply pl-2.5;
+    }
+    .dropdown-menu .menu-item:is(.menu-item--default, :not([class*='menu-item--'])) {
+        @apply hover:bg-tinted-600;
+    }
     .menu-item:is(.menu-item--default, :not([class*='menu-item--'])) {
         @apply hover:bg-tinted-700;
     }
