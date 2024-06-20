@@ -66,6 +66,7 @@ import { SettingsGeneralComponent } from './pages/settings/general/general.compo
 import { SettingsComponent } from './pages/settings/settings.component'
 import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-service.component'
 import { HighlightPipe } from './pipes/highlight.pipe'
+import { ResizeModule } from './resize/resize.module'
 import { RichTextEditorModule } from './rich-text-editor/rich-text-editor.module'
 import { RxModule } from './rx/rx.module'
 import { effects, metaReducers, reducers } from './store'
@@ -143,6 +144,7 @@ import { TooltipModule } from './tooltip/tooltip.module'
         DropdownModule,
         KeyboardModule,
         RichTextEditorModule,
+        ResizeModule,
     ],
     providers: [
         {
