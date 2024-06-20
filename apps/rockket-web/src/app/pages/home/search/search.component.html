@@ -57,7 +57,7 @@
                                 </div>
                                 <div
                                     *rxIf="getEntityDescription(entitiesState, entity); let desc"
-                                    class="description | bg-tinted-900 text-tinted-300 mt-1 h-full max-h-40 w-full overflow-y-auto rounded-lg px-2 py-1"
+                                    class="description | rendered-content | bg-tinted-900 text-tinted-300 mt-1 h-full max-h-40 w-full overflow-y-auto rounded-lg px-2 py-1"
                                     [innerHTML]="desc | highlight : search.query"
                                 ></div>
                             </button>
