@@ -69,7 +69,8 @@ export class PageProgressBarComponent {
     statusColorMap: Record<TaskStatus, TwColorClass> = {
         ...taskStatusColorMap,
         [TaskStatus.OPEN]: 'text-tinted-100',
-        [TaskStatus.BACKLOG]: 'text-tinted-200',
+        [TaskStatus.BACKLOG]: 'text-tinted-100',
+        [TaskStatus.NOT_PLANNED]: 'text-tinted-100',
     }
 
     taskTree$ = new BehaviorSubject<TaskRecursive[]>([])
@@ -77,10 +78,19 @@ export class PageProgressBarComponent {
         this.taskTree$.next(tasks)
     }
 
-    isShownAsPercentage = this.uiStateService.mainViewUiState.isProgressShownAsPercentage
-    toggleShownAsPercentage() {
-        this.isShownAsPercentage = !this.isShownAsPercentage
-        this.uiStateService.updateShownAsPercentage(this.isShownAsPercentage)
+    // isShownAsPercentage = this.uiStateService.mainViewUiState.isProgressShownAsPercentage
+    isShownAsPercentage$ = this.uiStateService.mainViewUiState$.pipe(
+        map(uiState => uiState.isProgressShownAsPercentage),
+        distinctUntilChanged(),
+        // untilDestroyed(this),
+    )
+    // toggleShownAsPercentage() {
+    //     this.isShownAsPercentage = !this.isShownAsPercentage
+    //     this.uiStateService.updateShownAsPercentage(this.isShownAsPercentage)
+    // }
+    setShownAsPercentage(value: boolean) {
+        // this.isShownAsPercentage = !this.isShownAsPercentage
+        this.uiStateService.updateShownAsPercentage(value)
     }
 
     digest$ = this.taskTree$.pipe(
