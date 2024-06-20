@@ -39,34 +39,44 @@ const resolveControlsLayout = (
         resolveIcon: (control: EditorControl) => IconKey
     },
 ) => {
-    const resolvedControls = layout.map<ResolvedEditorControlItem>(featureLayout => {
-        if (isSeparator(featureLayout)) return featureLayout
+    const resolvedControls = layout
+        .map<ResolvedEditorControlItem | null>(featureLayout => {
+            if (isSeparator(featureLayout)) return featureLayout
 
-        const controlId = typeof featureLayout == 'string' ? featureLayout : featureLayout.controlId
-        const control = controls.find(control => control.controlId == controlId)
-        if (!control) throw new Error(`Control '${control}' not found`)
+            const controlId = typeof featureLayout == 'string' ? featureLayout : featureLayout.controlId
+            const control = controls.find(control => control.controlId == controlId)
+            if (!control) {
+                // @TODO: Logs in Production should be shown on an `opt in` basis
+                console.warn(`Control '${control}' not found`)
+                return null
+            }
 
-        if (typeof featureLayout != 'string' && 'dropdown' in featureLayout) {
-            const resolvedControl = control as ResolvedEditorControl
+            if (typeof featureLayout != 'string' && 'dropdown' in featureLayout) {
+                const resolvedControl = control as ResolvedEditorControl
 
-            resolvedControl.dropdownItems = featureLayout.dropdown.map<MenuItem<EditorControlArgs>>(
-                controlIdOrSeparator => {
-                    if (isSeparator(controlIdOrSeparator)) return controlIdOrSeparator
+                resolvedControl.dropdownItems = featureLayout.dropdown
+                    .map<MenuItem<EditorControlArgs> | null>(controlIdOrSeparator => {
+                        if (isSeparator(controlIdOrSeparator)) return controlIdOrSeparator
 
-                    const control = controls.find(control => control.controlId == controlIdOrSeparator)
-                    if (!control) throw new Error(`Control '${controlIdOrSeparator}' not found`)
+                        const control = controls.find(control => control.controlId == controlIdOrSeparator)
+                        if (!control) {
+                            // @TODO: Logs in Production should be shown on an `opt in` basis
+                            console.warn(`Control '${controlIdOrSeparator}' not found`)
+                            return null
+                        }
 
-                    // @TODO: the dropdown should be responsible for resolving this
-                    control.title = resolvers.resolveTitle(control)
-                    control.icon = resolvers.resolveIcon(control)
+                        // @TODO: the dropdown should be responsible for resolving this
+                        control.title = resolvers.resolveTitle(control)
+                        control.icon = resolvers.resolveIcon(control)
 
-                    return control as MenuItem<EditorControlArgs>
-                },
-            )
-        }
+                        return control as MenuItem<EditorControlArgs>
+                    })
+                    .filter(isTruthy)
+            }
 
-        return control
-    })
+            return control
+        })
+        .filter(isTruthy)
 
     return resolvedControls
 }

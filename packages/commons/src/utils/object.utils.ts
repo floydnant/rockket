@@ -76,3 +76,11 @@ export const pickFromObj = <TObj extends Record<string, string>, TKeys extends k
 
     return newEnumObj
 }
+
+export type KeyWhereNotNull<T extends object> = {
+    [K in keyof T]: null extends T[K] ? never : K
+}[keyof T]
+
+export type PropertiesWhereNotNull<T extends object> = {
+    [K in KeyWhereNotNull<T>]: T[K]
+}

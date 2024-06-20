@@ -3,6 +3,10 @@ import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
 import { IconKey } from '../components/atoms/icons/icon/icons'
 import { HotToastServiceMethods } from '@ngneat/hot-toast'
 
+// @TODO: Remove these enums and refactor to make the editor features
+// more generic and extendable without having to update enums
+// (just like registering a provider in any DI system)
+
 export enum EditorFeatureId {
     Base = 'base',
     Inline = 'inline',
@@ -19,6 +23,7 @@ export enum EditorFeatureId {
     MoreMenu = 'more-menu',
     ChecklistCounter = 'checklist-counter',
     SearchAndReplace = 'search-and-replace',
+    CopyAsHtml = 'copy-as-html',
 }
 
 export enum EditorControlId {
@@ -50,6 +55,7 @@ export enum EditorControlId {
     Indent = 'indent',
     Outdent = 'outdent',
     CopyAsMarkdown = 'copy-as-markdown',
+    CopyAsHtml = 'copy-as-html',
 
     Blur = 'blur',
 }
