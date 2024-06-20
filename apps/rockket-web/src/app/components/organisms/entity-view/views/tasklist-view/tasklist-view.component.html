@@ -1,12 +1,4 @@
 <ng-container *rxIf="listEntity$; let entity; strategy: 'native'">
-    <!-- <div class="flex gap-1 text-tinted-300 opacity-0 transition-opacity group-hover:opacity-100"> -->
-    <!--     <button class="button-naked">Add Sublist</button> -->
-    <!--     <button class="button-naked">Add Description</button> -->
-    <!-- </div> -->
-    <!-- dont know 'bout these ones: -->
-    <!-- <button class="button-naked">Add Task</button> -->
-    <!-- <button class="button-naked">Share</button> -->
-
     <h1 class="heading | mt-4">
         <app-editable-entity-title [entity]="entity"></app-editable-entity-title>
     </h1>
@@ -23,15 +15,9 @@
         (update)="updateDescription($event)"
         (blur)="descriptionBlurInput$.next($event)"
     ></app-entity-description>
+</ng-container>
 
-    <!-- <p>And this is the part for the description</p>
-            <p>Where you can</p>
-            <ul>
-                <li>Describe the list/task in further detail</li>
-                <li>Take notes for yourself</li>
-            <li>Quickly write down / sketch out ideas</li>
-        </ul> -->
-
+<ng-container *rxLet="children$; let children">
     <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
         <button
             *rxIf="!(isDescriptionOpen$ | push)"
@@ -46,6 +32,7 @@
         </button>
 
         <button
+            *rxIf="!children || !children.length"
             class="button-naked text-tinted-200 hover:text-tinted-100"
             appTooltip="Create a new list inside this one"
             (click)="createSublist()"
@@ -57,36 +44,51 @@
         </button>
     </div>
 
-    <div
-        class="children | mt-3 flex flex-col items-start gap-2"
-        *ngIf="entity.children?.length"
-        cdkMenuBar
-        data-test-name="entity-children"
-    >
-        <button
-            class="child | button-m text-tinted-200 max-w-full truncate"
-            *ngFor="let child of children$ | async"
-            routerLink="/home/{{ child.id }}"
-            cdkMenuItem
-            [cdkContextMenuTriggerFor]="options"
-            #trigger="cdkContextMenuTriggerFor"
-            data-test-name="entity-child"
-        >
-            <app-entity-page-label
-                [pageTitle]="child.title"
-                [pageIcon]="child.entityType"
-            ></app-entity-page-label>
+    <ng-container *rxIf="children && children.length">
+        <div class="spacer | h-5"></div>
 
-            <ng-template #options>
-                <!-- @TODO: Using the options$ here is wrong, since the children might be of a different entityType than the parent. -->
-                <app-drop-down
-                    [items]="(options$ | async) || []"
-                    [rootTrigger]="trigger"
-                    [data]="{ id: child.id, entityType: child.entityType }"
-                ></app-drop-down>
-            </ng-template>
+        <p class="mb-2 text-lg font-semibold">Sublists</p>
+        <button
+            class="button-naked text-tinted-200 hover:text-tinted-100 mb-2"
+            appTooltip="Create a new list inside this one"
+            (click)="createSublist()"
+            data-test-name="create-children"
+        >
+            <app-icon icon="fas fa-plus" class="mr-1"></app-icon>
+            New sublist
         </button>
-    </div>
+
+        <div
+            class="children | mt-3 grid items-start gap-1"
+            cdkMenuBar
+            data-test-name="entity-children"
+            style="grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr))"
+        >
+            <button
+                class="child | button-m text-tinted-200 max-w-full truncate bg-transparent text-left duration-[20ms]"
+                *ngFor="let child of children"
+                routerLink="/home/{{ child.id }}"
+                cdkMenuItem
+                [cdkContextMenuTriggerFor]="options"
+                #trigger="cdkContextMenuTriggerFor"
+                data-test-name="entity-child"
+            >
+                <app-entity-page-label
+                    [pageTitle]="child.title"
+                    [pageIcon]="child.entityType"
+                ></app-entity-page-label>
+                <ng-template #options>
+                    <!-- @TODO: Using the options$ here is wrong, since the children might be of a different entityType than the parent. -->
+                    <app-drop-down
+                        [items]="(options$ | async) || []"
+                        [rootTrigger]="trigger"
+                        [data]="{ id: child.id, entityType: child.entityType }"
+                    ></app-drop-down>
+                </ng-template>
+            </button>
+        </div>
+        <div class="spacer | h-8"></div>
+    </ng-container>
 </ng-container>
 
 <ng-container *ngIf="tasks$ | async as tasks; else loadingTasks">
