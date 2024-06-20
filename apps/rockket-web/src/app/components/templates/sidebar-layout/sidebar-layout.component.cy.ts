@@ -9,12 +9,14 @@ import { UserMenuComponent } from '../../organisms/user-menu/user-menu.component
 import { MainPaneComponent } from '../main-pane/main-pane.component'
 import { MenuToggleComponent } from './menu-toggle/menu-toggle.component'
 import { SidebarLayoutComponent } from './sidebar-layout.component'
+import { RxModule } from 'src/app/rx/rx.module'
+import { ResizeModule } from '../../../resize/resize.module'
 
 const setupComponent = (template: string) => {
     cy.mount(template, {
         componentProperties: {},
         providers: [storeMock, UiStateService, actionsMock],
-        imports: [OverlayModule, CdkMenuModule],
+        imports: [OverlayModule, CdkMenuModule, RxModule, ResizeModule],
         declarations: [
             SidebarLayoutComponent,
             UserMenuComponent,
@@ -84,14 +86,14 @@ describe('SidebarLayoutComponent', () => {
             cy.viewport('macbook-13')
             setupComponent(defaultTemplate)
 
-            cy.get(testName('resize-handle'))
+            cy.get(testName('sidebar-resize-handle'))
                 .trigger('mousedown')
                 .trigger('mousemove', { clientX: 350, force: true })
                 .trigger('mouseup')
 
             cy.get(testName('sidebar')).then(e => expect(e.width()).greaterThan(348))
 
-            cy.get(testName('resize-handle'))
+            cy.get(testName('sidebar-resize-handle'))
                 .trigger('mousedown')
                 .trigger('mousemove', { clientX: 170, force: true })
                 .trigger('mouseup')
@@ -105,7 +107,7 @@ describe('SidebarLayoutComponent', () => {
                 `<app-sidebar-layout [enableResize]="false"> ${defaultContent} </app-sidebar-layout>`,
             )
 
-            cy.get(testName('resize-handle')).should('not.exist')
+            cy.get(testName('sidebar-resize-handle')).should('not.exist')
         })
     })
 })
