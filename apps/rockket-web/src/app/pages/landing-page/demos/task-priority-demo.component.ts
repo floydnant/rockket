@@ -5,7 +5,7 @@ const listId = 'priority-demo'
 const demoTasks: TaskRecursive[] = [
     {
         id: listId + 'task-one',
-        title: 'Do that extremely urgent thing',
+        title: 'This needs to be done yesterday',
         description: '',
         listId,
         status: TaskStatus.OPEN,
@@ -61,6 +61,20 @@ const demoTasks: TaskRecursive[] = [
     },
     {
         id: listId + 'task-five',
+        title: 'This thing got deprioritized',
+        description: '',
+        listId,
+        status: TaskStatus.OPEN,
+        priority: TaskPriority.LOW,
+        parentTaskId: '',
+        children: [],
+        createdAt: new Date(),
+        statusUpdatedAt: new Date(),
+        ownerId: '5',
+        deadline: null,
+    },
+    {
+        id: listId + 'task-six',
         title: 'This thing can wait until everything is else is done',
         description: '',
         listId,
