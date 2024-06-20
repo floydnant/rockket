@@ -6,7 +6,3 @@
         @apply -translate-x-full;
     }
 }
-
-.sidebar {
-    @apply [&_::-webkit-scrollbar-thumb]:not-hover:bg-transparent;
-}

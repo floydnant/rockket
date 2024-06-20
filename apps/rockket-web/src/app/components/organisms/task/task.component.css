@@ -70,7 +70,3 @@
 .task.completed.isSelected .icon-btn:not(app-toolbar .icon-btn) {
     @apply hover:bg-submit-600;
 }
-
-.description {
-    @apply not-hover:[&::-webkit-scrollbar-thumb]:bg-transparent;
-}
