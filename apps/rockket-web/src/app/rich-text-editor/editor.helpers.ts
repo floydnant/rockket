@@ -1,8 +1,22 @@
 import { Editor } from '@tiptap/core'
 import { EditorState } from 'prosemirror-state'
 import { EditorFeature } from './editor.types'
+import { PropertiesWhereNotNull } from '@rockket/commons'
 
 export const createEditorFeature = <TFeature extends EditorFeature>(feature: TFeature): TFeature => feature
+
+export const createEditorFeatureMap = <T extends Record<string, EditorFeature | null>>(
+    map: T,
+): PropertiesWhereNotNull<T> => {
+    const filteredMap = {} as PropertiesWhereNotNull<T>
+    for (const key in map) {
+        const feature = map[key]
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (feature) (filteredMap as any)[key] = feature
+    }
+
+    return filteredMap
+}
 
 type ListType = typeof bulletListType | typeof orderedListType | typeof taskListType
 
