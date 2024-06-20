@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { ResizeHandleComponent } from './resize-handle.component'
+import { ResizeDirective } from './resize.directive'
 
 describe('ResizeComponent', () => {
     let component: ResizeHandleComponent
@@ -7,7 +8,7 @@ describe('ResizeComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ResizeHandleComponent],
+            declarations: [ResizeHandleComponent, ResizeDirective],
         }).compileComponents()
 
         fixture = TestBed.createComponent(ResizeHandleComponent)
