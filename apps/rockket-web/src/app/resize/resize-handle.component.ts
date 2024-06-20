@@ -15,7 +15,7 @@ import { ResizeStrategy } from './resize.directive'
             #resize="appResize"
             (resizing)="resizing.emit($event)"
             (resizeEnd)="resizeEnd.emit($event)"
-            data-test-name="resize-handle"
+            [attr.data-test-name]="testName"
         >
             <div
                 class="group-hover:bg-tinted-400 group-[.isResizing]:bg-tinted-400 relative left-[50%] h-full w-0.5 translate-x-[-50%] transition-colors delay-75"
@@ -29,6 +29,7 @@ export class ResizeHandleComponent {
     @Input({ required: true }) resizeElement!: HTMLElement
     @Input() minSize?: number
     @Input() maxSize?: number
+    @Input() testName = 'resize-handle'
 
     @Output() resizing = new EventEmitter<number>()
     @Output() resizeEnd = new EventEmitter<number>()

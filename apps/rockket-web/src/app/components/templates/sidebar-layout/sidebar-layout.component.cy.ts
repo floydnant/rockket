@@ -9,12 +9,14 @@ import { UserMenuComponent } from '../../organisms/user-menu/user-menu.component
 import { MainPaneComponent } from '../main-pane/main-pane.component'
 import { MenuToggleComponent } from './menu-toggle/menu-toggle.component'
 import { SidebarLayoutComponent } from './sidebar-layout.component'
+import { RxModule } from 'src/app/rx/rx.module'
+import { ResizeModule } from '../../../resize/resize.module'
 
 const setupComponent = (template: string) => {
     cy.mount(template, {
         componentProperties: {},
         providers: [storeMock, UiStateService, actionsMock],
-        imports: [OverlayModule, CdkMenuModule],
+        imports: [OverlayModule, CdkMenuModule, RxModule, ResizeModule],
         declarations: [
             SidebarLayoutComponent,
             UserMenuComponent,
