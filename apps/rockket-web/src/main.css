@@ -27,16 +27,23 @@ body {
 ::selection {
     @apply bg-primary-200 text-primary-800;
 }
-::-webkit-scrollbar {
-    width: 0.4rem;
-    height: 0.4rem;
+* {
+    scrollbar-color: theme('colors.tinted.700') transparent;
+    scrollbar-width: thin;
 }
-::-webkit-scrollbar-track {
-    @apply bg-transparent;
+@supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar {
+        width: 0.4rem;
+        height: 0.4rem;
+    }
+    ::-webkit-scrollbar-track {
+        @apply bg-transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        @apply bg-tinted-700 hover:bg-tinted-600 rounded-full;
+    }
 }
-::-webkit-scrollbar-thumb {
-    @apply bg-tinted-700 hover:bg-tinted-600 rounded-full;
-}
+
 [disabled] {
     @apply cursor-not-allowed;
 }
@@ -173,7 +180,7 @@ pre {
     }
 
     .menu-item {
-        @apply button-naked text-left outline-none;
+        @apply button-naked text-left outline-none duration-[20ms];
     }
 
     .dropdown-menu .menu-item {

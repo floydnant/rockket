@@ -7,20 +7,22 @@
         [&.active]:bg-tinted-700
         flex
         w-full
-        items-stretch
+        items-center
         justify-start
         rounded-md
         transition-colors
-        duration-75
+        duration-[var(--transition-duration)]
         hover:outline-none
         [&.nested]:pl-2.5;
 
     line-height: 1.7;
+    --transition-duration: 5ms;
 }
 
 .indent-line {
     @apply border-tinted-700
         ml-3.5
+        h-7
         border-l
         first:ml-1;
 }
@@ -31,16 +33,18 @@
         flex
         grow
         gap-1
+        h-7
         truncate
         py-0.5
         pr-1
         transition-colors
-        duration-[40ms];
+        duration-[var(--transition-duration)];
 }
 
 .node-toggle {
     @apply text-tinted-600
         hover:text-tinted-400
+        shrink-0
         aspect-square
         rounded
         pl-2.5
@@ -52,7 +56,7 @@
 .no-toggle-icon app-icon {
     @apply text-tinted-700
         transition-colors
-        duration-75;
+        duration-[var(--transition-duration)];
 }
 .tree-node {
     @apply [&.isSelected_.no-toggle-icon_app-icon]:text-tinted-600

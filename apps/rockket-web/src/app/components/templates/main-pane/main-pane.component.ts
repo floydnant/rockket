@@ -18,9 +18,6 @@ import { MenuService } from '../sidebar-layout/menu.service'
                     @apply -translate-y-full;
                 }
             }
-            main {
-                @apply not-hover:[&_::-webkit-scrollbar-thumb]:bg-transparent;
-            }
         `,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
