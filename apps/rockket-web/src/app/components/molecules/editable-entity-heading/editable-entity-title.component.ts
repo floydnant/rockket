@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType, Task } from '@rockket/commons'
+import { EntityPreviewRecursive, EntityType, Task, TaskStatus } from '@rockket/commons'
 import { BehaviorSubject, distinctUntilKeyChanged, filter, first, map, of, switchMap } from 'rxjs'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
+import { taskStatusColorMap } from 'src/app/shared/colors'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { getTaskStatusMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { useTaskForActiveStatus } from 'src/app/utils/menu-item.helpers'
-import { EntityState } from '../../atoms/icons/icon/icons'
+import { EntityState, taskStatusLabelMap } from '../../atoms/icons/icon/icons'
 
 @UntilDestroy()
 @Component({
@@ -23,7 +24,10 @@ export class EditableEntityTitleComponent {
 
     EntityType = EntityType
     EntityState = EntityState
+    TaskStatus = TaskStatus
     ENTITY_TITLE_DEFAULTS = ENTITY_TITLE_DEFAULTS
+    taskStatusColorMap = taskStatusColorMap
+    taskStatusLabelMap = taskStatusLabelMap
 
     entity$ = new BehaviorSubject<
         (EntityPreviewRecursive & Pick<Task, 'status' | 'priority'>) | undefined | null

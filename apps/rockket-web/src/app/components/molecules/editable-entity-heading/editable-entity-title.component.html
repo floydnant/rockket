@@ -1,9 +1,8 @@
 <div class="inline-flex" *ngIf="entity$ | async as entity" data-test-name="entity-name-container">
     <ng-template #icon>
-        <!-- @TODO: see if this strategy really needs to be 'native' -->
         <app-icon
             *rxLet="isLoading$; let isLoading; strategy: 'native'"
-            class="text-2xl"
+            class="inline-flex w-6 justify-center text-2xl"
             [icon]="isLoading ? EntityState.LOADING : entity.status || entity.entityType"
             [attr.data-test-is-loading]="isLoading"
         >
@@ -15,6 +14,8 @@
             *ngIf="taskStatusMenuItems$ | async as statusItems; else elseBlock"
             [cdkMenuTriggerFor]="statusMenu"
             class="icon-btn aspect-square p-4"
+            [appTooltip]="tooltip"
+            [tooltipOptions]="{ avoidPositions: ['right'] }"
         >
             <ng-container *ngTemplateOutlet="icon"></ng-container>
             <ng-template #statusMenu>
@@ -23,7 +24,19 @@
         </button>
 
         <ng-template #elseBlock>
-            <ng-container *ngTemplateOutlet="icon"></ng-container>
+            <div [appTooltip]="tooltip" [tooltipOptions]="{ avoidPositions: ['right'] }">
+                <ng-container *ngTemplateOutlet="icon"></ng-container>
+            </div>
+        </ng-template>
+
+        <ng-template #tooltip>
+            <span class="text-tinted-300">Type: </span><span>{{ entity.entityType }}</span>
+            <ng-container *ngIf="entity.entityType == EntityType.TASK">
+                <span class="text-tinted-300">, Status: </span>
+                <span [class]="taskStatusColorMap[entity.status].text">{{
+                    taskStatusLabelMap[entity.status]
+                }}</span>
+            </ng-container>
         </ng-template>
     </div>
 
@@ -33,7 +46,10 @@
         [placeholder]="ENTITY_TITLE_DEFAULTS[entity.entityType]"
         [enableDebouncedUpdates]="false"
         (update)="titleUpdates$.next($event)"
-        editorClass="pr-14"
+        [editorClass]="{ 
+            'pr-14': true,
+            'line-through focus:no-underline decoration-primary-400 decoration-[4px]': entity.status == TaskStatus.NOT_PLANNED,
+        }"
         data-test-name="editable-entity-name"
     ></app-inline-editor>
 </div>

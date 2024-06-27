@@ -1,7 +1,13 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
 import { UntilDestroy } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType, TaskDetail, TaskEntityPreview } from '@rockket/commons'
+import {
+    EntityPreviewRecursive,
+    EntityType,
+    TaskDetail,
+    TaskEntityPreview,
+    TaskStatus,
+} from '@rockket/commons'
 import {
     Subject,
     combineLatest,
@@ -16,10 +22,10 @@ import {
     startWith,
     withLatestFrom,
 } from 'rxjs'
-import { taskPriorityLabelMap } from 'src/app/components/atoms/icons/icon/icons'
+import { taskPriorityLabelMap, taskStatusLabelMap } from 'src/app/components/atoms/icons/icon/icons'
 import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
-import { taskPriorityColorMap } from 'src/app/shared/colors'
-import { getTaskPriorityMenuItems } from 'src/app/shared/entity-menu-items'
+import { taskPriorityColorMap, taskStatusColorMap } from 'src/app/shared/colors'
+import { getTaskPriorityMenuItems, getTaskStatusMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
@@ -39,6 +45,20 @@ export class TaskViewComponent {
         @Inject(ENTITY_VIEW_DATA) private viewData: EntityViewData<TaskDetail>,
         private store: Store<AppState>,
     ) {}
+
+    // @TODO: make this a user setting
+    prominentStatusButton = false
+
+    taskStatusLabelMap = taskStatusLabelMap
+    statusMenuItems = getTaskStatusMenuItems(this.store)
+    getStatusButtonColorClasses(status: TaskStatus) {
+        return {
+            [taskStatusColorMap[status].textOnBackground]: true,
+            [taskStatusColorMap[status].background]: true,
+            [taskStatusColorMap[status].textHoverOnBackground]: true,
+            [taskStatusColorMap[status].backgroundHover]: true,
+        }
+    }
 
     taskPriorityLabelMap = taskPriorityLabelMap
     priorityColorMap = taskPriorityColorMap

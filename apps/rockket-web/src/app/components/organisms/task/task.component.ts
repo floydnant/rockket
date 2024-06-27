@@ -9,7 +9,7 @@ import {
     ViewChild,
 } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { EntityType, Task, TaskFlattend, TaskRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
+import { EntityType, Task, TaskFlattend, TaskPriority, TaskRecursive, TaskStatus } from '@rockket/commons'
 import { createDocument, getSchema } from '@tiptap/core'
 import {
     BehaviorSubject,
@@ -82,11 +82,7 @@ export class TaskComponent {
 
     TaskStatus = TaskStatus
     taskStatusLabelMap = taskStatusLabelMap
-    statusColorMap = {
-        ...taskStatusColorMap,
-        [TaskStatus.OPEN]: 'text-tinted-100',
-        [TaskStatus.BACKLOG]: 'text-tinted-100',
-    }
+    taskStatusColorMap = taskStatusColorMap
     TaskPriority = TaskPriority
     taskPriorityLabelMap = taskPriorityLabelMap
     priorityColorMap = taskPriorityColorMap
