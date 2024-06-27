@@ -41,7 +41,7 @@
         </button>
 
         <button
-            class="priority-button | button-naked text-tinted-200"
+            class="priority-button | button-naked text-tinted-100"
             appTooltip="Priority"
             data-test-name="task-priority"
             appTooltip="Priority"
@@ -53,10 +53,30 @@
                 {{ taskPriorityLabelMap[task.priority] }}
             </span>
             <app-icon icon="caretDown"></app-icon>
+
+            <ng-template #priorityMenu>
+                <app-drop-down [items]="priorityMenuItems" [data]="task"></app-drop-down>
+            </ng-template>
         </button>
-        <ng-template #priorityMenu>
-            <app-drop-down [items]="priorityMenuItems" [data]="task"></app-drop-down>
-        </ng-template>
+
+        <button
+            class="status-button | button-naked"
+            data-test-name="task-status"
+            [cdkMenuTriggerFor]="statusMenu"
+            [ngClass]="
+                prominentStatusButton
+                    ? getStatusButtonColorClasses(task.status)
+                    : 'text-tinted-100'
+            "
+        >
+            <app-icon [icon]="task.status"></app-icon>
+            <span>{{ taskStatusLabelMap[task.status] }}</span>
+            <app-icon icon="caretDown" class="[&_i]:mr-0"></app-icon>
+
+            <ng-template #statusMenu>
+                <app-drop-down [items]="statusMenuItems" [data]="task"></app-drop-down>
+            </ng-template>
+        </button>
     </div>
 
     <app-task-tree
