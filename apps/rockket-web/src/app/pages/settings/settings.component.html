@@ -1,12 +1,12 @@
 <app-sidebar-layout [enableResize]="false" data-test-name="settings-page">
     <ng-container sidebarHeader>
-        <div class="text-tinted-300 flex flex-col items-start gap-1 px-2 pb-2 pt-0.5" cdkMenu>
+        <div class="flex flex-col items-start gap-1 px-2 pb-2 pt-0.5" cdkMenu>
             <button
                 cdkMenuItem
                 *ngFor="let page of settingsPages"
                 class="menu-item | w-full text-left"
                 [routerLink]="page.route"
-                routerLinkActive="text-primary-300"
+                routerLinkActive="!text-primary-300"
             >
                 <app-icon [icon]="page.icon"></app-icon>{{ page.title }}
             </button>

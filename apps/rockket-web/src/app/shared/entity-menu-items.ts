@@ -100,6 +100,7 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
             title: 'Open as Page',
             icon: 'expand',
             route: '/home/:id',
+            hideWhenActive: true,
         },
         { isSeparator: true },
         {
