@@ -26,6 +26,7 @@ export class AuthService {
     }
     saveToken(authToken: string) {
         this.token.value = authToken
+        this.token.flush()
     }
     deleteToken() {
         this.token.remove()

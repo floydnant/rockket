@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment'
 import { EntityType } from '@rockket/commons'
 import { entitiesActions } from '../store/entities/entities.actions'
 import { StorageItem } from '../utils/storage.helpers'
+import { map } from 'rxjs'
 
 class SidebarUiState {
     isDesktopSidebarOpen = true
@@ -48,31 +49,40 @@ export class UiStateService {
     get mainViewUiState() {
         return this.mainViewUiState_.value as MainViewUiState
     }
+    mainViewUiState$ = this.mainViewUiState_.value$.pipe(
+        map(value => {
+            if (!value) return new MainViewUiState()
+
+            // return { ...new MainViewUiState(), ...value }
+            return value
+            return Object.assign({}, new MainViewUiState(), value)
+        }),
+    )
 
     toggleSidebarEntity(id: string, isExpanded: boolean) {
         this.sidebarUiState.entityExpandedMap.set(id, isExpanded)
-        this.sidebarUiState_.updateStorage()
+        this.sidebarUiState_.markAsDirty()
     }
     updateSidebarWidth(width: string) {
         this.sidebarUiState.width = width
-        this.sidebarUiState_.updateStorage()
+        this.sidebarUiState_.markAsDirty()
     }
     toggleMobileMenu(isOpen: boolean) {
         this.sidebarUiState.isMobileMenuOpen = isOpen
-        this.sidebarUiState_.updateStorage()
+        this.sidebarUiState_.markAsDirty()
     }
 
     toggleMainViewEntity(id: string, isExpanded: boolean) {
         this.mainViewUiState.entityExpandedMap.set(id, isExpanded)
-        this.mainViewUiState_.updateStorage()
+        this.mainViewUiState_.markAsDirty()
     }
     toggleTaskDescription(id: string, isExpanded: boolean) {
         this.mainViewUiState.taskTreeDescriptionExpandedMap.set(id, isExpanded)
-        this.mainViewUiState_.updateStorage()
+        this.mainViewUiState_.markAsDirty()
     }
     updateShownAsPercentage(isShownAsPercentage: boolean) {
         this.mainViewUiState.isProgressShownAsPercentage = isShownAsPercentage
-        this.mainViewUiState_.updateStorage()
+        this.mainViewUiState_.markAsDirty()
     }
 
     deleteUiEntryForEntity(id: string, entityType: EntityType) {
@@ -80,8 +90,8 @@ export class UiStateService {
         this.mainViewUiState.entityExpandedMap.delete(id)
         if (entityType == EntityType.TASK) this.mainViewUiState.taskTreeDescriptionExpandedMap.delete(id)
 
-        this.sidebarUiState_.updateStorage()
-        this.mainViewUiState_.updateStorage()
+        this.sidebarUiState_.markAsDirty()
+        this.mainViewUiState_.markAsDirty()
     }
     deleteUiState() {
         this.sidebarUiState_.remove()
