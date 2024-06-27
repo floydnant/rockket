@@ -1,6 +1,6 @@
 import { EntityType, TaskPriority, TaskStatus } from '@rockket/commons'
+import { TwColorClass, taskPriorityColorMap, taskStatusColorMap } from '../../../../shared/colors'
 import { concatMatchingKeys, flattenObject } from '../../../../utils'
-import { taskPriorityColorMap, taskStatusColorMap } from '../../../../shared/colors'
 
 export enum EntityState {
     DEFAULT = 'Default',
@@ -22,14 +22,21 @@ export const taskStatusIconMap: Record<TaskStatus, string> = concatMatchingKeys(
         [TaskStatus.COMPLETED]: 'fas fa-check-circle',
         [TaskStatus.NOT_PLANNED]: 'fas fa-minus-circle',
     } satisfies Record<TaskStatus, string>,
-    taskStatusColorMap,
+    {
+        [TaskStatus.OPEN]: taskStatusColorMap[TaskStatus.OPEN].icon,
+        [TaskStatus.IN_PROGRESS]: taskStatusColorMap[TaskStatus.IN_PROGRESS].icon,
+        [TaskStatus.IN_REVIEW]: taskStatusColorMap[TaskStatus.IN_REVIEW].icon,
+        [TaskStatus.BACKLOG]: taskStatusColorMap[TaskStatus.BACKLOG].icon,
+        [TaskStatus.COMPLETED]: taskStatusColorMap[TaskStatus.COMPLETED].icon,
+        [TaskStatus.NOT_PLANNED]: taskStatusColorMap[TaskStatus.NOT_PLANNED].icon,
+    } satisfies Record<TaskStatus, TwColorClass>,
 )
 export const taskStatusLabelMap = {
     [TaskStatus.OPEN]: 'To Do',
     [TaskStatus.IN_PROGRESS]: 'In Progress',
     [TaskStatus.IN_REVIEW]: 'In Review',
     [TaskStatus.BACKLOG]: 'Backlog',
-    [TaskStatus.COMPLETED]: 'Done',
+    [TaskStatus.COMPLETED]: 'Completed',
     [TaskStatus.NOT_PLANNED]: 'Discarded',
 } as const satisfies Record<TaskStatus, string>
 
@@ -109,8 +116,10 @@ const extraIcons = {
     },
 }
 
+// Possible icons for 'project': `fa-tv-alt`, `th-list`, `tasks-alt`, `table`, `server`, `money-check`, `line-columns`, `list-alt`
+
 export const defaultEntityIcons: Record<EntityType, string> = {
-    [EntityType.TASKLIST]: 'far fa-tasks text-tinted-400',
+    [EntityType.TASKLIST]: 'far fa-ballot-check text-tinted-400', // Possible other tasklist icons: `list-alt`
     [EntityType.TASK]: extraIcons.status,
 }
 

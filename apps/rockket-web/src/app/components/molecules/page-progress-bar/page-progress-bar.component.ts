@@ -14,9 +14,9 @@ import {
     timer,
 } from 'rxjs'
 import { UiStateService } from 'src/app/services/ui-state.service'
-import { TwColorClass, taskStatusColorMap } from 'src/app/shared/colors'
-import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
+import { taskStatusColorMap } from 'src/app/shared/colors'
 import { taskStatusLabelMap } from '../../atoms/icons/icon/icons'
+import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
 
 export const mapByStatus = <T extends Task>(taskTree: T[]) => {
     const statusCountMap = Object.values(TaskStatus).reduce(
@@ -66,11 +66,7 @@ export class PageProgressBarComponent {
 
     taskStatuses = Object.values(TaskStatus)
     statusLabelMap = taskStatusLabelMap
-    statusColorMap: Record<TaskStatus, TwColorClass> = {
-        ...taskStatusColorMap,
-        [TaskStatus.OPEN]: 'text-tinted-100',
-        [TaskStatus.BACKLOG]: 'text-tinted-200',
-    }
+    statusColorMap = taskStatusColorMap
 
     taskTree$ = new BehaviorSubject<TaskRecursive[]>([])
     @Input() set taskTree(tasks: TaskRecursive[]) {

@@ -25,8 +25,8 @@
                     data-test-name="task-status-button"
                 >
                     <ng-template #statusTooltip>
-                        <span class="text-tinted-300 decoration-[3px]">Status: </span>
-                        <span [class]="statusColorMap[task.status]">{{
+                        <span class="text-tinted-300">Status: </span>
+                        <span [class]="taskStatusColorMap[task.status].text">{{
                             taskStatusLabelMap[task.status]
                         }}</span>
                     </ng-template>
@@ -49,8 +49,8 @@
                     [placeholderColor]="placeholderColorMap[task.status]"
                     [highlight]="searchTerm$ | push"
                     [editorClass]="{
-                        'line-through': task.status == TaskStatus.NOT_PLANNED,
-                        'decoration-danger-400': task.status == TaskStatus.NOT_PLANNED,
+                        'line-through focus:no-underline': task.status == TaskStatus.NOT_PLANNED,
+                        'decoration-primary-400': task.status == TaskStatus.NOT_PLANNED,
                         'decoration-[2px]': task.status == TaskStatus.NOT_PLANNED,
                         'pr-12': true,
                     }"
