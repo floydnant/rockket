@@ -14,7 +14,7 @@
     <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
         <button
             *rxIf="!(isDescriptionOpen$ | push)"
-            class="button-naked text-tinted-200 hover:text-tinted-100"
+            class="button-naked"
             appTooltip="Add a description to this task"
             (click)="openDescription()"
             cdkMenuItem
@@ -31,7 +31,7 @@
 
     <div class="options | mb-3 mt-2 flex gap-2">
         <button
-            class="button-naked text-tinted-200 hover:text-tinted-100"
+            class="button-naked"
             (click)="createSubtask()"
             appTooltip="Create a new subtask"
             data-test-name="create-subtask"
@@ -41,7 +41,7 @@
         </button>
 
         <button
-            class="priority-button | button-naked text-tinted-200 hover:text-tinted-100"
+            class="priority-button | button-naked text-tinted-200"
             appTooltip="Priority"
             data-test-name="task-priority"
             appTooltip="Priority"

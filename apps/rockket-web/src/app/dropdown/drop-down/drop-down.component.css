@@ -1,13 +1,14 @@
-.route-active .title {
-    text-shadow: 0 0 10px theme('colors.primary.400');
-}
-:where(.route-active) {
-    @apply text-primary-300;
-}
-
 .menu-item {
     @apply inline-flex justify-between;
 }
-.menu-item.item-active {
-    @apply !bg-tinted-600;
+.menu-item span {
+    @apply inline-flex items-center gap-2;
+}
+
+.menu-item:is(.item-active, .route-active) {
+    @apply !bg-tinted-600 text-tinted-100;
+}
+
+.hide-active.route-active {
+    @apply hidden;
 }

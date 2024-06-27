@@ -13,6 +13,7 @@ export interface MenuItem<TArg = any> {
     route?: string
     action?: (data: TArg) => void
     isActive?: boolean | ((data: TArg) => boolean)
+    hideWhenActive?: boolean
     /** Only for display (doesn't hook up any listeners) for now */
     keybinding?: string
     children?: MenuItem[]

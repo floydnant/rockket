@@ -11,13 +11,8 @@
             <ng-content select="[headerBeforeOptions]"></ng-content>
         </div>
 
-        <div cdkMenuBar>
-            <button
-                cdkMenuItem
-                class="button-icon-naked menu-item | px-4 py-2"
-                [cdkMenuTriggerFor]="options"
-                #trigger="cdkMenuTriggerFor"
-            >
+        <div cdkMenuBar class="flex h-full items-center gap-2 pr-2">
+            <button cdkMenuItem class="icon-btn" [cdkMenuTriggerFor]="options" #trigger="cdkMenuTriggerFor">
                 <app-icon icon="ellipsisVertical"></app-icon>
             </button>
 

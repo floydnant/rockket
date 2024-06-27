@@ -21,7 +21,7 @@
     <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
         <button
             *rxIf="!(isDescriptionOpen$ | push)"
-            class="button-naked text-tinted-200 hover:text-tinted-100"
+            class="button-naked"
             appTooltip="Add a description to this list"
             (click)="openDescription()"
             cdkMenuItem
@@ -33,7 +33,7 @@
 
         <button
             *rxIf="!children || !children.length"
-            class="button-naked text-tinted-200 hover:text-tinted-100"
+            class="button-naked"
             appTooltip="Create a new list inside this one"
             (click)="createSublist()"
             cdkMenuItem
@@ -49,7 +49,7 @@
 
         <p class="mb-2 text-lg font-semibold">Sublists</p>
         <button
-            class="button-naked text-tinted-200 hover:text-tinted-100 mb-2"
+            class="button-naked mb-2"
             appTooltip="Create a new list inside this one"
             (click)="createSublist()"
             data-test-name="create-children"
@@ -96,7 +96,7 @@
 
     <div class="options | mb-3 mt-2 flex gap-2">
         <button
-            class="button-naked text-tinted-200 hover:text-tinted-100"
+            class="button-naked"
             (click)="createTask()"
             appTooltip="Create a new task"
             data-test-name="create-task"
