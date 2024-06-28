@@ -22,7 +22,6 @@ export class DiffComponent {
         return this.layout === 'stacked' || this.layout === 'side-by-side'
     }
     get diff() {
-        console.log('RENDERING DIFF')
         const html = diffHtmlContent(this.leftContent, this.rightContent)
 
         return {

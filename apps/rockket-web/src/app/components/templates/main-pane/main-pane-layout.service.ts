@@ -9,11 +9,7 @@ import { SidePanelPortalContext } from './sidepanel-portal.directive'
     providedIn: 'root',
 })
 export class MainPaneLayoutService {
-    constructor(private uiStateService: UiStateService) {
-        console.log({
-            mainViewUiState: this.uiStateService.mainViewUiState,
-        })
-    }
+    constructor(private uiStateService: UiStateService) {}
 
     sidePanelPortal$ = new BehaviorSubject<TemplatePortal<SidePanelPortalContext> | null>(null)
     sidePanelWidth$ = new BehaviorSubject<number>(
