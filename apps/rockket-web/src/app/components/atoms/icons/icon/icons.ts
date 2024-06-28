@@ -81,6 +81,8 @@ const extraIcons = {
     image: 'fas fa-image',
     copy: 'fas fa-copy',
     markdown: 'fab fa-markdown',
+    birth: 'fas fa-star',
+    deadline: 'far fa-calendar-exclamation',
 
     chevronRight: 'fas fa-chevron-right',
     chevronLeft: 'fas fa-chevron-left',

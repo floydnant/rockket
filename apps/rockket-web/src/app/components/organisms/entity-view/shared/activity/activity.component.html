@@ -1,0 +1,13 @@
+<p class="text-tinted-400 mb-1 text-lg font-semibold">Activity</p>
+<ng-container *rxLet="activeActivityTab$; let activeTab">
+    <app-tab-bar [tabs]="activityTabs" [activeTabId]="activeTab" class="block pb-6"></app-tab-bar>
+
+    <app-timeline
+        *rxIf="activeTab == ActivityTabId.All || activeTab == ActivityTabId.History"
+        [events]="(events$ | push : 'native') || []"
+    ></app-timeline>
+
+    <div *rxIf="activeTab == ActivityTabId.Comments" class="text-tinted-400 text-center">
+        Comments are coming soon
+    </div>
+</ng-container>

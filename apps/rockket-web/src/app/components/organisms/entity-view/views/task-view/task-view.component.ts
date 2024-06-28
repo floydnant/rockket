@@ -9,8 +9,10 @@ import {
     TaskStatus,
 } from '@rockket/commons'
 import {
+    ReplaySubject,
     Subject,
     combineLatest,
+    delay,
     distinctUntilChanged,
     distinctUntilKeyChanged,
     filter,
@@ -18,7 +20,7 @@ import {
     map,
     merge,
     mergeWith,
-    share,
+    shareReplay,
     startWith,
     withLatestFrom,
 } from 'rxjs'
@@ -47,7 +49,9 @@ export class TaskViewComponent {
     ) {}
 
     // @TODO: make this a user setting
-    prominentStatusButton = false
+    allowSidepanel = true
+    // @TODO: make this a user setting
+    prominentStatusButton = true
 
     taskStatusLabelMap = taskStatusLabelMap
     statusMenuItems = getTaskStatusMenuItems(this.store)
@@ -63,6 +67,8 @@ export class TaskViewComponent {
     taskPriorityLabelMap = taskPriorityLabelMap
     priorityColorMap = taskPriorityColorMap
     priorityMenuItems = getTaskPriorityMenuItems(this.store)
+
+    hasSidepanel$ = new ReplaySubject<boolean>()
 
     taskEntity$ = this.viewData.entity$
     detail$ = this.viewData.detail$
@@ -118,18 +124,22 @@ export class TaskViewComponent {
             this.descriptionBlurInput$.pipe(
                 withLatestFrom(merge(this.descriptionUpdateInput$.pipe(startWith(null)), this.description$)),
                 map(([, description]) => Boolean(description)),
+                delay(0),
             ),
         ),
-        share({ resetOnRefCountZero: true }),
+        distinctUntilChanged(),
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
-    task$ = combineLatest([this.viewData.entity$, this.store.select(entitiesSelectors.taskTreeMap)]).pipe(
+    task$ = combineLatest([this.taskEntity$, this.store.select(entitiesSelectors.taskTreeMap)]).pipe(
         map(([taskEntity, taskTreeMap]) => {
             if (!taskEntity || !taskTreeMap) return null
 
             return getTaskById(Object.values(taskTreeMap).flat(), taskEntity.id)
         }),
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
+
     createSubtask() {
         this.taskEntity$.pipe(first()).subscribe(entity => {
             if (!entity) return

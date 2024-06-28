@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
-import { EntitiesSearchResultDto, EntityPreview } from '@rockket/commons'
+import { EntitiesSearchResultDto, EntityEvent, EntityPreview } from '@rockket/commons'
 import { HttpServerErrorResponse, HttpServerErrorResponseWithMeta } from '../../http/types'
 import { EntityCrudDto } from '../../services/entities.service'
 import { listActions } from './list/list.actions'
@@ -17,6 +17,12 @@ export const entitiesActions = createActionGroup({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         'load detail success': props<EntityCrudDto<{ entityDetail: Record<string, any> }>>(),
         'load detail error': props<HttpServerErrorResponseWithMeta>(),
+
+        'load events': props<EntityCrudDto>(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        'load events success': props<EntityCrudDto<{ events: EntityEvent[] }>>(),
+        'append events': props<EntityCrudDto<{ events: EntityEvent[] }>>(),
+        'load events error': props<HttpServerErrorResponseWithMeta>(),
 
         'open rename dialog': props<EntityCrudDto>(),
         'abort rename dialog': emptyProps(),
@@ -43,6 +49,10 @@ export const loadingStateActions = [
     entitiesActions.loadDetail,
     entitiesActions.loadDetailSuccess,
     entitiesActions.loadDetailError,
+
+    // entitiesActions.loadEvents,
+    // entitiesActions.loadEventsSuccess,
+    // entitiesActions.loadEventsError,
 
     entitiesActions.rename,
     entitiesActions.renameSuccess,

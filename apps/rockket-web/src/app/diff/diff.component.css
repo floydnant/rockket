@@ -1,0 +1,15 @@
+ins {
+    background-color: theme('colors.submit.800');
+    text-decoration: none;
+}
+del {
+    background-color: theme('colors.danger.700');
+    text-decoration-color: theme('colors.danger.300');
+}
+
+.diff-deletions-only ins:is(.diffmod, .diffins) {
+    display: none;
+}
+.diff-insertions-only del:is(.diffmod, .diffdel) {
+    display: none;
+}

@@ -135,5 +135,8 @@ export class PageProgressBarComponent {
             }),
             untilDestroyed(this),
         )
-        .subscribe(progress => this.entityView.progress$.next(progress))
+        .subscribe({
+            next: progress => this.entityView.progress$.next(progress),
+            complete: () => this.entityView.progress$.next(null),
+        })
 }

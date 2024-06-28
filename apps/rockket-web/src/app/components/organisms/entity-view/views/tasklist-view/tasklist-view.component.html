@@ -3,60 +3,65 @@
         <app-editable-entity-title [entity]="entity"></app-editable-entity-title>
     </h1>
 
-    <!-- <div class="created-at | test-sm text-tinted-400" *ngIf="detail$ | async as detail">
-        <span class="text-tinted-500">Created at</span> {{ detail?.createdAt | date }},
-        {{ detail?.createdAt | date : 'shortTime' }}
-    </div> -->
-
-    <app-entity-description
-        #descriptionEditor
-        *rxIf="isDescriptionOpen$"
-        [context]="descriptionContext$ | push : 'native'"
-        (update)="updateDescription($event)"
-        (blur)="descriptionBlurInput$.next($event)"
-    ></app-entity-description>
-</ng-container>
-
-<ng-container *rxLet="children$; let children">
-    <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
+    <div class="button-group | flex w-fit flex-wrap items-center gap-2" cdkMenuBar>
         <button
             *rxIf="!(isDescriptionOpen$ | push)"
-            class="button-naked"
+            class="add-description-button | button-naked"
             appTooltip="Add a description to this list"
             (click)="openDescription()"
             cdkMenuItem
             data-test-name="add-description"
         >
-            <app-icon icon="description" class="mr-1"></app-icon>
+            <app-icon icon="description"></app-icon>
             Add description
         </button>
 
-        <button
-            *rxIf="!children || !children.length"
-            class="button-naked"
-            appTooltip="Create a new list inside this one"
-            (click)="createSublist()"
-            cdkMenuItem
-            data-test-name="create-children"
-        >
-            <app-icon icon="fas fa-plus" class="mr-1"></app-icon>
-            New sublist
-        </button>
+        <ng-container *ngTemplateOutlet="createSublistButton"></ng-container>
+        <ng-container *ngTemplateOutlet="createTaskButton"></ng-container>
     </div>
+</ng-container>
 
+<ng-template #createTaskButton>
+    <button
+        class="create-task-button | button-naked"
+        (click)="createTask()"
+        appTooltip="Create a new task"
+        data-test-name="create-task"
+    >
+        <app-icon icon="fas fa-plus"></app-icon>
+        New task
+    </button>
+</ng-template>
+<ng-template #createSublistButton>
+    <button
+        class="create-sublist-button | button-naked"
+        appTooltip="Create a new list inside this one"
+        (click)="createSublist()"
+        data-test-name="create-children"
+    >
+        <app-icon icon="fas fa-plus"></app-icon>
+        New sublist
+    </button>
+</ng-template>
+
+<div [hidden]="!(isDescriptionOpen$ | push)">
+    <div class="spacer | h-5"></div>
+    <p class="text-tinted-400 mb-1 text-lg font-semibold">Description</p>
+    <!-- @TODO: Editor updates are not received when inside an ngIf bound to an observable -->
+    <app-entity-description
+        #descriptionEditor
+        [context]="descriptionContext$ | async"
+        (update)="updateDescription($event)"
+        (blur)="descriptionBlurInput$.next()"
+    ></app-entity-description>
+</div>
+
+<ng-container *rxLet="children$; let children">
     <ng-container *rxIf="children && children.length">
         <div class="spacer | h-5"></div>
 
-        <p class="mb-2 text-lg font-semibold">Sublists</p>
-        <button
-            class="button-naked mb-2"
-            appTooltip="Create a new list inside this one"
-            (click)="createSublist()"
-            data-test-name="create-children"
-        >
-            <app-icon icon="fas fa-plus" class="mr-1"></app-icon>
-            New sublist
-        </button>
+        <p class="text-tinted-400 mb-1 text-lg font-semibold">Sublists</p>
+        <ng-container *ngTemplateOutlet="createSublistButton"></ng-container>
 
         <div
             class="children | mt-3 grid items-start gap-1"
@@ -87,32 +92,29 @@
                 </ng-template>
             </button>
         </div>
-        <div class="spacer | h-8"></div>
     </ng-container>
 </ng-container>
 
+<div class="spacer | h-5"></div>
+
+<app-activity *rxLet="entityWithDetail$; let entity" [entity]="entity"></app-activity>
+
 <ng-container *ngIf="tasks$ | async as tasks; else loadingTasks">
-    <app-page-progress-bar [taskTree]="tasks"></app-page-progress-bar>
-
-    <div class="options | mb-3 mt-2 flex gap-2">
-        <button
-            class="button-naked"
-            (click)="createTask()"
-            appTooltip="Create a new task"
-            data-test-name="create-task"
-        >
-            <app-icon icon="fas fa-plus" class="mr-1"></app-icon>
-            New task
-        </button>
-    </div>
-
     <ng-container *ngIf="tasks.length; else noTasks">
+        <div class="spacer | h-5"></div>
+        <p class="text-tinted-400 mb-1 text-lg font-semibold">Tasks</p>
+
+        <app-page-progress-bar [taskTree]="tasks"></app-page-progress-bar>
+
+        <div class="options | mb-2 mt-1.5 flex gap-2">
+            <ng-container *ngTemplateOutlet="createTaskButton"></ng-container>
+        </div>
+
         <app-task-tree [tasks]="tasks"></app-task-tree>
-        <!-- <pre class="select-text">{{ tasks | json }}</pre> -->
     </ng-container>
 
     <ng-template #noTasks>
-        <p class="text-tinted-400 text-center">No tasks yet...</p>
+        <!-- <p class="text-tinted-400 text-center">No tasks yet...</p> -->
     </ng-template>
 </ng-container>
 

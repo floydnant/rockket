@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core'
 import {
     CreateTasklistDto,
     CreateTasklistResponse,
+    EntityEvent,
     Tasklist,
     UpdateTasklistDto,
     UpdateTasklistResponse,
     createTasklistResponseSchema,
+    entityEventSchema,
     fnNames,
     updateTasklistResponseSchema,
 } from '@rockket/commons'
@@ -39,5 +41,11 @@ export class ListService implements EntityService {
 
     loadDetail(id: string): Observable<Tasklist> {
         return this.http.get('/list/' + id) //.pipe(parseWith(tasklistSchema, fnNames(ListService, this.loadDetail)))
+    }
+
+    loadEvents(id: string): Observable<EntityEvent[]> {
+        return this.http
+            .get('/list/' + id + '/events')
+            .pipe(parseWith(entityEventSchema.array(), fnNames(ListService, this.loadEvents)))
     }
 }

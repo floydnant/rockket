@@ -29,6 +29,7 @@ module.exports = {
         },
     },
     plugins: [
+        require('@tailwindcss/container-queries'),
         plugin(({ addVariant }) => {
             addVariant('hover', '@media (hover: hover) { &:is( :hover, :focus-visible ) }')
             addVariant('not-hover', '@media (hover: hover) { &:not( :hover, :focus-visible ) }')

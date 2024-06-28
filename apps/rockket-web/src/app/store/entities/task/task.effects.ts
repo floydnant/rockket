@@ -3,13 +3,14 @@ import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { EntityType } from '@rockket/commons'
-import { catchError, first, map, mergeMap, of, switchMap } from 'rxjs'
+import { catchError, first, from, map, mergeMap, of, switchMap } from 'rxjs'
 import { ENTITY_TITLE_DEFAULTS } from 'src/app/shared/defaults'
 import { getMessageFromHttpError } from 'src/app/utils/store.helpers'
 import { AppState } from '../..'
 import { getTaskById } from '../utils'
 import { taskActions } from './task.actions'
 import { TaskService } from 'src/app/services/entity.services/task.service'
+import { entitiesActions } from '../entities.actions'
 
 @Injectable()
 export class TaskEffects {
@@ -104,13 +105,20 @@ export class TaskEffects {
                 const response$ = this.taskService.update(id, { description: newDescription })
 
                 return response$.pipe(
-                    map(response =>
-                        taskActions.updateDescriptionSuccess({
-                            id,
-                            newDescription,
-                            listId: response.task.listId,
-                        }),
-                    ),
+                    switchMap(response => {
+                        return from([
+                            taskActions.updateDescriptionSuccess({
+                                id,
+                                newDescription,
+                                listId: response.task.listId,
+                            }),
+                            entitiesActions.appendEvents({
+                                id,
+                                entityType: EntityType.TASK,
+                                events: response.newEvents,
+                            }),
+                        ])
+                    }),
                     this.toast.observe({ error: 'Failed to update the description of this task.' }),
                     catchError(err => of(taskActions.updateDescriptionError({ ...err, id }))),
                 )
@@ -125,9 +133,16 @@ export class TaskEffects {
                 const response$ = this.taskService.update(id, { status })
 
                 return response$.pipe(
-                    map(response =>
-                        taskActions.updateStatusSuccess({ id, status, listId: response.task.listId }),
-                    ),
+                    switchMap(response => {
+                        return from([
+                            taskActions.updateStatusSuccess({ id, status, listId: response.task.listId }),
+                            entitiesActions.appendEvents({
+                                id,
+                                entityType: EntityType.TASK,
+                                events: response.newEvents,
+                            }),
+                        ])
+                    }),
                     this.toast.observe({ error: 'Failed to update the status of this task.' }),
                     catchError(err => of(taskActions.updateStatusError({ ...err, id }))),
                 )
@@ -142,9 +157,16 @@ export class TaskEffects {
                 const response$ = this.taskService.update(id, { priority })
 
                 return response$.pipe(
-                    map(response =>
-                        taskActions.updatePrioritySuccess({ id, priority, listId: response.task.listId }),
-                    ),
+                    switchMap(response => {
+                        return from([
+                            taskActions.updatePrioritySuccess({ id, priority, listId: response.task.listId }),
+                            entitiesActions.appendEvents({
+                                id,
+                                entityType: EntityType.TASK,
+                                events: response.newEvents,
+                            }),
+                        ])
+                    }),
                     this.toast.observe({ error: 'Failed to update the priority of this task.' }),
                     catchError(err => of(taskActions.updatePriorityError({ ...err, id }))),
                 )

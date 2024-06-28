@@ -4,7 +4,7 @@ import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { EntityType } from '@rockket/commons'
-import { catchError, concatMap, first, map, mergeMap, of, switchMap, tap } from 'rxjs'
+import { catchError, concatMap, first, from, map, mergeMap, of, switchMap, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { DialogService } from 'src/app/modal/dialog.service'
 import { EntitiesService } from 'src/app/services/entities.service'
@@ -76,6 +76,27 @@ export class EntitiesEffects {
         )
     })
 
+    forwardLoadDetail = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(entitiesActions.loadDetail),
+            map(dto => entitiesActions.loadEvents(dto)),
+        )
+    })
+    loadEvents = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(entitiesActions.loadEvents),
+            mergeMap(dto => {
+                // @TODO: Maybe we don't need to reload all the events every time
+                const res$ = this.entitiesService.loadEvents(dto)
+
+                return res$.pipe(
+                    map(events => entitiesActions.loadEventsSuccess({ ...dto, events })),
+                    catchError(err => of(entitiesActions.loadEventsError({ ...err, id: dto.id }))),
+                )
+            }),
+        )
+    })
+
     showRenameDialog = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.openRenameDialog),
@@ -115,7 +136,12 @@ export class EntitiesEffects {
                               error: getMessageFromHttpError,
                           })
                         : tap(),
-                    map(() => entitiesActions.renameSuccess({ id, entityType, title })),
+                    switchMap(({ newEvents }) => {
+                        return from([
+                            entitiesActions.renameSuccess({ id, entityType, title }),
+                            entitiesActions.appendEvents({ id, entityType, events: newEvents }),
+                        ])
+                    }),
                     catchError(err => {
                         if (!showToast) this.toast.error(getMessageFromHttpError(err))
 

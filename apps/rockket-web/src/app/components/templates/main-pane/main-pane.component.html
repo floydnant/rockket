@@ -1,42 +1,81 @@
 <div class="flex h-full grow flex-col overflow-x-auto" data-test-name="main-pane">
     <header
         class="main-header | main-header--mobile | border-tinted-700 relative flex border-b border-transparent transition-all"
-        [class.!border-tinted-700]="isScrolled"
+        [ngClass]="{
+            '!border-tinted-700': isScrolled$ | push
+        }"
         data-test-name="main-header"
     >
-        <!-- [class.hide]="isMenuOpen" -->
         <ng-content select="[header]"></ng-content>
     </header>
-    <main class="flex grow flex-col overflow-x-auto overflow-y-scroll overscroll-contain">
-        <div class="relative flex max-w-full grow flex-col items-center overflow-x-auto px-4 pb-56">
+
+    <div class="panes-container | relative min-h-max w-full grow scroll-p-20 overflow-y-auto">
+        <div
+            *rxLet="sidepanelPortal$; let portal"
+            class="relative mx-auto flex min-h-max"
+            [ngClass]="{
+                'justify-center': sidepanelInCenteredPanel || !portal,
+                'justify-between': !sidepanelInCenteredPanel && portal,
+            }"
+        >
             <!-- eslint-disable tailwindcss/no-contradicting-classname -->
             <div
                 class="background | bg-dotted fade-in-out-y absolute inset-x-0 top-0 z-[-1] h-full min-h-[calc(100dvh-50px)] min-h-[calc(100vh-50px)]"
             ></div>
 
-            <div
-                class="content max-w-full"
-                [class]="{ 'w-[min(100%,55rem)]': prose, 'w-full': !prose }"
-                data-test-name="main-content"
+            <div class="dummy-flex-child" *ngIf="!sidepanelInCenteredPanel && portal"></div>
+
+            <main
+                class="main-panel | min-h-max"
+                [class]="{
+                    'w-[min(100%,55rem)]': centerMainPanel,
+                    'w-full': !centerMainPanel,
+                }"
             >
-                <div class="top-scroll-spy" (intersectionChange)="setTopSpyIntersecting($event)"></div>
-                <ng-content select="[main]"></ng-content>
-                <div class="bottom-scroll-spy" (intersectionChange)="setBottomSpyIntersecting($event)"></div>
+                <div class="relative px-4 pb-56">
+                    <div class="content" data-test-name="main-content">
+                        <div
+                            class="top-scroll-spy"
+                            (intersectionChange)="setTopSpyIntersecting($event, 0)"
+                        ></div>
+                        <ng-content select="[main]"></ng-content>
+                        <div
+                            class="bottom-scroll-spy"
+                            (intersectionChange)="setBottomSpyIntersecting($event)"
+                        ></div>
+                    </div>
+                </div>
+            </main>
+
+            <div *rxIf="portal" class="relative -ml-2 shrink-0">
+                <app-resize-handle
+                    [resizeElement]="sidepanel"
+                    side="left"
+                    (resizeEnd)="onResizeEnd($event)"
+                    (resizing)="onResize($event)"
+                    [minSize]="minSidepanelWidth"
+                    [maxSize]="maxSidepanelWidth"
+                    [defaultSize]="defaultSidepanelWidth"
+                ></app-resize-handle>
+
+                <aside
+                    #sidepanel
+                    class="side-panel | [&.isResizing]:bg-tinted-850 [&.isResizing]:border-tinted-700 sticky top-0 h-[calc(100dvh-50px)] h-[calc(100vh-50px)] shrink-0 overflow-y-auto border-r border-transparent pb-56 pl-2 pr-4 transition-colors"
+                    [style.width]="(sidepanelWidth$ | push) + 'px'"
+                    [style.min-width]="minSidepanelWidth + 'px'"
+                    [style.max-width]="maxSidepanelWidth + 'px'"
+                >
+                    <div
+                        class="sidepanel-top-scroll-spy"
+                        (intersectionChange)="setTopSpyIntersecting($event, 1)"
+                    ></div>
+                    <ng-container [cdkPortalOutlet]="portal"></ng-container>
+                    <div
+                        class="sidepanel-bottom-scroll-spy"
+                        (intersectionChange)="setBottomSpyIntersecting($event)"
+                    ></div>
+                </aside>
             </div>
         </div>
-    </main>
+    </div>
 </div>
-
-<!-- 
-    <main
-        class="bg-dotted flex grow flex-col items-center overflow-x-auto overflow-y-scroll overscroll-contain px-4 pt-2 pb-56"
-    >
-        <div class="content" [class]="{ 'w-[min(100%,55rem)]': prose, 'w-full': !prose }" data-test-name="main-content">
-            <div class="top-scroll-spy" (intersectionChange)="setTopSpyIntersecting($event)"></div>
-
-            <ng-content select="[main]"></ng-content>
-
-            <div class="bottom-scroll-spy" (intersectionChange)="setBottomSpyIntersecting($event)"></div>
-        </div>
-    </main>
- -->

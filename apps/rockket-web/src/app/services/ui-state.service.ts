@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment'
 import { EntityType } from '@rockket/commons'
 import { entitiesActions } from '../store/entities/entities.actions'
 import { StorageItem } from '../utils/storage.helpers'
+import { uiDefaults } from '../shared/defaults'
 
 class SidebarUiState {
     isDesktopSidebarOpen = true
@@ -19,8 +20,9 @@ class MainViewUiState {
     isProgressBarSticky = true
     isProgressShownAsPercentage = true
 
-    entityExpandedMap: Map<string, boolean> = new Map()
-    taskTreeDescriptionExpandedMap: Map<string, boolean> = new Map()
+    entityExpandedMap = new Map<string, boolean>()
+    taskTreeDescriptionExpandedMap = new Map<string, boolean>()
+    sidePanelWidth: number = uiDefaults.mainView.SIDE_PANEL_WIDTH
 
     appVersion = environment.PACKAGE_VERSION
 }
@@ -46,7 +48,15 @@ export class UiStateService {
         defaultValue: new MainViewUiState(),
     })
     get mainViewUiState() {
-        return this.mainViewUiState_.value as MainViewUiState
+        // @TODO: clean this up
+        if (!this.mainViewUiState_.value) return new MainViewUiState()
+
+        // return { ...new MainViewUiState(), ...this.mainViewUiState_.value }
+        return this.mainViewUiState_.value
+        return Object.assign({}, new MainViewUiState(), this.mainViewUiState_.value)
+
+        // return { ...new MainViewUiState(), ...this.mainViewUiState_.value }
+        // // return this.mainViewUiState_.value as MainViewUiState
     }
 
     toggleSidebarEntity(id: string, isExpanded: boolean) {
@@ -62,6 +72,10 @@ export class UiStateService {
         this.sidebarUiState_.updateStorage()
     }
 
+    updateMainViewSidePanel(width: number) {
+        this.mainViewUiState.sidePanelWidth = width
+        this.mainViewUiState_.updateStorage()
+    }
     toggleMainViewEntity(id: string, isExpanded: boolean) {
         this.mainViewUiState.entityExpandedMap.set(id, isExpanded)
         this.mainViewUiState_.updateStorage()
