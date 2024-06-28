@@ -6,10 +6,11 @@
     <div class="relative flex h-[calc(100%-var(--bottom-nav-height))] md:h-full">
         <aside
             #sidebar
-            class="sidebar | sidebar--mobile | border-tinted-700 bg-tinted-850 md:text-md relative flex h-full shrink-0 flex-col md:w-[var(--sidebar-width)] md:min-w-[10rem] md:max-w-[60vw] md:border-r"
+            class="sidebar | sidebar--mobile | border-tinted-700 bg-tinted-850 md:text-md relative flex h-full shrink-0 flex-col md:w-[var(--fixed-width,var(--sidebar-width))] md:min-w-[10rem] md:max-w-[60vw] md:border-r"
             [class.hide]="!(isMenuOpen$ | async)"
             [hidden]="!(isMenuOpen$ | async)"
             data-test-name="sidebar"
+            [style.--fixed-width]="enableResize ? '' : this.fixedWidth || 'fit-content'"
             [style.--sidebar-width]="uiState.width || defaultSidebarWidth"
         >
             <app-resize-handle

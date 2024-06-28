@@ -19,6 +19,8 @@ export class SidebarLayoutComponent {
     ) {}
 
     @Input() enableResize = true
+    @Input() fixedWidth = ''
+
     defaultSidebarWidth = uiDefaults.sidebar.WIDTH
 
     isMobileScreen$ = this.deviceService.isMobileScreen$
