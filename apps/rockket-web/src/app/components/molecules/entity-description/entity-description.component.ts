@@ -26,6 +26,9 @@ export interface DescriptionContext {
 export class EntityDescriptionComponent {
     constructor(private deviceService: DeviceService) {}
 
+    // @TODO: make this a user setting
+    @Input() nakedEditor = true
+
     @ViewChild(TipTapEditorComponent) private ttEditor!: TipTapEditorComponent
     focus() {
         this.ttEditor.editor.commands.focus()

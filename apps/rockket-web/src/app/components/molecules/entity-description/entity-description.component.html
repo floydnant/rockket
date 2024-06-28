@@ -10,11 +10,18 @@
     </app-toolbar>
 </div>
 
-<app-tt-editor
-    #descriptionTtEditor
-    [bind]="bindConfig$ | push"
-    (isActive)="isActive$.next($event)"
-    (updateOnBlur)="updateInput$.next($event)"
-    (blur)="blurInput$.next($event)"
-    data-test-name="description-editor"
-></app-tt-editor>
+<div
+    [ngClass]="{
+        'bg-tinted-850 border-tinted-800 rounded-xl border px-4 py-2.5 transition-shadow': !nakedEditor,
+        'ring-primary-400 ring-2': !nakedEditor && (isActive$ | push)
+    }"
+>
+    <app-tt-editor
+        #descriptionTtEditor
+        [bind]="bindConfig$ | push"
+        (isActive)="isActive$.next($event)"
+        (updateOnBlur)="updateInput$.next($event)"
+        (blur)="blurInput$.next($event)"
+        data-test-name="description-editor"
+    ></app-tt-editor>
+</div>
