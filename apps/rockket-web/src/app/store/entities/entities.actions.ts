@@ -19,7 +19,6 @@ export const entitiesActions = createActionGroup({
         'load detail error': props<HttpServerErrorResponseWithMeta>(),
 
         'load events': props<EntityCrudDto>(),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         'load events success': props<EntityCrudDto<{ events: EntityEvent[] }>>(),
         'append events': props<EntityCrudDto<{ events: EntityEvent[] }>>(),
         'load events error': props<HttpServerErrorResponseWithMeta>(),
@@ -49,10 +48,6 @@ export const loadingStateActions = [
     entitiesActions.loadDetail,
     entitiesActions.loadDetailSuccess,
     entitiesActions.loadDetailError,
-
-    // entitiesActions.loadEvents,
-    // entitiesActions.loadEventsSuccess,
-    // entitiesActions.loadEventsError,
 
     entitiesActions.rename,
     entitiesActions.renameSuccess,

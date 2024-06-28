@@ -5,7 +5,6 @@ import { IconKey } from 'src/app/components/atoms/icons/icon/icons'
 import { TabOptions } from 'src/app/components/molecules/tab-bar/tab-bar.component'
 import { TimelineEntry } from 'src/app/components/molecules/timeline/timeline.component'
 import { AppState } from 'src/app/store'
-import { debugObserver } from 'src/app/utils/observable.helpers'
 import { entityEventToTimelineEntryMapperMap } from './entity-event.mappers'
 
 export enum ActivityTabId {
@@ -46,7 +45,6 @@ export class ActivityComponent {
                 ...events.map(event => entityEventToTimelineEntryMapperMap[event.type](event)),
             ] satisfies TimelineEntry[]
         }),
-        debugObserver('events$ (generic)'),
     )
 
     ActivityTabId = ActivityTabId

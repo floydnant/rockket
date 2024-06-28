@@ -9,7 +9,7 @@ export const diffHtmlContent = htmlDiff.execute as (leftContents: string, rightC
 export const removeTags = (html: string, tagName: string) => {
     const div = document.createElement('div')
     div.innerHTML = html
-    div.querySelectorAll(tagName).forEach(dels => dels.remove())
+    div.querySelectorAll(tagName).forEach(elem => elem.remove())
 
     return div.innerHTML
 }

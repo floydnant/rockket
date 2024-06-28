@@ -24,3 +24,19 @@ export const mapUnionOptions = <
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return z.discriminatedUnion(union.discriminator, union.options.map(mapper) as any)
 }
+
+export const jsonStringSchema = (reviver?: (this: unknown, key: string, value: unknown) => unknown) => {
+    return z.string().transform((v, ctx) => {
+        try {
+            return JSON.parse(v, reviver)
+        } catch (e) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                fatal: true,
+                message: (e as Error).message,
+            })
+
+            return z.NEVER
+        }
+    })
+}

@@ -1,25 +1,28 @@
+import { jsonStringSchema } from '@rockket/commons'
+import { z } from 'zod'
 import { replacer, reviver } from './serialization.helpers'
 
-interface StorageInterfaceOptions<T> {
-    defaultValue?: T
+interface StorageInterfaceOptions<TSchema extends z.Schema> {
+    defaultValue?: z.infer<TSchema>
     /** Will use `localStorage` by default. */
-    storage?: 'localStorage' | 'sessionStorage'
+    storage?: Storage
     /** A key used in previous versions of the app to migrate from. */
     oldKey?: string
+    schema?: TSchema
 }
 
-export class StorageItem<T> {
-    constructor(private key: string, private options: StorageInterfaceOptions<T> = {}) {}
+export class StorageItem<TSchema extends z.Schema> {
+    constructor(private key: string, private options: StorageInterfaceOptions<TSchema> = {}) {}
 
-    private storage = window[this.options.storage || 'localStorage']
+    private storage = this.options.storage || localStorage
 
-    private value_: T | null = null
-    get value() {
+    private value_: z.infer<TSchema> | null = null
+    get value(): z.infer<TSchema> {
         if (this.value_ === null) this.value_ = this.getParsedValue()
 
         return this.value_
     }
-    set value(value: T | null) {
+    set value(value: z.infer<TSchema> | null) {
         this.value_ = value
         this.updateStorage()
     }
@@ -40,11 +43,14 @@ export class StorageItem<T> {
     }
 
     private getParsedValue() {
-        const raw = this.getRawValue()
-        if (!raw) return this.options.defaultValue ?? null
+        const raw = this.getRawValue() || ''
+
+        let schema: z.Schema = this.options.schema || z.unknown()
+        if (this.options.defaultValue)
+            schema = schema?.default(this.options.defaultValue).catch(this.options.defaultValue)
 
         try {
-            return JSON.parse(raw, reviver) as T
+            return jsonStringSchema(reviver).pipe(schema).parse(raw) as z.infer<TSchema>
         } catch {
             return this.options.defaultValue ?? null
         }
