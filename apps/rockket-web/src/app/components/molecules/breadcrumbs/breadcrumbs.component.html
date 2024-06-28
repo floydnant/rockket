@@ -78,8 +78,12 @@
 >
     <button
         *ngIf="!isTruncationBreadcrumb(breadcrumb)"
-        class="breadcrumb | menu-item | max-w-[20ch] truncate px-1.5 py-0.5"
-        [class.text-tinted-100]="isLast"
+        class="breadcrumb | menu-item | w-full truncate px-1.5 py-0.5"
+        [ngClass]="{
+            'text-tinted-100': isLast,
+            'max-w-[20ch]': !isInsideTruncationPopover,
+            'max-w-full': isInsideTruncationPopover
+        }"
         cdkMenuItem
         [cdkContextMenuTriggerFor]="menu"
         [routerLink]="breadcrumb.route"
