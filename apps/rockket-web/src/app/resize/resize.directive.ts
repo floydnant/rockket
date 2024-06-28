@@ -2,6 +2,7 @@ import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/cor
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { coalesceWith } from '@rx-angular/cdk/coalescing'
 import {
+    NEVER,
     Subject,
     animationFrames,
     debounceTime,
@@ -10,10 +11,13 @@ import {
     fromEvent,
     map,
     merge,
+    of,
+    race,
     startWith,
     switchMap,
     takeUntil,
     tap,
+    timer,
 } from 'rxjs'
 import { isNotNullish } from '../utils'
 
@@ -24,9 +28,10 @@ export type ResizerFn = (
     elem: HTMLElement,
     minMax: { minSize: number; maxSize: number },
 ) => number
+export type SizeResetterFn = (elem: HTMLElement, defaultSize: number) => void
 
-const resizeStrategyMap: Record<ResizeStrategy, ResizerFn> = {
-    left: (event: MouseEvent, { offsetX }, elem: HTMLElement, { minSize, maxSize }) => {
+const resizerMap: Record<ResizeStrategy, ResizerFn> = {
+    left: (event, { offsetX }, elem, { minSize, maxSize }) => {
         const rect = elem.getBoundingClientRect()
         const rectLeftX = rect.x
         const diff = rectLeftX - event.clientX + offsetX
@@ -36,7 +41,7 @@ const resizeStrategyMap: Record<ResizeStrategy, ResizerFn> = {
         elem.style.width = clampedWidth + 'px'
         return clampedWidth
     },
-    right: (event: MouseEvent, { offsetX }, elem: HTMLElement, { minSize, maxSize }) => {
+    right: (event, { offsetX }, elem, { minSize, maxSize }) => {
         const rect = elem.getBoundingClientRect()
         const rectRightX = rect.x + rect.width
         const diff = event.clientX - rectRightX - offsetX
@@ -45,6 +50,15 @@ const resizeStrategyMap: Record<ResizeStrategy, ResizerFn> = {
 
         elem.style.width = clampedWidth + 'px'
         return clampedWidth
+    },
+}
+
+const sizeResetterMap: Record<ResizeStrategy, SizeResetterFn> = {
+    left: (elem, defaultSize) => {
+        elem.style.width = defaultSize + 'px'
+    },
+    right: (elem, defaultSize) => {
+        elem.style.width = defaultSize + 'px'
     },
 }
 
@@ -63,8 +77,10 @@ export class ResizeDirective {
     @Input({ alias: 'appResize', required: true }) resizeElem?: HTMLElement
     @Input() resizeStrategy: ResizeStrategy = 'left'
     @Input() customResizer?: ResizerFn
+    @Input() customSizeResetter?: SizeResetterFn
     @Input() minSize?: number
     @Input() maxSize?: number
+    @Input() defaultSize?: number
 
     @Output() resizing = new EventEmitter<number>()
     @Output() resizeEnd = new EventEmitter<number>()
@@ -98,23 +114,47 @@ export class ResizeDirective {
                 /** Offset between the mouse y and the resize handle center */
                 offsetY: mouseDownEvent.clientY - resizeHandleRect.y - resizeHandleRect.height / 2,
             }
-
-            return fromEvent<MouseEvent>(document, 'mousemove').pipe(
-                coalesceWith(animationFrames()),
-                takeUntil(fromEvent(document, 'mouseup', { once: true })),
-                map(mouseMoveEvent => [mouseMoveEvent, offset] as const),
-            )
-        }),
-        map(([event, offset]) => {
-            if (!this.resizeElem) return null
-
-            const calcAndApplyNewSize = this.customResizer || resizeStrategyMap[this.resizeStrategy]
-            const newSize = calcAndApplyNewSize(event, offset, this.resizeElem, {
+            const minMax = {
                 minSize: this.minSize || 0,
                 maxSize: this.maxSize || Infinity,
-            })
+            }
 
-            return newSize
+            const onResize$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(
+                coalesceWith(animationFrames()),
+                map(mouseMoveEvent => {
+                    if (!this.resizeElem) return
+
+                    const resize = this.customResizer || resizerMap[this.resizeStrategy]
+                    const newSize = resize(mouseMoveEvent, offset, this.resizeElem, minMax)
+
+                    return newSize
+                }),
+                takeUntil(fromEvent(document, 'mouseup', { once: true })),
+            )
+            const onResetSize$ = fromEvent(document, 'mouseup', { once: true }).pipe(
+                map(() => {
+                    if (!this.resizeElem) return
+                    if (!this.defaultSize) return
+
+                    const resetSize = this.customSizeResetter || sizeResetterMap[this.resizeStrategy]
+                    resetSize(this.resizeElem, this.defaultSize)
+
+                    return this.defaultSize
+                }),
+            )
+            const onResetSizeWithTimeout$ = race(onResetSize$, timer(500).pipe(map(() => null))).pipe(
+                switchMap(v => {
+                    // When the timeout kicked in, we want to ignore any 'reset size' emissions,
+                    // but leave the 'resize' event stream in tact
+                    if (v === null) return NEVER
+
+                    return of(v)
+                }),
+            )
+
+            // The 'reset size' event stream must be first, so its value is emitted before
+            // the 'mouseup' event completes the 'resize' event stream
+            return race(onResetSizeWithTimeout$, onResize$)
         }),
         filter(isNotNullish),
         distinctUntilChanged(),

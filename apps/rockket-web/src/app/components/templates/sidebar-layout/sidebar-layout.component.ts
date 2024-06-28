@@ -3,6 +3,7 @@ import { UntilDestroy } from '@ngneat/until-destroy'
 import { DeviceService } from 'src/app/services/device.service'
 import { UiStateService } from 'src/app/services/ui-state.service'
 import { MenuService } from './menu.service'
+import { uiDefaults } from 'src/app/shared/defaults'
 
 @UntilDestroy()
 @Component({
@@ -18,6 +19,7 @@ export class SidebarLayoutComponent {
     ) {}
 
     @Input() enableResize = true
+    defaultSidebarWidth = uiDefaults.sidebar.WIDTH
 
     isMobileScreen$ = this.deviceService.isMobileScreen$
 

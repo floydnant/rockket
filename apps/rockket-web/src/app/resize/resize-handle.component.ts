@@ -12,6 +12,7 @@ import { ResizeStrategy } from './resize.directive'
             [resizeStrategy]="side"
             [minSize]="minSize"
             [maxSize]="maxSize"
+            [defaultSize]="defaultSize"
             #resize="appResize"
             (resizing)="resizing.emit($event)"
             (resizeEnd)="resizeEnd.emit($event)"
@@ -29,6 +30,7 @@ export class ResizeHandleComponent {
     @Input({ required: true }) resizeElement!: HTMLElement
     @Input() minSize?: number
     @Input() maxSize?: number
+    @Input() defaultSize?: number
     @Input() testName = 'resize-handle'
 
     @Output() resizing = new EventEmitter<number>()

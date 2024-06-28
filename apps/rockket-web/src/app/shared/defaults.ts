@@ -6,6 +6,9 @@ export const ENTITY_TITLE_DEFAULTS: Record<EntityType, string> = {
 }
 
 export const uiDefaults = {
+    sidebar: {
+        WIDTH: 360,
+    },
     mainView: {
         IS_TASK_EXPANDED: true,
         IS_TASK_DESCRIPTION_EXPANDED: false,
