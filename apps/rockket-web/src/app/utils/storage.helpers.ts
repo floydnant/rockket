@@ -22,18 +22,13 @@ export class StorageItem<TSchema extends z.Schema> {
 
         return this.value_
     }
-    set value(value: z.infer<TSchema> | null) {
+    set value(value: z.infer<TSchema>) {
         this.value_ = value
         this.updateStorage()
     }
 
     /** Use this to manually update the storage item, when the `setter` cannot be triggered (e.g. when updating objects). */
     updateStorage() {
-        if (this.value_ === null || this.value_ === undefined) {
-            this.remove()
-            return
-        }
-
         this.storage.setItem(this.key, JSON.stringify(this.value_, replacer))
     }
 
@@ -50,8 +45,9 @@ export class StorageItem<TSchema extends z.Schema> {
             schema = schema?.default(this.options.defaultValue).catch(this.options.defaultValue)
 
         try {
-            return jsonStringSchema(reviver).pipe(schema).parse(raw) as z.infer<TSchema>
+            return jsonStringSchema(reviver).catch({}).pipe(schema).parse(raw) as z.infer<TSchema>
         } catch {
+            console.error(`Failed to parse storage item: ${this.key}`)
             return this.options.defaultValue ?? null
         }
     }
