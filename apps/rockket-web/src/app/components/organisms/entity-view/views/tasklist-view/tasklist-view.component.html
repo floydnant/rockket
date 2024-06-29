@@ -100,7 +100,7 @@
 <app-activity *rxLet="entityWithDetail$; let entity" [entity]="entity"></app-activity>
 
 <ng-container *ngIf="tasks$ | async as tasks; else loadingTasks">
-    <ng-container *ngIf="tasks.length; else noTasks">
+    <ng-container *ngIf="tasks.length">
         <div class="spacer | h-5"></div>
         <p class="text-tinted-400 mb-1 text-lg font-semibold">Tasks</p>
 
@@ -112,10 +112,6 @@
 
         <app-task-tree [tasks]="tasks"></app-task-tree>
     </ng-container>
-
-    <ng-template #noTasks>
-        <!-- <p class="text-tinted-400 text-center">No tasks yet...</p> -->
-    </ng-template>
 </ng-container>
 
 <ng-template #loadingTasks>

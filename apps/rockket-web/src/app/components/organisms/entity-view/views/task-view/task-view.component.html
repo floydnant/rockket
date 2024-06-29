@@ -131,7 +131,7 @@
         <app-activity [entity]="task"></app-activity>
     </ng-container>
 
-    <ng-container *ngIf="task.children && task.children.length; else noTasks">
+    <ng-container *ngIf="task.children && task.children.length">
         <div class="spacer | h-8"></div>
 
         <p class="text-tinted-400 mb-1 text-lg font-semibold">Subtasks</p>
@@ -151,8 +151,4 @@
 
         <app-task-tree [tasks]="task.children"></app-task-tree>
     </ng-container>
-
-    <ng-template #noTasks>
-        <!-- <p class="text-tinted-400 text-center">No subtasks yet...</p> -->
-    </ng-template>
 </ng-container>
