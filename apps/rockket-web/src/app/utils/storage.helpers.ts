@@ -45,7 +45,7 @@ export class StorageItem<TSchema extends z.Schema> {
             schema = schema?.default(this.options.defaultValue).catch(this.options.defaultValue)
 
         try {
-            return jsonStringSchema(reviver).catch({}).pipe(schema).parse(raw) as z.infer<TSchema>
+            return jsonStringSchema(reviver).catch(undefined).pipe(schema).parse(raw) as z.infer<TSchema>
         } catch {
             console.error(`Failed to parse storage item: ${this.key}`)
             return this.options.defaultValue ?? null
