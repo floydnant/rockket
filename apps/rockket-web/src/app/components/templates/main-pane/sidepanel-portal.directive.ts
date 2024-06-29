@@ -64,6 +64,11 @@ export class SidepanelPortalDirective implements OnInit {
         this.onInit$.next(null)
     }
 
+    /**
+     * This value represents the potential remaining width, available for the main panel, if we were to render the sidepanel.
+     *
+     * i.e. we only render the sidepanel if there would be enough space left for the main panel.
+     */
     private availableWidth$ = combineLatest([
         this.deviceService.screenWidth$,
         this.menuService.sidebarWidth$,
@@ -102,12 +107,6 @@ export class SidepanelPortalDirective implements OnInit {
                         this.hasLocalView = false
                     }
 
-                    // Teleport to remote view
-                    // @TODO: do we need to detach and recreate or can we just keep things as is?
-                    // if (this.portal.isAttached) this.portal.detach()
-                    // this.mainPaneLayoutService.sidePanelPortal$.next(this.portal)
-
-                    // this.portal?.viewContainerRef.
                     this.portal = new TemplatePortal(this.templateRef, this.viewContainerRef, {
                         $implicit: true,
                         isTeleported: true,
