@@ -48,7 +48,7 @@ export class ActivityComponent {
     )
 
     ActivityTabId = ActivityTabId
-    // @TODO: Implement setting for the default tab
+    // @TODO: Implement user setting for the default tab
     activeActivityTab$ = new BehaviorSubject<ActivityTabId>(ActivityTabId.Comments)
     activityTabs: TabOptions<ActivityTabId>[] = [
         {
