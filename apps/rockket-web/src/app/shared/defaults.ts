@@ -12,5 +12,6 @@ export const uiDefaults = {
     mainView: {
         IS_TASK_EXPANDED: true,
         IS_TASK_DESCRIPTION_EXPANDED: false,
+        SIDE_PANEL_WIDTH: 360,
     },
 } as const

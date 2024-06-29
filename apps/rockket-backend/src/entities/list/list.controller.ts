@@ -47,6 +47,11 @@ export class ListController {
         return this.listService.getRootLevelTasklists(user.id)
     }
 
+    @Get('list/:listId/events')
+    getTasklistEvents(@GetUser() user: User, @Param('listId') listId: string) {
+        return this.listService.getTasklistEvents(user.id, listId)
+    }
+
     // Nested child list previews
     @Get('list/:listId/child-lists')
     getChildTasklists(@GetUser() user: User, @Param('listId') listId: string) {

@@ -3,88 +3,152 @@
         <app-editable-entity-title [entity]="entity"></app-editable-entity-title>
     </h1>
 
-    <app-entity-description
-        #descriptionEditor
-        *rxIf="isDescriptionOpen$"
-        [context]="descriptionContext$ | push : 'native'"
-        (update)="updateDescription($event)"
-        (blur)="descriptionBlurInput$.next($event)"
-    ></app-entity-description>
+    <div class="button-group | flex w-full flex-wrap-reverse items-center justify-between gap-4" cdkMenuBar>
+        <div class="flex flex-wrap gap-2">
+            <button
+                *rxIf="!(isDescriptionOpen$ | push)"
+                class="add-description-button | button-naked"
+                appTooltip="Add a description to this task"
+                (click)="openDescription()"
+                cdkMenuItem
+                data-test-name="add-description"
+            >
+                <app-icon icon="description"></app-icon>
+                Add description
+            </button>
 
-    <div class="button-group | mt-5 flex w-fit items-center gap-2" cdkMenuBar>
-        <button
-            *rxIf="!(isDescriptionOpen$ | push)"
-            class="button-naked"
-            appTooltip="Add a description to this task"
-            (click)="openDescription()"
-            cdkMenuItem
-            data-test-name="add-description"
-        >
-            <app-icon icon="description" class="mr-1"></app-icon>
-            Add description
-        </button>
+            <button
+                class="create-subtask-button | button-naked"
+                (click)="createSubtask()"
+                cdkMenuItem
+                appTooltip="Create a new subtask"
+                data-test-name="create-subtask"
+            >
+                <app-icon icon="fas fa-plus"></app-icon>
+                New subtask
+            </button>
+        </div>
+
+        <ng-container *rxIf="!(hasSidepanel$ | push)">
+            <div *rxIf="task$; let task" class="flex flex-wrap gap-2">
+                <button
+                    class="priority-button | button-naked text-tinted-100"
+                    data-test-name="task-priority"
+                    cdkMenuItem
+                    [cdkMenuTriggerFor]="priorityMenu"
+                    appTooltip="Priority"
+                    #priorityBtnTooltip="appTooltip"
+                    (cdkMenuClosed)="priorityBtnTooltip.scheduleHideTooltip()"
+                >
+                    <app-icon [icon]="task.priority"></app-icon>
+                    <span>{{ taskPriorityLabelMap[task.priority] }}</span>
+                    <app-icon icon="caretDown"></app-icon>
+                    <ng-template #priorityMenu>
+                        <app-drop-down [items]="priorityMenuItems" [data]="task"></app-drop-down>
+                    </ng-template>
+                </button>
+                <button
+                    class="status-button | button-naked"
+                    data-test-name="task-status"
+                    cdkMenuItem
+                    [cdkMenuTriggerFor]="statusMenu"
+                    [ngClass]="
+                        prominentStatusButton ? getStatusButtonColorClasses(task.status) : 'text-tinted-100'
+                    "
+                    appTooltip="Status"
+                    debug="true"
+                    #statusBtnTooltip="appTooltip"
+                    (cdkMenuClosed)="statusBtnTooltip.scheduleHideTooltip()"
+                >
+                    <app-icon [icon]="task.status"></app-icon>
+                    <span>{{ taskStatusLabelMap[task.status] }}</span>
+                    <app-icon icon="caretDown" class="[&_i]:mr-0"></app-icon>
+                    <ng-template #statusMenu>
+                        <app-drop-down [items]="statusMenuItems" [data]="task"></app-drop-down>
+                    </ng-template>
+                </button>
+            </div>
+        </ng-container>
     </div>
 </ng-container>
 
+<div [hidden]="!(isDescriptionOpen$ | push)">
+    <div class="spacer | h-5"></div>
+    <p class="text-tinted-400 mb-1 text-lg font-semibold">Description</p>
+    <!-- @TODO: Editor updates are not received when inside an ngIf bound to an observable -->
+    <app-entity-description
+        #descriptionEditor
+        [context]="descriptionContext$ | async"
+        (update)="updateDescription($event)"
+        (blur)="descriptionBlurInput$.next($event)"
+    ></app-entity-description>
+</div>
+
 <ng-container *ngIf="task$ | async as task">
-    <app-page-progress-bar [taskTree]="task.children || []"></app-page-progress-bar>
+    <ng-container
+        *appSidepanelPortal="
+            let isInSidepanel;
+            allowTeleport: allowSidepanel;
+            isTeleportedCallback: hasSidepanel$
+        "
+    >
+        <ng-container *rxIf="isInSidepanel">
+            <div class="spacer | h-5"></div>
+            <p class="text-tinted-400 mb-1 text-lg font-semibold">Status</p>
+            <button
+                class="status-button | button-naked"
+                data-test-name="task-status"
+                [cdkMenuTriggerFor]="statusMenu"
+                [ngClass]="
+                    prominentStatusButton ? getStatusButtonColorClasses(task.status) : 'text-tinted-100'
+                "
+            >
+                <app-icon [icon]="task.status"></app-icon>
+                <span>{{ taskStatusLabelMap[task.status] }}</span>
+                <app-icon icon="caretDown" class="[&_i]:mr-0"></app-icon>
+                <ng-template #statusMenu>
+                    <app-drop-down [items]="statusMenuItems" [data]="task"></app-drop-down>
+                </ng-template>
+            </button>
+            <div class="spacer | h-8"></div>
+            <p class="text-tinted-400 mb-1 text-lg font-semibold">Priority</p>
+            <button
+                class="priority-button | button-naked text-tinted-100"
+                data-test-name="task-priority"
+                [cdkMenuTriggerFor]="priorityMenu"
+            >
+                <app-icon [icon]="task.priority"></app-icon>
+                <span>{{ taskPriorityLabelMap[task.priority] }}</span>
+                <app-icon icon="caretDown"></app-icon>
+                <ng-template #priorityMenu>
+                    <app-drop-down [items]="priorityMenuItems" [data]="task"></app-drop-down>
+                </ng-template>
+            </button>
+        </ng-container>
 
-    <div class="options | mb-3 mt-2 flex gap-2">
-        <button
-            class="button-naked"
-            (click)="createSubtask()"
-            appTooltip="Create a new subtask"
-            data-test-name="create-subtask"
-        >
-            <app-icon icon="fas fa-plus" class="mr-1"></app-icon>
-            New subtask
-        </button>
+        <div class="spacer | h-8"></div>
 
-        <button
-            class="priority-button | button-naked text-tinted-100"
-            appTooltip="Priority"
-            data-test-name="task-priority"
-            appTooltip="Priority"
-            [tooltipOptions]="{ avoidPositions: ['left'] }"
-            [cdkMenuTriggerFor]="priorityMenu"
-        >
-            <app-icon [icon]="task.priority"></app-icon>
-            <span>
-                {{ taskPriorityLabelMap[task.priority] }}
-            </span>
-            <app-icon icon="caretDown"></app-icon>
+        <app-activity [entity]="task"></app-activity>
+    </ng-container>
 
-            <ng-template #priorityMenu>
-                <app-drop-down [items]="priorityMenuItems" [data]="task"></app-drop-down>
-            </ng-template>
-        </button>
+    <ng-container *ngIf="task.children && task.children.length">
+        <div class="spacer | h-8"></div>
 
-        <button
-            class="status-button | button-naked"
-            data-test-name="task-status"
-            [cdkMenuTriggerFor]="statusMenu"
-            [ngClass]="
-                prominentStatusButton
-                    ? getStatusButtonColorClasses(task.status)
-                    : 'text-tinted-100'
-            "
-        >
-            <app-icon [icon]="task.status"></app-icon>
-            <span>{{ taskStatusLabelMap[task.status] }}</span>
-            <app-icon icon="caretDown" class="[&_i]:mr-0"></app-icon>
+        <p class="text-tinted-400 mb-1 text-lg font-semibold">Subtasks</p>
+        <app-page-progress-bar [taskTree]="task.children"></app-page-progress-bar>
+        <div class="options | mb-2 mt-1.5 flex gap-2" cdkMenuBar>
+            <button
+                class="create-subtask-button | button-naked"
+                (click)="createSubtask()"
+                cdkMenuItem
+                appTooltip="Create a new subtask"
+                data-test-name="create-subtask"
+            >
+                <app-icon icon="fas fa-plus"></app-icon>
+                New subtask
+            </button>
+        </div>
 
-            <ng-template #statusMenu>
-                <app-drop-down [items]="statusMenuItems" [data]="task"></app-drop-down>
-            </ng-template>
-        </button>
-    </div>
-
-    <app-task-tree
-        *ngIf="task.children && task.children.length; else noTasks"
-        [tasks]="task.children"
-    ></app-task-tree>
-
-    <ng-template #noTasks>
-        <p class="text-tinted-400 text-center">No subtasks yet...</p>
-    </ng-template>
+        <app-task-tree [tasks]="task.children"></app-task-tree>
+    </ng-container>
 </ng-container>

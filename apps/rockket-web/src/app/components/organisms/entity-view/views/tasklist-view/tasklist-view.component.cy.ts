@@ -72,7 +72,7 @@ const entityFixture: EntityPreviewRecursive = {
     children: [],
     parentId: '',
 }
-const entityDetailFixture: TasklistDetail = { description: null, createdAt: '', ownerId: '' }
+const entityDetailFixture: TasklistDetail = { description: null, createdAt: new Date(), ownerId: '' }
 
 describe('TasklistViewComponent', () => {
     it('renders the tasklist', () => {
@@ -83,7 +83,7 @@ describe('TasklistViewComponent', () => {
         })
 
         cy.get(testName('editable-entity-name')).contains(entityFixture.title)
-        cy.get(testName('description-editor')).should('not.exist')
+        cy.get(testName('description-editor')).should('be.hidden')
         cy.get(testName('entity-children')).should('not.exist')
     })
 

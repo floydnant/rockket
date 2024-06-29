@@ -1,0 +1,49 @@
+<div class="@container">
+    <div
+        *ngIf="diff as viewData"
+        class="grid select-text overflow-auto rounded-lg shadow-lg"
+        [ngClass]="{
+            '@xs:grid-cols-2':
+                layout === 'side-by-side' &&
+                ((viewData.hasDeletions && viewData.hasInsertions) || showPanelsWithoutChanges),
+
+            '@xs:grid-cols-[.15fr,1fr]':
+                layout === 'side-by-side' &&
+                showUnchangedPanelPlaceholder &&
+                !showPanelsWithoutChanges &&
+                !viewData.hasDeletions && viewData.hasInsertions,
+
+            '@xs:grid-cols-[1fr,.15fr]':
+                layout === 'side-by-side' &&
+                showUnchangedPanelPlaceholder &&
+                !showPanelsWithoutChanges &&
+                viewData.hasDeletions && !viewData.hasInsertions,
+        }"
+    >
+        <div
+            *ngIf="!isSeparated || (isSeparated && viewData.hasDeletions) || showPanelsWithoutChanges"
+            class="wrap-nicely"
+            [ngClass]="{
+                'diff-deletions-only | bg-danger-700/40 glass px-2 py-1': isSeparated,
+            }"
+            [innerHTML]="isSeparated ? viewData.deletionsOnly : viewData.html"
+        ></div>
+
+        <div
+            *ngIf="
+                showUnchangedPanelPlaceholder &&
+                !showPanelsWithoutChanges &&
+                layout === 'side-by-side' &&
+                (!viewData.hasDeletions || !viewData.hasInsertions)
+            "
+            class="diff-placeholder | bg-tinted-800/70 glass h-full w-full"
+            role="presentation"
+        ></div>
+
+        <div
+            *ngIf="(isSeparated && viewData.hasInsertions) || showPanelsWithoutChanges"
+            class="diff-insertions-only | wrap-nicely bg-submit-800/40 glass px-2 py-1"
+            [innerHTML]="viewData.insertionsOnly"
+        ></div>
+    </div>
+</div>

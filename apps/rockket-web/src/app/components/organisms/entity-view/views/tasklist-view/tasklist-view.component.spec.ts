@@ -5,6 +5,7 @@ import { storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 
 import { TasklistViewComponent } from './tasklist-view.component'
+import { RxModule } from 'src/app/rx/rx.module'
 
 describe('TasklistViewComponent', () => {
     let component: TasklistViewComponent
@@ -20,7 +21,7 @@ describe('TasklistViewComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [TasklistViewComponent],
             providers: [{ provide: ENTITY_VIEW_DATA, useValue: entityViewDataMock }, storeMock],
-            imports: [AsyncPipe],
+            imports: [AsyncPipe, RxModule],
         }).compileComponents()
 
         fixture = TestBed.createComponent(TasklistViewComponent)

@@ -4,26 +4,27 @@ import { environment } from 'src/environments/environment'
 import { EntityType } from '@rockket/commons'
 import { entitiesActions } from '../store/entities/entities.actions'
 import { StorageItem } from '../utils/storage.helpers'
+import { uiDefaults } from '../shared/defaults'
+import { z } from 'zod'
 
-class SidebarUiState {
-    isDesktopSidebarOpen = true
-    isMobileMenuOpen = true
-    width?: string
+const sidebarUiStateSchema = z.object({
+    isDesktopSidebarOpen: z.boolean().default(true),
+    isMobileMenuOpen: z.boolean().default(true),
+    width: z.string().default(uiDefaults.sidebar.WIDTH + 'px'),
+    entityExpandedMap: z.map(z.string(), z.boolean()).default(new Map()),
+    appVersion: z.string().default(environment.PACKAGE_VERSION),
+})
+const defaultSidebarUiState = sidebarUiStateSchema.parse({})
 
-    entityExpandedMap: Map<string, boolean> = new Map()
-
-    appVersion = environment.PACKAGE_VERSION
-}
-
-class MainViewUiState {
-    isProgressBarSticky = true
-    isProgressShownAsPercentage = true
-
-    entityExpandedMap: Map<string, boolean> = new Map()
-    taskTreeDescriptionExpandedMap: Map<string, boolean> = new Map()
-
-    appVersion = environment.PACKAGE_VERSION
-}
+const mainViewUiStateSchema = z.object({
+    isProgressBarSticky: z.boolean().default(true),
+    isProgressShownAsPercentage: z.boolean().default(true),
+    entityExpandedMap: z.map(z.string(), z.boolean()).default(new Map()),
+    taskTreeDescriptionExpandedMap: z.map(z.string(), z.boolean()).default(new Map()),
+    sidePanelWidth: z.number().default(uiDefaults.mainView.SIDE_PANEL_WIDTH),
+    appVersion: z.string().default(environment.PACKAGE_VERSION),
+})
+const defaultMainViewUIState = mainViewUiStateSchema.parse({})
 
 @Injectable({
     providedIn: 'root',
@@ -36,17 +37,19 @@ export class UiStateService {
         .subscribe(({ id, entityType }) => this.deleteUiEntryForEntity(id, entityType))
 
     private sidebarUiState_ = new StorageItem('rockket-sidebar-ui-state', {
-        defaultValue: new SidebarUiState(),
+        schema: sidebarUiStateSchema.catch(defaultSidebarUiState),
     })
     get sidebarUiState() {
-        return this.sidebarUiState_.value as SidebarUiState
+        if (!this.sidebarUiState_.value) return defaultSidebarUiState
+        return this.sidebarUiState_.value
     }
 
     private mainViewUiState_ = new StorageItem('rockket-main-ui-state', {
-        defaultValue: new MainViewUiState(),
+        schema: mainViewUiStateSchema.catch(defaultMainViewUIState),
     })
     get mainViewUiState() {
-        return this.mainViewUiState_.value as MainViewUiState
+        if (!this.mainViewUiState_.value) return defaultMainViewUIState
+        return this.mainViewUiState_.value
     }
 
     toggleSidebarEntity(id: string, isExpanded: boolean) {
@@ -62,6 +65,10 @@ export class UiStateService {
         this.sidebarUiState_.updateStorage()
     }
 
+    updateMainViewSidePanel(width: number) {
+        this.mainViewUiState.sidePanelWidth = width
+        this.mainViewUiState_.updateStorage()
+    }
     toggleMainViewEntity(id: string, isExpanded: boolean) {
         this.mainViewUiState.entityExpandedMap.set(id, isExpanded)
         this.mainViewUiState_.updateStorage()

@@ -37,7 +37,7 @@ export const defaultFeatureMap = createEditorFeatureMap({
     inlineFeature,
     linkFeature,
     blocksFeature,
-    placeholderFeature: placeholderFeature('Description'),
+    placeholderFeature: placeholderFeature('Make someone smile'),
     typographyFeature,
     blurFeature,
     indentationFeature,

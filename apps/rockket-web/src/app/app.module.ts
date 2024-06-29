@@ -1,6 +1,7 @@
 import { LayoutModule } from '@angular/cdk/layout'
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { OverlayModule } from '@angular/cdk/overlay'
+import { PortalModule } from '@angular/cdk/portal'
 import { CdkTreeModule } from '@angular/cdk/tree'
 import { ErrorHandler, NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -23,8 +24,14 @@ import { EditableEntityTitleComponent } from './components/molecules/editable-en
 import { EntityDescriptionComponent } from './components/molecules/entity-description/entity-description.component'
 import { FormComponent } from './components/molecules/form/form.component'
 import { PageProgressBarComponent } from './components/molecules/page-progress-bar/page-progress-bar.component'
+import { TabBarComponent } from './components/molecules/tab-bar/tab-bar.component'
 import { ToolbarComponent } from './components/molecules/toolbar/toolbar.component'
 import { EntityViewComponent } from './components/organisms/entity-view/entity-view.component'
+import { TaskDeadlineEventComponent } from './components/organisms/entity-view/shared/activity/event-views/task-deadline-event.component'
+import { TaskPriorityEventComponent } from './components/organisms/entity-view/shared/activity/event-views/task-priority-event.component'
+import { TaskStatusEventComponent } from './components/organisms/entity-view/shared/activity/event-views/task-status-event.component'
+import { TitleChangedEventComponent } from './components/organisms/entity-view/shared/activity/event-views/title-changed-event.component'
+import { TimelineComponent } from './components/molecules/timeline/timeline.component'
 import { TaskViewComponent } from './components/organisms/entity-view/views/task-view/task-view.component'
 import { TasklistViewComponent } from './components/organisms/entity-view/views/tasklist-view/tasklist-view.component'
 import { TaskTreeComponent } from './components/organisms/task-tree/task-tree.component'
@@ -32,8 +39,10 @@ import { ElemContainerComponent, TaskComponent } from './components/organisms/ta
 import { UserMenuComponent } from './components/organisms/user-menu/user-menu.component'
 import { CenteredLayoutComponent } from './components/templates/centered-layout/centered-layout.component'
 import { MainPaneComponent } from './components/templates/main-pane/main-pane.component'
+import { SidepanelPortalDirective } from './components/templates/main-pane/sidepanel-portal.directive'
 import { MenuToggleComponent } from './components/templates/sidebar-layout/menu-toggle/menu-toggle.component'
 import { SidebarLayoutComponent } from './components/templates/sidebar-layout/sidebar-layout.component'
+import { DiffModule } from './diff/diff.module'
 import { FocusableDirective } from './directives/focusable.directive'
 import { IntersectionDirective } from './directives/intersection.directive'
 import { MutationDirective } from './directives/mutation.directive'
@@ -71,6 +80,7 @@ import { RichTextEditorModule } from './rich-text-editor/rich-text-editor.module
 import { RxModule } from './rx/rx.module'
 import { effects, metaReducers, reducers } from './store'
 import { TooltipModule } from './tooltip/tooltip.module'
+import { ActivityComponent } from './components/organisms/entity-view/shared/activity/activity.component'
 
 @NgModule({
     declarations: [
@@ -123,6 +133,14 @@ import { TooltipModule } from './tooltip/tooltip.module'
         ContactComponent,
         ToolbarComponent,
         ElemContainerComponent,
+        TimelineComponent,
+        TaskStatusEventComponent,
+        TaskPriorityEventComponent,
+        TaskDeadlineEventComponent,
+        SidepanelPortalDirective,
+        TitleChangedEventComponent,
+        TabBarComponent,
+        ActivityComponent,
     ],
     imports: [
         BrowserModule,
@@ -144,6 +162,8 @@ import { TooltipModule } from './tooltip/tooltip.module'
         DropdownModule,
         KeyboardModule,
         RichTextEditorModule,
+        PortalModule,
+        DiffModule,
         ResizeModule,
     ],
     providers: [

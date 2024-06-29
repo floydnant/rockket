@@ -3,6 +3,7 @@ import { LoginDto, SignupDto } from '@rockket/commons'
 import { HttpService } from '../http/http.service'
 import { AuthSuccessResponse } from '../shared/models'
 import { StorageItem } from '../utils/storage.helpers'
+import { z } from 'zod'
 
 @Injectable({
     providedIn: 'root',
@@ -20,7 +21,10 @@ export class AuthService {
         return this.http.get<AuthSuccessResponse>('/auth/me')
     }
 
-    private token = new StorageItem<string>('rockket-auth-token', { oldKey: 'todo-authToken' })
+    private token = new StorageItem('rockket-auth-token', {
+        schema: z.string().nullish().catch(null),
+        oldKey: 'todo-authToken',
+    })
     getToken() {
         return this.token.value
     }

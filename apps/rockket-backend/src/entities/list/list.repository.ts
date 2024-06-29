@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { ListPermission } from '@prisma/client'
-import { EntityEvent, Tasklist } from '@rockket/commons'
+import { EntityEvent, Tasklist, entityEventSchema } from '@rockket/commons'
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
 import { CreateTasklistZodDto, ShareTasklistZodDto, UpdatePermissionsZodDto } from './list.dto'
 
@@ -88,6 +88,16 @@ export class ListRepository {
             affectedLists: affectedLists,
             affectedListParticipants: affectedListParticipants,
         }
+    }
+
+    async getTasklistEvents(listId: string) {
+        const events = await this.prisma.entityEvent.findMany({
+            where: { listId },
+            orderBy: { timestamp: 'asc' },
+        })
+
+        // @TODO: throw db inconsistency exception here
+        return entityEventSchema.array().parse(events)
     }
 
     async getRootLevelTasklists(userId: string) {

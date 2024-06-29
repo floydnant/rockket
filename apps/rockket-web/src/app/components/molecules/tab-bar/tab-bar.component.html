@@ -1,0 +1,44 @@
+<!-- @TODO: Connect these with the aria `tabpanel` role outside of this component -->
+
+<div
+    class="flex max-w-fit gap-1 rounded-xl"
+    [ngClass]="{
+        'bg-tinted-800 border-tinted-700 border px-1 py-[3px]': !transparentBackground
+    }"
+    role="tablist"
+    cdkMenuBar
+>
+    <ng-container *ngFor="let tab of tabs">
+        <a
+            *ngIf="asLink(tab) as linkTab"
+            [routerLink]="linkTab.path"
+            class="button-m hover:bg-tinted-700 [&.active]:text-tinted-100 [&.active]:bg-tinted-600 block h-full font-medium transition-colors"
+            [ngClass]="{
+                'bg-transparent': !transparentBackground
+            }"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: tab.exactMatch || false }"
+            cdkMenuItem
+            #tabLink
+            (isActiveChange)="tabLink.ariaSelected = $event.toString()"
+            role="tab"
+        >
+            {{ tab.label }}
+        </a>
+
+        <button
+            *ngIf="asButton(tab) as buttonTab"
+            class="button-m hover:bg-tinted-700 [&.active]:text-tinted-100 [&.active]:bg-tinted-600 h-full py-0 font-medium transition-colors"
+            [ngClass]="{
+                'bg-transparent': !transparentBackground
+            }"
+            [class.active]="buttonTab.tabId == activeTabId"
+            (click)="buttonTab.onClick($event)"
+            cdkMenuItem
+            role="tab"
+            [attr.aria-selected]="buttonTab.tabId == activeTabId"
+        >
+            {{ tab.label }}
+        </button>
+    </ng-container>
+</div>

@@ -27,7 +27,7 @@
                 "assets": ["apps/rockket-web/src/favicon.ico", "apps/rockket-web/src/assets"],
                 "styles": ["apps/rockket-web/src/main.css"],
                 "scripts": [],
-                "allowedCommonJsDependencies": ["markdown-it-task-lists"]
+                "allowedCommonJsDependencies": ["markdown-it-task-lists", "htmldiff-js"]
             },
             "dependsOn": ["^build", "prepare-env"],
             "configurations": {
@@ -36,11 +36,11 @@
                         {
                             "type": "initial",
                             "maximumWarning": "500kb",
-                            "maximumError": "1.5mb"
+                            "maximumError": "2mb"
                         },
                         {
                             "type": "anyComponentStyle",
-                            "maximumWarning": "2kb",
+                            "maximumWarning": "3kb",
                             "maximumError": "6kb"
                         }
                     ],

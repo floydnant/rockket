@@ -13,6 +13,7 @@ import {
 import { first } from 'rxjs'
 import { TooltipComponent, TOOLTIP_DATA } from './tooltip/tooltip.component'
 import { DeviceService } from '../services/device.service'
+import { moveToMacroQueue } from '../utils'
 
 const positions = {
     top: {
@@ -83,6 +84,13 @@ export class TooltipDirective implements OnDestroy {
     @HostListener('blur')
     hideTooltip(): void {
         if (this.overlayRef?.hasAttached()) this.overlayRef?.detach()
+    }
+
+    scheduleHideTooltip(): void {
+        this.hideTooltip()
+        moveToMacroQueue(() => {
+            this.hideTooltip()
+        })
     }
 
     @HostListener('click')

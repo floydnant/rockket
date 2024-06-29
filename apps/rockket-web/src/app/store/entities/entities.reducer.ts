@@ -15,6 +15,7 @@ const initialState: EntitiesState = {
     },
 
     taskTreeMap: null,
+    events: {},
 
     search: null,
 }
@@ -44,6 +45,25 @@ export const entitiesReducer = createReducer(
         return {
             ...state,
             entityDetails: entityDetailsCopy,
+        }
+    }),
+
+    on(entitiesActions.loadEventsSuccess, (state, { id, events }): EntitiesState => {
+        return {
+            ...state,
+            events: {
+                ...state.events,
+                [id]: events,
+            },
+        }
+    }),
+    on(entitiesActions.appendEvents, (state, { id, events }): EntitiesState => {
+        return {
+            ...state,
+            events: {
+                ...state.events,
+                [id]: [...(state.events[id] || []), ...events],
+            },
         }
     }),
 

@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core'
 import {
     CreateTaskDto,
     CreateTaskResponse,
+    EntityEvent,
     Task,
     TaskDetail,
     UpdateTaskDto,
     UpdateTaskResponse,
     createTaskResponseSchema,
+    entityEventSchema,
     fnNames,
     taskSchema,
     updateTaskResponseSchema,
@@ -42,6 +44,11 @@ export class TaskService implements EntityService {
     // Noop for now
     loadDetail(_id: string): Observable<TaskDetail> {
         return of({})
+    }
+    loadEvents(id: string): Observable<EntityEvent[]> {
+        return this.http
+            .get('/task/' + id + '/events')
+            .pipe(parseWith(entityEventSchema.array(), fnNames(TaskService, this.loadEvents)))
     }
 
     loadRootLevelTasks(listId: string): Observable<Task[]> {

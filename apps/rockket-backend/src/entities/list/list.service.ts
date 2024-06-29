@@ -89,6 +89,16 @@ export class ListService {
     async getAllTasklists(userId: string) {
         return this.listRepository.getAllTasklistPreviews(userId)
     }
+    async getTasklistEvents(userId: string, listId: string) {
+        const hasPermissions = await this.permissions.hasPermissionForList(
+            userId,
+            listId,
+            ListPermission.View,
+        )
+        if (!hasPermissions) throw new ForbiddenException("You don't have permission to view this tasklist")
+
+        return this.listRepository.getTasklistEvents(listId)
+    }
 
     async getChildTasklists(userId: string, listId: string) {
         const hasPermissions = await this.permissions.hasPermissionForList(

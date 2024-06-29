@@ -96,7 +96,7 @@ export class EntityViewComponent {
     entityViewData: EntityViewData<any> = {
         // @TODO: (high prio): get rid of the macro queue here as its causing
         // a huge delay of ~170ms on rendering the view
-        entity$: this.entity$.pipe(delay(0)), // Move to macro queue
+        entity$: this.entity$.pipe(delay(0), shareReplay({ bufferSize: 1, refCount: true })),
         detail$: this.entityDetail$,
         options$: this.entityOptionsItems$,
     }

@@ -1,0 +1,39 @@
+<ng-container *ngFor="let event of events; let i = index; let isLast = last; trackBy: trackEntry">
+    <div class="@container flex w-full gap-2">
+        <div class="flex flex-col" role="presentation">
+            <div
+                class="timeline-entry-icon | bg-tinted-800 border-tinted-700 flex aspect-square h-8 w-8 shrink-0 items-center justify-center rounded-full"
+            >
+                <app-icon
+                    [icon]="event.icon"
+                    class="text-tinted-300 mr-1 aspect-square translate-x-[0.139rem]"
+                ></app-icon>
+            </div>
+            <ng-container *ngIf="!isLast">
+                <div
+                    class="timeline-line | from-transparent to-tinted-700 mx-auto h-[clamp(4rem,25%,4rem)] w-0.5 bg-gradient-to-b"
+                ></div>
+                <div class="timeline-line | bg-tinted-700 mx-auto h-full w-0.5"></div>
+                <div
+                    class="timeline-line | from-tinted-700 to-transparent mx-auto h-[clamp(4rem,25%,4rem)] w-0.5 bg-gradient-to-b"
+                ></div>
+            </ng-container>
+        </div>
+        <div class="mt-1 w-full" [class.mb-4]="!isLast">
+            <div class="@sm:flex mb-2 items-center gap-2">
+                <div class="title">{{ event.title }}</div>
+                <div class="timestamp | text-tinted-500 text-sm">
+                    {{ event.timestamp | date : 'medium' }}
+                </div>
+            </div>
+
+            <div class="text-tinted-300 wrap-nicely">{{ event.description }}</div>
+
+            <ng-container *ngIf="event.component">
+                <ng-container
+                    *ngComponentOutlet="event.component; injector: createInjector(event.viewData)"
+                ></ng-container>
+            </ng-container>
+        </div>
+    </div>
+</ng-container>

@@ -1,4 +1,5 @@
 import {
+    EntityEvent,
     EntityPreviewRecursive,
     EntityType,
     TaskDetail,
@@ -17,6 +18,7 @@ export interface EntitiesState {
 
     /** Mapped to their tasklist */
     taskTreeMap: TaskTreeMap | null
+    events: Record<string, EntityEvent[]>
 
     search: { query: string } | null
 }

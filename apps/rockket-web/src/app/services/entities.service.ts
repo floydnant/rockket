@@ -16,6 +16,8 @@ export interface EntityService {
     delete(id: string): Observable<HttpSuccessResponse>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     loadDetail(id: string): Observable<Record<string, any>>
+
+    loadEvents(id: string): Observable<EntityEvent[]>
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type EntityServiceConstructor = new (...args: any[]) => EntityService
@@ -64,6 +66,9 @@ export class EntitiesService {
 
     loadDetail({ entityType, id }: EntityCrudDto) {
         return this.injectEntityService(entityType).loadDetail(id)
+    }
+    loadEvents({ entityType, id }: EntityCrudDto): Observable<EntityEvent[]> {
+        return this.injectEntityService(entityType).loadEvents(id)
     }
     rename({ entityType, id, title }: EntityCrudDto<{ title: string }>) {
         return this.injectEntityService(entityType).update(id, { title })

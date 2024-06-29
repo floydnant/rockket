@@ -16,6 +16,7 @@ import {
 
 export const mediaQueries = {
     mobileScreen: '(max-width: 768px)',
+    mediumScreen: '(min-width: 930px)',
     touchPrimary: '(pointer: coarse)',
     canHover: '(hover:hover)',
 }
@@ -41,6 +42,10 @@ export class DeviceService {
 
     isMobileScreen$ = this.queryChanges$.pipe(
         map(queryMap => queryMap[mediaQueries.mobileScreen]),
+        shareReplay({ bufferSize: 1, refCount: true }),
+    )
+    isMediumScreen$ = this.queryChanges$.pipe(
+        map(queryMap => queryMap[mediaQueries.mediumScreen]),
         shareReplay({ bufferSize: 1, refCount: true }),
     )
 

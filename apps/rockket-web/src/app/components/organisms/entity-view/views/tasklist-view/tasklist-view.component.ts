@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
 import { UntilDestroy } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { EntityType, TasklistDetail } from '@rockket/commons'
+import { EntityType, TasklistDetail, isTruthy } from '@rockket/commons'
 import { Subject, combineLatest, merge } from 'rxjs'
 import {
     distinctUntilChanged,
@@ -10,7 +10,6 @@ import {
     first,
     map,
     mergeWith,
-    share,
     shareReplay,
     startWith,
     withLatestFrom,
@@ -41,6 +40,14 @@ export class TasklistViewComponent {
     listEntity$ = this.viewData.entity$
     detail$ = this.viewData.detail$
     options$ = this.viewData.options$
+    entityWithDetail$ = combineLatest([this.listEntity$, this.detail$]).pipe(
+        map(([list, detail]) => {
+            if (!list || !detail) return null
+            return { id: list.id, createdAt: detail.createdAt }
+        }),
+        filter(isTruthy),
+        distinctUntilKeyChanged('id'),
+    )
 
     description$ = this.detail$.pipe(
         map(detail => {
@@ -76,7 +83,7 @@ export class TasklistViewComponent {
         })
     }
 
-    descriptionBlurInput$ = new Subject<null>()
+    descriptionBlurInput$ = new Subject<void>()
 
     private isDescriptionOpenInput$ = new Subject<boolean>()
     openDescription() {
@@ -93,11 +100,13 @@ export class TasklistViewComponent {
                 map(([, description]) => Boolean(description)),
             ),
         ),
-        share({ resetOnRefCountZero: true }),
+        distinctUntilChanged(),
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     children$ = this.listEntity$.pipe(
         map(entity => entity?.children?.filter(child => child.entityType != EntityType.TASK)),
+        startWith(undefined),
     )
     createSublist() {
         this.listEntity$.pipe(first()).subscribe(entity => {
