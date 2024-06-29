@@ -7,7 +7,7 @@ describe('TimelineComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [TimelineComponent],
+            declarations: [TimelineComponent],
         }).compileComponents()
 
         fixture = TestBed.createComponent(TimelineComponent)

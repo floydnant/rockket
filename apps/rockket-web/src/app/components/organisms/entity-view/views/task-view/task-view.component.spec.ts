@@ -5,6 +5,7 @@ import { storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 
 import { TaskViewComponent } from './task-view.component'
+import { RxModule } from 'src/app/rx/rx.module'
 
 describe('TaskViewComponent', () => {
     let component: TaskViewComponent
@@ -25,7 +26,7 @@ describe('TaskViewComponent', () => {
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 { provide: EntityViewComponent, useValue: { progress$: { next() {} } } },
             ],
-            imports: [AsyncPipe],
+            imports: [AsyncPipe, RxModule],
         }).compileComponents()
 
         fixture = TestBed.createComponent(TaskViewComponent)
