@@ -12,6 +12,7 @@ export interface Breadcrumb {
     icon: IconKey
     route: string
     contextMenuItems?: MenuItem[]
+    contextMenuItemData?: unknown
 }
 type BreadcrumbInternal =
     | Breadcrumb

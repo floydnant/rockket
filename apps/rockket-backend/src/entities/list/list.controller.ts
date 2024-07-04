@@ -55,7 +55,7 @@ export class ListController {
     // Nested child list previews
     @Get('list/:listId/child-lists')
     getChildTasklists(@GetUser() user: User, @Param('listId') listId: string) {
-        return this.listService.getChildTasklists(user.id, listId)
+        return this.listService.getSublists(user.id, listId)
     }
 
     // Tasklist sharing

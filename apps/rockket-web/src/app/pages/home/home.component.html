@@ -85,9 +85,9 @@
                         routerLink="/home/{{ node.id }}"
                         routerLinkActive="active"
                         (click)="closeMobileMenu()"
-                        [cdkContextMenuTriggerFor]="nodeDropDown"
-                        (cdkContextMenuOpened)="isSelected[node.id] = true"
-                        (cdkContextMenuClosed)="isSelected[node.id] = false"
+                        [appContextMenu]="node.menuItems"
+                        [appMenuData]="{ id: node.id, entityType: node.entityType }"
+                        (isMenuOpen)="isSelected[node.id] = $event"
                         data-test-name="entity-tree-node"
                         [attr.data-test-is-loading]="isNodeLoading"
                         [attr.data-level]="node.path.length"
@@ -139,20 +139,14 @@
                             <button
                                 class="icon-btn"
                                 (click)="$event.stopPropagation(); nodeTooltip.hideTooltip()"
-                                [cdkMenuTriggerFor]="nodeDropDown"
-                                (cdkMenuOpened)="isSelected[node.id] = true"
-                                (cdkMenuClosed)="isSelected[node.id] = false"
+                                [appMenu]="node.menuItems"
+                                [appMenuData]="{ id: node.id, entityType: node.entityType }"
+                                (isMenuOpen)="isSelected[node.id] = $event"
                                 data-test-name="open-menu"
                             >
                                 <app-double-ellipsis-icon></app-double-ellipsis-icon>
                             </button>
                         </div>
-                        <ng-template #nodeDropDown>
-                            <app-drop-down
-                                [items]="node.menuItems"
-                                [data]="{ id: node.id, entityType: node.entityType }"
-                            ></app-drop-down>
-                        </ng-template>
                     </button>
                 </cdk-tree-node>
             </cdk-tree>

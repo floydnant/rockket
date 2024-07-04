@@ -1,9 +1,11 @@
-import { EntityEvent, EntityEventType } from '@rockket/commons'
+import { EntityEvent, EntityEventType, EntityType } from '@rockket/commons'
 import { TaskPriorityEventComponent } from './event-views/task-priority-event.component'
 import { TaskStatusEventComponent } from './event-views/task-status-event.component'
 import { TimelineEntry } from '../../../../molecules/timeline/timeline.component'
 import { TaskDeadlineEventComponent } from './event-views/task-deadline-event.component'
 import { TitleChangedEventComponent } from './event-views/title-changed-event.component'
+import { TaskParentTaskChangedEventComponent } from './event-views/task-parent-task-changed-event.component'
+import { ParentListChangedEventComponent } from './event-views/parent-list-changed-event.component'
 
 export const entityEventToTimelineEntryMapperMap = {
     [EntityEventType.TitleChanged]: event => ({
@@ -14,26 +16,37 @@ export const entityEventToTimelineEntryMapperMap = {
         viewData: event,
     }),
     [EntityEventType.ListParentListChanged]: event => ({
-        title: `Parent list changed`,
-        description: `${event.metaData.prevValue || 'None'} → ${event.metaData.newValue || 'None'}`,
+        // @TODO: should these be dynamic at all? Or might a static string be better?
+        title:
+            event.metaData.prevValue && event.metaData.newValue
+                ? `Moved to another parent list`
+                : event.metaData.newValue
+                ? 'Added to a parent list'
+                : 'Removed from the parent list',
+        component: ParentListChangedEventComponent,
+        viewData: event,
         timestamp: event.timestamp,
-        icon: 'DISCARDED',
+        icon: 'parent',
     }),
     [EntityEventType.TaskParentListChanged]: event => ({
-        title: `Parent list changed`,
-        // @TODO: Add proper visual representation
+        title: `Moved to another list`,
         timestamp: event.timestamp,
-        description: `${event.metaData.prevValue} → ${event.metaData.newValue}`,
-        // @TODO: Add proper icon, how bout `fa-project-diagram`, `fa-sitemap`, `fa-folder-tree` or `fa-network-wired`?
-        icon: 'DISCARDED',
+        component: ParentListChangedEventComponent,
+        viewData: event,
+        icon: EntityType.TASKLIST,
     }),
     [EntityEventType.TaskParentTaskChanged]: event => ({
-        title: `Parent task changed`,
-        // @TODO: Add proper visual representation
+        // @TODO: should these be dynamic at all? Or might a static string be better?
+        title:
+            event.metaData.prevValue && event.metaData.newValue
+                ? `Moved to another parent task`
+                : event.metaData.newValue
+                ? 'Added to a parent task'
+                : 'Removed from the parent task',
         timestamp: event.timestamp,
-        description: `${event.metaData.prevValue || 'None'} → ${event.metaData.newValue || 'None'}`,
-        // @TODO: Add proper icon
-        icon: 'DISCARDED',
+        component: TaskParentTaskChangedEventComponent,
+        viewData: event,
+        icon: 'parent',
     }),
     [EntityEventType.TaskPriorityChanged]: event => ({
         title: `Priority changed`,

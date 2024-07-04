@@ -42,6 +42,20 @@ export class ListService {
         const tasklist = await this.listRepository.getTasklistById(listId)
         if (!tasklist) throw new NotFoundException('Could not find task')
 
+        // If the parent list was updated, ensure the new parent is valid
+        if (dto.parentListId && dto.parentListId != tasklist.parentListId) {
+            // Ensure tasklist is not its own parent
+            if (dto.parentListId == tasklist.id) {
+                throw new ForbiddenException('A tasklist cannot be its own parent')
+            }
+
+            // Ensure new parent tasklist is not a descendant of the tasklist
+            const nestedSublists = await this.listRepository.getSublistsRecursive(listId)
+            if (nestedSublists.some(sublist => sublist.id == dto.parentListId)) {
+                throw new ForbiddenException('A tasklist cannot be its own descendant')
+            }
+        }
+
         const tasklistEvents = buildTasklistEventsFromDto(tasklist, dto, userId)
 
         await this.listRepository.updateTasklist(listId, dto, tasklistEvents)
@@ -100,7 +114,7 @@ export class ListService {
         return this.listRepository.getTasklistEvents(listId)
     }
 
-    async getChildTasklists(userId: string, listId: string) {
+    async getSublists(userId: string, listId: string) {
         const hasPermissions = await this.permissions.hasPermissionForList(
             userId,
             listId,
@@ -108,7 +122,7 @@ export class ListService {
         )
         if (!hasPermissions) throw new ForbiddenException("You don't have permission to view this tasklist")
 
-        return this.listRepository.getChildTasklists(listId)
+        return this.listRepository.getSublists(listId)
     }
 
     async shareTasklist(userId: string, listId: string, newParticipantId: string, dto: ShareTasklistZodDto) {

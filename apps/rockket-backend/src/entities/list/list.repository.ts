@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { ListPermission } from '@prisma/client'
-import { EntityEvent, Tasklist, entityEventSchema } from '@rockket/commons'
+import { ListPermission, Tasklist as DbTasklist } from '@prisma/client'
+import { EntityEvent, Tasklist, entityEventSchema, valuesOf } from '@rockket/commons'
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
 import { CreateTasklistZodDto, ShareTasklistZodDto, UpdatePermissionsZodDto } from './list.dto'
+import { wrapInDoubleQuotes } from '../../shared/sql.utils'
+import { listTable } from './list.db-table'
 
 @Injectable()
 export class ListRepository {
@@ -138,11 +140,33 @@ export class ListRepository {
         return lists
     }
 
-    async getChildTasklists(listId: string) {
+    async getSublists(listId: string) {
         return await this.prisma.tasklist.findMany({
             where: { parentListId: listId },
             orderBy: { createdAt: 'desc' },
         })
+    }
+    async getSublistsRecursive(listId: string): Promise<DbTasklist[]> {
+        const allColumns = valuesOf(listTable.$columns).map(wrapInDoubleQuotes)
+
+        // @SCHEMA_CHANGE: Tasklist
+        const rows = await this.prisma.$queryRawUnsafe<Record<string, unknown>[]>(`
+            WITH RECURSIVE all_lists AS (
+                SELECT ${allColumns.join(', ')}
+                FROM public."${listTable.$tableName}"
+                WHERE "${listTable.id}" = '${listId}'
+
+                UNION
+
+                SELECT ${allColumns.map(v => 'l.' + v).join(', ')}
+                FROM public."${listTable.$tableName}" l
+                    INNER JOIN all_lists a ON a."${listTable.id}" = l."${listTable.parentListId}"
+            )
+            SELECT * FROM all_lists
+        `)
+        const nestedSublists = listTable.parseRows(rows)
+
+        return nestedSublists.filter(task => task.id !== listId)
     }
 
     async shareTasklist(listId: string, userId: string, dto: ShareTasklistZodDto) {

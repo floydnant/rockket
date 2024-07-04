@@ -24,7 +24,7 @@
                 ],
                 "@angular-eslint/no-output-rename": "off",
                 "@angular-eslint/no-input-rename": "off",
-                "@angular-eslint/no-host-metadata-property": "warn",
+                "@angular-eslint/no-host-metadata-property": "off",
                 // @TODO: @floydnant - Switch back to error once we have fixed all the issues
                 "@angular-eslint/no-output-native": "warn"
             }

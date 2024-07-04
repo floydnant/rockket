@@ -85,7 +85,8 @@
             'max-w-full': isInsideTruncationPopover
         }"
         cdkMenuItem
-        [cdkContextMenuTriggerFor]="menu"
+        [appContextMenu]="breadcrumb.contextMenuItems"
+        [appMenuData]="breadcrumb.contextMenuItemData"
         [routerLink]="breadcrumb.route"
         [appTooltip]="tooltip"
         [tooltipOptions]="{
@@ -96,14 +97,6 @@
         #trigger="cdkContextMenuTriggerFor"
         data-test-name="breadcrumb"
     >
-        <ng-template #menu>
-            <app-drop-down
-                *ngIf="breadcrumb.contextMenuItems?.length"
-                [items]="breadcrumb.contextMenuItems!"
-                [rootTrigger]="trigger"
-            ></app-drop-down>
-        </ng-template>
-
         <app-entity-page-label
             [pageTitle]="breadcrumb.title"
             [pageIcon]="breadcrumb.icon"

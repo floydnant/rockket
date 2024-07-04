@@ -48,11 +48,11 @@ export const createSqlTable = <
         $flippedColumns: flippedColumns,
 
         parseRow: (row: Record<string, unknown>, params?: Partial<z.ParseParams>) => {
-            // @TODO: throw db integrity/inconsistency exception if comments are not valid
+            // @TODO: throw db integrity/inconsistency exception
             return dbRowToCoreSchema.parse(row, params)
         },
         parseRows: (row: Record<string, unknown>[], params?: Partial<z.ParseParams>) => {
-            // @TODO: throw db integrity/inconsistency exception if comments are not valid
+            // @TODO: throw db integrity/inconsistency exception
             return dbRowsToCoreArraySchema.parse(row, params)
         },
     }

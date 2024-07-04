@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { Task as DbTask } from '@prisma/client'
-import { EntityEvent, Task, entityEventSchema } from '@rockket/commons'
+import { EntityEvent, Task, entityEventSchema, valuesOf } from '@rockket/commons'
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
 import { CommentService } from '../comment/comment.service'
 import { CreateTaskZodDto } from './task.dto'
+import { taskTable } from './task.db-table'
+import { wrapInDoubleQuotes } from '../../shared/sql.utils'
 
 @Injectable()
 export class TaskRepository {
@@ -45,20 +47,20 @@ export class TaskRepository {
 
     async deleteTask(taskId: string) {
         // @SCHEMA_CHANGE: Task
-        const nestedChildren: { id: string; parentTaskId: string }[] = await this.prisma.$queryRaw`
+        const nestedChildren: { id: string; parentTaskId: string }[] = await this.prisma.$queryRawUnsafe(`
             WITH RECURSIVE all_tasks AS (
-                SELECT id, "parentTaskId"
-                FROM public."Task"
-                WHERE id = ${taskId}
+                SELECT "${taskTable.id}", "${taskTable.parentTaskId}"
+                FROM public."${taskTable.$tableName}"
+                WHERE "${taskTable.id}" = '${taskId}'
 
                 UNION
 
-                SELECT t.id, t."parentTaskId"
-                FROM public."Task" t
-                    INNER JOIN all_tasks a ON a.id = t."parentTaskId"
+                SELECT t."${taskTable.id}", t."${taskTable.parentTaskId}"
+                FROM public."${taskTable.$tableName}" t
+                    INNER JOIN all_tasks a ON a."${taskTable.id}" = t."${taskTable.parentTaskId}"
             )
             SELECT * FROM all_tasks
-        `
+        `)
 
         const taskIds = nestedChildren.map(child => child.id)
 
@@ -72,6 +74,28 @@ export class TaskRepository {
 
     async getSubtasks(taskId: string): Promise<DbTask[]> {
         return this.prisma.task.findMany({ where: { parentTaskId: taskId } })
+    }
+    async getSubtasksRecursive(taskId: string): Promise<DbTask[]> {
+        const allColumns = valuesOf(taskTable.$columns).map(wrapInDoubleQuotes)
+
+        // @SCHEMA_CHANGE: Task
+        const rows = await this.prisma.$queryRawUnsafe<Record<string, unknown>[]>(`
+            WITH RECURSIVE all_tasks AS (
+                SELECT ${allColumns.join(', ')}
+                FROM public."${taskTable.$tableName}"
+                WHERE "${taskTable.id}" = '${taskId}'
+
+                UNION
+
+                SELECT ${allColumns.map(v => 't.' + v).join(', ')}
+                FROM public."${taskTable.$tableName}" t
+                    INNER JOIN all_tasks a ON a."${taskTable.id}" = t."${taskTable.parentTaskId}"
+            )
+            SELECT * FROM all_tasks
+        `)
+        const nestedSubtasks = taskTable.parseRows(rows)
+
+        return nestedSubtasks.filter(task => task.id !== taskId)
     }
 
     async getTaskEvents(taskId: string) {

@@ -83,6 +83,11 @@ const extraIcons = {
     markdown: 'fab fa-markdown',
     birth: 'fas fa-star',
     deadline: 'far fa-calendar-exclamation',
+    parent: 'far fa-sitemap',
+    // @TODO: remove these
+    parent1: 'far fa-project-diagram',
+    parent3: 'fas fa-folder-tree',
+    parent4: 'fas fa-network-wired',
 
     chevronRight: 'fas fa-chevron-right',
     chevronLeft: 'fas fa-chevron-left',

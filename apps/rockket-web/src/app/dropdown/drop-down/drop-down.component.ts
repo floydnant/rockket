@@ -1,8 +1,15 @@
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu'
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core'
-import { BehaviorSubject, map } from 'rxjs'
+import { Component, ElementRef, EventEmitter, Input, Output, Type, ViewChild, inject } from '@angular/core'
+import { BehaviorSubject, ReplaySubject, Subject, map } from 'rxjs'
+import { DialogService } from 'src/app/modal/dialog.service'
 import { moveToMacroQueue } from 'src/app/utils'
-import { useParamsForRoute } from 'src/app/utils/menu-item.helpers'
+import {
+    childrenAsComponent,
+    childrenAsItems,
+    isChildrenComponent,
+    isChildrenMenuItems,
+    useParamsForRoute,
+} from 'src/app/utils/menu-item.helpers'
 import { IconKey } from '../../components/atoms/icons/icon/icons'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,7 +23,7 @@ export interface MenuItem<TArg = any> {
     hideWhenActive?: boolean
     /** Only for display (doesn't hook up any listeners) for now */
     keybinding?: string
-    children?: MenuItem[]
+    children?: MenuItem[] | Type<unknown>
     isSeparator?: boolean
     variant?: MenuItemVariant
 }
@@ -33,16 +40,29 @@ export enum MenuItemVariant {
     styleUrls: ['./drop-down.component.css'],
 })
 export class DropDownComponent {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef)
+    private overlayService = inject(DialogService)
+
     items$_ = new BehaviorSubject<MenuItem[]>([])
-    @Input() set items(items: MenuItem[]) {
-        this.items$_.next(items)
+    @Input() set items(items: MenuItem['children']) {
+        if (isChildrenMenuItems(items)) this.items$_.next(items)
+        else {
+            // @TODO
+            if (isChildrenComponent(items)) this.component$.next(items)
+        }
     }
+
+    component$ = new ReplaySubject<Type<unknown>>()
     items$ = this.items$_.pipe(
-        // @TODO: we should check wether the data is appropriate for route params
+        // @TODO: we should check whether the data is appropriate for route params
         map(items =>
             !this.data ? items : items.map(useParamsForRoute(this.data as Record<string, string | number>)),
         ),
     )
+
+    childrenAsItems = childrenAsItems
+    isChildrenComponent = isChildrenComponent
+    childrenAsComponent = childrenAsComponent
 
     /** `data` is used for actions and route param interpolation */
     @Input() data?: Record<string, unknown>
@@ -52,6 +72,29 @@ export class DropDownComponent {
     triggerAction(action: MenuItem['action']) {
         // This ensures that the keydown event doesn't get picked up by another component
         moveToMacroQueue(() => action?.(this.data))
+    }
+    openOverlay(component: Type<unknown>) {
+        const rect = this.elementRef.nativeElement.getBoundingClientRect()
+
+        const dialogRef = this.overlayService.showOverlay(
+            component,
+            { left: rect.left, top: rect.top },
+            this.data,
+        )
+
+        this.opened.next()
+        setTimeout(() => {
+            this.opened.next()
+        })
+
+        dialogRef.closed.subscribe(() => {
+            this.closed.next()
+        })
+    }
+
+    close(shouldEmit = true) {
+        this.rootTrigger?.close()
+        if (shouldEmit) this.closed.next()
     }
 
     MenuItemVariant = MenuItemVariant
@@ -65,5 +108,6 @@ export class DropDownComponent {
         return this.menu.menuStack.hasFocus
     }
 
-    @Output() closed = new EventEmitter<void>()
+    @Output('opened') @Input('onOpen') opened: Subject<void> = new EventEmitter<void>()
+    @Output('closed') @Input('onClose') closed: Subject<void> = new EventEmitter<void>()
 }

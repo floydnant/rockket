@@ -42,6 +42,22 @@ export const flattenEntityTree = (
         return [flatEntity, ...flattenEntityTree(children || [], subpath)]
     })
 }
+export const flattenEntityTreeWithFullPath = (
+    entityTree: EntityPreviewRecursive[],
+    path: EntityPreviewRecursive[] = [],
+): (Omit<EntityPreviewFlattend, 'path'> & { path: EntityPreviewRecursive[] })[] => {
+    return entityTree.flatMap(entity => {
+        const { children, ...rest } = entity
+        const flatEntity: Omit<EntityPreviewFlattend, 'path'> & { path: EntityPreviewRecursive[] } = {
+            ...rest,
+            path,
+            childrenCount: children?.length,
+        }
+        const subpath = [...path, entity]
+
+        return [flatEntity, ...flattenEntityTreeWithFullPath(children || [], subpath)]
+    })
+}
 
 export const flattenTaskTree = (taskTree: TaskRecursive[], path: string[] = []): TaskFlattend[] => {
     return taskTree.flatMap(task => {
@@ -52,6 +68,19 @@ export const flattenTaskTree = (taskTree: TaskRecursive[], path: string[] = []):
         const subpath = [...path, task.id]
 
         return [flatTask, ...flattenTaskTree(children || [], subpath)]
+    })
+}
+export const flattenTaskTreeWithFullPath = (
+    taskTree: TaskRecursive[],
+    path: TaskRecursive[] = [],
+): (Omit<TaskFlattend, 'path'> & { path: TaskRecursive[] })[] => {
+    return taskTree.flatMap(task => {
+        const { children, ...restTask } = task
+
+        const flatTask = { ...restTask, path, children }
+        const subpath = [...path, task]
+
+        return [flatTask, ...flattenTaskTreeWithFullPath(children || [], subpath)]
     })
 }
 
@@ -229,6 +258,17 @@ export const applyMapperRecursive = (
             children: applyMapperRecursive(task.children, mapper),
         }
     })
+}
+
+export const visitDescendants = <T extends { children?: T[] | null }>(
+    tree: T[],
+    callback: (item: T) => void,
+): void => {
+    for (const item of tree) {
+        callback(item)
+
+        if (item.children) visitDescendants(item.children, callback)
+    }
 }
 
 export const traceEntityIncludingTasks = (

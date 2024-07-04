@@ -25,13 +25,17 @@ import { EntityDescriptionComponent } from './components/molecules/entity-descri
 import { FormComponent } from './components/molecules/form/form.component'
 import { PageProgressBarComponent } from './components/molecules/page-progress-bar/page-progress-bar.component'
 import { TabBarComponent } from './components/molecules/tab-bar/tab-bar.component'
+import { TimelineComponent } from './components/molecules/timeline/timeline.component'
 import { ToolbarComponent } from './components/molecules/toolbar/toolbar.component'
+import { EntityParentSelectorComponent } from './components/organisms/entity-parent-selector/entity-parent-selector.component'
 import { EntityViewComponent } from './components/organisms/entity-view/entity-view.component'
+import { ActivityComponent } from './components/organisms/entity-view/shared/activity/activity.component'
+import { ParentListChangedEventComponent } from './components/organisms/entity-view/shared/activity/event-views/parent-list-changed-event.component'
 import { TaskDeadlineEventComponent } from './components/organisms/entity-view/shared/activity/event-views/task-deadline-event.component'
+import { TaskParentTaskChangedEventComponent } from './components/organisms/entity-view/shared/activity/event-views/task-parent-task-changed-event.component'
 import { TaskPriorityEventComponent } from './components/organisms/entity-view/shared/activity/event-views/task-priority-event.component'
 import { TaskStatusEventComponent } from './components/organisms/entity-view/shared/activity/event-views/task-status-event.component'
 import { TitleChangedEventComponent } from './components/organisms/entity-view/shared/activity/event-views/title-changed-event.component'
-import { TimelineComponent } from './components/molecules/timeline/timeline.component'
 import { TaskViewComponent } from './components/organisms/entity-view/views/task-view/task-view.component'
 import { TasklistViewComponent } from './components/organisms/entity-view/views/tasklist-view/tasklist-view.component'
 import { TaskTreeComponent } from './components/organisms/task-tree/task-tree.component'
@@ -80,7 +84,6 @@ import { RichTextEditorModule } from './rich-text-editor/rich-text-editor.module
 import { RxModule } from './rx/rx.module'
 import { effects, metaReducers, reducers } from './store'
 import { TooltipModule } from './tooltip/tooltip.module'
-import { ActivityComponent } from './components/organisms/entity-view/shared/activity/activity.component'
 
 @NgModule({
     declarations: [
@@ -141,6 +144,9 @@ import { ActivityComponent } from './components/organisms/entity-view/shared/act
         TitleChangedEventComponent,
         TabBarComponent,
         ActivityComponent,
+        EntityParentSelectorComponent,
+        TaskParentTaskChangedEventComponent,
+        ParentListChangedEventComponent,
     ],
     imports: [
         BrowserModule,

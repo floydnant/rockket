@@ -1,5 +1,5 @@
 .menu-item {
-    @apply inline-flex justify-between;
+    @apply inline-flex justify-between py-0.5 items-center;
 }
 .menu-item span {
     @apply inline-flex items-center gap-2;

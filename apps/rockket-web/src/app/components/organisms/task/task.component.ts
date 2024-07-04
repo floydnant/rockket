@@ -127,7 +127,7 @@ export class TaskComponent {
             return items
         }),
         untilDestroyed(this),
-        shareReplay(1),
+        shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     statusMenuItems$ = this.menuItemsInput$.pipe(

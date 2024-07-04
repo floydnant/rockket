@@ -6,7 +6,7 @@ import { HttpSuccessResponse } from '../http/types'
 import { ListService } from './entity.services/list.service'
 import { TaskService } from './entity.services/task.service'
 
-// @TODO: we should contraint the dtos further
+// @TODO: Fix the types here
 export interface EntityService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     create(dto: Record<string, any>): Observable<Record<string, any>>
@@ -72,6 +72,23 @@ export class EntitiesService {
     }
     rename({ entityType, id, title }: EntityCrudDto<{ title: string }>) {
         return this.injectEntityService(entityType).update(id, { title })
+    }
+    move({
+        entityType,
+        id,
+        newParentId,
+        newParentEntityType,
+    }: EntityCrudDto<{ newParentId: string | null; newParentEntityType: EntityType | null }>) {
+        const machine = {
+            [EntityType.TASK]:
+                newParentEntityType == EntityType.TASK
+                    ? { parentTaskId: newParentId }
+                    : { listId: newParentId },
+
+            [EntityType.TASKLIST]: { parentListId: newParentId },
+        } satisfies Record<EntityType, object>
+
+        return this.injectEntityService(entityType).update(id, machine[entityType])
     }
     delete({ entityType, id }: EntityCrudDto) {
         return this.injectEntityService(entityType).delete(id)

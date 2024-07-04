@@ -152,6 +152,29 @@ export class EntitiesEffects {
         )
     })
 
+    move = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(entitiesActions.move),
+            mergeMap(({ id, entityType, newParentId, newParentEntityType }) => {
+                const res$ = this.entitiesService.move({ id, entityType, newParentId, newParentEntityType })
+
+                return res$.pipe(
+                    switchMap(({ newEvents }) => {
+                        return from([
+                            entitiesActions.moveSuccess({ id, entityType, newParentId, newParentEntityType }),
+                            entitiesActions.appendEvents({ id, entityType, events: newEvents }),
+                        ])
+                    }),
+                    catchError(err => {
+                        this.toast.error(getMessageFromHttpError(err))
+
+                        return of(entitiesActions.moveError({ ...err, id }))
+                    }),
+                )
+            }),
+        )
+    })
+
     showDeleteDialog = createEffect(() => {
         return this.actions$.pipe(
             ofType(entitiesActions.openDeleteDialog),

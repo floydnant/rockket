@@ -5,10 +5,21 @@ import { CdkMenuModule } from '@angular/cdk/menu'
 import { IconsModule } from '../components/atoms/icons/icons.module'
 import { KeyboardModule } from '../keyboard/keyboard.module'
 import { RouterModule } from '@angular/router'
+import {
+    MenuTriggerDirective,
+    DropDownTemplateWrapperComponent,
+    ContextMenuTriggerDirective,
+} from './menu-trigger.directive'
+import { RxModule } from '../rx/rx.module'
 
 @NgModule({
-    declarations: [DropDownComponent],
-    imports: [CommonModule, RouterModule, CdkMenuModule, IconsModule, KeyboardModule],
-    exports: [DropDownComponent],
+    declarations: [
+        DropDownComponent,
+        MenuTriggerDirective,
+        ContextMenuTriggerDirective,
+        DropDownTemplateWrapperComponent,
+    ],
+    imports: [CommonModule, RouterModule, CdkMenuModule, IconsModule, KeyboardModule, RxModule],
+    exports: [DropDownComponent, MenuTriggerDirective, ContextMenuTriggerDirective],
 })
 export class DropdownModule {}

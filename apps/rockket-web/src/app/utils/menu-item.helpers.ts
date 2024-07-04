@@ -1,6 +1,7 @@
 import { Task } from '@rockket/commons'
 import { interpolateParams } from '.'
 import { MenuItem } from '../dropdown/drop-down/drop-down.component'
+import { Type } from '@angular/core'
 
 export interface WrappedMenuItems<T> extends Array<MenuItem<T>> {
     applyOperators(...operator: ((item: MenuItem<T>) => MenuItem<T>)[]): WrappedMenuItems<T>
@@ -12,6 +13,19 @@ const getOperatorApplier = <T>(items: MenuItem<T>[]) => {
         })
         return wrapMenuItems(result)
     }
+}
+
+export const isChildrenMenuItems = (children: MenuItem['children']): children is MenuItem[] => {
+    return Array.isArray(children)
+}
+export const childrenAsItems = (children: MenuItem['children']): MenuItem[] | undefined => {
+    return isChildrenMenuItems(children) ? children : undefined
+}
+export const isChildrenComponent = (children: MenuItem['children']): children is Type<unknown> => {
+    return Boolean(children) && !Array.isArray(children)
+}
+export const childrenAsComponent = (children: MenuItem['children']): Type<unknown> | undefined => {
+    return isChildrenComponent(children) ? children : undefined
 }
 
 /** Used to apply operators sequentially per iteration, instead of iterating over all menu items for each operator.
@@ -29,7 +43,9 @@ export const interceptItem = <T>(callback: (item: MenuItem<T>) => Partial<Omit<M
             ...item,
             ...callback(item),
             // We cannot use optional chaining syntax here, because cypress->webpack complains
-            children: item.children && item.children.map(interceptItem(callback)),
+            children: isChildrenMenuItems(item.children)
+                ? item.children.map(interceptItem(callback))
+                : item.children,
         }
     }
 }
@@ -110,7 +126,7 @@ export const useTaskForActiveItems = (task: Pick<Task, 'status' | 'priority'>) =
 
         return {
             ...item,
-            children: item.children && item.children.map(mapper(task)),
+            children: isChildrenMenuItems(item.children) ? item.children.map(mapper(task)) : item.children,
         }
     }
 }

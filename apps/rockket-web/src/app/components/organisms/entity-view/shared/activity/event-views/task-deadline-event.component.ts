@@ -5,8 +5,8 @@ import { TIMELINE_ENTRY_VIEW_DATA } from '../../../../../molecules/timeline/time
 @Component({
     selector: 'app-task-deadline-event',
     template: `
-        <div class="text-tinted-300 mt-2 flex flex-wrap gap-1">
-            <ng-template #noDeadline> None </ng-template>
+        <div class="text-tinted-300 @xs:flex-row flex w-fit flex-col flex-wrap gap-1">
+            <ng-template #noDeadline> <span class="text-tinted-400">None</span> </ng-template>
 
             <div
                 *ngIf="event.metaData.prevValue; else noDeadline"
@@ -15,7 +15,7 @@ import { TIMELINE_ENTRY_VIEW_DATA } from '../../../../../molecules/timeline/time
                 <span>{{ event.metaData.prevValue | date : 'medium' }}</span>
             </div>
 
-            <span class="text-tinted-300 mx-1">→</span>
+            <span class="text-tinted-300 @xs:rotate-0 @xs:mx-1 mx-auto rotate-90">→</span>
 
             <div
                 *ngIf="event.metaData.newValue; else noDeadline"

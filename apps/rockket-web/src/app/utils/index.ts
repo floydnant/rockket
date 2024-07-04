@@ -11,7 +11,7 @@ export const stripNonWordChars = (str: string) =>
 
 export const interpolateParams = (template: string, params: Record<string, string | number>) => {
     return Object.entries(params).reduce((acc, [key, value]) => {
-        return acc.replace(new RegExp(`:${key}`, 'g'), value.toString())
+        return acc.replace(new RegExp(`:${key}`, 'g'), String(value))
     }, template)
 }
 
@@ -62,5 +62,5 @@ export const moveElement = <T>(arr: Array<T>, fromIndex: number, toIndex: number
     return arr
 }
 
-export const isNotNullish = <T>(value: T | undefined | null): value is T =>
+export const isNotNullish = <T>(value: T | undefined | void | null): value is T =>
     value !== undefined && value !== null
