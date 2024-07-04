@@ -212,13 +212,19 @@ export class EntityParentSelectorComponent {
         }),
         distinctUntilChanged(),
         tap(([selectedIndex, shouldScrollIntoView]) => {
-            if (!shouldScrollIntoView) return
-
             const listElem = this.resultsList?.nativeElement
             if (selectedIndex === null || !listElem) return
 
             const selectedElem = listElem.children[selectedIndex]
             if (!selectedElem) return
+
+            for (let i = 0; i < listElem.children.length; i++) {
+                const elem = listElem.children[i]
+                if (elem == selectedElem) selectedElem.classList.add('selected')
+                else elem.classList.remove('selected')
+            }
+
+            if (!shouldScrollIntoView) return
 
             const listRect = listElem.getBoundingClientRect()
             const rect = selectedElem.getBoundingClientRect()
@@ -231,7 +237,9 @@ export class EntityParentSelectorComponent {
         }),
         map(([selectedIndex]) => selectedIndex),
         shareReplay({ bufferSize: 1, refCount: true }),
+        untilDestroyed(this),
     )
+    private selectionSubscription = this.selectedIndex$.subscribe()
 
     onClick$ = new Subject<number | void>()
     onMouseEnter$ = new ReplaySubject<number>()

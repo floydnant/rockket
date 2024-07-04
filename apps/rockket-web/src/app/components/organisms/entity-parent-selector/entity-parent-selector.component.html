@@ -16,16 +16,15 @@
         #list
         class="no-default-padding | flex max-h-60 flex-col overflow-y-auto px-2 [&:has(li)]:pb-2"
         [style.scroll-padding]="listScrollPadding + 'px'"
-        *rxLet="selectedIndex$; let selectedIndex"
     >
         <li
             *ngFor="let result of results$ | push; let index = index"
             class="list-none [&:not(:last-of-type)]:mb-0.5"
         >
             <button
-                class="menu-item | [&:not(.selected)]:!text-tinted-300 w-full truncate px-2 text-left duration-0 [&:not(.selected)]:!bg-transparent"
+                class="menu-item | [li:not(.selected)_&]:!text-tinted-300 w-full truncate px-2 text-left duration-0 [li:not(.selected)_&]:!bg-transparent"
                 [ngClass]="{
-                    'selected !bg-tinted-600 text-tinted-100': selectedIndex == index
+                    '[.selected_&]:!bg-tinted-600 [.selected_&]:text-tinted-100': true,
                 }"
                 (click)="onClick$.next(index)"
                 (mouseenter)="onMouseEnter$.next(index)"
