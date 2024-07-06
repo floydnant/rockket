@@ -15,6 +15,7 @@ import { InlineEditorComponent } from '../../atoms/inline-editor/inline-editor.c
 import { TaskTreeNode } from '../task-tree/task-tree.component'
 import { TaskComponent } from './task.component'
 import { taskStatusLabelMap } from '../../atoms/icons/icon/icons'
+import { DialogModule } from '@angular/cdk/dialog'
 
 const taskMenuItems = getEntityMenuItemsMap({} as unknown as Store<AppState>)[EntityType.TASK]
 
@@ -41,7 +42,14 @@ const setupComponent = (
                 ...listeners,
                 menuItems: taskMenuItems.map(useStubsForActions(menuItemStubsMap)),
             },
-            imports: [CdkMenuModule, IconsModule, RxModule, DropdownModule, RichTextEditorModule],
+            imports: [
+                CdkMenuModule,
+                IconsModule,
+                RxModule,
+                DropdownModule,
+                RichTextEditorModule,
+                DialogModule,
+            ],
             declarations: [
                 TaskComponent,
                 InlineEditorComponent,
