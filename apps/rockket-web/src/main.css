@@ -115,7 +115,7 @@ pre {
 /*/////////////////////////////////////////// COMPONENTS ///////////////////////////////////////////////*/
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////*/
 @layer components {
-    a:not([class*='button'], .skip-default-a-styles),
+    a:not([class*='button'], .skip-default-a-styles, .no-default-a-styles),
     .link {
         @apply text-primary-400 hover:text-primary-300 hover:underline;
     }
@@ -129,10 +129,10 @@ pre {
     }
 
     .button-naked {
-        @apply text-tinted-300 hover:text-tinted-100 hover:bg-tinted-700 inline-flex items-center gap-2 rounded-lg px-2 py-1 transition-colors duration-75;
+        @apply text-tinted-300 hover:text-tinted-100 hover:bg-tinted-700 inline-flex items-center gap-2 rounded-lg px-3 py-1 transition-colors duration-75;
     }
     .button-naked:has(app-icon) {
-        @apply pr-2.5;
+        @apply pr-3.5;
     }
     .button-naked app-icon:first-of-type {
         @apply w-4 text-center text-sm;
@@ -187,7 +187,7 @@ pre {
         @apply button-naked py-0.5 text-left outline-none duration-[20ms];
     }
     .dropdown-menu .menu-item {
-        @apply pl-2.5;
+        @apply pl-3 pr-3;
     }
 
     .dropdown-menu .menu-item:is(.menu-item--default, :not([class*='menu-item--'])) {
@@ -250,7 +250,7 @@ pre {
 }
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////*/
-/*/////////////////////////////////////////// COMPONENTS ///////////////////////////////////////////////*/
+/*/////////////////////////////////////////// OVERLAYS ///////////////////////////////////////////////*/
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 /* Cannot be in the @layer because there is no actual reference for this class name in the source code */
@@ -265,22 +265,8 @@ pre {
     min-width: 180px;
     max-width: 280px;
     @apply border-tinted-700 bg-tinted-800 glass flex flex-col rounded-xl border bg-opacity-80 shadow-xl;
-    /* @apply border-tinted-600/60
-        bg-tinted-700
-        text-tinted-100
-        glass
-        box-border
-        block
-        max-w-xs
-        overflow-hidden
-        rounded-lg
-        border
-        px-2
-        py-1
-        text-sm
-        shadow-xl; */
 
-    animation: reveal 130ms var(--reveal-delay, 280ms) forwards;
+    animation: reveal 130ms var(--reveal-delay, 0ms) forwards;
     scale: 0.8;
     opacity: 0;
 }

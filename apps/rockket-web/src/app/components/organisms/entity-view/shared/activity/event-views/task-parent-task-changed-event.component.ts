@@ -16,7 +16,7 @@ import { getTaskById } from 'src/app/store/entities/utils'
             <a
                 *ngIf="data.previousParentTask; let previousParentTask; else: noParent"
                 [routerLink]="previousParentTask.route"
-                class="button-m text-tinted-300 flex max-w-[15ch] truncate bg-transparent text-left duration-[20ms]"
+                class="menu-item no-default-a-styles | text-tinted-300 flex max-w-[15ch] truncate bg-transparent text-left duration-[20ms]"
             >
                 <app-entity-page-label
                     [pageIcon]="previousParentTask.icon"
@@ -29,7 +29,7 @@ import { getTaskById } from 'src/app/store/entities/utils'
             <a
                 *ngIf="data.newParentTask; let newParentTask; else: noParent"
                 [routerLink]="newParentTask.route"
-                class="button-m text-tinted-300 flex max-w-[15ch] truncate bg-transparent text-left duration-[20ms]"
+                class="menu-item no-default-a-styles | text-tinted-300 flex max-w-[15ch] truncate bg-transparent text-left duration-[20ms]"
             >
                 <app-entity-page-label
                     [pageIcon]="newParentTask.icon"

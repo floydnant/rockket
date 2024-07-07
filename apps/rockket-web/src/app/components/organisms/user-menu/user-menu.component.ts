@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, Input } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { AppState } from 'src/app/store'
 import { authActions } from 'src/app/store/user/user.actions'
@@ -12,6 +12,8 @@ import { MenuItem, MenuItemVariant } from '../../../dropdown/drop-down/drop-down
 })
 export class UserMenuComponent {
     constructor(private store: Store<AppState>) {}
+
+    @Input() extraClasses: string | Record<string, boolean> = ''
 
     userState$ = this.store.select(userFeature)
 

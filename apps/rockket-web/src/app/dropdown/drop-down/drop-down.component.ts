@@ -73,12 +73,16 @@ export class DropDownComponent {
         // This ensures that the keydown event doesn't get picked up by another component
         moveToMacroQueue(() => action?.(this.data))
     }
-    openOverlay(component: Type<unknown>) {
-        const rect = this.elementRef.nativeElement.getBoundingClientRect()
+    openOverlay(component: Type<unknown>, triggerElem?: HTMLElement) {
+        const rect = (triggerElem || this.elementRef.nativeElement).getBoundingClientRect()
+
+        // If we're aligning the overlay w/ the element that triggered it
+        // we want to have it right under the mouse (move it up a bit)
+        const magicNumber = triggerElem ? 45 : 0
 
         const dialogRef = this.overlayService.showOverlay(
             component,
-            { left: rect.left, top: rect.top },
+            { left: rect.left, top: rect.top - magicNumber },
             this.data,
         )
 

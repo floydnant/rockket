@@ -2,7 +2,7 @@
     <ng-container *ngFor="let menuItem of items$ | async">
         <ng-template #chevron>
             <app-icon
-                class="chevron | text-tinted-500 [.menu-item:is(:hover,.item-active,.route-active)_&]:text-tinted-300 translate-x-1 transition-colors duration-75"
+                class="chevron | text-tinted-500 [.menu-item:is(:hover,.item-active,.route-active)_&]:text-tinted-300 translate-x-px transition-colors duration-75"
                 icon="chevronRight"
             ></app-icon>
         </ng-template>
@@ -110,7 +110,8 @@
             [class.item-active]="getIsActive(menuItem.isActive)"
             [class.hide-active]="menuItem.hideWhenActive"
             cdkMenuItem
-            (cdkMenuItemTriggered)="openOverlay(menuItem.children); close(false)"
+            #triggerElem
+            (cdkMenuItemTriggered)="openOverlay(menuItem.children, triggerElem); close(false)"
             data-test-name="menu-item"
         >
             <span>

@@ -16,7 +16,7 @@ import { getEntityById } from 'src/app/store/entities/utils'
             <a
                 *ngIf="data.previousParentList; let previousParentList; else: noParent"
                 [routerLink]="previousParentList.route"
-                class="button-m text-tinted-300 flex max-w-[15ch] truncate bg-transparent text-left duration-[20ms]"
+                class="menu-item no-default-a-styles | text-tinted-300 flex max-w-[15ch] truncate bg-transparent text-left duration-[20ms]"
             >
                 <app-entity-page-label
                     [pageIcon]="previousParentList.icon"
@@ -29,7 +29,7 @@ import { getEntityById } from 'src/app/store/entities/utils'
             <a
                 *ngIf="data.newParentList; let newParentList; else: noParent"
                 [routerLink]="newParentList.route"
-                class="button-m text-tinted-300 flex max-w-[15ch] truncate bg-transparent text-left duration-[20ms]"
+                class="menu-item no-default-a-styles | text-tinted-300 flex max-w-[15ch] truncate bg-transparent text-left duration-[20ms]"
             >
                 <app-entity-page-label
                     [pageIcon]="newParentList.icon"
