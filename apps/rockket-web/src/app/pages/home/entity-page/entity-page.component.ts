@@ -97,6 +97,7 @@ export class EntityPageComponent {
                     icon: loadingIcon || statusIcon || entityType,
                     route: `/home/${entity.id}`,
                     contextMenuItems: contextMenuItems,
+                    contextMenuItemData: { ...entity, entityType },
                 }
             }),
         ),

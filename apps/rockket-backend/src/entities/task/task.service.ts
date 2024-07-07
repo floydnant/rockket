@@ -1,6 +1,13 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { ListPermission, Task } from '@prisma/client'
-import { EntityEvent, buildTaskEventsFromDto, getTaskStatusUpdatedAt } from '@rockket/commons'
+import {
+    EntityEvent,
+    EntityEventType,
+    buildTaskEventsFromDto,
+    getTaskStatusUpdatedAt,
+    newEntityEvent,
+    newUuid,
+} from '@rockket/commons'
 import { PermissionsService } from '../permissions/permissions.service'
 import { CreateTaskZodDto, UpdateTaskZodDto } from './task.dto'
 import { TaskRepository } from './task.repository'
@@ -49,8 +56,70 @@ export class TaskService {
             ...dto,
             statusUpdatedAt: getTaskStatusUpdatedAt(task, dto.status),
         }
-        const taskEvents = buildTaskEventsFromDto(task, dto, userId)
 
+        let newParentTask: Task | null = null
+        let nestedSubtasks: Task[] | null = null
+
+        // Ensure valid parent task
+        if (updateTaskCommand.parentTaskId && updateTaskCommand.parentTaskId != task.parentTaskId) {
+            // Ensure task is not its own parent
+            if (updateTaskCommand.parentTaskId == task.id) {
+                throw new ForbiddenException('A task cannot be its own parent')
+            }
+
+            // Ensure new parent task is not a descendant of the task
+            nestedSubtasks = await this.taskRepository.getSubtasksRecursive(taskId)
+            if (nestedSubtasks.some(subtask => subtask.id == updateTaskCommand.parentTaskId)) {
+                throw new ForbiddenException('A task cannot be its own descendant')
+            }
+
+            // Check if the new parent task is also in a different list
+            newParentTask = await this.taskRepository.getTaskById(updateTaskCommand.parentTaskId)
+            if (!newParentTask) throw new NotFoundException('Could not find parent task')
+
+            if (newParentTask.listId != task.listId) {
+                updateTaskCommand.listId = newParentTask.listId
+            }
+        }
+        if (updateTaskCommand.listId) {
+            // If the listId was set explicitly, it means that we want to move the task
+            // there as a top level one, meaning the parentTaskId should be removed
+            if (updateTaskCommand.listId && !updateTaskCommand.parentTaskId) {
+                updateTaskCommand.parentTaskId = null
+            } else if (updateTaskCommand.listId && updateTaskCommand.parentTaskId) {
+                newParentTask ??= await this.taskRepository.getTaskById(updateTaskCommand.parentTaskId)
+                if (!newParentTask) throw new NotFoundException('Could not find parent task')
+
+                if (newParentTask.listId != updateTaskCommand.listId) {
+                    throw new ForbiddenException(
+                        'A task cannot be moved to a different list than its parent task',
+                    )
+                }
+            }
+
+            if (updateTaskCommand.listId != task.listId) {
+                const listChangedEvent = newEntityEvent(
+                    EntityEventType.TaskParentListChanged,
+                    {
+                        prevValue: task.listId,
+                        newValue: updateTaskCommand.listId,
+                    },
+                    userId,
+                )
+
+                // @TODO: this can be optimized by directly updating the listId in the query instead of
+                // fetching all subtasks first and then updating each task individually
+                nestedSubtasks ??= await this.taskRepository.getSubtasksRecursive(taskId)
+                const promises = nestedSubtasks.map(subtask => {
+                    return this.taskRepository.updateTask(subtask.id, { listId: updateTaskCommand.listId }, [
+                        { ...listChangedEvent, id: newUuid() },
+                    ])
+                })
+                await Promise.all(promises)
+            }
+        }
+
+        const taskEvents = buildTaskEventsFromDto(task, updateTaskCommand, userId)
         await this.taskRepository.updateTask(taskId, updateTaskCommand, taskEvents)
 
         return {

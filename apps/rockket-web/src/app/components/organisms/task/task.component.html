@@ -8,9 +8,9 @@
         isSelected,
         descriptionIsActive: isDescriptionActive$ | push
     }"
-    [cdkContextMenuTriggerFor]="menu"
-    (cdkContextMenuOpened)="isSelected = true"
-    (cdkContextMenuClosed)="isSelected = false"
+    [appContextMenu]="menuItems$ | push"
+    [appMenuData]="{ id: task.id, entityType: EntityType.TASK }"
+    (isMenuOpen)="isSelected = $event"
 >
     <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
         <div>
@@ -99,7 +99,6 @@
                                 class="mr-1 inline-block transition-transform"
                                 [class.rotate-90]="isDescriptionExpanded$ | async"
                             ></app-icon>
-                            <!-- <app-icon icon="description" class="mx-1"></app-icon> -->
                             Description
 
                             <app-elem-container
@@ -107,9 +106,6 @@
                                 class="text-md text-tinted-400 ml-1"
                             ></app-elem-container>
                         </button>
-                        <!-- <button class="expand-description">
-                            <app-icon icon="expand"></app-icon>
-                        </button> -->
                     </ng-container>
                 </ng-container>
             </div>
@@ -136,24 +132,14 @@
                 </ng-container>
             </div>
             <button
-                class="| icon-btn | text-tinted-200 absolute right-0 top-[50%] translate-y-[-50%] transition-opacity"
-                [cdkMenuTriggerFor]="menu"
-                (cdkMenuOpened)="isSelected = true"
-                (cdkMenuClosed)="isSelected = false"
-                #trigger="cdkMenuTriggerFor"
+                class="icon-btn | text-tinted-200 absolute right-0 top-[50%] translate-y-[-50%] transition-opacity"
+                [appMenu]="menuItems$ | push"
+                [appMenuData]="{ id: task.id, entityType: EntityType.TASK }"
+                (isMenuOpen)="isSelected = $event"
                 data-test-name="task-menu-button"
             >
                 <app-double-ellipsis-icon></app-double-ellipsis-icon>
             </button>
-
-            <ng-template #menu>
-                <app-drop-down
-                    *ngIf="menuItems$ | push as items"
-                    [items]="items"
-                    [rootTrigger]="trigger"
-                    [data]="{ id: task.id, entityType: EntityType.TASK }"
-                ></app-drop-down>
-            </ng-template>
         </div>
     </div>
 
@@ -169,17 +155,17 @@
         >
             <app-icon [icon]="task.priority"></app-icon>
         </button>
-    </ng-template>
-    <ng-template #priorityTooltip>
-        <span class="text-tinted-300">Priority: </span>
-        <span [class]="priorityColorMap[task.priority]">{{ taskPriorityLabelMap[task.priority] }}</span>
-    </ng-template>
-    <ng-template #priorityMenu>
-        <app-drop-down
-            *ngIf="priorityMenuItems$ | push as items"
-            [items]="items"
-            [data]="{ id: task.id }"
-        ></app-drop-down>
+        <ng-template #priorityTooltip>
+            <span class="text-tinted-300">Priority: </span>
+            <span [class]="priorityColorMap[task.priority]">{{ taskPriorityLabelMap[task.priority] }}</span>
+        </ng-template>
+        <ng-template #priorityMenu>
+            <app-drop-down
+                *ngIf="priorityMenuItems$ | push as items"
+                [items]="items"
+                [data]="{ id: task.id }"
+            ></app-drop-down>
+        </ng-template>
     </ng-template>
 
     <ng-container

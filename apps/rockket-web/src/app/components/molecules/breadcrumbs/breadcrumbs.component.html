@@ -78,14 +78,15 @@
 >
     <button
         *ngIf="!isTruncationBreadcrumb(breadcrumb)"
-        class="breadcrumb | menu-item | w-full truncate px-1.5 py-0.5"
+        class="breadcrumb | menu-item | w-full truncate !px-2 py-0.5 [&:has(app-icon)]:!pr-2.5"
         [ngClass]="{
             'text-tinted-100': isLast,
             'max-w-[20ch]': !isInsideTruncationPopover,
             'max-w-full': isInsideTruncationPopover
         }"
         cdkMenuItem
-        [cdkContextMenuTriggerFor]="menu"
+        [appContextMenu]="breadcrumb.contextMenuItems"
+        [appMenuData]="breadcrumb.contextMenuItemData"
         [routerLink]="breadcrumb.route"
         [appTooltip]="tooltip"
         [tooltipOptions]="{
@@ -96,14 +97,6 @@
         #trigger="cdkContextMenuTriggerFor"
         data-test-name="breadcrumb"
     >
-        <ng-template #menu>
-            <app-drop-down
-                *ngIf="breadcrumb.contextMenuItems?.length"
-                [items]="breadcrumb.contextMenuItems!"
-                [rootTrigger]="trigger"
-            ></app-drop-down>
-        </ng-template>
-
         <app-entity-page-label
             [pageTitle]="breadcrumb.title"
             [pageIcon]="breadcrumb.icon"

@@ -5,7 +5,8 @@
                 cdkMenuItem
                 [cdkMenuTriggerFor]="menu"
                 #menuTrigger="cdkMenuTriggerFor"
-                class="menu-item | text-tinted-100 flex w-full rounded-none px-4 py-2.5 text-left"
+                class="menu-item | text-tinted-100 flex w-full rounded-none p-2.5 text-left"
+                [ngClass]="extraClasses"
                 data-test-name="user-menu-toggle"
                 [attr.data-logged-in]="userState.isLoggedIn"
             >

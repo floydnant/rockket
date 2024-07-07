@@ -69,27 +69,20 @@
             data-test-name="entity-children"
             style="grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr))"
         >
+            <!-- @TODO: Using the options$ here is wrong, since the children might be of a different entityType than the parent. -->
             <button
-                class="child | button-m text-tinted-200 max-w-full truncate bg-transparent text-left duration-[20ms]"
+                class="child | menu-item text-tinted-200 max-w-full truncate bg-transparent text-left duration-[20ms]"
                 *ngFor="let child of children"
                 routerLink="/home/{{ child.id }}"
                 cdkMenuItem
-                [cdkContextMenuTriggerFor]="options"
-                #trigger="cdkContextMenuTriggerFor"
+                [appContextMenu]="options$ | async"
+                [appMenuData]="{ id: child.id, entityType: child.entityType }"
                 data-test-name="entity-child"
             >
                 <app-entity-page-label
                     [pageTitle]="child.title"
                     [pageIcon]="child.entityType"
                 ></app-entity-page-label>
-                <ng-template #options>
-                    <!-- @TODO: Using the options$ here is wrong, since the children might be of a different entityType than the parent. -->
-                    <app-drop-down
-                        [items]="(options$ | async) || []"
-                        [rootTrigger]="trigger"
-                        [data]="{ id: child.id, entityType: child.entityType }"
-                    ></app-drop-down>
-                </ng-template>
             </button>
         </div>
     </ng-container>

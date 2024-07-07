@@ -8,12 +8,18 @@ import { listActions } from '../store/entities/list/list.actions'
 import { taskActions } from '../store/entities/task/task.actions'
 import { WrappedMenuItems, wrapMenuItems } from '../utils/menu-item.helpers'
 import { taskPriorityLabelMap, taskStatusLabelMap } from '../components/atoms/icons/icon/icons'
+import { EntityParentSelectorComponent } from '../components/organisms/entity-parent-selector/entity-parent-selector.component'
 
-export const getGeneralMenuItems = (store: Store<AppState>): MenuItem[] => [
+export const getGeneralMenuItems = (store: Store<AppState>): MenuItem<EntityCrudDto>[] => [
     {
         title: `Rename`,
         icon: 'edit',
-        action: (dto: EntityCrudDto) => store.dispatch(entitiesActions.openRenameDialog(dto)),
+        action: data => store.dispatch(entitiesActions.openRenameDialog(data)),
+    },
+    {
+        title: `Move to`,
+        icon: 'parent',
+        children: EntityParentSelectorComponent,
     },
 ]
 export const getDangerMenuItems = (store: Store<AppState>): MenuItem[] => [
@@ -60,7 +66,6 @@ export type EntityMenuItemsMap = {
 
 export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMap => ({
     [EntityType.TASKLIST]: wrapMenuItems<EntityMenuItemData>([
-        ...getGeneralMenuItems(store),
         {
             title: 'New Inside',
             icon: 'plus',
@@ -77,6 +82,7 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
                 },
             ],
         },
+        ...getGeneralMenuItems(store),
         {
             title: 'Duplicate',
             icon: 'clone',

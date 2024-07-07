@@ -1,11 +1,25 @@
 import { createReducer, on } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType, Task, Tasklist, TaskRecursive } from '@rockket/commons'
+import {
+    assertUnreachable,
+    EntityPreviewRecursive,
+    EntityType,
+    Task,
+    Tasklist,
+    TaskRecursive,
+    valuesOf,
+} from '@rockket/commons'
 import { authActions } from '../user/user.actions'
 import { entitiesActions } from './entities.actions'
 import { EntitiesState, TaskTreeMap } from './entities.state'
 import { tasklistReducerOns } from './list/list.reducer'
 import { taskReducerOns } from './task/task.reducer'
-import { buildEntityTree, getEntityById, getParentEntityByChildIdIncludingTasks, getTaskById } from './utils'
+import {
+    buildEntityTree,
+    getEntityById,
+    getParentEntityByChildIdIncludingTasks,
+    getTaskById,
+    visitDescendants,
+} from './utils'
 
 const initialState: EntitiesState = {
     entityTree: null,
@@ -93,6 +107,101 @@ export const entitiesReducer = createReducer(
             entityTree: entityTreeCopy,
         }
     }),
+
+    on(entitiesActions.moveSuccess, (state, { id, entityType, newParentId, newParentEntityType }) => {
+        const entityTreeCopy = structuredClone(state.entityTree) || []
+        const taskTreeMapCopy = structuredClone(state.taskTreeMap) || {}
+
+        const taskTree = valuesOf(taskTreeMapCopy).flat()
+        const task = entityType != EntityType.TASK ? undefined : getTaskById(taskTree, id)
+
+        const entity = entityType == EntityType.TASK ? undefined : getEntityById(entityTreeCopy, id)
+
+        // Delete the old entiity
+        // @TODO: We can optimize this by checking the entityType, then calling the appropriate function and reducing the appropriate state
+        const oldParentEntity = getParentEntityByChildIdIncludingTasks(entityTreeCopy, taskTreeMapCopy, id)
+        if (!oldParentEntity) return state
+        oldParentEntity.subTree.splice(oldParentEntity.index, 1)
+
+        // Recreate in the new parent
+        entityTypeSwitch: {
+            if (entityType == EntityType.TASK) {
+                if (!task) break entityTypeSwitch
+
+                // Tasks cannot be at the root, thus never should have a null parent
+                if (newParentEntityType === null || newParentId === null) {
+                    console.warn('Task cannot be at the root')
+                    break entityTypeSwitch
+                }
+
+                if (newParentEntityType == EntityType.TASK) {
+                    const parentTask = getTaskById(taskTree, newParentId)
+                    if (!parentTask) break entityTypeSwitch
+
+                    task.parentTaskId = newParentId
+                    if (task.listId != parentTask.listId) {
+                        task.listId = parentTask.listId
+                        if (task.children) {
+                            visitDescendants(task.children, child => {
+                                child.listId = task.listId
+                            })
+                        }
+                    }
+
+                    parentTask.children ??= []
+                    parentTask.children.unshift(task)
+
+                    break entityTypeSwitch
+                } else if (newParentEntityType == EntityType.TASKLIST) {
+                    task.listId = newParentId
+                    task.parentTaskId = null
+                    taskTreeMapCopy[task.listId] ??= []
+                    taskTreeMapCopy[task.listId].unshift(task)
+
+                    if (task.children) {
+                        visitDescendants(task.children, task => {
+                            task.listId = newParentId
+                        })
+                    }
+
+                    break entityTypeSwitch
+                }
+
+                assertUnreachable(newParentEntityType)
+                break entityTypeSwitch
+            }
+            if (entityType == EntityType.TASKLIST) {
+                if (!entity) break entityTypeSwitch
+
+                if (newParentId === null) {
+                    entity.parentId = newParentId
+                    entityTreeCopy.unshift(entity)
+
+                    break entityTypeSwitch
+                }
+
+                const parentEntity = getEntityById(entityTreeCopy, newParentId)
+                if (!parentEntity) {
+                    break entityTypeSwitch
+                }
+
+                entity.parentId = newParentId
+                parentEntity.children ??= []
+                parentEntity.children.unshift(entity)
+
+                break entityTypeSwitch
+            }
+
+            assertUnreachable(entityType)
+        }
+
+        return {
+            ...state,
+            entityTree: entityTreeCopy,
+            taskTreeMap: taskTreeMapCopy,
+        }
+    }),
+
     on(entitiesActions.deleteSuccess, (state, { id }): EntitiesState => {
         const entityTreeCopy = structuredClone(state.entityTree) || []
         const taskTreeMapCopy = structuredClone(state.taskTreeMap) || {}

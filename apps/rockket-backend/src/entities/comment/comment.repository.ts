@@ -11,7 +11,7 @@ import {
 import { PrismaService } from '../../prisma-abstractions/prisma.service'
 import { entityCommentsTable } from './comment.db-table'
 import { commentTypeColumnMap } from './comment.db-table'
-import { wrapInDoubleQuotes } from './sql.utils'
+import { wrapInDoubleQuotes } from '../../shared/sql.utils'
 
 const entityRefMatcher = createMatcher<
     EntityCommentType,

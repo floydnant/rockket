@@ -115,7 +115,7 @@ pre {
 /*/////////////////////////////////////////// COMPONENTS ///////////////////////////////////////////////*/
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////*/
 @layer components {
-    a:not([class*='button'], .skip-default-a-styles),
+    a:not([class*='button'], .skip-default-a-styles, .no-default-a-styles),
     .link {
         @apply text-primary-400 hover:text-primary-300 hover:underline;
     }
@@ -129,10 +129,10 @@ pre {
     }
 
     .button-naked {
-        @apply text-tinted-300 hover:text-tinted-100 hover:bg-tinted-700 inline-flex items-center gap-2 rounded-lg px-2 py-1 transition-colors duration-75;
+        @apply text-tinted-300 hover:text-tinted-100 hover:bg-tinted-700 inline-flex items-center gap-2 rounded-lg px-3 py-1 transition-colors duration-75;
     }
     .button-naked:has(app-icon) {
-        @apply pr-2.5;
+        @apply pr-3.5;
     }
     .button-naked app-icon:first-of-type {
         @apply w-4 text-center text-sm;
@@ -165,7 +165,7 @@ pre {
 
     .keybinding,
     kbd {
-        @apply border-tinted-600/70 bg-tinted-700 text-tinted-300 inline-block h-6 min-w-[1.5rem] rounded-md border px-0.5 py-[0.0625rem] text-center text-[0.8125rem] font-semibold;
+        @apply border-tinted-700/60 bg-tinted-800/60 text-tinted-400 inline-block h-5 min-w-[1.3rem] rounded-md border px-0.5 py-[0.0625rem] text-center text-xs font-semibold shadow-md;
     }
 
     .show-placeholder::before {
@@ -178,37 +178,44 @@ pre {
     }
 
     .dropdown-menu {
-        min-width: 180px;
+        min-width: 165px;
         max-width: 280px;
-        @apply border-tinted-700 bg-tinted-800 glass mx-2 flex flex-col gap-0.5 rounded-xl border bg-opacity-80 p-1.5 shadow-lg;
+        @apply border-tinted-700 bg-tinted-800 glass mx-2 flex flex-col gap-0.5 rounded-xl border bg-opacity-80 p-1 shadow-lg;
     }
 
     .menu-item {
-        @apply button-naked text-left outline-none duration-[20ms];
+        @apply button-naked py-0.5 text-left outline-none duration-[20ms];
+    }
+    .dropdown-menu .menu-item {
+        @apply pl-3 pr-3;
     }
 
-    .dropdown-menu .menu-item {
-        @apply pl-2.5;
-    }
     .dropdown-menu .menu-item:is(.menu-item--default, :not([class*='menu-item--'])) {
         @apply hover:bg-tinted-600;
     }
+    .dropdown-menu .menu-item:is(.menu-item--default, :not([class*='menu-item--'])).menu-item-selected {
+        @apply bg-tinted-600;
+    }
     .menu-item:is(.menu-item--default, :not([class*='menu-item--'])) {
         @apply hover:bg-tinted-700;
+    }
+    .menu-item:is(.menu-item--default, :not([class*='menu-item--'])).menu-item-selected {
+        @apply bg-tinted-700;
     }
 
     .menu-item.menu-item--danger {
         @apply text-danger-400 hover:bg-danger-400 hover:text-danger-900;
     }
+    .menu-item.menu-item--danger.menu-item-selected {
+        @apply bg-danger-400 text-danger-900;
+    }
 
     .menu-item.menu-item--submit {
         @apply text-submit-500 hover:bg-submit-400 hover:text-submit-900;
     }
-}
-
-/* Cannot be in the @layer because there is no actual reference for this class name in the source code */
-.cdk-overlay-backdrop {
-    @apply bg-tinted-900/50 backdrop-blur-md;
+    .menu-item.menu-item--submit.menu-item-selected {
+        @apply bg-submit-400 text-submit-900;
+    }
 }
 
 @layer utilities {
@@ -240,4 +247,46 @@ pre {
     .highlight {
         @apply bg-secondary-400 text-tinted-900 rounded-[0.25em];
     }
+}
+
+/*//////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*/////////////////////////////////////////// OVERLAYS ///////////////////////////////////////////////*/
+/*//////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+/* Cannot be in the @layer because there is no actual reference for this class name in the source code */
+.cdk-overlay-backdrop:not(.not-visible) {
+    @apply bg-tinted-900/50 backdrop-blur-md;
+}
+
+:is(.app-overlay).no-delay {
+    --reveal-delay: 0ms;
+}
+:is(.app-overlay) {
+    min-width: 180px;
+    max-width: 280px;
+    @apply border-tinted-700 bg-tinted-800 glass flex flex-col rounded-xl border bg-opacity-80 shadow-xl;
+
+    animation: reveal 130ms var(--reveal-delay, 0ms) forwards;
+    scale: 0.8;
+    opacity: 0;
+}
+
+@keyframes reveal {
+    100% {
+        scale: 1;
+        opacity: 1;
+    }
+}
+
+.cdk-overlay-pane.top {
+    @apply mb-2;
+}
+.cdk-overlay-pane.bottom {
+    @apply mt-2;
+}
+.cdk-overlay-pane.right {
+    @apply ml-2;
+}
+.cdk-overlay-pane.left {
+    @apply mr-6;
 }

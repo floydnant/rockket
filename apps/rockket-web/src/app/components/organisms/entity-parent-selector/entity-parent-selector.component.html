@@ -1,0 +1,53 @@
+<div (keydown)="onKeydown($event)" class="flex flex-col">
+    <p class="text-tinted-300 mx-2 mt-1">Move to a new parent</p>
+
+    <input
+        #input
+        class="input | mx-2 mb-2"
+        type="text"
+        placeholder="Search"
+        (input)="searchQuery$.next(input.value)"
+        focusable
+        [autoFocus]="true"
+        (blur)="input.focus()"
+    />
+
+    <ul
+        #list
+        class="no-default-padding | flex max-h-60 flex-col overflow-y-auto px-2 [&:has(li)]:pb-2"
+        [style.scroll-padding]="listScrollPadding + 'px'"
+    >
+        <li
+            *ngFor="let result of results$ | push; let index = index"
+            class="list-none [&:not(:last-of-type)]:mb-0.5"
+        >
+            <button
+                class="menu-item | [li:not(.selected)_&]:!text-tinted-300 w-full truncate px-2 text-left duration-0 [li:not(.selected)_&]:!bg-transparent"
+                [ngClass]="{
+                    '[.selected_&]:!bg-tinted-600 [.selected_&]:text-tinted-100': true,
+                }"
+                (click)="onClick$.next(index)"
+                (mouseenter)="onMouseEnter$.next(index)"
+                (focus)="input.focus()"
+            >
+                <div class="w-full">
+                    <app-entity-page-label
+                        class="block truncate"
+                        [pageTitle]="result.title"
+                        [pageIcon]="result.icon"
+                    ></app-entity-page-label>
+
+                    <div class="path | flex items-center gap-1 truncate">
+                        <span
+                            class="path-segment | text-tinted-400 [.selected_&]:!text-tinted-300 inline-flex items-center gap-1 text-xs"
+                            *ngFor="let segment of result.path; let isLast = last"
+                        >
+                            <span class="inline-block max-w-[13ch] truncate">{{ segment }}</span>
+                            <span *ngIf="!isLast" class="inline-block"> / </span>
+                        </span>
+                    </div>
+                </div>
+            </button>
+        </li>
+    </ul>
+</div>

@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store'
-import { EntitiesSearchResultDto, EntityEvent, EntityPreview } from '@rockket/commons'
+import { EntitiesSearchResultDto, EntityEvent, EntityPreview, EntityType } from '@rockket/commons'
 import { HttpServerErrorResponse, HttpServerErrorResponseWithMeta } from '../../http/types'
 import { EntityCrudDto } from '../../services/entities.service'
 import { listActions } from './list/list.actions'
@@ -30,6 +30,14 @@ export const entitiesActions = createActionGroup({
         'rename success': props<EntityCrudDto<{ title: string }>>(),
         'rename error': props<HttpServerErrorResponseWithMeta>(),
 
+        move: props<EntityCrudDto & { newParentId: string | null; newParentEntityType: EntityType | null }>(),
+        'move success': props<
+            EntityCrudDto & { newParentId: string | null; newParentEntityType: EntityType | null }
+        >(),
+        'move error': props<
+            EntityCrudDto & { newParentId: string | null; newParentEntityType: EntityType | null }
+        >(),
+
         'open delete dialog': props<EntityCrudDto>(),
         'abort delete dialog': emptyProps(),
         //
@@ -52,6 +60,10 @@ export const loadingStateActions = [
     entitiesActions.rename,
     entitiesActions.renameSuccess,
     entitiesActions.renameError,
+
+    entitiesActions.move,
+    entitiesActions.moveSuccess,
+    entitiesActions.moveError,
 
     entitiesActions.delete,
     entitiesActions.deleteSuccess,

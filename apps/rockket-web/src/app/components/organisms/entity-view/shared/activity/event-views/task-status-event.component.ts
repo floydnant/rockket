@@ -8,7 +8,7 @@ import { TIMELINE_ENTRY_VIEW_DATA } from '../../../../../molecules/timeline/time
     template: `
         <!-- INFO: this component assumes there is a '@container' outside -->
 
-        <div class="text-tinted-300 @xs:flex-row mt-2 flex w-fit flex-col flex-wrap gap-1">
+        <div class="text-tinted-300 @xs:flex-row flex w-fit flex-col flex-wrap gap-1">
             <div class="bg-tinted-850 border-tinted-800 w-max rounded-md border px-1.5">
                 <app-icon [icon]="event.metaData.prevValue" class="mr-1"></app-icon>
                 {{ taskStatusLabelMap[event.metaData.prevValue] }}

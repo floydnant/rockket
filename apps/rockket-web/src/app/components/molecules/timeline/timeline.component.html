@@ -11,23 +11,26 @@
             </div>
             <ng-container *ngIf="!isLast">
                 <div
-                    class="timeline-line | from-transparent to-tinted-700 mx-auto h-[clamp(4rem,25%,4rem)] w-0.5 bg-gradient-to-b"
+                    class="timeline-line | to-tinted-700 mx-auto h-[clamp(4rem,25%,4rem)] w-0.5 bg-gradient-to-b from-transparent"
                 ></div>
                 <div class="timeline-line | bg-tinted-700 mx-auto h-full w-0.5"></div>
                 <div
-                    class="timeline-line | from-tinted-700 to-transparent mx-auto h-[clamp(4rem,25%,4rem)] w-0.5 bg-gradient-to-b"
+                    class="timeline-line | from-tinted-700 mx-auto h-[clamp(4rem,25%,4rem)] w-0.5 bg-gradient-to-b to-transparent"
                 ></div>
             </ng-container>
         </div>
-        <div class="mt-1 w-full" [class.mb-4]="!isLast">
-            <div class="@sm:flex mb-2 items-center gap-2">
-                <div class="title">{{ event.title }}</div>
+        <div class="mt-1 flex w-full flex-col" [class.mb-4]="!isLast">
+            <div
+                class="@sm:flex flex-wrap items-center"
+                [ngClass]="{ 'mb-2': event.description || event.component }"
+            >
+                <div class="title | mr-2">{{ event.title }}</div>
                 <div class="timestamp | text-tinted-500 text-sm">
                     {{ event.timestamp | date : 'medium' }}
                 </div>
             </div>
 
-            <div class="text-tinted-300 wrap-nicely">{{ event.description }}</div>
+            <div *ngIf="event.description" class="text-tinted-300 wrap-nicely">{{ event.description }}</div>
 
             <ng-container *ngIf="event.component">
                 <ng-container

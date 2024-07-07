@@ -1,5 +1,5 @@
 import { EntityCommentType, entityCommentSchema } from '@rockket/commons'
-import { createSqlTable } from './sql.utils'
+import { createSqlTable } from '../../shared/sql.utils'
 
 export const entityCommentsTable = createSqlTable({
     tableName: 'entity_comments',
