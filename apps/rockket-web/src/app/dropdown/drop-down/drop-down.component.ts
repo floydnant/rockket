@@ -45,14 +45,18 @@ export class DropDownComponent {
 
     items$_ = new BehaviorSubject<MenuItem[]>([])
     @Input() set items(items: MenuItem['children']) {
-        if (isChildrenMenuItems(items)) this.items$_.next(items)
-        else {
-            // @TODO
-            if (isChildrenComponent(items)) this.component$.next(items)
+        if (isChildrenMenuItems(items)) {
+            this.items$_.next(items)
+        } else if (isChildrenComponent(items)) {
+            this.component$.next(items)
         }
     }
 
+    // @TODO: What should we do w/ the component here?
+    // If we reach this point, and the component was not rendered somewhere else already
+    // thats probably a bug, and we should throw an error
     component$ = new ReplaySubject<Type<unknown>>()
+
     items$ = this.items$_.pipe(
         // @TODO: we should check whether the data is appropriate for route params
         map(items =>
