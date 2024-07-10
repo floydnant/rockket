@@ -1,7 +1,7 @@
 import { CdkMenuModule } from '@angular/cdk/menu'
 import { TaskRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
 import { testName } from 'cypress/support/helpers'
-import { FocusableDirective } from 'src/app/directives/focusable.directive'
+import { FocusableDirective } from 'src/app/focusable/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
 import { DropdownModule } from 'src/app/dropdown/dropdown.module'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'

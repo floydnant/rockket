@@ -6,7 +6,7 @@ import { EntityPageLabelComponent } from 'src/app/components/atoms/entity-page-l
 import { InlineEditorComponent } from 'src/app/components/atoms/inline-editor/inline-editor.component'
 import { EditableEntityTitleComponent } from 'src/app/components/molecules/editable-entity-heading/editable-entity-title.component'
 import { PageProgressBarComponent } from 'src/app/components/molecules/page-progress-bar/page-progress-bar.component'
-import { FocusableDirective } from 'src/app/directives/focusable.directive'
+import { FocusableDirective } from 'src/app/focusable/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
 import { DropdownModule } from 'src/app/dropdown/dropdown.module'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
