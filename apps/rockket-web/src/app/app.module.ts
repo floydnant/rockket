@@ -14,7 +14,7 @@ import { StoreModule } from '@ngrx/store'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { environment } from 'src/environments/environment'
 import { routes } from './app.routes'
-import { CommandPalletteModule } from './command-pallette/command-pallette.module'
+import { CommandPaletteModule } from './command-palette/command-palette.module'
 import { EntityPageLabelComponent } from './components/atoms/entity-page-label/entity-page-label.component'
 import { IconsModule } from './components/atoms/icons/icons.module'
 import { InlineEditorComponent } from './components/atoms/inline-editor/inline-editor.component'
@@ -171,7 +171,7 @@ import { TooltipModule } from './tooltip/tooltip.module'
         PortalModule,
         DiffModule,
         ResizeModule,
-        CommandPalletteModule,
+        CommandPaletteModule,
         FocusableModule,
     ],
     providers: [

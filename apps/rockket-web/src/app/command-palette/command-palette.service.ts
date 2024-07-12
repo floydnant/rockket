@@ -19,7 +19,7 @@ import {
     takeUntil,
     tap,
 } from 'rxjs'
-import { CommandPalletteComponent } from 'src/app/command-pallette/command-pallette.component'
+import { CommandPaletteComponent } from 'src/app/command-palette/command-palette.component'
 import { IconKey } from 'src/app/components/atoms/icons/icon/icons'
 import { DialogService } from 'src/app/modal/dialog.service'
 import { environment } from 'src/environments/environment'
@@ -31,9 +31,9 @@ const truncatePath = <T>(path: T[]): (T | '...')[] => {
     return path.length < 3 ? path : [path[0], '...', path.at(-1)!]
 }
 
-export type CommandPalletteContext = {
-    enter(data: CommandPalletteItem): void
-    items$: Observable<CommandPalletteItem[]>
+export type CommandPaletteContext = {
+    enter(data: CommandPaletteItem): void
+    items$: Observable<CommandPaletteItem[]>
     preserveSearchQuery: boolean
     renderItemsOnEmptySearchQuery: boolean
     placeholder: string
@@ -41,7 +41,7 @@ export type CommandPalletteContext = {
     maxHeight: number
 }
 
-export type CommandPalletteItem = {
+export type CommandPaletteItem = {
     title: string
     icon?: IconKey
     breadcrumbs?: string[]
@@ -49,7 +49,7 @@ export type CommandPalletteItem = {
     keepOpen?: boolean
 }
 
-export type CommandPalletteResult<T extends CommandPalletteItem> =
+export type CommandPaletteResult<T extends CommandPaletteItem> =
     | {
           result: T
           type: 'selected'
@@ -64,7 +64,7 @@ export type CommandPalletteResult<T extends CommandPalletteItem> =
 @Injectable({
     providedIn: 'root',
 })
-export class CommandPalletteService {
+export class CommandPaletteService {
     constructor(
         private overlayService: DialogService,
         private store: Store<AppState>,
@@ -79,10 +79,10 @@ export class CommandPalletteService {
     })
 
     selectEntity(options?: { keepOpen?: boolean }) {
-        return this.searchableEntityCommandPalletteItems$.pipe(
+        return this.searchableEntityCommandPaletteItems$.pipe(
             first(),
             switchMap(items => {
-                const ref = this.openCommandPallette({
+                const ref = this.openCommandPalette({
                     prompt: 'Search for stuff',
                     items,
                     keepOpen: options?.keepOpen,
@@ -111,17 +111,17 @@ export class CommandPalletteService {
                 switchMap(entity => {
                     if (!entity) return of(null)
 
-                    const result$ = this.openCommandPallette({
+                    const result$ = this.openCommandPalette({
                         prompt: 'What should we do with this?',
                         items: [
-                            { title: 'Second command pallette for: ' + entity.title, action: () => {} },
+                            { title: 'Second command palette for: ' + entity.title, action: () => {} },
                             { title: 'With followup options for: ' + entity.title, action: () => {} },
                         ],
                         renderItemsOnEmptySearchQuery: true,
                     })
                     return result$.result$.pipe(
                         map(res => {
-                            console.log('second command pallette returned', res)
+                            console.log('second command palette returned', res)
                             if (res.type == 'selected') res.result.action()
                         }),
                     )
@@ -130,29 +130,29 @@ export class CommandPalletteService {
             .subscribe()
     }
 
-    private commandPalletteContext$ = new ReplaySubject<CommandPalletteContext>(1)
+    private commandPaletteContext$ = new ReplaySubject<CommandPaletteContext>(1)
 
     /**
-     * Fired when `openCommandPallette()` is called, but there is already an active
-     * command pallette, so we want to focus it in case the focus got lost somehow.
+     * Fired when `openCommandPalette()` is called, but there is already an active
+     * command palette, so we want to focus it in case the focus got lost somehow.
      */
-    onShouldFocusPallette$ = new Subject<void>()
+    onShouldFocusPalette$ = new Subject<void>()
 
     private dialogRef: DialogRef | null = null
-    openCommandPallette<T extends CommandPalletteItem>(options: {
+    openCommandPalette<T extends CommandPaletteItem>(options: {
         items: T[] | Observable<T[]>
         prompt: string
 
         /**
-         * Keep the command pallette open after a result was returned.
-         * This is useful for nested command pallettes. I.e. so that the next
-         * context can claim the pallette and reuse the dom (w/o flickering).
+         * Keep the command palette open after a result was returned.
+         * This is useful for nested command palettes. I.e. so that the next
+         * context can claim the palette and reuse the dom (w/o flickering).
          *
          * Most of the time, you probably want to specify this option on the item level.
          */
         keepOpen?: boolean
         /**
-         * If there is already a command pallette open, it's search query gets cleared by default.
+         * If there is already a command palette open, it's search query gets cleared by default.
          * This option prevents that.
          */
         preserveSearchQuery?: boolean
@@ -163,50 +163,50 @@ export class CommandPalletteService {
          */
         renderItemsOnEmptySearchQuery?: boolean
 
-        // @TODO: option to allow committing the command pallette without a selected item (returns the search query instead)
+        // @TODO: option to allow committing the command palette without a selected item (returns the search query instead)
     }) {
-        const enter$ = new Subject<CommandPalletteItem>()
+        const enter$ = new Subject<CommandPaletteItem>()
 
-        const palletteWidth = 600
-        const palletteMaxHeight = 350
-        this.commandPalletteContext$.next({
+        const paletteWidth = 600
+        const paletteMaxHeight = 350
+        this.commandPaletteContext$.next({
             enter: selectedItem => enter$.next(selectedItem),
             items$: isObservable(options.items) ? options.items : of(options.items),
             preserveSearchQuery: options?.preserveSearchQuery || false,
             renderItemsOnEmptySearchQuery: options?.renderItemsOnEmptySearchQuery || false,
             placeholder: options.prompt,
-            width: palletteWidth,
-            maxHeight: palletteMaxHeight,
+            width: paletteWidth,
+            maxHeight: paletteMaxHeight,
         })
 
         if (this.dialogRef && this.dialogRef?.overlayRef.hasAttached()) {
-            if (!environment.isProduction) console.warn('CommandPallette is already open')
-            this.onShouldFocusPallette$.next()
+            if (!environment.isProduction) console.warn('CommandPalette is already open')
+            this.onShouldFocusPalette$.next()
         } else {
             this.dialogRef = this.overlayService.showDialog<unknown, unknown>(
-                CommandPalletteComponent,
-                this.commandPalletteContext$,
+                CommandPaletteComponent,
+                this.commandPaletteContext$,
                 {
-                    width: palletteWidth,
-                    maxHeight: palletteMaxHeight,
+                    width: paletteWidth,
+                    maxHeight: paletteMaxHeight,
                 },
             )
         }
-        // `commandPalletteContext$` is a ReplaySubject(1), so we need to skip the first value
-        this.dialogRef.closed.pipe(takeUntil(this.commandPalletteContext$.pipe(skip(1)))).subscribe(() => {
+        // `commandPaletteContext$` is a ReplaySubject(1), so we need to skip the first value
+        this.dialogRef.closed.pipe(takeUntil(this.commandPaletteContext$.pipe(skip(1)))).subscribe(() => {
             this.dialogRef = null
         })
 
         const result$ = enter$.pipe(
             first(),
-            map((result): CommandPalletteResult<T> => {
+            map((result): CommandPaletteResult<T> => {
                 const keptOpen = Boolean(result && (result.keepOpen || options?.keepOpen))
 
                 if (result) return { keptOpen, result: result as T, type: 'selected' }
                 return { keptOpen, result: undefined, type: 'dismissed' }
             }),
-            // `commandPalletteContext$` is a ReplaySubject(1), so we need to skip the first value
-            takeUntil(this.commandPalletteContext$.pipe(skip(1))),
+            // `commandPaletteContext$` is a ReplaySubject(1), so we need to skip the first value
+            takeUntil(this.commandPaletteContext$.pipe(skip(1))),
             // `dialogRef.closed` is synchronous, so we need to move it to the macro queue
             // in order to allow our `result$` to complete first
             takeUntil(this.dialogRef.closed.pipe(delay(0))),
@@ -220,7 +220,7 @@ export class CommandPalletteService {
         return { result$, close: () => this.dialogRef?.close() }
     }
 
-    private searchableEntityCommandPalletteItems$ = this.store
+    private searchableEntityCommandPaletteItems$ = this.store
         .select(state => state.entities)
         .pipe(
             map(entitiesState => {
@@ -251,7 +251,7 @@ export class CommandPalletteService {
                         id: entity.id,
                         entityType: entity.entityType,
                     })),
-                ] satisfies CommandPalletteItem[]
+                ] satisfies CommandPaletteItem[]
             }),
         )
 }

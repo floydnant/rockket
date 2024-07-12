@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { CommandPalletteService } from '../command-pallette/command-pallette.service'
+import { CommandPaletteService } from '../command-palette/command-palette.service'
 import { InsightsService } from '../services/insights.service'
 
 @Component({
@@ -9,7 +9,7 @@ import { InsightsService } from '../services/insights.service'
 export class AppComponent implements OnInit, OnDestroy {
     constructor(
         private insights: InsightsService /* The insights just need to be initialized somewhere */,
-        private commandPalletteService: CommandPalletteService,
+        private commandPaletteService: CommandPaletteService,
     ) {}
 
     ngOnInit() {

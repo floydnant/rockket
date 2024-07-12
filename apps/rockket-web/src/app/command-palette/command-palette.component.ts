@@ -15,22 +15,18 @@ import {
     shareReplay,
     switchMap,
 } from 'rxjs'
-import {
-    CommandPalletteContext,
-    CommandPalletteItem,
-    CommandPalletteService,
-} from './command-pallette.service'
+import { CommandPaletteContext, CommandPaletteItem, CommandPaletteService } from './command-palette.service'
 
 const buildItemMatcher = (query: string) => {
     const regex = new RegExp(escapeForRegEx(query), 'i')
-    return (commandItem: CommandPalletteItem) => {
+    return (commandItem: CommandPaletteItem) => {
         return regex.test(commandItem.title) || commandItem.keywords?.some(keyword => regex.test(keyword))
     }
 }
 
 @UntilDestroy()
 @Component({
-    selector: 'app-command-pallette',
+    selector: 'app-command-palette',
     template: `
         <div
             (keydown)="this.onKeydown$.next($event)"
@@ -65,10 +61,10 @@ const buildItemMatcher = (query: string) => {
     styles: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommandPalletteComponent {
-    private commandPalletteService = inject(CommandPalletteService)
+export class CommandPaletteComponent {
+    private commandPaletteService = inject(CommandPaletteService)
     /** This is a replay subject, feel free to subscribe to it multiple times, no problem. */
-    private context$: Observable<CommandPalletteContext> = inject(DIALOG_DATA)
+    private context$: Observable<CommandPaletteContext> = inject(DIALOG_DATA)
 
     searchQuery$ = new BehaviorSubject<string>('')
     onKeydown$ = new Subject<KeyboardEvent>()
@@ -78,7 +74,7 @@ export class CommandPalletteComponent {
     maxHeight$ = this.context$.pipe(map(context => context.maxHeight))
 
     @ViewChild('input') input?: ElementRef<HTMLInputElement>
-    focusInputSubscription = this.commandPalletteService.onShouldFocusPallette$
+    focusInputSubscription = this.commandPaletteService.onShouldFocusPalette$
         .pipe(untilDestroyed(this))
         .subscribe(() => {
             this.input?.nativeElement.focus()
@@ -91,7 +87,7 @@ export class CommandPalletteComponent {
         if (this.input?.nativeElement) this.input.nativeElement.value = ''
     }
 
-    onSelected(item: CommandPalletteItem) {
+    onSelected(item: CommandPaletteItem) {
         this.context$.pipe(first(), untilDestroyed(this)).subscribe(context => {
             context.enter(item)
         })
@@ -106,7 +102,7 @@ export class CommandPalletteComponent {
         this.context$.pipe(switchMap(context => context.items$)),
         this.context$,
     ]).pipe(
-        map(([searchQuery, items, { renderItemsOnEmptySearchQuery }]): CommandPalletteItem[] => {
+        map(([searchQuery, items, { renderItemsOnEmptySearchQuery }]): CommandPaletteItem[] => {
             if (!searchQuery) return renderItemsOnEmptySearchQuery ? items : []
 
             return items.filter(buildItemMatcher(searchQuery))

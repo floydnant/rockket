@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { CommandPalletteComponent } from './command-pallette.component'
+import { CommandPaletteComponent } from './command-palette.component'
 
-describe('CommandPalletteComponent', () => {
-    let component: CommandPalletteComponent
-    let fixture: ComponentFixture<CommandPalletteComponent>
+describe('CommandPaletteComponent', () => {
+    let component: CommandPaletteComponent
+    let fixture: ComponentFixture<CommandPaletteComponent>
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CommandPalletteComponent],
+            declarations: [CommandPaletteComponent],
         }).compileComponents()
 
-        fixture = TestBed.createComponent(CommandPalletteComponent)
+        fixture = TestBed.createComponent(CommandPaletteComponent)
         component = fixture.componentInstance
         fixture.detectChanges()
     })
