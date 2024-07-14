@@ -11,7 +11,9 @@ import {
     combineLatest,
     distinctUntilChanged,
     first,
+    isObservable,
     map,
+    of,
     shareReplay,
     switchMap,
 } from 'rxjs'
@@ -39,7 +41,7 @@ const buildItemMatcher = (query: string) => {
                 <app-icon icon="search" class="text-tinted-500 ml-2 mr-1 text-sm"></app-icon>
                 <input
                     #input
-                    class="input | placeholder:text-tinted-400 !bg-opacity-0 px-2 py-1 ring-transparent"
+                    class="input | placeholder:text-tinted-400 w-full !bg-opacity-0 px-2 py-1 ring-transparent"
                     type="text"
                     [placeholder]="placeholder$ | async"
                     (input)="searchQuery$.next(input.value)"
@@ -95,18 +97,29 @@ export class CommandPaletteComponent {
 
     matchedItems$ = combineLatest([
         this.searchQuery$.pipe(
-            coalesceWith(animationFrames()),
             map(v => v.trim()),
             distinctUntilChanged(),
         ),
         this.context$.pipe(switchMap(context => context.items$)),
         this.context$,
     ]).pipe(
-        map(([searchQuery, items, { renderItemsOnEmptySearchQuery }]): CommandPaletteItem[] => {
-            if (!searchQuery) return renderItemsOnEmptySearchQuery ? items : []
+        coalesceWith(animationFrames()),
+        switchMap(
+            ([searchQuery, items, { renderItemsOnEmptySearchQuery, itemsIfNoMatch }]): Observable<
+                CommandPaletteItem[]
+            > => {
+                if (!searchQuery) return of(renderItemsOnEmptySearchQuery ? items : [])
 
-            return items.filter(buildItemMatcher(searchQuery))
-        }),
+                const matchedItems = items.filter(buildItemMatcher(searchQuery))
+                if (!matchedItems.length && itemsIfNoMatch) {
+                    const items = itemsIfNoMatch(searchQuery)
+
+                    return isObservable(items) ? items : of(items)
+                }
+
+                return of(matchedItems)
+            },
+        ),
         shareReplay({ bufferSize: 1, refCount: true }),
     )
 }
