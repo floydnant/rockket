@@ -1,14 +1,15 @@
 import { TestBed } from '@angular/core/testing'
 import { RouterTestingModule } from '@angular/router/testing'
 import { AppComponent } from './app.component'
-import { insightsMock } from '../utils/unit-test.mocks'
+import { insightsMock, storeMock } from '../utils/unit-test.mocks'
+import { DialogModule } from '@angular/cdk/dialog'
 
 describe('AppComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, DialogModule],
             declarations: [AppComponent],
-            providers: [insightsMock],
+            providers: [insightsMock, storeMock],
         }).compileComponents()
     })
 
