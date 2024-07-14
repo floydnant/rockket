@@ -111,7 +111,14 @@ export class CommandPaletteService {
 
     // @TODO: connect this to a proper keybinding mechanism
     private _keydownSubscription = fromEvent<KeyboardEvent>(document, 'keydown').subscribe(e => {
-        if (e.key === 'k' && e.metaKey) {
+        if (
+            (e.key == 'k' || e.key == 'p') &&
+            (e.metaKey || e.ctrlKey) &&
+            !e.shiftKey &&
+            !e.altKey &&
+            !e.isComposing &&
+            !e.repeat
+        ) {
             this.navigateToSelectedEntity()
         }
     })
@@ -146,13 +153,13 @@ export class CommandPaletteService {
                 })
                 return ref.result$
             }),
-                map(res => {
-                    if (res.type == 'selected') {
-                        return res.result
-                    }
+            map(res => {
+                if (res.type == 'selected') {
+                    return res.result
+                }
 
-                    return null
-                }),
+                return null
+            }),
         )
     }
 

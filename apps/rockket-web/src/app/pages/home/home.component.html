@@ -9,11 +9,15 @@
             <button
                 cdkMenuItem
                 class="menu-item | w-full text-left"
-                appTooltip="Search for tasks and lists"
+                [appTooltip]="quickSearchTooltip"
                 [tooltipOptions]="{ preferredPosition: 'right' }"
-                routerLink="/home/search"
+                (click)="openQuickSearch()"
             >
                 <app-icon icon="search"></app-icon> Search
+                <ng-template #quickSearchTooltip>
+                    Search for stuff
+                    <app-key-combo combo="cmd+K" class="ml-1"></app-key-combo>
+                </ng-template>
             </button>
             <!-- <button
                 cdkMenuItem
