@@ -92,6 +92,27 @@ export class DialogService {
 
         return dialogRef
     }
+    showDialog<TReturn, TData, TComponentData = unknown>(
+        component: Type<TComponentData>,
+        data?: TData,
+        rect?: { width?: number; maxHeight?: number },
+    ) {
+        const closeOnOutsideClick = true
+
+        const defaultWidth = 300
+        const defaultMaxHeight = 400
+
+        const dialogRef = this.dialog.open<TReturn, TData, TComponentData>(component, {
+            positionStrategy: this.overlay.position().global().centerHorizontally().top(`20vh`),
+            backdropClass: 'subtle',
+            width: `${rect?.width || defaultWidth}px`,
+            maxHeight: `${rect?.maxHeight || defaultMaxHeight}px`,
+            data,
+        })
+        if (closeOnOutsideClick) dialogRef.outsidePointerEvents.subscribe(() => dialogRef.close())
+
+        return dialogRef
+    }
 
     private getGlobalPositionStrategy(options: { left: number; top: number }): PositionStrategy {
         return this.overlay.position().global().left(`${options.left}px`).top(`${options.top}px`)

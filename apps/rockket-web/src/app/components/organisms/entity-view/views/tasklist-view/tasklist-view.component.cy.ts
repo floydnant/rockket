@@ -9,7 +9,7 @@ import { EditableEntityTitleComponent } from 'src/app/components/molecules/edita
 import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
 import { PageProgressBarComponent } from 'src/app/components/molecules/page-progress-bar/page-progress-bar.component'
 import { ToolbarComponent } from 'src/app/components/molecules/toolbar/toolbar.component'
-import { FocusableDirective } from 'src/app/directives/focusable.directive'
+import { FocusableDirective } from 'src/app/focusable/focusable.directive'
 import { IntersectionDirective } from 'src/app/directives/intersection.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
 import { DropdownModule } from 'src/app/dropdown/dropdown.module'

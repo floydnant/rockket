@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { FocusableDirective } from 'src/app/directives/focusable.directive'
+import { FocusableDirective } from 'src/app/focusable/focusable.directive'
 import { InlineEditorComponent } from './inline-editor.component'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'
 import { RxModule } from 'src/app/rx/rx.module'

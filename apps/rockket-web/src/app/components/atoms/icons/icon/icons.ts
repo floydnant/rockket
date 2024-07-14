@@ -84,6 +84,7 @@ const extraIcons = {
     birth: 'fas fa-star',
     deadline: 'far fa-calendar-exclamation',
     parent: 'far fa-sitemap', // Possible other parent icons: `fa-project-diagram`, `fa-folder-tree`, `fa-network-wired`
+    search: 'far fa-search',
 
     chevronRight: 'fas fa-chevron-right',
     chevronLeft: 'fas fa-chevron-left',

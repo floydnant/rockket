@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store'
 import { Action } from '@ngrx/store/src/models'
 import { EntityPreviewFlattend, EntityType, Task } from '@rockket/commons'
 import { combineLatestWith, map, tap } from 'rxjs'
+import { CommandPaletteService } from 'src/app/command-palette/command-palette.service'
 import { MenuService } from 'src/app/components/templates/sidebar-layout/menu.service'
 import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
 import { DeviceService } from 'src/app/services/device.service'
@@ -57,7 +58,12 @@ export class HomeComponent {
         private deviceService: DeviceService,
         private menuService: MenuService,
         private uiStateService: UiStateService,
+        private commandPaletteService: CommandPaletteService,
     ) {}
+
+    openQuickSearch() {
+        this.commandPaletteService.navigateToSelectedEntity()
+    }
 
     EntityType = EntityType
 

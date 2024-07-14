@@ -255,20 +255,23 @@ pre {
 
 /* Cannot be in the @layer because there is no actual reference for this class name in the source code */
 .cdk-overlay-backdrop:not(.not-visible) {
-    @apply bg-tinted-900/50 backdrop-blur-md;
+    /* @apply bg-tinted-900/50 backdrop-blur-md; */
+    @apply bg-tinted-900/30 backdrop-blur-[2px];
+}
+.cdk-overlay-backdrop:not(.not-visible).subtle {
+    @apply bg-tinted-900/40 backdrop-blur-[0px] pointer-events-none;
 }
 
-:is(.app-overlay).no-delay {
-    --reveal-delay: 0ms;
-}
-:is(.app-overlay) {
-    min-width: 180px;
-    max-width: 280px;
+.app-overlay {
     @apply border-tinted-700 bg-tinted-800 glass flex flex-col rounded-xl border bg-opacity-80 shadow-xl;
 
     animation: reveal 130ms var(--reveal-delay, 0ms) forwards;
     scale: 0.8;
     opacity: 0;
+}
+.app-overlay:not([class*='w-']) {
+    min-width: 180px;
+    max-width: 280px;
 }
 
 @keyframes reveal {

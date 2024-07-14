@@ -25,6 +25,13 @@ module.exports = {
                     0 -10px 20px -25px theme(colors.tinted.900),
                     0 -25px 30px -35px theme(colors.tinted.900)
                 `,
+                dialog: `
+                    0 0px 31px 18px theme(colors.tinted.900),
+                    0 0px 21px 12px theme(colors.tinted.900),
+                    0 -13px 10px -10px theme(colors.tinted.900),
+                    0 -10px 20px -25px theme(colors.tinted.900),
+                    0 -25px 30px -35px theme(colors.tinted.900)
+                `,
             },
         },
     },
@@ -48,6 +55,7 @@ module.exports = {
                 },
                 '.child-focus-ring': {
                     '&:has(:focus, :focus-visible)': {
+                        // eslint-disable-next-line capitalized-comments
                         // ring-2
                         '--tw-ring-offset-shadow':
                             'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',

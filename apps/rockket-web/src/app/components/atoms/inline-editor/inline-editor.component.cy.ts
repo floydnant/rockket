@@ -1,6 +1,6 @@
 import { testName } from 'cypress/support/helpers'
 import { BehaviorSubject } from 'rxjs'
-import { FocusableDirective } from 'src/app/directives/focusable.directive'
+import { FocusableDirective } from 'src/app/focusable/focusable.directive'
 import { MutationDirective } from 'src/app/directives/mutation.directive'
 import { InlineEditorComponent, INLINE_EDITOR_DELAY_TIME } from './inline-editor.component'
 import { HighlightPipe } from 'src/app/pipes/highlight.pipe'

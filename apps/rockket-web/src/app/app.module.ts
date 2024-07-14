@@ -14,6 +14,7 @@ import { StoreModule } from '@ngrx/store'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { environment } from 'src/environments/environment'
 import { routes } from './app.routes'
+import { CommandPaletteModule } from './command-palette/command-palette.module'
 import { EntityPageLabelComponent } from './components/atoms/entity-page-label/entity-page-label.component'
 import { IconsModule } from './components/atoms/icons/icons.module'
 import { InlineEditorComponent } from './components/atoms/inline-editor/inline-editor.component'
@@ -47,10 +48,10 @@ import { SidepanelPortalDirective } from './components/templates/main-pane/sidep
 import { MenuToggleComponent } from './components/templates/sidebar-layout/menu-toggle/menu-toggle.component'
 import { SidebarLayoutComponent } from './components/templates/sidebar-layout/sidebar-layout.component'
 import { DiffModule } from './diff/diff.module'
-import { FocusableDirective } from './directives/focusable.directive'
 import { IntersectionDirective } from './directives/intersection.directive'
 import { MutationDirective } from './directives/mutation.directive'
 import { DropdownModule } from './dropdown/dropdown.module'
+import { FocusableModule } from './focusable/focusable.module'
 import { HttpModule } from './http/http.module'
 import { KeyboardModule } from './keyboard/keyboard.module'
 import { ModalModule } from './modal/modal.module'
@@ -91,7 +92,6 @@ import { TooltipModule } from './tooltip/tooltip.module'
         DemoComponent,
         TaskComponent,
         ComponentPlaygroundComponent,
-        FocusableDirective,
         InputComponent,
         FormComponent,
         LoginComponent,
@@ -171,6 +171,8 @@ import { TooltipModule } from './tooltip/tooltip.module'
         PortalModule,
         DiffModule,
         ResizeModule,
+        CommandPaletteModule,
+        FocusableModule,
     ],
     providers: [
         {

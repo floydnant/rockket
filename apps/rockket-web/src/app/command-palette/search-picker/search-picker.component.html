@@ -1,0 +1,49 @@
+<ul
+    #list
+    class="no-default-padding | flex flex-col overflow-y-auto rounded-lg [&:has(li)]:pb-[var(--padding-bottom)] [&:has(li)]:pt-[var(--padding-top)]"
+    [style.---padding-top]="listPaddingTop + 'px'"
+    [style.scroll-padding-top]="listPaddingTop + 'px'"
+    [style.---padding-bottom]="listPaddingBottom + 'px'"
+    [style.scroll-padding-bottom]="listPaddingBottom + 'px'"
+    [style.max-height]="(maxHeight || 240) + 'px'"
+>
+    <li
+        *ngFor="let result of results$ | push; let index = index"
+        class="list-none [&:not(:last-of-type)]:mb-0.5"
+    >
+        <button
+            class="menu-item | [li:not(.selected)_&]:!text-tinted-300 w-full truncate px-2 text-left duration-0 [li:not(.selected)_&]:!bg-transparent"
+            [ngClass]="{
+                '[.selected_&]:!bg-tinted-700 [.selected_&]:text-tinted-100': true,
+                '[ul:not(:has(.selected))_&]:!text-tinted-100' : index == 0,
+                '[ul:not(:has(.selected))_&]:!bg-tinted-700' : index == 0,
+            }"
+            (click)="onClick$.next(index)"
+            (mouseenter)="onMouseEnter$.next(index)"
+        >
+            <div class="w-full">
+                <div class="pointer-events-none truncate text-left">
+                    <span *ngIf="result.icon as icon" class="inline-flex justify-center">
+                        <app-icon class="icon | text-md mr-1 inline-block w-4" [icon]="icon"></app-icon>
+                    </span>
+                    <span class="title | truncate" translate="no">{{ result.title }}</span>
+                </div>
+
+                <div class="breadcrumbs | flex items-center gap-1 truncate">
+                    <span
+                        class="breadcrumb-segment | text-tinted-400 [.selected_&]:!text-tinted-300 inline-flex items-center gap-1 text-xs"
+                        [ngClass]="{
+                            '[ul:not(:has(.selected))_&]:!text-tinted-300' : index == 0,
+                        }"
+                        *ngFor="let segment of result.breadcrumbs; let isLast = last"
+                    >
+                        <span class="inline-block truncate" [style.max-width]="maxBreadcrumbWidth">{{
+                            segment
+                        }}</span>
+                        <span *ngIf="!isLast" class="inline-block"> / </span>
+                    </span>
+                </div>
+            </div>
+        </button>
+    </li>
+</ul>
