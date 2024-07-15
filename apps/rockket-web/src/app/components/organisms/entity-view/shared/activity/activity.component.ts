@@ -25,7 +25,7 @@ export class ActivityComponent {
     @Input({ alias: 'entity', required: true }) set entitySetter(entity: { id: string; createdAt: Date }) {
         this.entity$.next(entity)
     }
-    entity$ = new ReplaySubject<{ id: string; createdAt: Date }>()
+    entity$ = new ReplaySubject<{ id: string; createdAt: Date }>(1)
 
     events$ = combineLatest([
         this.entity$.pipe(distinctUntilKeyChanged('id')),
