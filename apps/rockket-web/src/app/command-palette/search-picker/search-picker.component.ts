@@ -194,13 +194,11 @@ export class SearchPickerComponent<T extends { title: string; icon?: IconKey; br
                 prevIndex == index && prevEmissionIndex == emissionIndex,
         ),
         tap(({ index: selectedIndex, shouldScroll: shouldScrollIntoView }) => {
-            console.time(`updateDomAndScroll ${selectedIndex}`)
             this.updateDomAndScroll(selectedIndex, shouldScrollIntoView)
             // @TODO: lets try and get rid of this
             // This ensures the list selection is updated after angulars rendering
             setTimeout(() => {
                 this.updateDomAndScroll(selectedIndex, shouldScrollIntoView)
-                console.timeEnd(`updateDomAndScroll ${selectedIndex}`)
             })
         }),
         map(({ index: selectedIndex }) => selectedIndex),

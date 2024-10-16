@@ -69,7 +69,7 @@ export class EntityParentSelectorComponent {
     @ViewChild('list') resultsList?: ElementRef<HTMLUListElement>
     listScrollPadding = 8
 
-    searchQuery$ = new ReplaySubject<string>()
+    searchQuery$ = new ReplaySubject<string>(1)
     allowedParentEntityTypes$ = new BehaviorSubject<EntityType[]>([EntityType.TASKLIST, EntityType.TASK])
 
     onMoveSelection$ = new Subject<'up' | 'down'>()
@@ -242,7 +242,7 @@ export class EntityParentSelectorComponent {
     private selectionSubscription = this.selectedIndex$.subscribe()
 
     onClick$ = new Subject<number | void>()
-    onMouseEnter$ = new ReplaySubject<number>()
+    onMouseEnter$ = new ReplaySubject<number>(1)
 
     private _onCommitParentSubscription = this.onClick$
         .pipe(

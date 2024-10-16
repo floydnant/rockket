@@ -55,7 +55,7 @@ export class DropDownComponent {
     // @TODO: What should we do w/ the component here?
     // If we reach this point, and the component was not rendered somewhere else already
     // thats probably a bug, and we should throw an error
-    component$ = new ReplaySubject<Type<unknown>>()
+    component$ = new ReplaySubject<Type<unknown>>(1)
 
     items$ = this.items$_.pipe(
         // @TODO: we should check whether the data is appropriate for route params

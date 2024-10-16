@@ -68,7 +68,7 @@ export class TaskViewComponent {
     priorityColorMap = taskPriorityColorMap
     priorityMenuItems = getTaskPriorityMenuItems(this.store)
 
-    hasSidepanel$ = new ReplaySubject<boolean>()
+    hasSidepanel$ = new ReplaySubject<boolean>(1)
 
     taskEntity$ = this.viewData.entity$
     detail$ = this.viewData.detail$
