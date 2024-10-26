@@ -132,7 +132,7 @@ pre {
         @apply text-tinted-300 hover:text-tinted-100 hover:bg-tinted-700 inline-flex items-center gap-2 rounded-lg px-3 py-1 transition-colors duration-75;
     }
     .button-naked:has(app-icon) {
-        @apply pr-3.5;
+        @apply pr-[0.8125rem]; /* 13px */
     }
     .button-naked app-icon:first-of-type {
         @apply w-4 text-center text-sm;
