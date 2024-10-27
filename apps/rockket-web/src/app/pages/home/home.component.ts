@@ -18,7 +18,7 @@ import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
 import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
-import { flattenEntityTreeIncludingTasks, traceEntityIncludingTasks } from 'src/app/store/entities/utils'
+import { flattenEntityTreeIncludingTasks } from 'src/app/store/entities/utils'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 
 export interface EntityTreeNode {
@@ -123,27 +123,15 @@ export class HomeComponent {
         .pipe(
             combineLatestWith(this.store.select(entitiesSelectors.taskTreeMap)),
             map(([entityTree, taskTreeMap]) => {
-                // @TODO: come up with a better solution for this
-                // NOTE: using `ActivatedRoute` doesn't work in here either
-                const segments = location.pathname.split('/')
-                const activeId = segments[segments.length - 1]
-
                 if (!entityTree) return []
 
                 const flattendEntityTree = flattenEntityTreeIncludingTasks(entityTree, taskTreeMap || {})
                 const treeNodes = flattendEntityTree.map(convertToEntityTreeNode)
 
-                const [, ...entityTraceWithoutActive] = traceEntityIncludingTasks(
-                    entityTree,
-                    taskTreeMap || {},
-                    activeId,
-                ).reverse()
-
                 return treeNodes.map<EntityTreeNode>(node => {
-                    const isContainedInTrace = entityTraceWithoutActive.some(entity => entity.id == node.id)
                     return {
                         ...node,
-                        isExpanded: this.entityExpandedMap.get(node.id) || isContainedInTrace,
+                        isExpanded: this.entityExpandedMap.get(node.id) ?? false,
                         menuItems: this.nodeMenuItemsMap[node.entityType].map(
                             useTaskForActiveItems(node as EntityTreeNode & Task),
                         ),
