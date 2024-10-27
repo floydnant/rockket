@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
+import { Actions, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import {
     EntityType,
@@ -9,7 +11,7 @@ import {
     TaskStatusGroup,
     taskStatusGroupMap,
 } from '@rockket/commons'
-import { BehaviorSubject, combineLatestWith, map, shareReplay, tap } from 'rxjs'
+import { BehaviorSubject, combineLatestWith, filter, map, shareReplay, tap } from 'rxjs'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
 import { UiStateService } from 'src/app/services/ui-state.service'
 import { uiDefaults } from 'src/app/shared/defaults'
@@ -38,6 +40,7 @@ export const convertToTaskTreeNode = (task: TaskFlattend, expand?: boolean): Tas
     }
 }
 
+@UntilDestroy()
 @Component({
     selector: 'app-task-tree',
     templateUrl: './task-tree.component.html',
@@ -47,6 +50,7 @@ export const convertToTaskTreeNode = (task: TaskFlattend, expand?: boolean): Tas
 export class TaskTreeComponent {
     constructor(
         private store: Store<AppState>,
+        private actions$: Actions,
         private loadingService: LoadingStateService,
         private uiStateService: UiStateService,
     ) {}
@@ -59,6 +63,18 @@ export class TaskTreeComponent {
     @Input() expandAll?: boolean
 
     @Input() readonly = false
+
+    onClosedTask$ = this.actions$
+        .pipe(
+            ofType(taskActions.updateStatusSuccess),
+            filter(action => taskStatusGroupMap[action.status] == TaskStatusGroup.Closed),
+            map(action => action.id),
+            untilDestroyed(this),
+        )
+        .subscribe(id => {
+            this.toggleDescriptionExpansion({ taskPreview: { id } }, false)
+            this.toggleExpansion({ taskPreview: { id } }, false)
+        })
 
     flattendTaskTree$ = this.tasks$.pipe(
         // @TODO: this is running too often, we should only run this when the tasks change
@@ -101,7 +117,7 @@ export class TaskTreeComponent {
     } | null>(null)
 
     descriptionExpandedMap = this.uiStateService.mainViewUiState.taskTreeDescriptionExpandedMap
-    toggleDescriptionExpansion(node: TaskTreeNode, isDescriptionExpanded: boolean) {
+    toggleDescriptionExpansion(node: { taskPreview: { id: string } }, isDescriptionExpanded: boolean) {
         this.uiChangeEvents.next({
             id: node.taskPreview.id,
             key: 'isDescriptionExpanded',
@@ -112,7 +128,7 @@ export class TaskTreeComponent {
     }
 
     entityExpandedMap = this.uiStateService.mainViewUiState.entityExpandedMap
-    toggleExpansion(node: TaskTreeNode, isExpanded: boolean) {
+    toggleExpansion(node: { taskPreview: { id: string } }, isExpanded: boolean) {
         this.uiChangeEvents.next({ id: node.taskPreview.id, key: 'isExpanded', value: isExpanded })
 
         this.uiStateService.toggleMainViewEntity(node.taskPreview.id, isExpanded)
@@ -120,6 +136,7 @@ export class TaskTreeComponent {
 
     treeWithUiChanges!: TaskTreeNode[]
     treeWithUiChanges$ = this.flattendTaskTree$.pipe(
+        // @TODO: these events should be debounced/coalesced
         combineLatestWith(this.uiChangeEvents),
         map(([taskNodes, changeEvent]) => {
             if (!changeEvent) return taskNodes
