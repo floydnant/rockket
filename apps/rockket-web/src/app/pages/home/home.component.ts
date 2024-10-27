@@ -123,7 +123,7 @@ export class HomeComponent {
         .pipe(
             combineLatestWith(this.store.select(entitiesSelectors.taskTreeMap)),
             map(([entityTree, taskTreeMap]) => {
-                if (!entityTree) return []
+                if (!entityTree) return null
 
                 const flattendEntityTree = flattenEntityTreeIncludingTasks(entityTree, taskTreeMap || {})
                 const treeNodes = flattendEntityTree.map(convertToEntityTreeNode)
@@ -138,7 +138,10 @@ export class HomeComponent {
                     }
                 })
             }),
-            tap(transformed => (this.entityPreviewsTransformed = transformed)),
+            tap(transformed => {
+                if (transformed) this.entityPreviewsTransformed = transformed
+                else this.entityPreviewsTransformed = []
+            }),
         )
     private readonly nodeMenuItemsMap = getEntityMenuItemsMap(this.store)
 
@@ -151,7 +154,7 @@ export class HomeComponent {
     isSelected: Record<string, boolean> = {}
     nodeLoadingMap$ = this.loadingService.getEntitiesLoadingStateMap()
 
-    dataSource = new ArrayDataSource(this.entityPreviewsTransformed$)
+    dataSource = new ArrayDataSource(this.entityPreviewsTransformed$.pipe(map(nodes => nodes || [])))
     treeControl = new FlatTreeControl<EntityTreeNode>(
         node => node.path.length,
         node => node.expandable,

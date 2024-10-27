@@ -49,7 +49,7 @@
     </ng-container>
 
     <!-- SIDEBAR CONTENT -->
-    <ng-container sidebarContent>
+    <ng-container sidebarContent *rxLet="entityPreviewsTransformed$; let entityPreviewsTransformed">
         <p class="text-tinted-400 flex items-center justify-between px-3 text-sm">
             Tasklists
             <button
@@ -62,12 +62,15 @@
             </button>
         </p>
 
-        <div class="pt-10 text-center" *ngIf="isTreeLoading$ | async; else tree">
-            <app-loading-spinner class="text-xl"></app-loading-spinner>
+        <div
+            class="pt-10 text-center"
+            *ngIf="(isTreeLoading$ | async) || !entityPreviewsTransformed; else tree"
+        >
+            <app-loading-spinner class="text-2xl"></app-loading-spinner>
         </div>
 
         <ng-template #tree>
-            <p *ngIf="(entityPreviewsTransformed$ | async)?.length == 0" class="text-tinted-400 text-center">
+            <p *ngIf="entityPreviewsTransformed?.length == 0" class="text-tinted-400 text-center">
                 No lists so far...
             </p>
 
