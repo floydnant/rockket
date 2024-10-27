@@ -1,5 +1,6 @@
+import { z } from 'zod'
 import { Tasklist } from './list/list.schema'
-import { Task } from './task/task.schema'
+import { Task, taskSchema } from './task/task.schema'
 
 export enum EntityType {
     TASKLIST = 'Tasklist',
@@ -8,17 +9,28 @@ export enum EntityType {
     // VIEW = 'View',
 }
 
-type BaseEntityPreview = {
-    id: string
-    entityType: EntityType
-    title: string
-    parentId: string | undefined | null
-}
+const baseEntitySchema = z.object({
+    id: z.string(),
+    entityType: z.nativeEnum(EntityType),
+    createdAt: z.date({ coerce: true }),
+    title: z.string(),
+    parentId: z.string().nullable().optional(),
+})
 
-export type TaskEntityPreview = BaseEntityPreview & { entityType: EntityType.TASK } & Task
-export type TasklistEntityPreview = BaseEntityPreview & { entityType: EntityType.TASKLIST }
+export const taskEntitySchema = baseEntitySchema
+    .extend({
+        entityType: z.literal(EntityType.TASK),
+    })
+    .merge(taskSchema)
+export type TaskEntityPreview = z.infer<typeof taskEntitySchema>
 
-export type EntityPreview = TaskEntityPreview | TasklistEntityPreview
+export const tasklistEntitySchema = baseEntitySchema.extend({
+    entityType: z.literal(EntityType.TASKLIST),
+})
+export type TasklistEntityPreview = z.infer<typeof tasklistEntitySchema>
+
+export const entityPreviewSchema = z.union([taskEntitySchema, tasklistEntitySchema])
+export type EntityPreview = z.infer<typeof entityPreviewSchema>
 
 export type EntityPreviewRecursive = EntityPreview & {
     children: EntityPreviewRecursive[] | undefined

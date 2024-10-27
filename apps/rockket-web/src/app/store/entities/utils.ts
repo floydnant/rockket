@@ -218,17 +218,22 @@ export const getTaskById = (taskTree: TaskRecursive[], id: string) => {
     return res.subTree[res.index]
 }
 
+export type EntitySorter = (a: { createdAt: Date }, b: { createdAt: Date }) => number
 export type TaskSorter = (a: Task, b: Task) => number
 
+export const sortEntities = {
+    byCreatedAtAsc: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+    byCreatedAtDesc: (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+} satisfies Record<string, EntitySorter>
+
 export const sortTasks = {
+    ...sortEntities,
+
     byStatusAsc: (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status],
     byStatusDesc: (a, b) => statusSortingMap[b.status] - statusSortingMap[a.status],
 
     byPriorityAsc: (a, b) => prioritySortingMap[a.priority] - prioritySortingMap[b.priority],
     byPriorityDesc: (a, b) => prioritySortingMap[b.priority] - prioritySortingMap[a.priority],
-
-    byCreatedAtAsc: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
-    byCreatedAtDesc: (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
 
     byStatusUpdatedAtAsc: (a, b) => a.statusUpdatedAt.getTime() - b.statusUpdatedAt.getTime(),
     byStatusUpdatedAtDesc: (a, b) => b.statusUpdatedAt.getTime() - a.statusUpdatedAt.getTime(),

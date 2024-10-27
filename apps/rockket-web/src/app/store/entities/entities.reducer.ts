@@ -269,6 +269,7 @@ export const entitiesReducer = createReducer(
                     const listEntity: EntityPreviewRecursive = {
                         id: list.id,
                         title: list.title,
+                        createdAt: list.createdAt,
                         entityType: EntityType.TASKLIST,
                         parentId: list.parentListId,
                         children: [],
