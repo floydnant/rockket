@@ -1,21 +1,25 @@
 import { EntityPreview, EntityPreviewFlattend, EntityPreviewRecursive, EntityType } from '@rockket/commons'
 import { buildEntityTree, flattenEntityTree, getParentEntityByChildId, traceEntity } from './utils'
 
+const mockDate = new Date()
+
 const entityPreviewsFixture: EntityPreview[] = [
-    { id: '1', entityType: EntityType.TASKLIST, title: 'First', parentId: '' },
-    { id: '2', entityType: EntityType.TASKLIST, title: 'Second', parentId: '' },
-    { id: '3', entityType: EntityType.TASKLIST, title: 'First nested', parentId: '1' },
-    { id: '4', entityType: EntityType.TASKLIST, title: 'Deep nested', parentId: '3' },
+    { id: '1', createdAt: mockDate, entityType: EntityType.TASKLIST, title: 'First', parentId: '' },
+    { id: '2', createdAt: mockDate, entityType: EntityType.TASKLIST, title: 'Second', parentId: '' },
+    { id: '3', createdAt: mockDate, entityType: EntityType.TASKLIST, title: 'First nested', parentId: '1' },
+    { id: '4', createdAt: mockDate, entityType: EntityType.TASKLIST, title: 'Deep nested', parentId: '3' },
 ]
 const entityTreeFixture: EntityPreviewRecursive[] = [
     {
         id: '1',
+        createdAt: mockDate,
         entityType: EntityType.TASKLIST,
         title: 'First',
         parentId: '',
         children: [
             {
                 id: '3',
+                createdAt: mockDate,
                 entityType: EntityType.TASKLIST,
                 title: 'First nested',
                 parentId: '1',
@@ -25,18 +29,27 @@ const entityTreeFixture: EntityPreviewRecursive[] = [
                         title: 'Deep nested',
                         children: [],
                         parentId: '3',
+                        createdAt: mockDate,
                         entityType: EntityType.TASKLIST,
                     },
                 ],
             },
         ],
     },
-    { id: '2', entityType: EntityType.TASKLIST, title: 'Second', parentId: '', children: [] },
+    {
+        id: '2',
+        createdAt: mockDate,
+        entityType: EntityType.TASKLIST,
+        title: 'Second',
+        parentId: '',
+        children: [],
+    },
 ]
 
 const entityTreeFlattenedFixture: EntityPreviewFlattend[] = [
     {
         id: '1',
+        createdAt: mockDate,
         entityType: EntityType.TASKLIST,
         title: 'First',
         parentId: '',
@@ -45,6 +58,7 @@ const entityTreeFlattenedFixture: EntityPreviewFlattend[] = [
     },
     {
         id: '3',
+        createdAt: mockDate,
         entityType: EntityType.TASKLIST,
         title: 'First nested',
         parentId: '1',
@@ -53,6 +67,7 @@ const entityTreeFlattenedFixture: EntityPreviewFlattend[] = [
     },
     {
         id: '4',
+        createdAt: mockDate,
         entityType: EntityType.TASKLIST,
         title: 'Deep nested',
         parentId: '3',
@@ -61,6 +76,7 @@ const entityTreeFlattenedFixture: EntityPreviewFlattend[] = [
     },
     {
         id: '2',
+        createdAt: mockDate,
         entityType: EntityType.TASKLIST,
         title: 'Second',
         parentId: '',
@@ -91,18 +107,21 @@ describe('Store entity utils', () => {
             const traceFixture: EntityPreviewRecursive[] = [
                 {
                     id: '1',
+                    createdAt: mockDate,
                     entityType: EntityType.TASKLIST,
                     title: 'First',
                     parentId: '',
                     children: [
                         {
                             id: '3',
+                            createdAt: mockDate,
                             entityType: EntityType.TASKLIST,
                             title: 'First nested',
                             parentId: '1',
                             children: [
                                 {
                                     id: '4',
+                                    createdAt: mockDate,
                                     entityType: EntityType.TASKLIST,
                                     title: 'Deep nested',
                                     children: [],
@@ -114,12 +133,14 @@ describe('Store entity utils', () => {
                 },
                 {
                     id: '3',
+                    createdAt: mockDate,
                     entityType: EntityType.TASKLIST,
                     title: 'First nested',
                     parentId: '1',
                     children: [
                         {
                             id: '4',
+                            createdAt: mockDate,
                             entityType: EntityType.TASKLIST,
                             title: 'Deep nested',
                             children: [],
@@ -129,6 +150,7 @@ describe('Store entity utils', () => {
                 },
                 {
                     id: '4',
+                    createdAt: mockDate,
                     entityType: EntityType.TASKLIST,
                     title: 'Deep nested',
                     children: [],
@@ -146,6 +168,7 @@ describe('Store entity utils', () => {
                 subTree: [
                     {
                         id: '4',
+                        createdAt: mockDate,
                         entityType: EntityType.TASKLIST,
                         title: 'Deep nested',
                         children: [],
