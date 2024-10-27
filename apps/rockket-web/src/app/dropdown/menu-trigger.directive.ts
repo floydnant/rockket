@@ -115,7 +115,7 @@ export abstract class AbstractMenuTriggerDirective<TMenuItemData> implements Aft
         this.onClose$.pipe(map(() => false)),
     ).pipe(startWith(false))
 
-    items$ = new ReplaySubject<MenuItem<TMenuItemData>['children']>()
+    items$ = new ReplaySubject<MenuItem<TMenuItemData>['children']>(1)
     @Input({ required: true, alias: 'appMenu' }) set items(
         items: MenuItem<TMenuItemData>['children'] | undefined | null,
     ) {

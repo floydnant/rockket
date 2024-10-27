@@ -37,7 +37,7 @@ export class EntityDescriptionComponent {
     toolbarLayout = defaultDesktopEditorLayout
     toolbarLayout$ = this.deviceService.isTouchPrimary$.pipe(map(getDefaultEditorLayout))
 
-    private context$ = new ReplaySubject<DescriptionContext>()
+    private context$ = new ReplaySubject<DescriptionContext>(1)
     @Input() set context(context: DescriptionContext | null) {
         if (context) this.context$.next(context)
     }
@@ -47,7 +47,7 @@ export class EntityDescriptionComponent {
         map(context => ({ input$: context.description$, context: context.id })),
     )
 
-    @Output('isActive') isActive$ = new ReplaySubject<boolean>()
+    @Output('isActive') isActive$ = new ReplaySubject<boolean>(1)
 
     updateInput$ = new Subject<{ html: string; context: string }>()
     @Output('update') update$ = this.updateInput$.pipe(
