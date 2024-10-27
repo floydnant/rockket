@@ -1,7 +1,14 @@
 import { inject, Injectable } from '@angular/core'
-import { EntitiesSearchResultDto, EntityEvent, EntityPreview, EntityType } from '@rockket/commons'
+import {
+    EntitiesSearchResultDto,
+    EntityEvent,
+    entityPreviewSchema,
+    EntityType,
+    fnNames,
+} from '@rockket/commons'
 import { Observable } from 'rxjs'
 import { HttpService } from '../http/http.service'
+import { parseWith } from '../http/http.utils'
 import { HttpSuccessResponse } from '../http/types'
 import { ListService } from './entity.services/list.service'
 import { TaskService } from './entity.services/task.service'
@@ -61,7 +68,9 @@ export class EntitiesService {
     }
 
     getEntityPreviews() {
-        return this.http.get<EntityPreview[]>('/entities')
+        return this.http
+            .get('/entities')
+            .pipe(parseWith(entityPreviewSchema.array(), fnNames(EntitiesService, this.getEntityPreviews)))
     }
 
     loadDetail({ entityType, id }: EntityCrudDto) {

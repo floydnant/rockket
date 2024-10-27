@@ -42,14 +42,15 @@ export const concatMatchingKeys = (
     return Object.fromEntries(entries)
 }
 
-/** Insert an element after a given position.
- *
- * **Note:** This function mutates the original array.
- */
+/** Insert an element after a given position.  */
 export const insertElementAfter = <T>(arr: Array<T>, position: number, elem: T) => {
-    arr.splice(position + 1, 0, elem)
-
-    return arr
+    if (position < 0) {
+        arr.unshift(elem)
+    } else if (position >= arr.length) {
+        arr.push(elem)
+    } else {
+        arr.splice(position + 1, 0, elem)
+    }
 }
 
 /** Move an element at a given position to a specified position in the array.

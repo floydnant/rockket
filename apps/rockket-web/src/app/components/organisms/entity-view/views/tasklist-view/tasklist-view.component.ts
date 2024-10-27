@@ -21,6 +21,7 @@ import { listActions } from 'src/app/store/entities/list/list.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { isNotNullish, moveToMacroQueue } from 'src/app/utils'
 import { ENTITY_VIEW_DATA, EntityViewData } from '../../entity-view.component'
+import { sortEntities } from 'src/app/store/entities/utils'
 
 @UntilDestroy()
 @Component({
@@ -105,7 +106,11 @@ export class TasklistViewComponent {
     )
 
     children$ = this.listEntity$.pipe(
-        map(entity => entity?.children?.filter(child => child.entityType != EntityType.TASK)),
+        map(entity => {
+            return entity?.children
+                ?.filter(child => child.entityType != EntityType.TASK)
+                .sort(sortEntities.byCreatedAtDesc)
+        }),
         startWith(undefined),
     )
     createSublist() {
