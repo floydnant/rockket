@@ -6,6 +6,11 @@ import { entitiesActions } from '../store/entities/entities.actions'
 import { StorageItem } from '../utils/storage.helpers'
 import { uiDefaults } from '../shared/defaults'
 import { z } from 'zod'
+import {
+    DEFAULT_TASK_SORTING_STRATEGY_KEY,
+    TaskSortingStrategyKey,
+    taskSortingStrategyKeySchema,
+} from '../components/organisms/entity-view/shared/sorting/task-sorting-strategies'
 
 const sidebarUiStateSchema = z.object({
     isDesktopSidebarOpen: z.boolean().default(true),
@@ -22,6 +27,7 @@ const mainViewUiStateSchema = z.object({
     entityExpandedMap: z.map(z.string(), z.boolean()).default(new Map()),
     taskTreeDescriptionExpandedMap: z.map(z.string(), z.boolean()).default(new Map()),
     sidePanelWidth: z.number().default(uiDefaults.mainView.SIDE_PANEL_WIDTH),
+    taskSortingStrategy: taskSortingStrategyKeySchema.catch(DEFAULT_TASK_SORTING_STRATEGY_KEY),
     appVersion: z.string().default(environment.PACKAGE_VERSION),
 })
 const defaultMainViewUIState = mainViewUiStateSchema.parse({})
@@ -79,6 +85,11 @@ export class UiStateService {
     }
     updateShownAsPercentage(isShownAsPercentage: boolean) {
         this.mainViewUiState.isProgressShownAsPercentage = isShownAsPercentage
+        this.mainViewUiState_.updateStorage()
+    }
+
+    setTaskSortingStrategy(strategy: TaskSortingStrategyKey) {
+        this.mainViewUiState.taskSortingStrategy = strategy
         this.mainViewUiState_.updateStorage()
     }
 

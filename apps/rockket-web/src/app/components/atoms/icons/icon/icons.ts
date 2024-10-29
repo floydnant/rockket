@@ -82,9 +82,12 @@ const extraIcons = {
     copy: 'fas fa-copy',
     markdown: 'fab fa-markdown',
     birth: 'fas fa-star',
+    calendarBirth: 'far fa-calendar-star',
+    calendarCheck: 'far fa-calendar-check',
     deadline: 'far fa-calendar-exclamation',
     parent: 'far fa-sitemap', // Possible other parent icons: `fa-project-diagram`, `fa-folder-tree`, `fa-network-wired`
     search: 'far fa-search',
+    sort: 'fas fa-sort-alt',
 
     chevronRight: 'fas fa-chevron-right',
     chevronLeft: 'fas fa-chevron-left',

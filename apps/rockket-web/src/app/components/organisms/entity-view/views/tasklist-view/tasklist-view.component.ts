@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
-import { UntilDestroy } from '@ngneat/until-destroy'
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import { EntityType, TasklistDetail, isTruthy } from '@rockket/commons'
-import { Subject, combineLatest, merge } from 'rxjs'
+import { BehaviorSubject, Subject, combineLatest, merge } from 'rxjs'
 import {
     distinctUntilChanged,
     distinctUntilKeyChanged,
@@ -11,17 +11,20 @@ import {
     map,
     mergeWith,
     shareReplay,
+    skip,
     startWith,
     withLatestFrom,
 } from 'rxjs/operators'
-import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
-import { AppState } from 'src/app/store'
-import { entitiesSelectors } from 'src/app/store/entities/entities.selectors'
-import { listActions } from 'src/app/store/entities/list/list.actions'
-import { taskActions } from 'src/app/store/entities/task/task.actions'
-import { isNotNullish, moveToMacroQueue } from 'src/app/utils'
+import { UiStateService } from 'src/app/services/ui-state.service'
+import { EntityDescriptionComponent } from '../../../../../components/molecules/entity-description/entity-description.component'
+import { AppState } from '../../../../../store'
+import { entitiesSelectors } from '../../../../../store/entities/entities.selectors'
+import { listActions } from '../../../../../store/entities/list/list.actions'
+import { taskActions } from '../../../../../store/entities/task/task.actions'
+import { entitySortingCompareFns } from '../../../../../store/entities/utils'
+import { isNotNullish, moveToMacroQueue } from '../../../../../utils'
 import { ENTITY_VIEW_DATA, EntityViewData } from '../../entity-view.component'
-import { sortEntities } from 'src/app/store/entities/utils'
+import { TaskSortingStrategyKey, sortingStrategies } from '../../shared/sorting/task-sorting-strategies'
 
 @UntilDestroy()
 @Component({
@@ -34,6 +37,7 @@ export class TasklistViewComponent {
     constructor(
         @Inject(ENTITY_VIEW_DATA) private viewData: EntityViewData<TasklistDetail>,
         private store: Store<AppState>,
+        private uiState: UiStateService,
     ) {}
 
     EntityType = EntityType
@@ -109,7 +113,7 @@ export class TasklistViewComponent {
         map(entity => {
             return entity?.children
                 ?.filter(child => child.entityType != EntityType.TASK)
-                .sort(sortEntities.byCreatedAtDesc)
+                .sort(entitySortingCompareFns.byCreatedAtDesc)
         }),
         startWith(undefined),
     )
@@ -120,11 +124,27 @@ export class TasklistViewComponent {
         })
     }
 
-    tasks$ = combineLatest([this.store.select(entitiesSelectors.taskTreeMap), this.listEntity$]).pipe(
-        map(([taskTreeMap, entity]) => {
+    activeSorting$ = new BehaviorSubject<TaskSortingStrategyKey>(
+        this.uiState.mainViewUiState.taskSortingStrategy,
+    )
+    _onActiveSortingChanged = this.activeSorting$
+        .pipe(skip(1), untilDestroyed(this))
+        .subscribe(activeSortingKey => {
+            this.uiState.setTaskSortingStrategy(activeSortingKey)
+        })
+
+    tasks$ = combineLatest([
+        this.store.select(entitiesSelectors.taskTreeMap),
+        this.listEntity$,
+        this.activeSorting$,
+    ]).pipe(
+        map(([taskTreeMap, entity, activeSortingKey]) => {
             if (!taskTreeMap || !entity) return null
 
-            return taskTreeMap[entity.id] || []
+            const tasks = taskTreeMap[entity.id]
+            if (!tasks) return []
+
+            return sortingStrategies[activeSortingKey].sorter([...tasks])
         }),
         shareReplay({ bufferSize: 1, refCount: true }),
     )

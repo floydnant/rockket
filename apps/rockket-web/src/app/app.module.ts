@@ -85,6 +85,7 @@ import { RichTextEditorModule } from './rich-text-editor/rich-text-editor.module
 import { RxModule } from './rx/rx.module'
 import { effects, metaReducers, reducers } from './store'
 import { TooltipModule } from './tooltip/tooltip.module'
+import { SortingDropdownComponent } from './components/organisms/entity-view/shared/sorting/sorting-dropdown.component'
 
 @NgModule({
     declarations: [
@@ -147,6 +148,7 @@ import { TooltipModule } from './tooltip/tooltip.module'
         EntityParentSelectorComponent,
         TaskParentTaskChangedEventComponent,
         ParentListChangedEventComponent,
+        SortingDropdownComponent,
     ],
     imports: [
         BrowserModule,
