@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { BehaviorSubject } from 'rxjs'
-import { storeMock } from 'src/app/utils/unit-test.mocks'
+import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityViewComponent, EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 
 import { TaskViewComponent } from './task-view.component'
@@ -23,6 +23,7 @@ describe('TaskViewComponent', () => {
             providers: [
                 { provide: ENTITY_VIEW_DATA, useValue: entityViewDataMock },
                 storeMock,
+                actionsMock,
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 { provide: EntityViewComponent, useValue: { progress$: { next() {} } } },
             ],
