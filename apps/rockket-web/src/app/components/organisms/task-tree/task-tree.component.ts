@@ -5,8 +5,8 @@ import { Store } from '@ngrx/store'
 import {
     EntityType,
     TaskFlattend,
-    TaskRecursive,
     TaskPriority,
+    TaskRecursive,
     TaskStatus,
     TaskStatusGroup,
     taskStatusGroupMap,
@@ -19,7 +19,7 @@ import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
-import { applyMapperRecursive, flattenTaskTree, sortTasks } from 'src/app/store/entities/utils'
+import { flattenTaskTree } from 'src/app/store/entities/utils'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
 
 export interface TaskTreeNode {
@@ -81,18 +81,7 @@ export class TaskTreeComponent {
         map(tasks => {
             if (!tasks) return []
 
-            const sorted = applyMapperRecursive(tasks, tasks_ => {
-                const nonClosedTasks = tasks_.filter(
-                    task => taskStatusGroupMap[task.status] != TaskStatusGroup.Closed,
-                )
-                const closedTasks = tasks_
-                    .filter(task => taskStatusGroupMap[task.status] == TaskStatusGroup.Closed)
-                    .sort(sortTasks.byStatusUpdatedAtDesc)
-
-                return [...nonClosedTasks, ...closedTasks]
-            })
-
-            const treeNodes = flattenTaskTree(sorted).map(task => {
+            const treeNodes = flattenTaskTree(tasks).map(task => {
                 const treeNode = convertToTaskTreeNode(task, this.expandAll)
 
                 treeNode.isExpanded =

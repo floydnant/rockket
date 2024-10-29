@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { BehaviorSubject } from 'rxjs'
-import { storeMock } from 'src/app/utils/unit-test.mocks'
+import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
 import { EntityViewData, ENTITY_VIEW_DATA } from '../../entity-view.component'
 
 import { TasklistViewComponent } from './tasklist-view.component'
@@ -20,7 +20,7 @@ describe('TasklistViewComponent', () => {
         }
         await TestBed.configureTestingModule({
             declarations: [TasklistViewComponent],
-            providers: [{ provide: ENTITY_VIEW_DATA, useValue: entityViewDataMock }, storeMock],
+            providers: [{ provide: ENTITY_VIEW_DATA, useValue: entityViewDataMock }, storeMock, actionsMock],
             imports: [AsyncPipe, RxModule],
         }).compileComponents()
 

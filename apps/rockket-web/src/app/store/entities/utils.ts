@@ -218,16 +218,18 @@ export const getTaskById = (taskTree: TaskRecursive[], id: string) => {
     return res.subTree[res.index]
 }
 
-export type EntitySorter = (a: { createdAt: Date }, b: { createdAt: Date }) => number
-export type TaskSorter = (a: Task, b: Task) => number
+export type EntitySortingCompareFn = (a: { createdAt: Date }, b: { createdAt: Date }) => number
+export type TaskSortingCompareFn = (a: Task, b: Task) => number
 
-export const sortEntities = {
+export type TaskSorter = (tasks: TaskRecursive[]) => TaskRecursive[]
+
+export const entitySortingCompareFns = {
     byCreatedAtAsc: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
     byCreatedAtDesc: (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
-} satisfies Record<string, EntitySorter>
+} satisfies Record<string, EntitySortingCompareFn>
 
-export const sortTasks = {
-    ...sortEntities,
+export const taskSortingCompareFns = {
+    ...entitySortingCompareFns,
 
     byStatusAsc: (a, b) => statusSortingMap[a.status] - statusSortingMap[b.status],
     byStatusDesc: (a, b) => statusSortingMap[b.status] - statusSortingMap[a.status],
@@ -237,18 +239,18 @@ export const sortTasks = {
 
     byStatusUpdatedAtAsc: (a, b) => a.statusUpdatedAt.getTime() - b.statusUpdatedAt.getTime(),
     byStatusUpdatedAtDesc: (a, b) => b.statusUpdatedAt.getTime() - a.statusUpdatedAt.getTime(),
-} satisfies Record<string, TaskSorter>
+} satisfies Record<string, TaskSortingCompareFn>
 
 export const applySortersRecursive = (
     taskTree: TaskRecursive[],
-    ...sorters: TaskSorter[]
+    ...compareFns: TaskSortingCompareFn[]
 ): TaskRecursive[] => {
     const mappedTree = taskTree.map(({ children, ...task }) => ({
         ...task,
-        children: children && applySortersRecursive(children, ...sorters),
+        children: children && applySortersRecursive(children, ...compareFns),
     }))
 
-    return sorters.reduce((acc, sorter) => acc.sort(sorter), mappedTree)
+    return compareFns.reduce((acc, compareFn) => acc.sort(compareFn), mappedTree)
 }
 
 export const applyMapperRecursive = (

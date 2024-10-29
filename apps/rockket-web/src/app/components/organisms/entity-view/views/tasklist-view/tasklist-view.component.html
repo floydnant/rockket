@@ -101,6 +101,8 @@
 
         <div class="options | mb-2 mt-1.5 flex gap-2">
             <ng-container *ngTemplateOutlet="createTaskButton"></ng-container>
+
+            <app-sorting-dropdown [activeSorting$]="activeSorting$"></app-sorting-dropdown>
         </div>
 
         <app-task-tree [tasks]="tasks"></app-task-tree>

@@ -77,6 +77,7 @@ const setupComponent = (viewData: EntityViewData<TasklistDetail>, taskTreeMap: T
 }
 
 const entityFixture: EntityPreviewRecursive = {
+    createdAt: new Date(),
     id: 'the mock id',
     entityType: EntityType.TASKLIST,
     title: 'The mock name',
@@ -114,6 +115,7 @@ describe('TasklistViewComponent', () => {
 
     describe('Children', () => {
         const childEntity: EntityPreviewRecursive = {
+            createdAt: new Date(),
             title: 'A child within',
             entityType: EntityType.TASKLIST,
             children: [],

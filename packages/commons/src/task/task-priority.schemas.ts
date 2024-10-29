@@ -29,10 +29,10 @@ export const taskPriorityBackwardsCompatibleSchema = z.union([
 ]) as z.Schema<TaskPriority>
 
 export const prioritySortingMap: Record<TaskPriority, number> = {
-    [TaskPriority.URGENT]: 0,
-    [TaskPriority.HIGH]: 1,
-    [TaskPriority.MEDIUM]: 2,
-    [TaskPriority.NONE]: 3,
-    [TaskPriority.LOW]: 4,
-    [TaskPriority.OPTIONAL]: 5,
+    [TaskPriority.URGENT]: 5,
+    [TaskPriority.HIGH]: 4,
+    [TaskPriority.MEDIUM]: 3,
+    [TaskPriority.NONE]: 2,
+    [TaskPriority.LOW]: 1,
+    [TaskPriority.OPTIONAL]: 0,
 }

@@ -16,7 +16,7 @@
         [&.nested]:pl-2.5;
 
     line-height: 1.7;
-    --transition-duration: 5ms;
+    --transition-duration: 0ms;
 }
 
 .indent-line {

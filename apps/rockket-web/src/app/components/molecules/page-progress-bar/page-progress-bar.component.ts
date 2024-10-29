@@ -1,6 +1,14 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
-import { Task, TaskRecursive, TaskStatus } from '@rockket/commons'
+import {
+    entriesOf,
+    Task,
+    TaskRecursive,
+    TaskStatus,
+    TaskStatusGroup,
+    taskStatusGroupMap,
+    valuesOf,
+} from '@rockket/commons'
 import {
     BehaviorSubject,
     combineLatest,
@@ -19,7 +27,7 @@ import { taskStatusLabelMap } from '../../atoms/icons/icon/icons'
 import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
 
 export const mapByStatus = <T extends Task>(taskTree: T[]) => {
-    const statusCountMap = Object.values(TaskStatus).reduce(
+    const statusCountMap = valuesOf(TaskStatus).reduce(
         (acc, status) => ({
             ...acc,
             [status]: taskTree.filter(task => task.status == status),
@@ -31,7 +39,7 @@ export const mapByStatus = <T extends Task>(taskTree: T[]) => {
 
 export const getStatusCountMapRecursive = (taskTree: TaskRecursive[]): Record<TaskStatus, number> => {
     const map = Object.fromEntries(
-        Object.entries(mapByStatus(taskTree)).map(([status, tasks]) => [status, tasks.length]),
+        entriesOf(mapByStatus(taskTree)).map(([status, tasks]) => [status, tasks.length]),
     ) as Record<TaskStatus, number>
 
     const mapRecursive = taskTree.reduce<Record<TaskStatus, number>>((acc, task) => {
@@ -39,7 +47,7 @@ export const getStatusCountMapRecursive = (taskTree: TaskRecursive[]): Record<Ta
         const childrenStatusCountMap =
             (task.children?.length && getStatusCountMapRecursive(task.children)) || null
 
-        const statusCountEntries = Object.entries(acc).map(([status, taskCount]) => {
+        const statusCountEntries = entriesOf(acc).map(([status, taskCount]) => {
             const childrenCount = childrenStatusCountMap?.[status as TaskStatus] || 0
 
             return [status, taskCount + childrenCount]
@@ -64,7 +72,7 @@ export class PageProgressBarComponent {
         private uiStateService: UiStateService,
     ) {}
 
-    taskStatuses = Object.values(TaskStatus)
+    taskStatuses = valuesOf(TaskStatus)
     statusLabelMap = taskStatusLabelMap
     statusColorMap = taskStatusColorMap
 
@@ -85,9 +93,11 @@ export class PageProgressBarComponent {
 
             const statusTaskCountMap = getStatusCountMapRecursive(tasks)
 
-            const all = Object.values(statusTaskCountMap).reduce((acc, curr) => acc + curr)
-            const closed =
-                statusTaskCountMap[TaskStatus.NOT_PLANNED] + statusTaskCountMap[TaskStatus.COMPLETED]
+            const all = valuesOf(statusTaskCountMap).reduce((acc, curr) => acc + curr, 0)
+
+            const closed = valuesOf(TaskStatus)
+                .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Closed)
+                .reduce((acc, status) => acc + statusTaskCountMap[status], 0)
             const progress = (closed / all) * 100 || 0
 
             return {

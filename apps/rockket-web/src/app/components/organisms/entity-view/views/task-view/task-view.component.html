@@ -136,17 +136,18 @@
 
         <p class="text-tinted-400 mb-1 text-lg font-semibold">Subtasks</p>
         <app-page-progress-bar [taskTree]="task.children"></app-page-progress-bar>
-        <div class="options | mb-2 mt-1.5 flex gap-2" cdkMenuBar>
+        <div class="options | mb-2 mt-1.5 flex gap-2">
             <button
                 class="create-subtask-button | button-naked"
                 (click)="createSubtask()"
-                cdkMenuItem
                 appTooltip="Create a new subtask"
                 data-test-name="create-subtask"
             >
                 <app-icon icon="fas fa-plus"></app-icon>
                 New subtask
             </button>
+
+            <app-sorting-dropdown [activeSorting$]="activeSorting$"></app-sorting-dropdown>
         </div>
 
         <app-task-tree [tasks]="task.children"></app-task-tree>
