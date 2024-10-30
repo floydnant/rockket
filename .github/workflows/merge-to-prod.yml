@@ -1,0 +1,19 @@
+name: Merge to prod
+
+on:
+    push:
+        tags:
+          - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+    merge-to-prod:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                ref: 'prod'
+                fetch-depth: 0
+            - run: |
+                git fetch origin main
+                git merge origin/main
+                git push
