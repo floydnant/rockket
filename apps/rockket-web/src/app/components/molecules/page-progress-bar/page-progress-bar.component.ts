@@ -124,10 +124,11 @@ export class PageProgressBarComponent {
             const firstWithCount = progressBarSegments.find(({ count }) => count > 0)
             if (firstWithCount) firstWithCount.isFirst = true
 
-            progressBarSegments.reverse()
-            const lastWithCount = progressBarSegments.find(({ count }) => count > 0)
+            const lastWithCount = progressBarSegments.reduce((lastWithCountAcc, currentSegment) => {
+                if (currentSegment.count > 0) return currentSegment
+                return lastWithCountAcc
+            }, undefined as (typeof progressBarSegments)[number] | undefined)
             if (lastWithCount) lastWithCount.isLast = true
-            progressBarSegments.reverse()
 
             const untackledTasksCount = this.taskStatusValues
                 .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Open)
