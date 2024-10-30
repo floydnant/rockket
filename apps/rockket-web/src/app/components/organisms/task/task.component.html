@@ -2,7 +2,7 @@
     *rxIf="task$; let task; strategy: 'native'"
     class="task | border-tinted-700/75 bg-tinted-800 shadow-tinted-900 relative flex list-none flex-col rounded-xl border px-1 py-2 pb-1 shadow transition-colors duration-75"
     [ngClass]="{
-        completed: task.status == TaskStatus.COMPLETED,
+        completed: task.status == TaskStatus.Completed,
         isActive: inlineEditor.isFocused || isDescriptionActive$ | push,
         titleHasFocus: inlineEditor.isFocused,
         isSelected,
@@ -49,9 +49,9 @@
                     [placeholderColor]="placeholderColorMap[task.status]"
                     [highlight]="searchTerm$ | push"
                     [editorClass]="{
-                        'line-through focus:no-underline': task.status == TaskStatus.NOT_PLANNED,
-                        'decoration-primary-400': task.status == TaskStatus.NOT_PLANNED,
-                        'decoration-[2px]': task.status == TaskStatus.NOT_PLANNED,
+                        'line-through focus:no-underline': task.status == TaskStatus.Discarded,
+                        'decoration-primary-400': task.status == TaskStatus.Discarded,
+                        'decoration-[2px]': task.status == TaskStatus.Discarded,
                         'pr-12': true,
                     }"
                     [enableDebouncedUpdates]="false"
@@ -123,8 +123,8 @@
 
                 <ng-container
                     *ngIf="
-                        task.status != TaskStatus.COMPLETED &&
-                        task.status != TaskStatus.NOT_PLANNED &&
+                        task.status != TaskStatus.Completed &&
+                        task.status != TaskStatus.Discarded &&
                         task.priority != TaskPriority.NONE
                     "
                 >

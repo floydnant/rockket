@@ -48,7 +48,7 @@
         (update)="titleUpdates$.next($event)"
         [editorClass]="{ 
             'pr-14': true,
-            'line-through focus:no-underline decoration-primary-400 decoration-[4px]': entity.status == TaskStatus.NOT_PLANNED,
+            'line-through focus:no-underline decoration-primary-400 decoration-[4px]': entity.status == TaskStatus.Discarded,
         }"
         data-test-name="editable-entity-name"
     ></app-inline-editor>

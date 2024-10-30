@@ -147,7 +147,7 @@ describe('Task CRUD (e2e)', () => {
             await request(app)
                 .patch(`/task/${createdTask.id}`)
                 .auth(authToken, typeBearer)
-                .send({ status: TaskStatus.COMPLETED })
+                .send({ status: TaskStatus.Completed })
                 .expect(200)
 
             await request(app).delete(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(200)

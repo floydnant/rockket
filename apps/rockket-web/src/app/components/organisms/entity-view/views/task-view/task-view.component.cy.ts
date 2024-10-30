@@ -65,7 +65,7 @@ const entityFixture: EntityPreviewRecursive = {
     listId: '',
     parentTaskId: '',
     priority: TaskPriority.MEDIUM,
-    status: TaskStatus.OPEN,
+    status: TaskStatus.Open,
 }
 const taskDetailFixture: TaskDetail = {}
 

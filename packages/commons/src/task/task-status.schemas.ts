@@ -2,23 +2,23 @@ import { z } from 'zod'
 import { ValueOf, objKeysToEnumSchema } from '../utils'
 
 export const TaskStatus = {
-    IN_PROGRESS: 'IN_PROGRESS',
-    IN_REVIEW: 'IN_REVIEW',
-    OPEN: 'OPEN',
-    BACKLOG: 'BACKLOG',
-    COMPLETED: 'COMPLETED',
-    NOT_PLANNED: 'DISCARDED',
+    InProgress: 'IN_PROGRESS',
+    InReview: 'IN_REVIEW',
+    Open: 'OPEN',
+    Backlog: 'BACKLOG',
+    Completed: 'COMPLETED',
+    Discarded: 'DISCARDED',
 } as const
 export type TaskStatus = ValueOf<typeof TaskStatus>
 export const taskStatusSchema = z.nativeEnum(TaskStatus)
 
 // For backwards compatibility with the old task status values
 const oldTaskStatusToTaskStatusMap = {
-    Open: TaskStatus.OPEN,
-    In_Progress: TaskStatus.IN_PROGRESS,
-    Completed: TaskStatus.COMPLETED,
-    Backlog: TaskStatus.BACKLOG,
-    Not_Planned: TaskStatus.NOT_PLANNED,
+    Open: TaskStatus.Open,
+    In_Progress: TaskStatus.InProgress,
+    Completed: TaskStatus.Completed,
+    Backlog: TaskStatus.Backlog,
+    Not_Planned: TaskStatus.Discarded,
 } satisfies Record<string, TaskStatus>
 export const taskStatusBackwardsCompatibleSchema = z.union([
     taskStatusSchema,
@@ -28,12 +28,12 @@ export const taskStatusBackwardsCompatibleSchema = z.union([
 ]) as z.Schema<TaskStatus>
 
 export const statusSortingMap: Record<TaskStatus, number> = {
-    [TaskStatus.IN_PROGRESS]: 0,
-    [TaskStatus.IN_REVIEW]: 1,
-    [TaskStatus.OPEN]: 2,
-    [TaskStatus.BACKLOG]: 3,
-    [TaskStatus.COMPLETED]: 4,
-    [TaskStatus.NOT_PLANNED]: 5,
+    [TaskStatus.InProgress]: 0,
+    [TaskStatus.InReview]: 1,
+    [TaskStatus.Open]: 2,
+    [TaskStatus.Backlog]: 3,
+    [TaskStatus.Completed]: 4,
+    [TaskStatus.Discarded]: 5,
 }
 
 export enum TaskStatusGroup {
@@ -42,10 +42,10 @@ export enum TaskStatusGroup {
     InProgress = 'IN_PROGRESS',
 }
 export const taskStatusGroupMap = {
-    [TaskStatus.IN_PROGRESS]: TaskStatusGroup.InProgress,
-    [TaskStatus.IN_REVIEW]: TaskStatusGroup.InProgress,
-    [TaskStatus.OPEN]: TaskStatusGroup.Untackled,
-    [TaskStatus.BACKLOG]: TaskStatusGroup.Untackled,
-    [TaskStatus.COMPLETED]: TaskStatusGroup.Closed,
-    [TaskStatus.NOT_PLANNED]: TaskStatusGroup.Closed,
+    [TaskStatus.InProgress]: TaskStatusGroup.InProgress,
+    [TaskStatus.InReview]: TaskStatusGroup.InProgress,
+    [TaskStatus.Open]: TaskStatusGroup.Untackled,
+    [TaskStatus.Backlog]: TaskStatusGroup.Untackled,
+    [TaskStatus.Completed]: TaskStatusGroup.Closed,
+    [TaskStatus.Discarded]: TaskStatusGroup.Closed,
 } satisfies Record<TaskStatus, TaskStatusGroup>

@@ -26,7 +26,7 @@ describe('TaskComponent', () => {
             id: '',
             title: 'Task title here',
             priority: TaskPriority.NONE,
-            status: TaskStatus.OPEN,
+            status: TaskStatus.Open,
             description: '',
             listId: '',
             ownerId: '5',

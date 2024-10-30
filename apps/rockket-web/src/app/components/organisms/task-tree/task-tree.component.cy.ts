@@ -36,7 +36,7 @@ const newTaskRecursive = (args?: { children: TaskRecursive[] }): TaskRecursive =
     description: '',
     parentTaskId: '10',
     priority: TaskPriority.OPTIONAL,
-    status: TaskStatus.BACKLOG,
+    status: TaskStatus.Backlog,
     children: args?.children || [],
     createdAt: new Date(),
     deadline: null,

@@ -91,7 +91,7 @@ export class TaskComponent {
         ...(Object.fromEntries(
             Object.values(TaskStatus).map(status => [status, colors.tinted[400]]),
         ) as Record<TaskStatus, string>),
-        [TaskStatus.COMPLETED]: colors.submit[600],
+        [TaskStatus.Completed]: colors.submit[600],
     }
 
     searchTerm$ = new BehaviorSubject<string | null>(null)
@@ -271,7 +271,7 @@ export class TaskComponent {
         const totalItems = task.children?.length || 0
         const checkedItems =
             task.children?.filter(
-                task => task.status == TaskStatus.COMPLETED || task.status == TaskStatus.NOT_PLANNED,
+                task => task.status == TaskStatus.Completed || task.status == TaskStatus.Discarded,
             ).length || 0
         const progress = (checkedItems / totalItems) * 100 || 0
 
@@ -282,7 +282,7 @@ export class TaskComponent {
 
         const totalItems = Object.values(statusTaskCountMap).reduce((acc, curr) => acc + curr)
         const checkedItems =
-            statusTaskCountMap[TaskStatus.NOT_PLANNED] + statusTaskCountMap[TaskStatus.COMPLETED]
+            statusTaskCountMap[TaskStatus.Discarded] + statusTaskCountMap[TaskStatus.Completed]
         const progress = (checkedItems / totalItems) * 100 || 0
 
         return { totalItems, checkedItems, progress }

@@ -70,7 +70,7 @@ const taskFixture: TaskFlattend = {
     parentTaskId: '',
     path: [],
     priority: TaskPriority.NONE,
-    status: TaskStatus.OPEN,
+    status: TaskStatus.Open,
     createdAt: new Date(),
     ownerId: '5',
     statusUpdatedAt: new Date(),
@@ -116,7 +116,7 @@ describe('TaskComponent', () => {
     describe('Status', () => {
         it('emits status updates', () => {
             const onStatusChange = cy.stub().as('onStatusChange')
-            const status = taskStatusLabelMap[TaskStatus.IN_PROGRESS]
+            const status = taskStatusLabelMap[TaskStatus.InProgress]
             setupComponent(taskTreeNodeFixture, { onStatusChange }, { [status]: onStatusChange })
 
             cy.get(testName('task-status-button')).click()
@@ -146,7 +146,7 @@ describe('TaskComponent', () => {
                 ...taskTreeNodeFixture,
                 taskPreview: {
                     ...taskFixture,
-                    status: TaskStatus.COMPLETED,
+                    status: TaskStatus.Completed,
                     priority,
                 },
             })

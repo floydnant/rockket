@@ -19,7 +19,7 @@ export const colorClassToValue = (colorClass: TwColorClass) => {
 export type TwColorClass = LeavesConcatenated<typeof colorClasses, '-'>
 
 export const taskStatusColorMap = {
-    [TaskStatus.OPEN]: {
+    [TaskStatus.Open]: {
         icon: 'text-tinted-300',
         text: 'text-tinted-100',
         foregroundAsBg: 'bg-tinted-100',
@@ -28,7 +28,7 @@ export const taskStatusColorMap = {
         textOnBackground: 'text-tinted-100',
         textHoverOnBackground: 'hover:text-tinted-100',
     },
-    [TaskStatus.IN_PROGRESS]: {
+    [TaskStatus.InProgress]: {
         icon: 'text-secondary-400',
         text: 'text-secondary-400',
         foregroundAsBg: 'bg-secondary-400',
@@ -37,7 +37,7 @@ export const taskStatusColorMap = {
         textOnBackground: 'text-secondary-400',
         textHoverOnBackground: 'hover:text-secondary-300',
     },
-    [TaskStatus.IN_REVIEW]: {
+    [TaskStatus.InReview]: {
         icon: 'text-secondary-400',
         text: 'text-secondary-400',
         foregroundAsBg: 'bg-secondary-400',
@@ -46,7 +46,7 @@ export const taskStatusColorMap = {
         textOnBackground: 'text-secondary-400',
         textHoverOnBackground: 'hover:text-secondary-300',
     },
-    [TaskStatus.BACKLOG]: {
+    [TaskStatus.Backlog]: {
         icon: 'text-tinted-300',
         text: 'text-tinted-100',
         foregroundAsBg: 'bg-tinted-100',
@@ -55,7 +55,7 @@ export const taskStatusColorMap = {
         textOnBackground: 'text-tinted-100',
         textHoverOnBackground: 'hover:text-tinted-100',
     },
-    [TaskStatus.COMPLETED]: {
+    [TaskStatus.Completed]: {
         icon: 'text-submit-400',
         text: 'text-submit-400',
         foregroundAsBg: 'bg-submit-400',
@@ -64,7 +64,7 @@ export const taskStatusColorMap = {
         textOnBackground: 'text-submit-200',
         textHoverOnBackground: 'hover:text-submit-100',
     },
-    [TaskStatus.NOT_PLANNED]: {
+    [TaskStatus.Discarded]: {
         icon: 'text-primary-300',
         text: 'text-primary-300',
         foregroundAsBg: 'bg-primary-400',

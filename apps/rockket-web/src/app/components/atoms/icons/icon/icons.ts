@@ -15,29 +15,29 @@ export const entityStateIcons = {
 
 export const taskStatusIconMap: Record<TaskStatus, string> = concatMatchingKeys(
     {
-        [TaskStatus.OPEN]: 'far fa-circle',
-        [TaskStatus.IN_PROGRESS]: 'far fa-clock',
-        [TaskStatus.IN_REVIEW]: 'far fa-record-vinyl',
-        [TaskStatus.BACKLOG]: 'fal fa-bullseye',
-        [TaskStatus.COMPLETED]: 'fas fa-check-circle',
-        [TaskStatus.NOT_PLANNED]: 'fas fa-minus-circle',
+        [TaskStatus.Open]: 'far fa-circle',
+        [TaskStatus.InProgress]: 'far fa-clock',
+        [TaskStatus.InReview]: 'far fa-record-vinyl',
+        [TaskStatus.Backlog]: 'fal fa-bullseye',
+        [TaskStatus.Completed]: 'fas fa-check-circle',
+        [TaskStatus.Discarded]: 'fas fa-minus-circle',
     } satisfies Record<TaskStatus, string>,
     {
-        [TaskStatus.OPEN]: taskStatusColorMap[TaskStatus.OPEN].icon,
-        [TaskStatus.IN_PROGRESS]: taskStatusColorMap[TaskStatus.IN_PROGRESS].icon,
-        [TaskStatus.IN_REVIEW]: taskStatusColorMap[TaskStatus.IN_REVIEW].icon,
-        [TaskStatus.BACKLOG]: taskStatusColorMap[TaskStatus.BACKLOG].icon,
-        [TaskStatus.COMPLETED]: taskStatusColorMap[TaskStatus.COMPLETED].icon,
-        [TaskStatus.NOT_PLANNED]: taskStatusColorMap[TaskStatus.NOT_PLANNED].icon,
+        [TaskStatus.Open]: taskStatusColorMap[TaskStatus.Open].icon,
+        [TaskStatus.InProgress]: taskStatusColorMap[TaskStatus.InProgress].icon,
+        [TaskStatus.InReview]: taskStatusColorMap[TaskStatus.InReview].icon,
+        [TaskStatus.Backlog]: taskStatusColorMap[TaskStatus.Backlog].icon,
+        [TaskStatus.Completed]: taskStatusColorMap[TaskStatus.Completed].icon,
+        [TaskStatus.Discarded]: taskStatusColorMap[TaskStatus.Discarded].icon,
     } satisfies Record<TaskStatus, TwColorClass>,
 )
 export const taskStatusLabelMap = {
-    [TaskStatus.OPEN]: 'To Do',
-    [TaskStatus.IN_PROGRESS]: 'In Progress',
-    [TaskStatus.IN_REVIEW]: 'In Review',
-    [TaskStatus.BACKLOG]: 'Backlog',
-    [TaskStatus.COMPLETED]: 'Completed',
-    [TaskStatus.NOT_PLANNED]: 'Discarded',
+    [TaskStatus.Open]: 'To Do',
+    [TaskStatus.InProgress]: 'In Progress',
+    [TaskStatus.InReview]: 'In Review',
+    [TaskStatus.Backlog]: 'Backlog',
+    [TaskStatus.Completed]: 'Completed',
+    [TaskStatus.Discarded]: 'Discarded',
 } as const satisfies Record<TaskStatus, string>
 
 export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingKeys(
