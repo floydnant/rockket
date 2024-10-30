@@ -1,13 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { INestApplication } from '@nestjs/common'
-import { PrismaClient, Tasklist, TaskStatus } from '@prisma/client'
+import { PrismaClient, Tasklist } from '@prisma/client'
 import { UpdateTasklistZodDto } from '../../../rockket-backend/src/entities/list/list.dto'
 import { createTask, createTasklist, request, signup, typeBearer } from '../utils/requests.e2e-util'
 import { userFixtures } from '../fixtures/users.fixture'
 import { initApplication } from '../utils/init-app.e2e-util'
 import { createListDtoFixture } from '../fixtures/lists.fixture'
 import { DbHelper } from 'apps/rockket-backend/src/prisma-abstractions/db-helper'
-import { UpdateTasklistResponse } from '@rockket/commons'
+import { TaskStatus, UpdateTasklistResponse } from '@rockket/commons'
 
 const dbHelper = new DbHelper(new PrismaClient(), { cacheTableNames: true })
 
