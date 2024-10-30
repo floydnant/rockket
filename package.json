@@ -43,7 +43,7 @@
         "@rx-angular/template": "^16.1.1",
         "@tailwindcss/container-queries": "^0.1.1",
         "@tiptap/core": "^2.1.12",
-        "@tiptap/extension-link": "^2.1.12",
+        "@tiptap/extension-link": "^2.9.1",
         "@tiptap/extension-placeholder": "^2.3.0",
         "@tiptap/extension-task-item": "^2.1.12",
         "@tiptap/extension-task-list": "^2.1.12",
