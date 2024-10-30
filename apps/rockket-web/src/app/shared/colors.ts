@@ -9,12 +9,20 @@ const colorClasses = {
     bg: colorsJson,
 }
 
+export const colorClassToValue = (colorClass: TwColorClass) => {
+    const [_, color_, shade_] = colorClass.split('-')
+    const color = color_ as keyof typeof colorsJson
+    const shade = shade_ as keyof (typeof colorsJson)[typeof color]
+    return colors[color][shade]
+}
+
 export type TwColorClass = LeavesConcatenated<typeof colorClasses, '-'>
 
 export const taskStatusColorMap = {
     [TaskStatus.OPEN]: {
         icon: 'text-tinted-300',
         text: 'text-tinted-100',
+        foregroundAsBg: 'bg-tinted-100',
         background: 'bg-tinted-800',
         backgroundHover: 'hover:bg-tinted-700',
         textOnBackground: 'text-tinted-100',
@@ -23,6 +31,7 @@ export const taskStatusColorMap = {
     [TaskStatus.IN_PROGRESS]: {
         icon: 'text-secondary-400',
         text: 'text-secondary-400',
+        foregroundAsBg: 'bg-secondary-400',
         background: 'bg-secondary-800',
         backgroundHover: 'hover:bg-secondary-700',
         textOnBackground: 'text-secondary-400',
@@ -31,6 +40,7 @@ export const taskStatusColorMap = {
     [TaskStatus.IN_REVIEW]: {
         icon: 'text-secondary-400',
         text: 'text-secondary-400',
+        foregroundAsBg: 'bg-secondary-400',
         background: 'bg-secondary-800',
         backgroundHover: 'hover:bg-secondary-700',
         textOnBackground: 'text-secondary-400',
@@ -39,6 +49,7 @@ export const taskStatusColorMap = {
     [TaskStatus.BACKLOG]: {
         icon: 'text-tinted-300',
         text: 'text-tinted-100',
+        foregroundAsBg: 'bg-tinted-100',
         background: 'bg-tinted-800',
         backgroundHover: 'hover:bg-tinted-700',
         textOnBackground: 'text-tinted-100',
@@ -47,6 +58,7 @@ export const taskStatusColorMap = {
     [TaskStatus.COMPLETED]: {
         icon: 'text-submit-400',
         text: 'text-submit-400',
+        foregroundAsBg: 'bg-submit-400',
         background: 'bg-submit-800',
         backgroundHover: 'hover:bg-submit-700',
         textOnBackground: 'text-submit-200',
@@ -55,6 +67,7 @@ export const taskStatusColorMap = {
     [TaskStatus.NOT_PLANNED]: {
         icon: 'text-primary-300',
         text: 'text-primary-300',
+        foregroundAsBg: 'bg-primary-400',
         background: 'bg-primary-700',
         backgroundHover: 'hover:bg-primary-600',
         textOnBackground: 'text-primary-200',
@@ -65,6 +78,7 @@ export const taskStatusColorMap = {
     {
         icon: TwColorClass
         text: TwColorClass
+        foregroundAsBg: TwColorClass
         background: TwColorClass
         backgroundHover: `hover:${TwColorClass}`
         textOnBackground: TwColorClass

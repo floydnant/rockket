@@ -1,15 +1,12 @@
-.progress-container:is(:hover, .glow) .progress {
-    box-shadow: 0 0 10px theme('colors.submit.400');
-    transition: box-shadow 100ms, width 800ms ease-in-out;
+.progress-container:is(:hover, .glow) .progress-segment {
+    box-shadow: 0 0 10px var(--color);
+    transition: box-shadow 100ms, width 800ms ease-in-out, border-radius 800ms;
 }
-.progress {
+.progress-segment {
     transition: box-shadow 450ms, width 800ms ease-out;
 }
-.progress-container.glow span {
-    @apply text-submit-400;
-}
 .progress-container:is(:hover, .glow) .progress-number {
-    @apply text-submit-400;
+    @apply text-tinted-400;
 }
 
 table tr:not(:last-child) td {

@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, TrackByFunction } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import {
     entriesOf,
+    isTruthy,
     Task,
     TaskRecursive,
     TaskStatus,
@@ -22,7 +23,7 @@ import {
     timer,
 } from 'rxjs'
 import { UiStateService } from 'src/app/services/ui-state.service'
-import { taskStatusColorMap } from 'src/app/shared/colors'
+import { colorClassToValue, taskStatusColorMap } from 'src/app/shared/colors'
 import { taskStatusLabelMap } from '../../atoms/icons/icon/icons'
 import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
 
@@ -35,6 +36,17 @@ export const mapByStatus = <T extends Task>(taskTree: T[]) => {
         {} as Record<TaskStatus, T[]>,
     )
     return statusCountMap
+}
+
+const progressBarStatusSortingMap: Record<TaskStatus, number> = {
+    [TaskStatus.IN_PROGRESS]: 0,
+    [TaskStatus.IN_REVIEW]: 1,
+    [TaskStatus.NOT_PLANNED]: 2,
+    [TaskStatus.COMPLETED]: 3,
+
+    // Not shown in the progress bar
+    [TaskStatus.OPEN]: 0,
+    [TaskStatus.BACKLOG]: 0,
 }
 
 export const getStatusCountMapRecursive = (taskTree: TaskRecursive[]): Record<TaskStatus, number> => {
@@ -72,7 +84,7 @@ export class PageProgressBarComponent {
         private uiStateService: UiStateService,
     ) {}
 
-    taskStatuses = valuesOf(TaskStatus)
+    taskStatusValues = valuesOf(TaskStatus)
     statusLabelMap = taskStatusLabelMap
     statusColorMap = taskStatusColorMap
 
@@ -87,43 +99,86 @@ export class PageProgressBarComponent {
         this.uiStateService.updateShownAsPercentage(this.isShownAsPercentage)
     }
 
-    digest$ = this.taskTree$.pipe(
+    trackByStatus: TrackByFunction<{ status: TaskStatus }> = (_index, { status }) => status
+
+    progressSummary$ = this.taskTree$.pipe(
         map(tasks => {
             if (!tasks) return null
 
-            const statusTaskCountMap = getStatusCountMapRecursive(tasks)
+            const taskCountByStatus = getStatusCountMapRecursive(tasks)
+            const totalTaskCount = valuesOf(taskCountByStatus).reduce((acc, curr) => acc + curr, 0)
 
-            const all = valuesOf(statusTaskCountMap).reduce((acc, curr) => acc + curr, 0)
+            const progressBarSegments = entriesOf(taskCountByStatus)
+                .filter(([status]) => taskStatusGroupMap[status] != TaskStatusGroup.Open)
+                .map(([status, count]) => ({
+                    status,
+                    percent: (count / totalTaskCount) * 100 || 0,
+                    colorClass: taskStatusColorMap[status].foregroundAsBg,
+                    colorValue: colorClassToValue(taskStatusColorMap[status].foregroundAsBg),
+                    count,
+                    isFirst: false,
+                    isLast: false,
+                }))
+                .sort((a, b) => progressBarStatusSortingMap[a.status] - progressBarStatusSortingMap[b.status])
 
-            const closed = valuesOf(TaskStatus)
+            const firstWithCount = progressBarSegments.find(({ count }) => count > 0)
+            if (firstWithCount) firstWithCount.isFirst = true
+
+            const lastWithCount = progressBarSegments.reduce((lastWithCountAcc, currentSegment) => {
+                if (currentSegment.count > 0) return currentSegment
+                return lastWithCountAcc
+            }, undefined as (typeof progressBarSegments)[number] | undefined)
+            if (lastWithCount) lastWithCount.isLast = true
+
+            const untackledTasksCount = this.taskStatusValues
+                .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Open)
+                .reduce((acc, status) => acc + taskCountByStatus[status], 0)
+            const closedTasksCount = this.taskStatusValues
                 .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Closed)
-                .reduce((acc, status) => acc + statusTaskCountMap[status], 0)
-            const progress = (closed / all) * 100 || 0
+                .reduce((acc, status) => acc + taskCountByStatus[status], 0)
+            const progress = (closedTasksCount / totalTaskCount) * 100 || 0
 
             return {
-                all,
-                closed,
-                open: all - closed,
-                byStatus: statusTaskCountMap,
+                totalTaskCount: totalTaskCount,
+                untackledTasksCount: untackledTasksCount,
+                closedTasksCount: closedTasksCount,
+                taskCountByStatus: taskCountByStatus,
+                progressBarSegments: progressBarSegments,
 
                 progress,
                 progressRounded: Math.round(progress),
+                /** This is for tracking if the progress bar updated */
+                countsString: progressBarSegments.map(({ count }) => count).join(),
             }
         }),
         shareReplay({ bufferSize: 1, refCount: true }),
     )
 
-    isProgressBarIncreasing$ = this.digest$.pipe(
-        map(digest => digest?.progress),
-        distinctUntilChanged(),
+    isMakingProgress$ = this.progressSummary$.pipe(
+        filter(isTruthy),
+        distinctUntilChanged((prev, curr) => prev?.countsString == curr?.countsString),
         scan(
-            ({ prevProgress }, progress = 0) => ({
-                prevProgress: progress,
-                isIncreasing: progress > prevProgress,
-            }),
-            { prevProgress: 0, isIncreasing: false },
+            (
+                { prevUntackledTasksCount, prevClosedTasksCount },
+                { untackledTasksCount, closedTasksCount },
+            ) => {
+                return {
+                    prevUntackledTasksCount: untackledTasksCount,
+                    prevClosedTasksCount: closedTasksCount,
+                    isMakingProgress:
+                        // If there are less untackled tasks than before, we're making progress
+                        untackledTasksCount < prevUntackledTasksCount ||
+                        // If there are more closed tasks than before, we're making progress
+                        closedTasksCount > prevClosedTasksCount,
+                }
+            },
+            {
+                prevUntackledTasksCount: 0,
+                prevClosedTasksCount: 0,
+                isMakingProgress: false,
+            },
         ),
-        filter(({ isIncreasing }) => isIncreasing),
+        filter(({ isMakingProgress }) => isMakingProgress),
         switchMap(() => {
             return timer(1000).pipe(
                 map(() => false),
@@ -133,20 +188,23 @@ export class PageProgressBarComponent {
     )
 
     isProgressBarVisible$ = new BehaviorSubject(true)
-    progressOutputSubscription = combineLatest([
-        this.digest$.pipe(map(digest => digest?.progress)),
+    // This controls the secondary progress bar (the one that shows when
+    // the primary progress bar is scrolled out of view)
+    secondaryProgressBarSubscription = combineLatest([
+        this.progressSummary$.pipe(filter(isTruthy)),
         this.isProgressBarVisible$,
     ])
         .pipe(
-            map(([progress, isProgressBarVisible]) => {
-                if (isProgressBarVisible || !progress) return null
+            map(([{ progressBarSegments, untackledTasksCount, totalTaskCount }, isProgressBarVisible]) => {
+                if (isProgressBarVisible) return null
+                if (untackledTasksCount == totalTaskCount) return null
 
-                return progress
+                return progressBarSegments
             }),
             untilDestroyed(this),
         )
         .subscribe({
-            next: progress => this.entityView.progress$.next(progress),
-            complete: () => this.entityView.progress$.next(null),
+            next: segments => this.entityView.progressBarSegments$.next(segments),
+            complete: () => this.entityView.progressBarSegments$.next(null),
         })
 }

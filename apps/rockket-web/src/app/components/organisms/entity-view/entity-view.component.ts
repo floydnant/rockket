@@ -10,7 +10,7 @@ import {
 } from '@angular/core'
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { EntityPreviewRecursive, EntityType, Task } from '@rockket/commons'
+import { EntityPreviewRecursive, EntityType, Task, TaskStatus } from '@rockket/commons'
 import {
     BehaviorSubject,
     Observable,
@@ -22,6 +22,7 @@ import {
     shareReplay,
     tap,
 } from 'rxjs'
+import { TwColorClass } from 'src/app/shared/colors'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { useTaskForActiveItems } from 'src/app/utils/menu-item.helpers'
@@ -123,5 +124,8 @@ export class EntityViewComponent {
         )
         .subscribe()
 
-    progress$ = new BehaviorSubject<number | null>(null)
+    progressBarSegments$ = new BehaviorSubject<
+        { colorClass: TwColorClass; percent: number; status: TaskStatus }[] | null
+    >(null)
+    trackByStatus = (_index: number, { status }: { status: TaskStatus }) => status
 }
