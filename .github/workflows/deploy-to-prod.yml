@@ -14,5 +14,6 @@ jobs:
                 ref: 'demo-prod'
                 fetch-depth: 0
             - run: |
+                git fetch origin main
                 git merge main
                 git push
