@@ -11,13 +11,13 @@
         [intersectionThreshold]="0.5"
     >
         <div
-            *rxFor="let status of summary.progressBarSegments; trackBy: trackByStatus"
+            *rxFor="let segment of summary.progressBarSegments; trackBy: trackByStatus"
             class="progress-segment | h-full"
-            [ngClass]="status.colorClass"
-            [class.rounded-l]="status.isFirst"
-            [class.rounded-r]="status.isLast"
-            [style.width]="status.percent + '%'"
-            [style.--color]="status.colorValue"
+            [ngClass]="segment.colorClass"
+            [class.rounded-l]="segment.isFirst"
+            [class.rounded-r]="segment.isLast"
+            [style.width]="segment.percent + '%'"
+            [style.--color]="segment.colorValue"
         ></div>
     </div>
     <button

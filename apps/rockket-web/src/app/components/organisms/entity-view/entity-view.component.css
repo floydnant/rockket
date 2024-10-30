@@ -1,0 +1,3 @@
+.progress-segment {
+    transition: width 800ms ease-out;
+}

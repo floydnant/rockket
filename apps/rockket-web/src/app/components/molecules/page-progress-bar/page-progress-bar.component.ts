@@ -187,20 +187,23 @@ export class PageProgressBarComponent {
     )
 
     isProgressBarVisible$ = new BehaviorSubject(true)
-    progressOutputSubscription = combineLatest([
-        this.progressSummary$.pipe(map(digest => digest?.progress)),
+    // This controls the secondary progress bar (the one that shows when
+    // the primary progress bar is scrolled out of view)
+    secondaryProgressBarSubscription = combineLatest([
+        this.progressSummary$.pipe(filter(isTruthy)),
         this.isProgressBarVisible$,
     ])
         .pipe(
-            map(([progress, isProgressBarVisible]) => {
-                if (isProgressBarVisible || !progress) return null
+            map(([{ progressBarSegments, untackledTasksCount, totalTaskCount }, isProgressBarVisible]) => {
+                if (isProgressBarVisible) return null
+                if (untackledTasksCount == totalTaskCount) return null
 
-                return progress
+                return progressBarSegments
             }),
             untilDestroyed(this),
         )
         .subscribe({
-            next: progress => this.entityView.progress$.next(progress),
-            complete: () => this.entityView.progress$.next(null),
+            next: segments => this.entityView.progressBarSegments$.next(segments),
+            complete: () => this.entityView.progressBarSegments$.next(null),
         })
 }
