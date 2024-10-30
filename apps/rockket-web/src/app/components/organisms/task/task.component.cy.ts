@@ -17,7 +17,7 @@ import { TaskComponent } from './task.component'
 import { taskStatusLabelMap } from '../../atoms/icons/icon/icons'
 import { DialogModule } from '@angular/cdk/dialog'
 
-const taskMenuItems = getEntityMenuItemsMap({} as unknown as Store<AppState>)[EntityType.TASK]
+const taskMenuItems = getEntityMenuItemsMap({} as unknown as Store<AppState>)[EntityType.Task]
 
 const setupComponent = (
     data: TaskTreeNode,

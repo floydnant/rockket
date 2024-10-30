@@ -112,7 +112,7 @@ export class TasklistViewComponent {
     children$ = this.listEntity$.pipe(
         map(entity => {
             return entity?.children
-                ?.filter(child => child.entityType != EntityType.TASK)
+                ?.filter(child => child.entityType != EntityType.Task)
                 .sort(entitySortingCompareFns.byCreatedAtDesc)
         }),
         startWith(undefined),

@@ -53,7 +53,7 @@ const setupComponent = (viewData: EntityViewData<TaskDetail>, taskTreeMap: TaskT
 
 const entityFixture: EntityPreviewRecursive = {
     id: 'the mock id',
-    entityType: EntityType.TASK,
+    entityType: EntityType.Task,
     title: 'The mock title',
     children: [],
     parentId: '',

@@ -96,7 +96,7 @@ export class UiStateService {
     deleteUiEntryForEntity(id: string, entityType: EntityType) {
         this.sidebarUiState.entityExpandedMap.delete(id)
         this.mainViewUiState.entityExpandedMap.delete(id)
-        if (entityType == EntityType.TASK) this.mainViewUiState.taskTreeDescriptionExpandedMap.delete(id)
+        if (entityType == EntityType.Task) this.mainViewUiState.taskTreeDescriptionExpandedMap.delete(id)
 
         this.sidebarUiState_.updateStorage()
         this.mainViewUiState_.updateStorage()

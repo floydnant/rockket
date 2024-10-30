@@ -53,31 +53,31 @@ export const getTaskPriorityMenuItems = (store: Store<AppState>) =>
 
 export type EntityMenuItemData = EntityCrudDto
 export type TaskMenuItemData = EntityMenuItemData & {
-    entityType: EntityType.TASK
+    entityType: EntityType.Task
     status: TaskStatus
     priority: TaskPriority
 }
 
 // @TODO: how do we make this exhaustive?
 export type EntityMenuItemsMap = {
-    [EntityType.TASK]: WrappedMenuItems<TaskMenuItemData>
-    [EntityType.TASKLIST]: WrappedMenuItems<EntityMenuItemData>
+    [EntityType.Task]: WrappedMenuItems<TaskMenuItemData>
+    [EntityType.Tasklist]: WrappedMenuItems<EntityMenuItemData>
 }
 
 export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMap => ({
-    [EntityType.TASKLIST]: wrapMenuItems<EntityMenuItemData>([
+    [EntityType.Tasklist]: wrapMenuItems<EntityMenuItemData>([
         {
             title: 'New Inside',
             icon: 'plus',
             children: [
                 {
                     title: 'Tasklist',
-                    icon: EntityType.TASKLIST,
+                    icon: EntityType.Tasklist,
                     action: dto => store.dispatch(listActions.createTaskList({ parentListId: dto.id })),
                 },
                 {
                     title: 'Task',
-                    icon: EntityType.TASK,
+                    icon: EntityType.Task,
                     action: dto => store.dispatch(taskActions.create({ listId: dto.id })),
                 },
             ],
@@ -95,7 +95,7 @@ export const getEntityMenuItemsMap = (store: Store<AppState>): EntityMenuItemsMa
         },
         ...getDangerMenuItems(store),
     ]),
-    [EntityType.TASK]: wrapMenuItems<TaskMenuItemData>([
+    [EntityType.Task]: wrapMenuItems<TaskMenuItemData>([
         {
             title: 'New Subtask',
             icon: 'plus',

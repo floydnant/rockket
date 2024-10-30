@@ -35,8 +35,8 @@ export type EntityServiceInstanceMap = {
 }
 
 const entityServiceInjectorMap = {
-    [EntityType.TASKLIST]: ListService,
-    [EntityType.TASK]: TaskService,
+    [EntityType.Tasklist]: ListService,
+    [EntityType.Task]: TaskService,
 } satisfies Record<EntityType, EntityServiceConstructor>
 
 export const getEntityServiceInjector = <T extends EntityType>(
@@ -89,12 +89,12 @@ export class EntitiesService {
         newParentEntityType,
     }: EntityCrudDto<{ newParentId: string | null; newParentEntityType: EntityType | null }>) {
         const machine = {
-            [EntityType.TASK]:
-                newParentEntityType == EntityType.TASK
+            [EntityType.Task]:
+                newParentEntityType == EntityType.Task
                     ? { parentTaskId: newParentId }
                     : { listId: newParentId },
 
-            [EntityType.TASKLIST]: { parentListId: newParentId },
+            [EntityType.Tasklist]: { parentListId: newParentId },
         } satisfies Record<EntityType, object>
 
         return this.injectEntityService(entityType).update(id, machine[entityType])

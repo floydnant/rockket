@@ -15,7 +15,7 @@ describe('EntityParentSelectorComponent', () => {
             providers: [
                 storeMock,
                 { provide: DialogRef, useValue: {} as DialogRef },
-                { provide: DIALOG_DATA, useValue: { id: 'some id', entityType: EntityType.TASK } },
+                { provide: DIALOG_DATA, useValue: { id: 'some id', entityType: EntityType.Task } },
             ],
             declarations: [EntityParentSelectorComponent],
         }).compileComponents()

@@ -76,7 +76,7 @@ export class ParentListChangedEventComponent {
                             ? null
                             : {
                                   title: previousParentList?.title || 'Unknown',
-                                  icon: previousParentList ? EntityType.TASKLIST : 'unknown',
+                                  icon: previousParentList ? EntityType.Tasklist : 'unknown',
                                   route: '/home/' + previousParentList?.id,
                               },
                     newParentList:
@@ -84,7 +84,7 @@ export class ParentListChangedEventComponent {
                             ? null
                             : {
                                   title: newParentList?.title || 'Unknown',
-                                  icon: newParentList ? EntityType.TASKLIST : 'unknown',
+                                  icon: newParentList ? EntityType.Tasklist : 'unknown',
                                   route: '/home/' + newParentList?.id,
                               },
                 }

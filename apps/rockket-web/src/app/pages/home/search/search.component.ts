@@ -52,7 +52,7 @@ export class SearchComponent {
     }
 
     getEntityDescription(entitiesState: EntitiesState, entity: EntityPreview) {
-        if (entity.entityType == EntityType.TASK) return entity.description
+        if (entity.entityType == EntityType.Task) return entity.description
 
         return entitiesState.entityDetails[entity.entityType][entity.id]?.description
     }
@@ -88,11 +88,11 @@ export class SearchComponent {
                           const description =
                               // There should not be any task entities in the entity tree here,
                               // this is only to make TS happy
-                              entity.entityType == EntityType.TASK
+                              entity.entityType == EntityType.Task
                                   ? entity.description
                                   : details && 'description' in details
-                                    ? details.description
-                                    : null
+                                  ? details.description
+                                  : null
 
                           return matchEntity({ title: entity.title, description })
                       },

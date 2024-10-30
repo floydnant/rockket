@@ -13,7 +13,7 @@ export class EntitiesService {
         const entityPreviews: EntityPreview[] = [
             ...tasklists.map<EntityPreview>(({ parentListId, ...list }) => ({
                 ...list,
-                entityType: EntityType.TASKLIST,
+                entityType: EntityType.Tasklist,
                 parentId: parentListId as string | undefined,
             })),
         ]
@@ -28,8 +28,8 @@ export class EntitiesService {
         ])
 
         return {
-            [EntityType.TASKLIST]: lists,
-            [EntityType.TASK]: tasks,
+            [EntityType.Tasklist]: lists,
+            [EntityType.Task]: tasks,
         }
     }
 }

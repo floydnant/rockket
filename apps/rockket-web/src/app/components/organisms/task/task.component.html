@@ -9,7 +9,7 @@
         descriptionIsActive: isDescriptionActive$ | push
     }"
     [appContextMenu]="menuItems$ | push"
-    [appMenuData]="{ id: task.id, entityType: EntityType.TASK }"
+    [appMenuData]="{ id: task.id, entityType: EntityType.Task }"
     (isMenuOpen)="isSelected = $event"
 >
     <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
@@ -134,7 +134,7 @@
             <button
                 class="icon-btn | text-tinted-200 absolute right-0 top-[50%] translate-y-[-50%] transition-opacity"
                 [appMenu]="menuItems$ | push"
-                [appMenuData]="{ id: task.id, entityType: EntityType.TASK }"
+                [appMenuData]="{ id: task.id, entityType: EntityType.Task }"
                 (isMenuOpen)="isSelected = $event"
                 data-test-name="task-menu-button"
             >

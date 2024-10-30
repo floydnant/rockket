@@ -76,7 +76,7 @@ export class TaskComponent {
     constructor(private deviceService: DeviceService) {}
 
     EntityType = EntityType
-    PLACEHOLDER = ENTITY_TITLE_DEFAULTS[EntityType.TASK]
+    PLACEHOLDER = ENTITY_TITLE_DEFAULTS[EntityType.Task]
 
     toolbarLayout$ = this.deviceService.isTouchPrimary$.pipe(map(getDefaultEditorLayout))
 

@@ -23,7 +23,7 @@ export class ListEffects {
         return this.actions$.pipe(
             ofType(listActions.createTaskList),
             mergeMap(dto => {
-                const title = dto.title || ENTITY_TITLE_DEFAULTS[EntityType.TASKLIST]
+                const title = dto.title || ENTITY_TITLE_DEFAULTS[EntityType.Tasklist]
                 const res$ = this.listService.create({ ...dto, title })
 
                 return res$.pipe(

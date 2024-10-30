@@ -1,8 +1,8 @@
 import { EntityType } from '@rockket/commons'
 
 export const ENTITY_TITLE_DEFAULTS: Record<EntityType, string> = {
-    [EntityType.TASKLIST]: 'Untitled tasklist',
-    [EntityType.TASK]: 'Untitled task',
+    [EntityType.Tasklist]: 'Untitled tasklist',
+    [EntityType.Task]: 'Untitled task',
 }
 
 export const uiDefaults = {

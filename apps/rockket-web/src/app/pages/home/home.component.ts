@@ -165,8 +165,8 @@ export class HomeComponent {
     }
     createChild(id: string, entityType: EntityType) {
         const machine: Record<EntityType, Action> = {
-            [EntityType.TASKLIST]: listActions.createTaskList({ parentListId: id }),
-            [EntityType.TASK]: taskActions.create({ parentTaskId: id }),
+            [EntityType.Tasklist]: listActions.createTaskList({ parentListId: id }),
+            [EntityType.Task]: taskActions.create({ parentTaskId: id }),
         }
         this.store.dispatch(machine[entityType])
     }

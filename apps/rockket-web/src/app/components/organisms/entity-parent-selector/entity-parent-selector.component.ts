@@ -70,7 +70,7 @@ export class EntityParentSelectorComponent {
     listScrollPadding = 8
 
     searchQuery$ = new ReplaySubject<string>()
-    allowedParentEntityTypes$ = new BehaviorSubject<EntityType[]>([EntityType.TASKLIST, EntityType.TASK])
+    allowedParentEntityTypes$ = new BehaviorSubject<EntityType[]>([EntityType.Tasklist, EntityType.Task])
 
     onMoveSelection$ = new Subject<'up' | 'down'>()
 
@@ -83,7 +83,7 @@ export class EntityParentSelectorComponent {
                 const allowedParentEntityTypes = allowedParentEntitiesMap[this.data.entityType]
                 const forbiddenParentIds = [this.data.id]
 
-                if (this.data.entityType == EntityType.TASK) {
+                if (this.data.entityType == EntityType.Task) {
                     const task = getTaskById(taskTree, this.data.id)
                     if (task?.children)
                         visitDescendants(task.children, child => forbiddenParentIds.push(child.id))
@@ -98,7 +98,7 @@ export class EntityParentSelectorComponent {
 
                 const flatEntityTree = flattenEntityTreeWithFullPath(entitiesState.entityTree || [])
 
-                const flatTaskTree = allowedParentEntityTypes.includes(EntityType.TASK)
+                const flatTaskTree = allowedParentEntityTypes.includes(EntityType.Task)
                     ? flattenTaskTreeWithFullPath(taskTree).map(task => {
                           // Join the task's ancestor entities into the path
                           const parentEntity = flatEntityTree.find(entity => entity.id == task.listId)
@@ -151,7 +151,7 @@ export class EntityParentSelectorComponent {
                         return {
                             ...task,
                             icon: task.status,
-                            entityType: EntityType.TASK,
+                            entityType: EntityType.Task,
                             path:
                                 task.path.length < 3
                                     ? task.path.map(entity => entity.title)

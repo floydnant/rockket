@@ -24,8 +24,8 @@ import {
 const initialState: EntitiesState = {
     entityTree: null,
     entityDetails: {
-        [EntityType.TASKLIST]: {},
-        [EntityType.TASK]: {},
+        [EntityType.Tasklist]: {},
+        [EntityType.Task]: {},
     },
 
     taskTreeMap: null,
@@ -82,7 +82,7 @@ export const entitiesReducer = createReducer(
     }),
 
     on(entitiesActions.renameSuccess, (state, { id, title, entityType }): EntitiesState => {
-        if (entityType == EntityType.TASK) {
+        if (entityType == EntityType.Task) {
             const taskTreeMapCopy = structuredClone(state.taskTreeMap) as TaskTreeMap
             const task = getTaskById(Object.values(taskTreeMapCopy).flat(), id)
             if (!task) return state
@@ -113,9 +113,9 @@ export const entitiesReducer = createReducer(
         const taskTreeMapCopy = structuredClone(state.taskTreeMap) || {}
 
         const taskTree = valuesOf(taskTreeMapCopy).flat()
-        const task = entityType != EntityType.TASK ? undefined : getTaskById(taskTree, id)
+        const task = entityType != EntityType.Task ? undefined : getTaskById(taskTree, id)
 
-        const entity = entityType == EntityType.TASK ? undefined : getEntityById(entityTreeCopy, id)
+        const entity = entityType == EntityType.Task ? undefined : getEntityById(entityTreeCopy, id)
 
         // Delete the old entiity
         // @TODO: We can optimize this by checking the entityType, then calling the appropriate function and reducing the appropriate state
@@ -125,7 +125,7 @@ export const entitiesReducer = createReducer(
 
         // Recreate in the new parent
         entityTypeSwitch: {
-            if (entityType == EntityType.TASK) {
+            if (entityType == EntityType.Task) {
                 if (!task) break entityTypeSwitch
 
                 // Tasks cannot be at the root, thus never should have a null parent
@@ -134,7 +134,7 @@ export const entitiesReducer = createReducer(
                     break entityTypeSwitch
                 }
 
-                if (newParentEntityType == EntityType.TASK) {
+                if (newParentEntityType == EntityType.Task) {
                     const parentTask = getTaskById(taskTree, newParentId)
                     if (!parentTask) break entityTypeSwitch
 
@@ -152,7 +152,7 @@ export const entitiesReducer = createReducer(
                     parentTask.children.unshift(task)
 
                     break entityTypeSwitch
-                } else if (newParentEntityType == EntityType.TASKLIST) {
+                } else if (newParentEntityType == EntityType.Tasklist) {
                     task.listId = newParentId
                     task.parentTaskId = null
                     taskTreeMapCopy[task.listId] ??= []
@@ -170,7 +170,7 @@ export const entitiesReducer = createReducer(
                 assertUnreachable(newParentEntityType)
                 break entityTypeSwitch
             }
-            if (entityType == EntityType.TASKLIST) {
+            if (entityType == EntityType.Tasklist) {
                 if (!entity) break entityTypeSwitch
 
                 if (newParentId === null) {
@@ -201,7 +201,6 @@ export const entitiesReducer = createReducer(
             taskTreeMap: taskTreeMapCopy,
         }
     }),
-
     on(entitiesActions.deleteSuccess, (state, { id }): EntitiesState => {
         const entityTreeCopy = structuredClone(state.entityTree) || []
         const taskTreeMapCopy = structuredClone(state.taskTreeMap) || {}
@@ -218,7 +217,6 @@ export const entitiesReducer = createReducer(
             taskTreeMap: taskTreeMapCopy,
         }
     }),
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     on(entitiesActions.search, (state, { type, ...search }): EntitiesState => {
         return { ...state, search }
@@ -243,7 +241,7 @@ export const entitiesReducer = createReducer(
                 // @FIXME: we actually do need to build the trees here, because the entities are not guaranteed to be in the correct order
 
                 // update task tree
-                if (entityType == EntityType.TASK) {
+                if (entityType == EntityType.Task) {
                     const task = entity as Task
                     let containingArr: TaskRecursive[]
 
@@ -264,13 +262,13 @@ export const entitiesReducer = createReducer(
                 }
 
                 // Update list tree
-                if (entityType == EntityType.TASKLIST) {
+                if (entityType == EntityType.Tasklist) {
                     const list = entity as Tasklist
                     const listEntity: EntityPreviewRecursive = {
                         id: list.id,
                         title: list.title,
                         createdAt: list.createdAt,
-                        entityType: EntityType.TASKLIST,
+                        entityType: EntityType.Tasklist,
                         parentId: list.parentListId,
                         children: [],
                     }

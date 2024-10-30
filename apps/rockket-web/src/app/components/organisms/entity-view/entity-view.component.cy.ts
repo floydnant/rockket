@@ -45,7 +45,7 @@ const setupComponent = (template = defaultTemplate) => {
 
 const entityFixture: EntityPreviewRecursive = {
     id: 'the mock id',
-    entityType: EntityType.TASKLIST,
+    entityType: EntityType.Tasklist,
     title: 'The mock name',
     children: [],
     parentId: '',

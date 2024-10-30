@@ -126,18 +126,18 @@ const extraIcons = {
 // Possible icons for 'project': `fa-tv-alt`, `th-list`, `tasks-alt`, `table`, `server`, `money-check`, `line-columns`, `list-alt`
 
 export const defaultEntityIcons: Record<EntityType, string> = {
-    [EntityType.TASKLIST]: 'far fa-ballot-check text-tinted-400', // Possible other tasklist icons: `list-alt`
-    [EntityType.TASK]: extraIcons.status,
+    [EntityType.Tasklist]: 'far fa-ballot-check text-tinted-400', // Possible other tasklist icons: `list-alt`
+    [EntityType.Task]: extraIcons.status,
 }
 
 export const entityIcons = {
-    [EntityType.TASKLIST]: {
-        [EntityState.DEFAULT]: defaultEntityIcons[EntityType.TASKLIST],
+    [EntityType.Tasklist]: {
+        [EntityState.DEFAULT]: defaultEntityIcons[EntityType.Tasklist],
         ...entityStateIcons,
     } as const,
 
-    [EntityType.TASK]: {
-        [EntityState.DEFAULT]: defaultEntityIcons[EntityType.TASK],
+    [EntityType.Task]: {
+        [EntityState.DEFAULT]: defaultEntityIcons[EntityType.Task],
         ...entityStateIcons,
         ...taskStatusIconMap,
     } as const,
