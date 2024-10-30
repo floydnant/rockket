@@ -17,7 +17,7 @@ import { TaskComponent } from './task.component'
 import { taskStatusLabelMap } from '../../atoms/icons/icon/icons'
 import { DialogModule } from '@angular/cdk/dialog'
 
-const taskMenuItems = getEntityMenuItemsMap({} as unknown as Store<AppState>)[EntityType.TASK]
+const taskMenuItems = getEntityMenuItemsMap({} as unknown as Store<AppState>)[EntityType.Task]
 
 const setupComponent = (
     data: TaskTreeNode,
@@ -69,8 +69,8 @@ const taskFixture: TaskFlattend = {
     listId: '',
     parentTaskId: '',
     path: [],
-    priority: TaskPriority.NONE,
-    status: TaskStatus.OPEN,
+    priority: TaskPriority.None,
+    status: TaskStatus.Open,
     createdAt: new Date(),
     ownerId: '5',
     statusUpdatedAt: new Date(),
@@ -116,7 +116,7 @@ describe('TaskComponent', () => {
     describe('Status', () => {
         it('emits status updates', () => {
             const onStatusChange = cy.stub().as('onStatusChange')
-            const status = taskStatusLabelMap[TaskStatus.IN_PROGRESS]
+            const status = taskStatusLabelMap[TaskStatus.InProgress]
             setupComponent(taskTreeNodeFixture, { onStatusChange }, { [status]: onStatusChange })
 
             cy.get(testName('task-status-button')).click()
@@ -131,7 +131,7 @@ describe('TaskComponent', () => {
 
     describe('Priority', () => {
         it('renders the priority', () => {
-            const priority = TaskPriority.MEDIUM
+            const priority = TaskPriority.Medium
             setupComponent({
                 ...taskTreeNodeFixture,
                 taskPreview: { ...taskFixture, priority },
@@ -141,12 +141,12 @@ describe('TaskComponent', () => {
             cy.get(testName('task-priority-button')).should('exist')
         })
         it('does not render priority when task is closed', () => {
-            const priority = TaskPriority.MEDIUM
+            const priority = TaskPriority.Medium
             setupComponent({
                 ...taskTreeNodeFixture,
                 taskPreview: {
                     ...taskFixture,
-                    status: TaskStatus.COMPLETED,
+                    status: TaskStatus.Completed,
                     priority,
                 },
             })

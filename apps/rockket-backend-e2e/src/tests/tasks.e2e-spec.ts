@@ -1,20 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { INestApplication } from '@nestjs/common'
-import {
-    PrismaClient,
-    EntityComment,
-    Tasklist,
-    TaskPriority,
-    TaskStatus,
-    EntityCommentType,
-    ListPermission,
-} from '@prisma/client'
+import { PrismaClient, EntityComment, Tasklist, EntityCommentType, ListPermission } from '@prisma/client'
 import { createTask, createTasklist, request, signup, typeBearer } from '../utils/requests.e2e-util'
 import { userFixtures } from '../fixtures/users.fixture'
 import { initApplication } from '../utils/init-app.e2e-util'
 import { createListDtoFixture } from '../fixtures/lists.fixture'
 import { DbHelper } from '../../../rockket-backend/src/prisma-abstractions/db-helper'
-import { EntityEvent, TaskEventType, UpdateTaskResponse } from '@rockket/commons'
+import { EntityEvent, TaskEventType, TaskPriority, TaskStatus, UpdateTaskResponse } from '@rockket/commons'
 
 // @TODO: look into socket testing https://socket.io/docs/v4/testing/#example-with-jest
 
@@ -112,8 +104,8 @@ describe('Task CRUD (e2e)', () => {
     describe('task events', () => {
         it.each([
             [TaskEventType.TitleChanged, { key: 'title', value: 'The updated title' }],
-            [TaskEventType.TaskStatusChanged, { key: 'status', value: TaskStatus.IN_PROGRESS }],
-            [TaskEventType.TaskPriorityChanged, { key: 'priority', value: TaskPriority.HIGH }],
+            [TaskEventType.TaskStatusChanged, { key: 'status', value: TaskStatus.InProgress }],
+            [TaskEventType.TaskPriorityChanged, { key: 'priority', value: TaskPriority.High }],
             [TaskEventType.TaskDeadlineChanged, { key: 'deadline', value: new Date().toISOString() }],
         ])("can trigger a task's %s event", async (eventType, { key, value }) => {
             const createdTask = await createTask(app, authToken, {
@@ -147,7 +139,7 @@ describe('Task CRUD (e2e)', () => {
             await request(app)
                 .patch(`/task/${createdTask.id}`)
                 .auth(authToken, typeBearer)
-                .send({ status: TaskStatus.COMPLETED })
+                .send({ status: TaskStatus.Completed })
                 .expect(200)
 
             await request(app).delete(`/task/${createdTask.id}`).auth(authToken, typeBearer).expect(200)

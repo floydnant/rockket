@@ -208,7 +208,7 @@ export class TaskTreeComponent {
     }
 
     // @OUTSOURCE
-    private readonly taskMenuItems = getEntityMenuItemsMap(this.store)[EntityType.TASK]
+    private readonly taskMenuItems = getEntityMenuItemsMap(this.store)[EntityType.Task]
     menuItemsMap$ = this.flattendTaskTree$.pipe(
         map(flattendTree => {
             const menuItemEntries = flattendTree.map(({ taskPreview }) => {
@@ -227,7 +227,7 @@ export class TaskTreeComponent {
     )
 
     onTitleChange(id: string, title: string) {
-        this.store.dispatch(entitiesActions.rename({ id, title, entityType: EntityType.TASK }))
+        this.store.dispatch(entitiesActions.rename({ id, title, entityType: EntityType.Task }))
     }
     onDescriptionChange(id: string, newDescription: string) {
         this.store.dispatch(taskActions.updateDescription({ id, newDescription }))

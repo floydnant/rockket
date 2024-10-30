@@ -3,8 +3,8 @@ import { Tasklist } from './list/list.schema'
 import { Task, taskSchema } from './task/task.schema'
 
 export enum EntityType {
-    TASKLIST = 'Tasklist',
-    TASK = 'Task',
+    Tasklist = 'TASKLIST',
+    Task = 'TASK',
     // DOCUMENT = 'Document',
     // VIEW = 'View',
 }
@@ -19,13 +19,13 @@ const baseEntitySchema = z.object({
 
 export const taskEntitySchema = baseEntitySchema
     .extend({
-        entityType: z.literal(EntityType.TASK),
+        entityType: z.literal(EntityType.Task),
     })
     .merge(taskSchema)
 export type TaskEntityPreview = z.infer<typeof taskEntitySchema>
 
 export const tasklistEntitySchema = baseEntitySchema.extend({
-    entityType: z.literal(EntityType.TASKLIST),
+    entityType: z.literal(EntityType.Tasklist),
 })
 export type TasklistEntityPreview = z.infer<typeof tasklistEntitySchema>
 
@@ -41,6 +41,6 @@ export type EntityPreviewFlattend = Omit<EntityPreviewRecursive, 'children'> & {
 }
 
 export type EntitiesSearchResultDto = Record<EntityType, unknown> & {
-    [EntityType.TASK]: Task[]
-    [EntityType.TASKLIST]: Tasklist[]
+    [EntityType.Task]: Task[]
+    [EntityType.Tasklist]: Tasklist[]
 }

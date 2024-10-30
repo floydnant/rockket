@@ -193,7 +193,7 @@ export class EntitiesEffects {
                             const hasChildren = (entity.children?.length || 0) > 0
 
                             const messages = {
-                                [EntityType.TASK]: `Are you sure you want to delete '${entity.title}'${
+                                [EntityType.Task]: `Are you sure you want to delete '${entity.title}'${
                                     hasChildren ? ' and all its subtasks' : ''
                                 }?`,
                             } as Record<EntityType, string>

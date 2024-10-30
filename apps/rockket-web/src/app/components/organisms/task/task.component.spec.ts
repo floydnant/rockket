@@ -25,8 +25,8 @@ describe('TaskComponent', () => {
         component.task$ = new BehaviorSubject<TaskFlattend | null>({
             id: '',
             title: 'Task title here',
-            priority: TaskPriority.NONE,
-            status: TaskStatus.OPEN,
+            priority: TaskPriority.None,
+            status: TaskStatus.Open,
             description: '',
             listId: '',
             ownerId: '5',

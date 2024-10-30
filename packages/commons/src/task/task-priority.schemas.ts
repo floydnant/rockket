@@ -2,24 +2,24 @@ import { z } from 'zod'
 import { ValueOf, objKeysToEnumSchema } from '../utils'
 
 export const TaskPriority = {
-    URGENT: 'URGENT',
-    HIGH: 'HIGH',
-    MEDIUM: 'MEDIUM',
-    NONE: 'NONE',
-    LOW: 'LOW',
-    OPTIONAL: 'OPTIONAL',
+    Urgent: 'URGENT',
+    High: 'HIGH',
+    Medium: 'MEDIUM',
+    None: 'NONE',
+    Low: 'LOW',
+    Optional: 'OPTIONAL',
 } as const
 export type TaskPriority = ValueOf<typeof TaskPriority>
 export const taskPrioritySchema = z.nativeEnum(TaskPriority)
 
 // For backwards compatibility with the old task priority values
 const oldTaskPriorityToTaskPriorityMap = {
-    Urgent: TaskPriority.URGENT,
-    High: TaskPriority.HIGH,
-    Medium: TaskPriority.MEDIUM,
-    None: TaskPriority.NONE,
-    Low: TaskPriority.LOW,
-    Optional: TaskPriority.OPTIONAL,
+    Urgent: TaskPriority.Urgent,
+    High: TaskPriority.High,
+    Medium: TaskPriority.Medium,
+    None: TaskPriority.None,
+    Low: TaskPriority.Low,
+    Optional: TaskPriority.Optional,
 } satisfies Record<string, TaskPriority>
 export const taskPriorityBackwardsCompatibleSchema = z.union([
     taskPrioritySchema,
@@ -29,10 +29,10 @@ export const taskPriorityBackwardsCompatibleSchema = z.union([
 ]) as z.Schema<TaskPriority>
 
 export const prioritySortingMap: Record<TaskPriority, number> = {
-    [TaskPriority.URGENT]: 5,
-    [TaskPriority.HIGH]: 4,
-    [TaskPriority.MEDIUM]: 3,
-    [TaskPriority.NONE]: 2,
-    [TaskPriority.LOW]: 1,
-    [TaskPriority.OPTIONAL]: 0,
+    [TaskPriority.Urgent]: 5,
+    [TaskPriority.High]: 4,
+    [TaskPriority.Medium]: 3,
+    [TaskPriority.None]: 2,
+    [TaskPriority.Low]: 1,
+    [TaskPriority.Optional]: 0,
 }

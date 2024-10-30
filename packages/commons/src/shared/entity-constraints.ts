@@ -5,9 +5,9 @@ export const NULL_PARENT = 'NULL_PARENT'
 export type NullParent = typeof NULL_PARENT
 
 export const allowedChildEntitiesMap = {
-    [EntityType.TASK]: [EntityType.TASK],
-    [EntityType.TASKLIST]: [EntityType.TASK, EntityType.TASKLIST],
-    [NULL_PARENT]: [EntityType.TASKLIST],
+    [EntityType.Task]: [EntityType.Task],
+    [EntityType.Tasklist]: [EntityType.Task, EntityType.Tasklist],
+    [NULL_PARENT]: [EntityType.Tasklist],
 } satisfies Record<EntityType | NullParent, EntityType[]>
 
 export const allowedParentEntitiesMap: Record<EntityType, (EntityType | NullParent)[]> = (() => {

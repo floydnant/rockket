@@ -59,7 +59,7 @@ export class TaskEffects {
         return this.actions$.pipe(
             ofType(taskActions.create),
             mergeMap(({ listId, ...dto }) => {
-                const title = dto.title || ENTITY_TITLE_DEFAULTS[EntityType.TASK]
+                const title = dto.title || ENTITY_TITLE_DEFAULTS[EntityType.Task]
 
                 if (!listId && !dto.parentTaskId) throw new Error('Must specify a listId or a parentTaskId')
 
@@ -114,7 +114,7 @@ export class TaskEffects {
                             }),
                             entitiesActions.appendEvents({
                                 id,
-                                entityType: EntityType.TASK,
+                                entityType: EntityType.Task,
                                 events: response.newEvents,
                             }),
                         ])
@@ -138,7 +138,7 @@ export class TaskEffects {
                             taskActions.updateStatusSuccess({ id, status, listId: response.task.listId }),
                             entitiesActions.appendEvents({
                                 id,
-                                entityType: EntityType.TASK,
+                                entityType: EntityType.Task,
                                 events: response.newEvents,
                             }),
                         ])
@@ -162,7 +162,7 @@ export class TaskEffects {
                             taskActions.updatePrioritySuccess({ id, priority, listId: response.task.listId }),
                             entitiesActions.appendEvents({
                                 id,
-                                entityType: EntityType.TASK,
+                                entityType: EntityType.Task,
                                 events: response.newEvents,
                             }),
                         ])

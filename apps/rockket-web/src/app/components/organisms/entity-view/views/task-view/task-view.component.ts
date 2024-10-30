@@ -82,7 +82,7 @@ export class TaskViewComponent {
     description$ = this.taskEntity$.pipe(
         filter(
             (taskEntity): taskEntity is EntityPreviewRecursive & TaskEntityPreview =>
-                taskEntity?.entityType == EntityType.TASK,
+                taskEntity?.entityType == EntityType.Task,
         ),
         map(detail => detail.description || ''),
         distinctUntilChanged(),

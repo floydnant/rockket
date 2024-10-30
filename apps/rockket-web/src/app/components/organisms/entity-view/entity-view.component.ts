@@ -31,10 +31,10 @@ import { EntityMenuItemsMap } from '../../../shared/entity-menu-items'
 import { TaskViewComponent } from './views/task-view/task-view.component'
 import { TasklistViewComponent } from './views/tasklist-view/tasklist-view.component'
 
-export const entityViewComponentMap: Record<EntityType, Type<unknown>> = {
-    [EntityType.TASKLIST]: TasklistViewComponent,
-    [EntityType.TASK]: TaskViewComponent,
-} as const // @TODO: satisfies
+export const entityViewComponentMap = {
+    [EntityType.Tasklist]: TasklistViewComponent,
+    [EntityType.Task]: TaskViewComponent,
+} as const satisfies Record<EntityType, Type<unknown>>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ENTITY_VIEW_DATA = new InjectionToken<EntityViewData<any>>('app.entity.view-data')

@@ -74,7 +74,7 @@ export class EntityPageComponent {
 
                 let contextMenuItems: Breadcrumb['contextMenuItems']
 
-                if (entityType == EntityType.TASK) {
+                if (entityType == EntityType.Task) {
                     const taskEntity: TaskMenuItemData = {
                         ...(entity as EntityPreviewRecursive & Task),
                         entityType,

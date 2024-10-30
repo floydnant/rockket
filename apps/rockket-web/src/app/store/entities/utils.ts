@@ -140,7 +140,7 @@ export const mapTaskToEntityPreview: TaskToEntityPreviewMapperFn = ({
 }) => ({
     ...rest,
     id,
-    entityType: EntityType.TASK,
+    entityType: EntityType.Task,
     parentId: parentTaskId || listId,
     parentTaskId,
     listId,

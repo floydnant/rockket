@@ -11,7 +11,7 @@ export const tasklistReducerOns: ReducerOns<EntitiesState> = [
         (state, { createdList: { parentListId, ...createdList } }): EntitiesState => {
             const listEntity: EntityPreviewRecursive = {
                 ...createdList,
-                entityType: EntityType.TASKLIST,
+                entityType: EntityType.Tasklist,
                 parentId: parentListId,
                 children: [],
             }
@@ -42,18 +42,17 @@ export const tasklistReducerOns: ReducerOns<EntitiesState> = [
             }
         },
     ),
+        on(listActions.updateDescriptionSuccess, (state, { id, newDescription }): EntitiesState => {
+            const entityDetailsCopy = structuredClone(state.entityDetails) as EntitiesState['entityDetails']
 
-    on(listActions.updateDescriptionSuccess, (state, { id, newDescription }): EntitiesState => {
-        const entityDetailsCopy = structuredClone(state.entityDetails) as EntitiesState['entityDetails']
+            entityDetailsCopy[EntityType.Tasklist][id] = {
+                ...(entityDetailsCopy[EntityType.Tasklist][id] || {}),
+                description: newDescription,
+            }
 
-        entityDetailsCopy[EntityType.TASKLIST][id] = {
-            ...(entityDetailsCopy[EntityType.TASKLIST][id] || {}),
-            description: newDescription,
-        }
-
-        return {
-            ...state,
-            entityDetails: entityDetailsCopy,
-        }
-    }),
+            return {
+                ...state,
+                entityDetails: entityDetailsCopy,
+            }
+        }),
 ]

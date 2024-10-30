@@ -247,7 +247,7 @@ describe('Workspace', () => {
                     .last()
                     .within(() => {
                         cy.get(testName('menu-item'))
-                            .contains(taskPriorityLabelMap[TaskPriority.URGENT])
+                            .contains(taskPriorityLabelMap[TaskPriority.Urgent])
                             .click()
                         cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
                     })
@@ -293,7 +293,7 @@ describe('Workspace', () => {
                     .within(() => {
                         cy.intercept('PATCH', '/task/*').as('updateTask')
                         cy.get(testName('menu-item'))
-                            .contains(taskPriorityLabelMap[TaskPriority.URGENT])
+                            .contains(taskPriorityLabelMap[TaskPriority.Urgent])
                             .click()
                         cy.wait('@updateTask').its('response.statusCode').should('equal', 200)
                     })

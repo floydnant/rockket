@@ -39,14 +39,14 @@ export const mapByStatus = <T extends Task>(taskTree: T[]) => {
 }
 
 const progressBarStatusSortingMap: Record<TaskStatus, number> = {
-    [TaskStatus.IN_PROGRESS]: 0,
-    [TaskStatus.IN_REVIEW]: 1,
-    [TaskStatus.NOT_PLANNED]: 2,
-    [TaskStatus.COMPLETED]: 3,
+    [TaskStatus.InProgress]: 0,
+    [TaskStatus.InReview]: 1,
+    [TaskStatus.Discarded]: 2,
+    [TaskStatus.Completed]: 3,
 
     // Not shown in the progress bar
-    [TaskStatus.OPEN]: 0,
-    [TaskStatus.BACKLOG]: 0,
+    [TaskStatus.Open]: 0,
+    [TaskStatus.Backlog]: 0,
 }
 
 export const getStatusCountMapRecursive = (taskTree: TaskRecursive[]): Record<TaskStatus, number> => {
@@ -109,7 +109,7 @@ export class PageProgressBarComponent {
             const totalTaskCount = valuesOf(taskCountByStatus).reduce((acc, curr) => acc + curr, 0)
 
             const progressBarSegments = entriesOf(taskCountByStatus)
-                .filter(([status]) => taskStatusGroupMap[status] != TaskStatusGroup.Open)
+                .filter(([status]) => taskStatusGroupMap[status] != TaskStatusGroup.Untackled)
                 .map(([status, count]) => ({
                     status,
                     percent: (count / totalTaskCount) * 100 || 0,
@@ -131,7 +131,7 @@ export class PageProgressBarComponent {
             if (lastWithCount) lastWithCount.isLast = true
 
             const untackledTasksCount = this.taskStatusValues
-                .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Open)
+                .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Untackled)
                 .reduce((acc, status) => acc + taskCountByStatus[status], 0)
             const closedTasksCount = this.taskStatusValues
                 .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Closed)

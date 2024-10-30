@@ -286,7 +286,7 @@ export class CommandPaletteService {
                         icon: task.status,
                         breadcrumbs: truncatePath(task.path.map(entity => entity.title)),
                         id: task.id,
-                        entityType: EntityType.TASK,
+                        entityType: EntityType.Task,
                         route: '/home/' + task.id,
                         resultType: 'entity' as const,
                     })),

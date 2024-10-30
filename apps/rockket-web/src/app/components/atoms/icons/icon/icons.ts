@@ -15,49 +15,49 @@ export const entityStateIcons = {
 
 export const taskStatusIconMap: Record<TaskStatus, string> = concatMatchingKeys(
     {
-        [TaskStatus.OPEN]: 'far fa-circle',
-        [TaskStatus.IN_PROGRESS]: 'far fa-clock',
-        [TaskStatus.IN_REVIEW]: 'far fa-record-vinyl',
-        [TaskStatus.BACKLOG]: 'fal fa-bullseye',
-        [TaskStatus.COMPLETED]: 'fas fa-check-circle',
-        [TaskStatus.NOT_PLANNED]: 'fas fa-minus-circle',
+        [TaskStatus.Open]: 'far fa-circle',
+        [TaskStatus.InProgress]: 'far fa-clock',
+        [TaskStatus.InReview]: 'far fa-record-vinyl',
+        [TaskStatus.Backlog]: 'fal fa-bullseye',
+        [TaskStatus.Completed]: 'fas fa-check-circle',
+        [TaskStatus.Discarded]: 'fas fa-minus-circle',
     } satisfies Record<TaskStatus, string>,
     {
-        [TaskStatus.OPEN]: taskStatusColorMap[TaskStatus.OPEN].icon,
-        [TaskStatus.IN_PROGRESS]: taskStatusColorMap[TaskStatus.IN_PROGRESS].icon,
-        [TaskStatus.IN_REVIEW]: taskStatusColorMap[TaskStatus.IN_REVIEW].icon,
-        [TaskStatus.BACKLOG]: taskStatusColorMap[TaskStatus.BACKLOG].icon,
-        [TaskStatus.COMPLETED]: taskStatusColorMap[TaskStatus.COMPLETED].icon,
-        [TaskStatus.NOT_PLANNED]: taskStatusColorMap[TaskStatus.NOT_PLANNED].icon,
+        [TaskStatus.Open]: taskStatusColorMap[TaskStatus.Open].icon,
+        [TaskStatus.InProgress]: taskStatusColorMap[TaskStatus.InProgress].icon,
+        [TaskStatus.InReview]: taskStatusColorMap[TaskStatus.InReview].icon,
+        [TaskStatus.Backlog]: taskStatusColorMap[TaskStatus.Backlog].icon,
+        [TaskStatus.Completed]: taskStatusColorMap[TaskStatus.Completed].icon,
+        [TaskStatus.Discarded]: taskStatusColorMap[TaskStatus.Discarded].icon,
     } satisfies Record<TaskStatus, TwColorClass>,
 )
 export const taskStatusLabelMap = {
-    [TaskStatus.OPEN]: 'To Do',
-    [TaskStatus.IN_PROGRESS]: 'In Progress',
-    [TaskStatus.IN_REVIEW]: 'In Review',
-    [TaskStatus.BACKLOG]: 'Backlog',
-    [TaskStatus.COMPLETED]: 'Completed',
-    [TaskStatus.NOT_PLANNED]: 'Discarded',
+    [TaskStatus.Open]: 'To Do',
+    [TaskStatus.InProgress]: 'In Progress',
+    [TaskStatus.InReview]: 'In Review',
+    [TaskStatus.Backlog]: 'Backlog',
+    [TaskStatus.Completed]: 'Completed',
+    [TaskStatus.Discarded]: 'Discarded',
 } as const satisfies Record<TaskStatus, string>
 
 export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingKeys(
     {
-        [TaskPriority.URGENT]: 'fas fa-chevron-double-up',
-        [TaskPriority.HIGH]: 'fas fa-chevron-up',
-        [TaskPriority.MEDIUM]: 'fas fa-equals',
-        [TaskPriority.NONE]: 'fas fa-minus',
-        [TaskPriority.LOW]: 'fas fa-chevron-down',
-        [TaskPriority.OPTIONAL]: 'fas fa-chevron-double-down',
+        [TaskPriority.Urgent]: 'fas fa-chevron-double-up',
+        [TaskPriority.High]: 'fas fa-chevron-up',
+        [TaskPriority.Medium]: 'fas fa-equals',
+        [TaskPriority.None]: 'fas fa-minus',
+        [TaskPriority.Low]: 'fas fa-chevron-down',
+        [TaskPriority.Optional]: 'fas fa-chevron-double-down',
     } satisfies Record<TaskPriority, string>,
     taskPriorityColorMap,
 )
 export const taskPriorityLabelMap = {
-    [TaskPriority.URGENT]: 'Urgent',
-    [TaskPriority.HIGH]: 'High',
-    [TaskPriority.MEDIUM]: 'Medium',
-    [TaskPriority.NONE]: 'None',
-    [TaskPriority.LOW]: 'Low',
-    [TaskPriority.OPTIONAL]: 'Nice To Have',
+    [TaskPriority.Urgent]: 'Urgent',
+    [TaskPriority.High]: 'High',
+    [TaskPriority.Medium]: 'Medium',
+    [TaskPriority.None]: 'None',
+    [TaskPriority.Low]: 'Low',
+    [TaskPriority.Optional]: 'Nice To Have',
 } as const satisfies Record<TaskPriority, string>
 
 const extraIcons = {
@@ -126,18 +126,18 @@ const extraIcons = {
 // Possible icons for 'project': `fa-tv-alt`, `th-list`, `tasks-alt`, `table`, `server`, `money-check`, `line-columns`, `list-alt`
 
 export const defaultEntityIcons: Record<EntityType, string> = {
-    [EntityType.TASKLIST]: 'far fa-ballot-check text-tinted-400', // Possible other tasklist icons: `list-alt`
-    [EntityType.TASK]: extraIcons.status,
+    [EntityType.Tasklist]: 'far fa-ballot-check text-tinted-400', // Possible other tasklist icons: `list-alt`
+    [EntityType.Task]: extraIcons.status,
 }
 
 export const entityIcons = {
-    [EntityType.TASKLIST]: {
-        [EntityState.DEFAULT]: defaultEntityIcons[EntityType.TASKLIST],
+    [EntityType.Tasklist]: {
+        [EntityState.DEFAULT]: defaultEntityIcons[EntityType.Tasklist],
         ...entityStateIcons,
     } as const,
 
-    [EntityType.TASK]: {
-        [EntityState.DEFAULT]: defaultEntityIcons[EntityType.TASK],
+    [EntityType.Task]: {
+        [EntityState.DEFAULT]: defaultEntityIcons[EntityType.Task],
         ...entityStateIcons,
         ...taskStatusIconMap,
     } as const,

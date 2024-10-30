@@ -33,7 +33,7 @@ export const entityEventToTimelineEntryMapperMap = {
         timestamp: event.timestamp,
         component: ParentListChangedEventComponent,
         viewData: event,
-        icon: EntityType.TASKLIST,
+        icon: EntityType.Tasklist,
     }),
     [EntityEventType.TaskParentTaskChanged]: event => ({
         // @TODO: should these be dynamic at all? Or might a static string be better?
