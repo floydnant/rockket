@@ -14,7 +14,6 @@ import {
     BehaviorSubject,
     combineLatest,
     distinctUntilChanged,
-    distinctUntilKeyChanged,
     filter,
     map,
     scan,
@@ -27,7 +26,6 @@ import { UiStateService } from 'src/app/services/ui-state.service'
 import { colorClassToValue, taskStatusColorMap } from 'src/app/shared/colors'
 import { taskStatusLabelMap } from '../../atoms/icons/icon/icons'
 import { EntityViewComponent } from '../../organisms/entity-view/entity-view.component'
-import { debugObserver } from 'src/app/utils/observable.helpers'
 
 export const mapByStatus = <T extends Task>(taskTree: T[]) => {
     const statusCountMap = valuesOf(TaskStatus).reduce(
@@ -103,15 +101,14 @@ export class PageProgressBarComponent {
 
     trackByStatus: TrackByFunction<{ status: TaskStatus }> = (_index, { status }) => status
 
-    digest$ = this.taskTree$.pipe(
+    progressSummary$ = this.taskTree$.pipe(
         map(tasks => {
             if (!tasks) return null
 
-            const statusTaskCountMap = getStatusCountMapRecursive(tasks)
+            const taskCountByStatus = getStatusCountMapRecursive(tasks)
+            const totalTaskCount = valuesOf(taskCountByStatus).reduce((acc, curr) => acc + curr, 0)
 
-            const totalTaskCount = valuesOf(statusTaskCountMap).reduce((acc, curr) => acc + curr, 0)
-
-            const byStatus__ = entriesOf(statusTaskCountMap)
+            const progressBarSegments = entriesOf(taskCountByStatus)
                 .filter(([status]) => taskStatusGroupMap[status] != TaskStatusGroup.Open)
                 .map(([status, count]) => ({
                     status,
@@ -124,41 +121,41 @@ export class PageProgressBarComponent {
                 }))
                 .sort((a, b) => progressBarStatusSortingMap[a.status] - progressBarStatusSortingMap[b.status])
 
-            const firstWithCount = byStatus__.find(({ count }) => count > 0)
+            const firstWithCount = progressBarSegments.find(({ count }) => count > 0)
             if (firstWithCount) firstWithCount.isFirst = true
 
-            byStatus__.reverse()
-            const lastWithCount = byStatus__.find(({ count }) => count > 0)
+            progressBarSegments.reverse()
+            const lastWithCount = progressBarSegments.find(({ count }) => count > 0)
             if (lastWithCount) lastWithCount.isLast = true
-            byStatus__.reverse()
+            progressBarSegments.reverse()
 
             const untackledTasksCount = this.taskStatusValues
                 .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Open)
-                .reduce((acc, status) => acc + statusTaskCountMap[status], 0)
+                .reduce((acc, status) => acc + taskCountByStatus[status], 0)
             const closedTasksCount = this.taskStatusValues
                 .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Closed)
-                .reduce((acc, status) => acc + statusTaskCountMap[status], 0)
+                .reduce((acc, status) => acc + taskCountByStatus[status], 0)
             const progress = (closedTasksCount / totalTaskCount) * 100 || 0
 
             return {
                 totalTaskCount: totalTaskCount,
                 untackledTasksCount: untackledTasksCount,
                 closedTasksCount: closedTasksCount,
-                byStatus: statusTaskCountMap,
-                byStatus__,
+                taskCountByStatus: taskCountByStatus,
+                progressBarSegments: progressBarSegments,
 
                 progress,
                 progressRounded: Math.round(progress),
                 /** This is for tracking if the progress bar updated */
-                countsString: byStatus__.map(({ count }) => count).join(),
+                countsString: progressBarSegments.map(({ count }) => count).join(),
             }
         }),
         shareReplay({ bufferSize: 1, refCount: true }),
     )
 
-    isMakingProgress$ = this.digest$.pipe(
-        distinctUntilChanged((prev, curr) => prev?.countsString == curr?.countsString),
+    isMakingProgress$ = this.progressSummary$.pipe(
         filter(isTruthy),
+        distinctUntilChanged((prev, curr) => prev?.countsString == curr?.countsString),
         scan(
             (
                 { prevUntackledTasksCount, prevClosedTasksCount },
@@ -180,7 +177,6 @@ export class PageProgressBarComponent {
                 isMakingProgress: false,
             },
         ),
-        debugObserver('is increasing'),
         filter(({ isMakingProgress }) => isMakingProgress),
         switchMap(() => {
             return timer(1000).pipe(
@@ -192,7 +188,7 @@ export class PageProgressBarComponent {
 
     isProgressBarVisible$ = new BehaviorSubject(true)
     progressOutputSubscription = combineLatest([
-        this.digest$.pipe(map(digest => digest?.progress)),
+        this.progressSummary$.pipe(map(digest => digest?.progress)),
         this.isProgressBarVisible$,
     ])
         .pipe(

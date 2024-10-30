@@ -1,5 +1,5 @@
 <div
-    *ngIf="digest$ | async as digest"
+    *ngIf="progressSummary$ | async as summary"
     class="progress-container | bg-tinted-900 shadow-header glass group sticky top-0 z-30 flex items-center gap-2 rounded-b-[12.5px] px-3.5 py-2"
     [class.glow]="isMakingProgress$ | async"
     [appTooltip]="progressTooltip"
@@ -11,8 +11,8 @@
         [intersectionThreshold]="0.5"
     >
         <div
-            *rxFor="let status of digest.byStatus__; trackBy: trackByStatus"
-            class="progress | h-full"
+            *rxFor="let status of summary.progressBarSegments; trackBy: trackByStatus"
+            class="progress-segment | h-full"
             [ngClass]="status.colorClass"
             [class.rounded-l]="status.isFirst"
             [class.rounded-r]="status.isLast"
@@ -22,31 +22,31 @@
     </div>
     <button
         class="progress-number | text-tinted-600 font-bold transition-colors"
-        [class.!text-submit-400]="digest.totalTaskCount && digest.closedTasksCount == digest.totalTaskCount"
+        [class.!text-submit-400]="summary.totalTaskCount && summary.closedTasksCount == summary.totalTaskCount"
         (click)="toggleShownAsPercentage()"
         [appTooltip]="isShownAsPercentage ? 'Display as fraction' : 'Display as percentage'"
         [tooltipOptions]="{ avoidPositions: ['left'] }"
     >
-        {{ isShownAsPercentage ? digest.progressRounded + ' %' : digest.closedTasksCount + ' / ' + digest.totalTaskCount }}
+        {{ isShownAsPercentage ? summary.progressRounded + ' %' : summary.closedTasksCount + ' / ' + summary.totalTaskCount }}
     </button>
 
     <ng-template #progressTooltip>
         <ng-template #noTasks>0 %<span class="text-tinted-300"> - No tasks</span></ng-template>
 
-        <ng-container *ngIf="digest.totalTaskCount; else noTasks">
+        <ng-container *ngIf="summary.totalTaskCount; else noTasks">
             <div class="flex items-end justify-between gap-4">
                 <span class="text-xl font-bold">
                     {{
                         isShownAsPercentage
-                            ? digest.progress.toFixed(2).replace('.00', '') + ' %'
-                            : digest.closedTasksCount + ' / ' + digest.totalTaskCount
+                            ? summary.progress.toFixed(2).replace('.00', '') + ' %'
+                            : summary.closedTasksCount + ' / ' + summary.totalTaskCount
                     }}
                 </span>
                 <span class="text-tinted-400">
                     {{
                         !isShownAsPercentage
-                            ? digest.progress.toFixed(2).replace('.00', '') + ' %'
-                            : digest.closedTasksCount + ' / ' + digest.totalTaskCount
+                            ? summary.progress.toFixed(2).replace('.00', '') + ' %'
+                            : summary.closedTasksCount + ' / ' + summary.totalTaskCount
                     }}
                     Closed
                 </span>
@@ -56,10 +56,10 @@
                 <tr *ngFor="let status of taskStatusValues">
                     <td class="pr-1"><app-icon [icon]="status"></app-icon></td>
                     <td [class]="statusColorMap[status].text">{{ statusLabelMap[status] }}</td>
-                    <td class="pl-4 text-center">{{ digest.byStatus[status] }}</td>
+                    <td class="pl-4 text-center">{{ summary.taskCountByStatus[status] }}</td>
                     <td class="text-tinted-300 text-right">
-                        <span class="pl-4" [class.hidden]="!digest.byStatus[status]">
-                            {{ ((digest.byStatus[status] / digest.totalTaskCount) * 100).toFixed(2).replace('.00', '') }}
+                        <span class="pl-4" [class.hidden]="!summary.taskCountByStatus[status]">
+                            {{ ((summary.taskCountByStatus[status] / summary.totalTaskCount) * 100).toFixed(2).replace('.00', '') }}
                             %
                         </span>
                     </td>
@@ -67,7 +67,7 @@
                 <tr>
                     <td></td>
                     <td class="text-tinted-400">All</td>
-                    <td class="pl-4">{{ digest.totalTaskCount }}</td>
+                    <td class="pl-4">{{ summary.totalTaskCount }}</td>
                     <td></td>
                 </tr>
             </table>
