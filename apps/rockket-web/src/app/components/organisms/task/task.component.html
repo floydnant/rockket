@@ -125,7 +125,7 @@
                     *ngIf="
                         task.status != TaskStatus.Completed &&
                         task.status != TaskStatus.Discarded &&
-                        task.priority != TaskPriority.NONE
+                        task.priority != TaskPriority.None
                     "
                 >
                     <ng-container *ngTemplateOutlet="priorityButton"></ng-container>

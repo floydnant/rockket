@@ -42,22 +42,22 @@ export const taskStatusLabelMap = {
 
 export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingKeys(
     {
-        [TaskPriority.URGENT]: 'fas fa-chevron-double-up',
-        [TaskPriority.HIGH]: 'fas fa-chevron-up',
-        [TaskPriority.MEDIUM]: 'fas fa-equals',
-        [TaskPriority.NONE]: 'fas fa-minus',
-        [TaskPriority.LOW]: 'fas fa-chevron-down',
-        [TaskPriority.OPTIONAL]: 'fas fa-chevron-double-down',
+        [TaskPriority.Urgent]: 'fas fa-chevron-double-up',
+        [TaskPriority.High]: 'fas fa-chevron-up',
+        [TaskPriority.Medium]: 'fas fa-equals',
+        [TaskPriority.None]: 'fas fa-minus',
+        [TaskPriority.Low]: 'fas fa-chevron-down',
+        [TaskPriority.Optional]: 'fas fa-chevron-double-down',
     } satisfies Record<TaskPriority, string>,
     taskPriorityColorMap,
 )
 export const taskPriorityLabelMap = {
-    [TaskPriority.URGENT]: 'Urgent',
-    [TaskPriority.HIGH]: 'High',
-    [TaskPriority.MEDIUM]: 'Medium',
-    [TaskPriority.NONE]: 'None',
-    [TaskPriority.LOW]: 'Low',
-    [TaskPriority.OPTIONAL]: 'Nice To Have',
+    [TaskPriority.Urgent]: 'Urgent',
+    [TaskPriority.High]: 'High',
+    [TaskPriority.Medium]: 'Medium',
+    [TaskPriority.None]: 'None',
+    [TaskPriority.Low]: 'Low',
+    [TaskPriority.Optional]: 'Nice To Have',
 } as const satisfies Record<TaskPriority, string>
 
 const extraIcons = {

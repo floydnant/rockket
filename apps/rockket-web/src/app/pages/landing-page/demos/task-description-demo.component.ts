@@ -26,7 +26,7 @@ const demoTasks: TaskRecursive[] = [
         `,
         listId,
         status: TaskStatus.Open,
-        priority: TaskPriority.NONE,
+        priority: TaskPriority.None,
         parentTaskId: '',
         children: [],
         statusUpdatedAt: new Date(),

@@ -69,7 +69,7 @@ const taskFixture: TaskFlattend = {
     listId: '',
     parentTaskId: '',
     path: [],
-    priority: TaskPriority.NONE,
+    priority: TaskPriority.None,
     status: TaskStatus.Open,
     createdAt: new Date(),
     ownerId: '5',
@@ -131,7 +131,7 @@ describe('TaskComponent', () => {
 
     describe('Priority', () => {
         it('renders the priority', () => {
-            const priority = TaskPriority.MEDIUM
+            const priority = TaskPriority.Medium
             setupComponent({
                 ...taskTreeNodeFixture,
                 taskPreview: { ...taskFixture, priority },
@@ -141,7 +141,7 @@ describe('TaskComponent', () => {
             cy.get(testName('task-priority-button')).should('exist')
         })
         it('does not render priority when task is closed', () => {
-            const priority = TaskPriority.MEDIUM
+            const priority = TaskPriority.Medium
             setupComponent({
                 ...taskTreeNodeFixture,
                 taskPreview: {

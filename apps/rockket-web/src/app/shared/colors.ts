@@ -87,10 +87,10 @@ export const taskStatusColorMap = {
 >
 
 export const taskPriorityColorMap = {
-    [TaskPriority.LOW]: 'text-submit-400',
-    [TaskPriority.OPTIONAL]: 'text-submit-400',
-    [TaskPriority.NONE]: 'text-tinted-300',
-    [TaskPriority.MEDIUM]: 'text-secondary-400',
-    [TaskPriority.HIGH]: 'text-danger-400',
-    [TaskPriority.URGENT]: 'text-danger-400',
+    [TaskPriority.Low]: 'text-submit-400',
+    [TaskPriority.Optional]: 'text-submit-400',
+    [TaskPriority.None]: 'text-tinted-300',
+    [TaskPriority.Medium]: 'text-secondary-400',
+    [TaskPriority.High]: 'text-danger-400',
+    [TaskPriority.Urgent]: 'text-danger-400',
 } as const satisfies Record<TaskPriority, TwColorClass>
