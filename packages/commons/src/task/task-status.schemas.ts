@@ -37,15 +37,15 @@ export const statusSortingMap: Record<TaskStatus, number> = {
 }
 
 export enum TaskStatusGroup {
-    Open = 'OPEN',
+    Untackled = 'UNTACKLED',
     Closed = 'CLOSED',
     InProgress = 'IN_PROGRESS',
 }
 export const taskStatusGroupMap = {
     [TaskStatus.IN_PROGRESS]: TaskStatusGroup.InProgress,
     [TaskStatus.IN_REVIEW]: TaskStatusGroup.InProgress,
-    [TaskStatus.OPEN]: TaskStatusGroup.Open,
-    [TaskStatus.BACKLOG]: TaskStatusGroup.Open,
+    [TaskStatus.OPEN]: TaskStatusGroup.Untackled,
+    [TaskStatus.BACKLOG]: TaskStatusGroup.Untackled,
     [TaskStatus.COMPLETED]: TaskStatusGroup.Closed,
     [TaskStatus.NOT_PLANNED]: TaskStatusGroup.Closed,
 } satisfies Record<TaskStatus, TaskStatusGroup>

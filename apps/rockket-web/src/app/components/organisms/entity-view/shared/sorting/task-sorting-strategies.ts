@@ -35,7 +35,7 @@ export const sortingStrategies = {
                     .filter(task => taskStatusGroupMap[task.status] == TaskStatusGroup.InProgress)
                     .sort(taskSortingCompareFns.byPriorityDesc)
                 const openTasks = tasks
-                    .filter(task => taskStatusGroupMap[task.status] == TaskStatusGroup.Open)
+                    .filter(task => taskStatusGroupMap[task.status] == TaskStatusGroup.Untackled)
                     .sort(taskSortingCompareFns.byPriorityDesc)
                 const closedTasks = tasks
                     .filter(task => taskStatusGroupMap[task.status] == TaskStatusGroup.Closed)

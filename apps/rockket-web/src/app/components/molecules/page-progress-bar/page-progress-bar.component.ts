@@ -109,7 +109,7 @@ export class PageProgressBarComponent {
             const totalTaskCount = valuesOf(taskCountByStatus).reduce((acc, curr) => acc + curr, 0)
 
             const progressBarSegments = entriesOf(taskCountByStatus)
-                .filter(([status]) => taskStatusGroupMap[status] != TaskStatusGroup.Open)
+                .filter(([status]) => taskStatusGroupMap[status] != TaskStatusGroup.Untackled)
                 .map(([status, count]) => ({
                     status,
                     percent: (count / totalTaskCount) * 100 || 0,
@@ -131,7 +131,7 @@ export class PageProgressBarComponent {
             if (lastWithCount) lastWithCount.isLast = true
 
             const untackledTasksCount = this.taskStatusValues
-                .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Open)
+                .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Untackled)
                 .reduce((acc, status) => acc + taskCountByStatus[status], 0)
             const closedTasksCount = this.taskStatusValues
                 .filter(status => taskStatusGroupMap[status] == TaskStatusGroup.Closed)
