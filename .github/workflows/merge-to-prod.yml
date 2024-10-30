@@ -14,6 +14,6 @@ jobs:
                 ref: 'demo-prod'
                 fetch-depth: 0
             - run: |
-                git fetch origin main
-                git merge origin/main
+                git fetch origin ci/automate-prod-deployments
+                git merge origin/ci/automate-prod-deployments
                 git push
