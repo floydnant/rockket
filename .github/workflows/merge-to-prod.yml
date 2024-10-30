@@ -2,8 +2,8 @@ name: Merge to prod
 
 on:
     push:
-        # tags:
-        #   - 'v[0-9]+.[0-9]+.[0-9]+'
+        tags:
+          - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
     merge-to-prod:
@@ -11,9 +11,9 @@ jobs:
         steps:
             - uses: actions/checkout@v3
               with:
-                ref: 'demo-prod'
+                ref: 'prod'
                 fetch-depth: 0
             - run: |
-                git fetch origin ci/automate-prod-deployments
-                git merge origin/ci/automate-prod-deployments
+                git fetch origin main
+                git merge origin/main
                 git push
