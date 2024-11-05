@@ -1,0 +1,67 @@
+<div *rxLet="viewSettings$; let viewSettings" class="flex gap-2">
+    <!-- <button
+        class="icon-btn"
+        [class.view-settings--isActive]="viewSettings.sorting != defaultSortingStrategyKey"
+        [appMenu]="sortOptionsMenuItems"
+        [appMenuData]="viewSettings"
+        data-test-name="sort-tasks-button"
+    >
+        <app-icon icon="sort"></app-icon>
+    </button>
+
+    <button
+        class="icon-btn"
+        [class.view-settings--isActive]="viewSettings.grouping != defaultGroupingStrategyKey"
+        [appMenu]="groupingOptionsMenuItems"
+        [appMenuData]="viewSettings"
+        data-test-name="group-tasks-button"
+    >
+        <app-icon icon="group"></app-icon>
+    </button> -->
+
+    <!--  -->
+    <!--  -->
+    <!--  -->
+
+    <button
+        class="button-naked"
+        [appMenu]="sortOptionsMenuItems"
+        [appMenuData]="viewSettings"
+        data-test-name="sort-tasks-button"
+    >
+        <app-icon
+            [icon]="
+                viewSettings.sorting != defaultSortingStrategyKey
+                    ? getSortingStrategy(viewSettings.sorting).icon
+                    : 'sort'
+            "
+        ></app-icon>
+        Sort{{
+            viewSettings.sorting != defaultSortingStrategyKey
+                ? 'ing by ' + getSortingStrategy(viewSettings.sorting).shortLabel
+                : ''
+        }}
+        <app-icon icon="caretDown"></app-icon>
+    </button>
+
+    <button
+        class="button-naked"
+        [appMenu]="groupingOptionsMenuItems"
+        [appMenuData]="viewSettings"
+        data-test-name="group-tasks-button"
+    >
+        <app-icon
+            [icon]="
+                viewSettings.grouping != defaultGroupingStrategyKey
+                    ? getGroupingStrategy(viewSettings.grouping).icon
+                    : 'group'
+            "
+        ></app-icon>
+        Group{{
+            viewSettings.grouping != defaultGroupingStrategyKey
+                ? 'ing by ' + getGroupingStrategy(viewSettings.grouping).label
+                : ' By'
+        }}
+        <app-icon icon="caretDown"></app-icon>
+    </button>
+</div>

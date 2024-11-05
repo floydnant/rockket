@@ -28,7 +28,7 @@ import {
 } from 'rxjs'
 import { taskPriorityLabelMap, taskStatusLabelMap } from 'src/app/components/atoms/icons/icon/icons'
 import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
-import { UiStateService } from 'src/app/services/ui-state.service'
+import { UiStateService, ViewSettings } from 'src/app/services/ui-state.service'
 import { taskPriorityColorMap, taskStatusColorMap } from 'src/app/shared/colors'
 import { getTaskPriorityMenuItems, getTaskStatusMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
@@ -37,7 +37,7 @@ import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { getTaskById } from 'src/app/store/entities/utils'
 import { isNotNullish, moveToMacroQueue } from 'src/app/utils'
 import { ENTITY_VIEW_DATA, EntityViewData } from '../../entity-view.component'
-import { TaskSortingStrategyKey, sortingStrategies } from '../../shared/sorting/task-sorting-strategies'
+import { TaskSortingStrategyKey, sortingStrategies } from '../../shared/view-settings/task-sorting-strategies'
 
 @UntilDestroy()
 @Component({
@@ -136,21 +136,19 @@ export class TaskViewComponent {
         shareReplay({ bufferSize: 1, refCount: true }),
     )
 
-    activeSorting$ = new BehaviorSubject<TaskSortingStrategyKey>(
-        this.uiState.mainViewUiState.taskSortingStrategy,
-    )
-    _onActiveSortingChanged = this.activeSorting$
+    viewSettings$ = new BehaviorSubject<ViewSettings>(this.uiState.mainViewUiState.viewSettings)
+    _onViewSettingsChanged = this.viewSettings$
         .pipe(skip(1), untilDestroyed(this))
-        .subscribe(activeSortingKey => {
-            this.uiState.setTaskSortingStrategy(activeSortingKey)
+        .subscribe(viewSettings => {
+            this.uiState.setViewSettings(viewSettings)
         })
 
     task$ = combineLatest([
         this.taskEntity$,
         this.store.select(entitiesSelectors.taskTreeMap),
-        this.activeSorting$,
+        this.viewSettings$,
     ]).pipe(
-        map(([taskEntity, taskTreeMap, activeSortingKey]) => {
+        map(([taskEntity, taskTreeMap, { sorting: activeSortingKey }]) => {
             if (!taskEntity || !taskTreeMap) return null
 
             const task = getTaskById(Object.values(taskTreeMap).flat(), taskEntity.id)
