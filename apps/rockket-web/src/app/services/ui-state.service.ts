@@ -10,25 +10,40 @@ import {
     DEFAULT_TASK_SORTING_STRATEGY_KEY,
     TaskSortingStrategyKey,
     taskSortingStrategyKeySchema,
-} from '../components/organisms/entity-view/shared/sorting/task-sorting-strategies'
+} from '../components/organisms/entity-view/shared/view-settings/task-sorting-strategies'
+import {
+    DEFAULT_TASK_GROUPING_STRATEGY_KEY,
+    TaskGroupingStrategyKey,
+    taskGroupingStrategyKeySchema,
+} from '../components/organisms/entity-view/shared/view-settings/task-grouping-strategies'
 
 const sidebarUiStateSchema = z.object({
-    isDesktopSidebarOpen: z.boolean().default(true),
-    isMobileMenuOpen: z.boolean().default(true),
-    width: z.string().default(uiDefaults.sidebar.WIDTH + 'px'),
-    entityExpandedMap: z.map(z.string(), z.boolean()).default(new Map()),
-    appVersion: z.string().default(environment.PACKAGE_VERSION),
+    isDesktopSidebarOpen: z.boolean().catch(true),
+    isMobileMenuOpen: z.boolean().catch(true),
+    width: z.string().catch(uiDefaults.sidebar.WIDTH + 'px'),
+    entityExpandedMap: z.map(z.string(), z.boolean()).catch(new Map()),
+    appVersion: z.string().catch(environment.PACKAGE_VERSION),
 })
 const defaultSidebarUiState = sidebarUiStateSchema.parse({})
 
+const viewSettingsSchema = z.object({
+    sorting: taskSortingStrategyKeySchema.catch(DEFAULT_TASK_SORTING_STRATEGY_KEY),
+    grouping: taskGroupingStrategyKeySchema.catch(DEFAULT_TASK_GROUPING_STRATEGY_KEY),
+    groupRecursive: z.boolean().catch(true),
+})
+export type ViewSettings = z.infer<typeof viewSettingsSchema>
+export const defaultViewSettings = viewSettingsSchema.parse({})
+
 const mainViewUiStateSchema = z.object({
-    isProgressBarSticky: z.boolean().default(true),
-    isProgressShownAsPercentage: z.boolean().default(true),
-    entityExpandedMap: z.map(z.string(), z.boolean()).default(new Map()),
-    taskTreeDescriptionExpandedMap: z.map(z.string(), z.boolean()).default(new Map()),
-    sidePanelWidth: z.number().default(uiDefaults.mainView.SIDE_PANEL_WIDTH),
-    taskSortingStrategy: taskSortingStrategyKeySchema.catch(DEFAULT_TASK_SORTING_STRATEGY_KEY),
-    appVersion: z.string().default(environment.PACKAGE_VERSION),
+    isProgressBarSticky: z.boolean().catch(true),
+    isProgressShownAsPercentage: z.boolean().catch(true),
+    entityExpandedMap: z.map(z.string(), z.boolean()).catch(new Map()),
+    taskTreeDescriptionExpandedMap: z.map(z.string(), z.boolean()).catch(new Map()),
+    sidePanelWidth: z.number().catch(uiDefaults.mainView.SIDE_PANEL_WIDTH),
+    // @TODO: what do we call this? viewSettings? settings? preferences?
+    // It stores sorting and grouping settings for a list of tasks
+    viewSettings: viewSettingsSchema.catch(defaultViewSettings),
+    appVersion: z.string().catch(environment.PACKAGE_VERSION),
 })
 const defaultMainViewUIState = mainViewUiStateSchema.parse({})
 
@@ -56,6 +71,9 @@ export class UiStateService {
     get mainViewUiState() {
         if (!this.mainViewUiState_.value) return defaultMainViewUIState
         return this.mainViewUiState_.value
+    }
+    updateMainViewStorage() {
+        this.mainViewUiState_.updateStorage()
     }
 
     toggleSidebarEntity(id: string, isExpanded: boolean) {
@@ -88,8 +106,8 @@ export class UiStateService {
         this.mainViewUiState_.updateStorage()
     }
 
-    setTaskSortingStrategy(strategy: TaskSortingStrategyKey) {
-        this.mainViewUiState.taskSortingStrategy = strategy
+    setViewSettings(settings: ViewSettings) {
+        this.mainViewUiState.viewSettings = settings
         this.mainViewUiState_.updateStorage()
     }
 

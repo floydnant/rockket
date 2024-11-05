@@ -16,7 +16,7 @@ import { IconKey } from '../../components/atoms/icons/icon/icons'
 export interface MenuItem<TArg = any> {
     title?: string
     /** Any valid `IconKey` or FontAwesome icon class */
-    icon?: IconKey
+    icon?: IconKey | ((data: TArg) => IconKey)
     route?: string
     action?: (data: TArg) => void
     isActive?: boolean | ((data: TArg) => boolean)
@@ -109,6 +109,9 @@ export class DropDownComponent {
 
     getIsActive(isActive: MenuItem['isActive']) {
         return typeof isActive == 'function' ? isActive(this.data) : isActive
+    }
+    getIcon(icon: MenuItem['icon']) {
+        return typeof icon == 'function' ? icon(this.data) : icon
     }
 
     @ViewChild(CdkMenu) menu!: CdkMenu

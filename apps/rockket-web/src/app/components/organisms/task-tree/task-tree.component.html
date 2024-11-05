@@ -1,4 +1,12 @@
-<div class="flex w-full flex-col gap-2">
+<app-tree
+    *rxIf="nodes$; let nodes"
+    [nodes]="nodes"
+    [expandedIfUnset]="isExpandedIfUnset"
+    [expandedMap]="expandedMap"
+    [expandedMapDidChange$]="expandedMapDidChange$"
+    (nodeToggle)="updateExpandedMapStorage()"
+></app-tree>
+<!-- <div class="flex w-full flex-col gap-2">
     <div class="tree-container | flex flex-col">
         <ng-container
             *ngFor="let taskNode of treeWithUiChanges$ | async; let nodeIndex = index; trackBy: trackByFn"
@@ -40,4 +48,4 @@
             </div>
         </ng-container>
     </div>
-</div>
+</div> -->
