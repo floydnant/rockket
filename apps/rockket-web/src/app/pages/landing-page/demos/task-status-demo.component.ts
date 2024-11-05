@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { TaskRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
+import { defaultViewSettings } from 'src/app/services/ui-state.service'
 
 const listId = 'status-demo'
 
@@ -92,9 +93,17 @@ const demoTasks: TaskRecursive[] = [
 
 @Component({
     selector: 'app-task-status-demo',
-    template: `<app-task-tree [tasks]="tasks" [readonly]="true"></app-task-tree>`,
+    template: `
+        <app-task-tree
+            [tasks]="tasks"
+            [readonly]="true"
+            [viewSettings]="viewSettings"
+            parentId="nesting-demo"
+        ></app-task-tree>
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskStatusDemoComponent {
     tasks = demoTasks
+    viewSettings = defaultViewSettings
 }

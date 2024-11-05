@@ -16,8 +16,8 @@
 
         <ng-template #icon>
             <app-icon
-                *ngIf="menuItem.icon"
-                [icon]="menuItem.icon"
+                *ngIf="getIcon(menuItem.icon) as icon"
+                [icon]="icon"
                 class="inline-block scale-110"
                 [ngClass]="{
                     'text-tinted-400 [.menu-item:is(:hover,.item-active,.route-active)_&]:text-tinted-300':

@@ -136,7 +136,7 @@
 
         <p class="text-tinted-400 mb-1 text-lg font-semibold">Subtasks</p>
         <app-page-progress-bar [taskTree]="task.children"></app-page-progress-bar>
-        <div class="options | mb-2 mt-1.5 flex gap-2">
+        <div class="options | mb-2 mt-1.5 flex flex-wrap items-center gap-2">
             <button
                 class="create-subtask-button | button-naked"
                 (click)="createSubtask()"
@@ -147,9 +147,13 @@
                 New subtask
             </button>
 
-            <app-sorting-dropdown [activeSorting$]="activeSorting$"></app-sorting-dropdown>
+            <app-view-settings [viewSettings$]="viewSettings$"></app-view-settings>
         </div>
 
-        <app-task-tree [tasks]="task.children"></app-task-tree>
+        <app-task-tree
+            [tasks]="task.children"
+            [viewSettings]="viewSettings$ | push"
+            [parentId]="task.id"
+        ></app-task-tree>
     </ng-container>
 </ng-container>

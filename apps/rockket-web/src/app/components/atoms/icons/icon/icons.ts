@@ -1,4 +1,4 @@
-import { EntityType, TaskPriority, TaskStatus } from '@rockket/commons'
+import { EntityType, TaskPriority, TaskStatus, TaskStatusGroup } from '@rockket/commons'
 import { TwColorClass, taskPriorityColorMap, taskStatusColorMap } from '../../../../shared/colors'
 import { concatMatchingKeys, flattenObject } from '../../../../utils'
 
@@ -40,6 +40,12 @@ export const taskStatusLabelMap = {
     [TaskStatus.Discarded]: 'Discarded',
 } as const satisfies Record<TaskStatus, string>
 
+export const taskStatusGroupLabelMap = {
+    [TaskStatusGroup.Untackled]: 'Untackled',
+    [TaskStatusGroup.InProgress]: 'In Progress',
+    [TaskStatusGroup.Closed]: 'Closed',
+} as const satisfies Record<TaskStatusGroup, string>
+
 export const taskPriorityIconMap: Record<TaskPriority, string> = concatMatchingKeys(
     {
         [TaskPriority.Urgent]: 'fas fa-chevron-double-up',
@@ -69,6 +75,8 @@ const extraIcons = {
     export: 'far fa-file-export',
     clone: 'far fa-clone',
     close: 'fas fa-times',
+    check: 'far fa-check',
+    empty: 'as fa-square opacity-0',
     expand: 'far fa-expand-alt',
     priority: 'far fa-exclamation',
     status: 'far fa-circle',
@@ -88,6 +96,7 @@ const extraIcons = {
     parent: 'far fa-sitemap', // Possible other parent icons: `fa-project-diagram`, `fa-folder-tree`, `fa-network-wired`
     search: 'far fa-search',
     sort: 'fas fa-sort-alt',
+    group: 'far fa-layer-group',
 
     chevronRight: 'fas fa-chevron-right',
     chevronLeft: 'fas fa-chevron-left',

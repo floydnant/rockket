@@ -1,0 +1,23 @@
+<app-task
+    [data]="{
+        taskPreview: data,
+        path: node.path,
+        hasChildren: node.hasChildren,
+        isExpanded: node.expandedMap.get(data.id),
+        isDescriptionExpanded: isDescriptionExpanded$ | push,
+    }"
+    class="grow"
+    [menuItems]="taskMenuItems"
+    [isLoading]="(isLoadingMap$ | async)?.[data.id] || false"
+    (descriptionExpansionChange)="toggleDescriptionExpansion(data.id, $event)"
+    (expansionChange)="node.setExpanded($event)"
+    (titleChange)="onTitleChange(data.id, $event)"
+    (descriptionChange)="onDescriptionChange(data.id, $event)"
+    (statusChange)="onStatusChange(data.id, $event)"
+    (priorityChange)="onPriorityChange(data.id, $event)"
+></app-task>
+
+<!-- [searchTerm]="highlightQuery"
+    [menuItems]="(menuItemsMap$ | async)?.[data.taskPreview.id] || []"
+    [isLoading]="(isLoadingMap$ | async)?.[data.taskPreview.id] || false"
+    [readonly]="readonly" -->

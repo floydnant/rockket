@@ -1,0 +1,38 @@
+<div class="flex w-full flex-col gap-2">
+    <div class="tree-container | flex flex-col">
+        <ng-container
+            *rxFor="
+                let node of nodesWithControlls$;
+                let nodeIndex = index;
+                trackBy: nodeTrackByFn;
+                strategy: 'native'
+            "
+        >
+            <!-- *rxIf="treeNode.shouldRender$; strategy: 'native'" -->
+            <div
+                class="tree-node | flex h-fit"
+                [class.hidden]="!(node.shouldRender$ | push)"
+                data-test-name="tree-node"
+            >
+                <div
+                    class="indent-line"
+                    *rxFor="let line of node.lines$; strategy: 'native'; trackBy: indentLineTrackByFn"
+                    [class.isFirstInHierarchy]="line.isFirstInHierarchy"
+                    [class.isLastInHierarchy]="line.isLastInHierarchy"
+                ></div>
+
+                <div class="my-1 grow">
+                    <ng-container
+                        *ngComponentOutlet="
+                            node.component;
+                            inputs: {
+                                data: node.data,
+                                node: node,
+                            }
+                        "
+                    ></ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
