@@ -50,7 +50,7 @@ export class ViewSettingsComponent {
                     ...viewSettings,
                     groupRecursive: !viewSettings.groupRecursive,
                 }),
-            icon: viewSettings => (viewSettings.groupRecursive ? 'check' : 'empty'),
+            icon: viewSettings => (viewSettings.groupRecursive ? 'check' : 'emptyIconSlot'),
         },
     ]
 

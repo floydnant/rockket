@@ -76,7 +76,7 @@ const extraIcons = {
     clone: 'far fa-clone',
     close: 'fas fa-times',
     check: 'far fa-check',
-    empty: 'as fa-square opacity-0',
+    emptyIconSlot: 'fas fa-square opacity-0',
     expand: 'far fa-expand-alt',
     priority: 'far fa-exclamation',
     status: 'far fa-circle',
