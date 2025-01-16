@@ -258,19 +258,6 @@ export const applyMapperRecursive = <
         }
     })
 }
-// export const applyMapperRecursive = (
-//     taskTree: TaskRecursive[],
-//     mapper: (tasks: TaskRecursive[]) => TaskRecursive[],
-// ): TaskRecursive[] => {
-//     return mapper(taskTree).map(task => {
-//         if (!task.children) return task
-
-//         return {
-//             ...task,
-//             children: applyMapperRecursive(task.children, mapper),
-//         }
-//     })
-// }
 
 export const visitDescendants = <T extends { children?: T[] | null }>(
     tree: T[],
