@@ -1,8 +1,7 @@
-<!-- <div *rxLet="node.isExpanded$; let isExpanded; strategy: 'native'" class="mt-2"> -->
-<div *rxLet="node.expandedMap.get(node.id); let isExpanded; strategy: 'native'">
+<div *rxLet="node.expandedStore.listen(node.id); let isExpanded; strategy: 'native'">
     <button
         class="group-toggle | text-tinted-500 hover:text-tinted-400 inline-flex gap-1 text-sm transition-colors"
-        (click)="node.setExpanded(!isExpanded)"
+        (click)="node.expandedStore.set(node.id, !isExpanded)"
         data-test-name="group-toggle"
     >
         <app-icon
@@ -10,12 +9,10 @@
             class="mr-1 inline-block transition-transform"
             [class.rotate-90]="isExpanded"
         ></app-icon>
-        <app-icon [icon]="data.icon" class="mr-1 inline-block"></app-icon>
-        {{ data.label }}
+        <app-icon [icon]="node.data.icon" class="mr-1 inline-block"></app-icon>
+        {{ node.data.label }}
 
-        <!-- <app-elem-container
-            [elem]="getTaskCounterWidget()"
-            class="text-md text-tinted-400 ml-1"
-        ></app-elem-container> -->
+        <!-- @TODO: Add a tasks count -->
+        <!-- @TODO: Add a `Add task` button -->
     </button>
 </div>

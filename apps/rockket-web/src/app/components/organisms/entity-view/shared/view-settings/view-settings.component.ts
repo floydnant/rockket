@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { entriesOf } from '@rockket/commons'
-import { Subject } from 'rxjs'
 import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
 import { separator } from 'src/app/rich-text-editor/editor.types'
-import { ViewSettings } from 'src/app/services/ui-state.service'
+import { KvStoreProxy, ViewSettings } from 'src/app/services/ui-state.service'
 import {
     DEFAULT_TASK_GROUPING_STRATEGY_KEY,
     TaskGroupingStrategyKey,
@@ -29,7 +28,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewSettingsComponent {
-    @Input({ required: true }) viewSettings$!: Subject<ViewSettings>
+    @Input({ required: true }) viewSettingsStore!: KvStoreProxy<void, ViewSettings>
 
     getGroupingStrategy = (key: string) => groupingStrategies[key as TaskGroupingStrategyKey]
     defaultGroupingStrategyKey = DEFAULT_TASK_GROUPING_STRATEGY_KEY
@@ -38,7 +37,8 @@ export class ViewSettingsComponent {
             ([key, { label, icon }]): MenuItem<ViewSettings> => ({
                 title: label,
                 icon,
-                action: viewSettings => this.viewSettings$.next({ ...viewSettings, grouping: key }),
+                action: viewSettings =>
+                    this.viewSettingsStore.set(undefined, { ...viewSettings, grouping: key }),
                 isActive: data => data.grouping == key,
             }),
         ),
@@ -46,7 +46,10 @@ export class ViewSettingsComponent {
         {
             title: 'Group Subtasks too',
             action: viewSettings =>
-                this.viewSettings$.next({ ...viewSettings, groupRecursive: !viewSettings.groupRecursive }),
+                this.viewSettingsStore.set(undefined, {
+                    ...viewSettings,
+                    groupRecursive: !viewSettings.groupRecursive,
+                }),
             icon: viewSettings => (viewSettings.groupRecursive ? 'check' : 'empty'),
         },
     ]
@@ -57,7 +60,7 @@ export class ViewSettingsComponent {
         ([key, { label, icon }]): MenuItem<ViewSettings> => ({
             title: label,
             icon,
-            action: viewSettings => this.viewSettings$.next({ ...viewSettings, sorting: key }),
+            action: viewSettings => this.viewSettingsStore.set(undefined, { ...viewSettings, sorting: key }),
             isActive: data => data.sorting == key,
         }),
     )

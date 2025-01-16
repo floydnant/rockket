@@ -1,5 +1,3 @@
-import { NOOP_GROUP_KEY } from '../components/organisms/entity-view/shared/view-settings/task-grouping-strategies'
-
 export const filterTree = <T extends { children?: T[] | null }>(
     taskTree: T[],
     predicate: (elem: T) => boolean,

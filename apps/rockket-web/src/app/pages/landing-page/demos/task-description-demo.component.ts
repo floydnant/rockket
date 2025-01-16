@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { TaskRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
-import { defaultViewSettings, ViewSettings } from 'src/app/services/ui-state.service'
+import { TaskPriority, TaskRecursive, TaskStatus } from '@rockket/commons'
+import { createLocalKvStoreProxy, defaultViewSettings } from 'src/app/services/ui-state.service'
 
 const listId = 'description-demo'
 const demoTasks: TaskRecursive[] = [
@@ -44,7 +44,7 @@ const demoTasks: TaskRecursive[] = [
             [tasks]="tasks"
             [readonly]="true"
             [expandAll]="true"
-            [viewSettings]="viewSettings"
+            [viewSettingsStore]="viewSettingsStore"
             parentId="description-demo"
         ></app-task-tree>
     `,
@@ -52,5 +52,5 @@ const demoTasks: TaskRecursive[] = [
 })
 export class TaskDescriptionDemoComponent {
     tasks = demoTasks
-    viewSettings = defaultViewSettings
+    viewSettingsStore = createLocalKvStoreProxy(defaultViewSettings)
 }

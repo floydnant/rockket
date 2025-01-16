@@ -1,93 +1,16 @@
-import { ChangeDetectionStrategy, Component, Input, Output, Type } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, Type } from '@angular/core'
 import { UntilDestroy } from '@ngneat/until-destroy'
 import { entriesOf } from '@rockket/commons'
-import {
-    distinctUntilChanged,
-    EMPTY,
-    filter,
-    map,
-    mergeWith,
-    Observable,
-    of,
-    ReplaySubject,
-    shareReplay,
-    Subject,
-} from 'rxjs'
+import { map, mergeWith, Observable, of, ReplaySubject, shareReplay } from 'rxjs'
+import { KvStoreProxy } from 'src/app/services/ui-state.service'
 import { debugObserver } from 'src/app/utils/observable.helpers'
 import { GroupedItem } from 'src/app/utils/tree.helpers'
-
-class ExpandedMapProxy {
-    constructor(
-        private collapsedEntities: Set<string>,
-        private onWeUpdated$: Subject<string>,
-        private onTheyUpdated$: Subject<string>,
-        private cacheObservables = true,
-    ) {}
-
-    private selfNotifier$ = new Subject<string>()
-
-    get(id: string) {
-        const isExpanded = !this.collapsedEntities.has(id)
-        return isExpanded
-    }
-
-    private observables = new Map<string, Observable<boolean>>()
-    listen(id: string) {
-        const cachedObservable = this.cacheObservables && this.observables.get(id)
-        if (cachedObservable) return cachedObservable
-
-        const isExpanded$ = of(id).pipe(
-            mergeWith(this.selfNotifier$),
-            mergeWith(this.onTheyUpdated$),
-            filter(updatedId => updatedId == id),
-            map(() => this.get(id)),
-            distinctUntilChanged(),
-            shareReplay({ bufferSize: 1, refCount: true }),
-        )
-        if (this.cacheObservables) this.observables.set(id, isExpanded$)
-
-        return isExpanded$
-    }
-
-    set(id: string, isExpanded: boolean, notifySelf = false) {
-        if (this.get(id) == isExpanded) return
-
-        if (isExpanded) {
-            this.collapsedEntities.delete(id)
-        } else {
-            this.collapsedEntities.add(id)
-        }
-
-        if (notifySelf) {
-            this.selfNotifier$.next(id)
-        }
-        this.onWeUpdated$.next(id)
-    }
-}
-
-// const collapsedEntities = new Set<string>()
-// const onWeUpdated$ = new Subject<string>()
-// const onTheyUpdate$ = new Subject<string>()
-// onTheyUpdate$.subscribe(id => console.log('they updated', id))
-
-// const expandedMapProxy = new ExpandedMapProxy(collapsedEntities, onTheyUpdate$, onWeUpdated$)
-// // expandedMapProxy.get('1')
-// expandedMapProxy.set('1', false, true)
-// const yeah = expandedMapProxy.listen('1').subscribe(yes => console.log('isExpanded', yes))
-
-// expandedMapProxy.set('1', true, true)
-// expandedMapProxy.set('1', true, true)
-
-// expandedMapProxy.listen('1').subscribe(yes => console.log('isExpanded 2', yes))
-// expandedMapProxy.set('1', true, true)
-// expandedMapProxy.set('1', true, true)
-// yeah.unsubscribe()
 
 type AnyRecord = Record<string, unknown>
 
 export type UiTreeNode<T extends Record<string, unknown>> = {
     id: string
-    component: Type<{ data: T }>
+    component: Type<{ node: UiTreeNodeWithControlls<T> }>
     data: T
     path: string[]
     hasChildren: boolean
@@ -95,10 +18,9 @@ export type UiTreeNode<T extends Record<string, unknown>> = {
 }
 
 export type UiTreeNodeWithControlls<T extends Record<string, unknown>> = UiTreeNode<T> & {
-    expandedMap: { get: (id: string) => boolean }
-    expandedMap$: Observable<{ get: (id: string) => boolean }>
+    /** A store that knows if nodes are expanded or not. */
+    expandedStore: KvStoreProxy<string, boolean>
     shouldRender$: Observable<boolean>
-    setExpanded: (isExpanded: boolean) => void
 }
 
 export type IntermediateUiTreeNode = Omit<UiTreeNode<Record<string, unknown>>, 'path'> & {
@@ -111,11 +33,8 @@ export const mapGroupsToUiTreeNodes = <
     TGroupData extends { id: string },
 >(
     groupedTree: Record<TGroupKey, GroupedItem<TItem, TGroupKey>[]>,
-    itemComponent: Type<{
-        // @TODO:
-        data: Partial<TItem>
-    }>,
-    groupComponent: Type<{ data: TGroupData }>,
+    itemComponent: Type<{ node: UiTreeNodeWithControlls<TItem> }>,
+    groupComponent: Type<{ node: UiTreeNodeWithControlls<TGroupData> }>,
     // @TODO: Put a NoInfer around TGroupData here
     getGroupData: (key: TGroupKey, parentId: string | undefined) => TGroupData | null,
     parentId?: string,
@@ -171,11 +90,7 @@ const range = (number: number) => {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GenericTreeComponent {
-    @Input({ required: true }) expandedMap!: Map<string, boolean>
-    @Input() expandedMapDidChange$?: Observable<unknown>
-
-    /** Whether a node should be expanded by default if the `expandedMap` doesn't contain an entry for it. */
-    @Input() expandedIfUnset = true
+    @Input({ required: true }) expandedStore!: KvStoreProxy<string, boolean>
     @Input() enableIndentLineGradient = true
 
     nodes$ = new ReplaySubject<UiTreeNode<AnyRecord>[]>(1)
@@ -185,31 +100,13 @@ export class GenericTreeComponent {
         this.nodes$.next(nodes)
     }
 
-    @Output('nodeToggle') nodeToggleEvents$ = new Subject<{ id: string; isExpanded: boolean }>()
-
-    setIsExpanded(node: { id: string }, isExpanded: boolean) {
-        this.expandedMap.set(node.id, isExpanded)
-        this.nodeToggleEvents$.next({ id: node.id, isExpanded })
-    }
-    getIsExpanded(id: string) {
-        return this.expandedMap.get(id) ?? this.expandedIfUnset
-    }
-
-    expandedMapProxy = { get: (id: string) => this.getIsExpanded(id) }
-    expandedMapProxy$ = of(null).pipe(
-        mergeWith(this.expandedMapDidChange$ || EMPTY),
-        mergeWith(this.nodeToggleEvents$),
-        map(() => this.expandedMapProxy),
-        // @TODO: we probably don't need to share this
-        shareReplay({ bufferSize: 1, refCount: true }),
-    )
     nodesWithControlls$ = this.nodes$.pipe(
         map(nodes => {
             return nodes.map((node, nodeIndex) => {
                 const shouldRender$ = of(null).pipe(
-                    mergeWith(this.expandedMapDidChange$ || EMPTY),
-                    mergeWith(this.nodeToggleEvents$),
+                    mergeWith(this.expandedStore.listenAll()),
                     map(() => this.shouldRender(node)),
+                    shareReplay({ bufferSize: 1, refCount: true }),
                 )
 
                 const linesCount = Math.max(node.path.length + (node.indentationOffset || 0), 0)
@@ -235,9 +132,7 @@ export class GenericTreeComponent {
                     ...node,
                     shouldRender$,
                     lines$,
-                    expandedMap: this.expandedMapProxy,
-                    expandedMap$: this.expandedMapProxy$,
-                    setExpanded: isExpanded => this.setIsExpanded(node, isExpanded),
+                    expandedStore: this.expandedStore,
                 } satisfies UiTreeNodeWithControlls<AnyRecord> & {
                     lines$: Observable<{ isFirstInHierarchy: boolean; isLastInHierarchy: boolean }[]>
                 }
@@ -277,7 +172,7 @@ export class GenericTreeComponent {
     }
     shouldRender(node: UiTreeNode<AnyRecord>) {
         for (let i = 0; i < node.path.length; i++) {
-            if (!this.getIsExpanded(node.path[i])) {
+            if (!this.expandedStore.get(node.path[i])) {
                 return false
             }
         }

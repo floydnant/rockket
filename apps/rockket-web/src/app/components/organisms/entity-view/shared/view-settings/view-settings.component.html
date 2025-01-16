@@ -1,4 +1,4 @@
-<div *rxLet="viewSettings$; let viewSettings" class="flex gap-2">
+<div *rxLet="viewSettingsStore.listen(); let viewSettings" class="flex gap-2">
     <!-- <button
         class="icon-btn"
         [class.view-settings--isActive]="viewSettings.sorting != defaultSortingStrategyKey"

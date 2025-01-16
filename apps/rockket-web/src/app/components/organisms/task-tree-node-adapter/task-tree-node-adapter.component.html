@@ -1,23 +1,22 @@
 <app-task
     [data]="{
-        taskPreview: data,
+        taskPreview: node.data,
         path: node.path,
         hasChildren: node.hasChildren,
-        isExpanded: node.expandedMap.get(data.id),
+        isExpanded: node.expandedStore.listen(node.data.id) | push,
         isDescriptionExpanded: isDescriptionExpanded$ | push,
     }"
     class="grow"
     [menuItems]="taskMenuItems"
-    [isLoading]="(isLoadingMap$ | async)?.[data.id] || false"
-    (descriptionExpansionChange)="toggleDescriptionExpansion(data.id, $event)"
-    (expansionChange)="node.setExpanded($event)"
-    (titleChange)="onTitleChange(data.id, $event)"
-    (descriptionChange)="onDescriptionChange(data.id, $event)"
-    (statusChange)="onStatusChange(data.id, $event)"
-    (priorityChange)="onPriorityChange(data.id, $event)"
+    [isLoading]="(isLoadingMap$ | async)?.[node.data.id] || false"
+    (descriptionExpansionChange)="toggleDescriptionExpansion(node.data.id, $event)"
+    (expansionChange)="node.expandedStore.set(node.id, $event)"
+    (titleChange)="onTitleChange(node.data.id, $event)"
+    (descriptionChange)="onDescriptionChange(node.data.id, $event)"
+    (statusChange)="onStatusChange(node.data.id, $event)"
+    (priorityChange)="onPriorityChange(node.data.id, $event)"
 ></app-task>
 
+<!-- @TODO: Implement these -->
 <!-- [searchTerm]="highlightQuery"
-    [menuItems]="(menuItemsMap$ | async)?.[data.taskPreview.id] || []"
-    [isLoading]="(isLoadingMap$ | async)?.[data.taskPreview.id] || false"
     [readonly]="readonly" -->

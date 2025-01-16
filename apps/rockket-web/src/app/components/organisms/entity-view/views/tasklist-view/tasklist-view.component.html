@@ -86,8 +86,8 @@
 
 <app-activity *rxLet="entityWithDetail$; let entity" [entity]="entity"></app-activity>
 
-<ng-container *ngIf="tasks$ | async as tasks; else loadingTasks">
-    <ng-container *ngIf="tasks.tasks.length">
+<ng-container *rxIf="tasks$; let tasks; else loadingTasks">
+    <ng-container *rxIf="tasks.tasks.length">
         <div class="spacer | h-5"></div>
         <p class="text-tinted-400 mb-1 text-lg font-semibold">Tasks</p>
 
@@ -96,12 +96,12 @@
         <div class="options | mb-2 mt-1.5 flex flex-wrap items-center gap-2">
             <ng-container *ngTemplateOutlet="createTaskButton"></ng-container>
 
-            <app-view-settings [viewSettings$]="viewSettings$"></app-view-settings>
+            <app-view-settings [viewSettingsStore]="viewSettingsStore"></app-view-settings>
         </div>
 
         <app-task-tree
             [tasks]="tasks.tasks"
-            [viewSettings]="viewSettings$ | push"
+            [viewSettingsStore]="viewSettingsStore"
             [parentId]="tasks.parentId"
         ></app-task-tree>
     </ng-container>

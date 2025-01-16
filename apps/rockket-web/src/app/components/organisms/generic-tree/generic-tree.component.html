@@ -8,10 +8,16 @@
                 strategy: 'native'
             "
         >
-            <!-- *rxIf="treeNode.shouldRender$; strategy: 'native'" -->
+            <!--
+                @TODO: Currently we keep all nodes rendered at all times to make expands snappier.
+                - Perhaps we can find a better way to achieve snappy expands without keeping all nodes rendered.
+                - Or if nothing helps, make this configurable and show a loading spinner when expanding.
+
+                Lets let this become a bigger problem before we solve it.
+            -->
             <div
-                class="tree-node | flex h-fit"
                 [class.hidden]="!(node.shouldRender$ | push)"
+                class="tree-node | flex h-fit"
                 data-test-name="tree-node"
             >
                 <div
@@ -26,7 +32,6 @@
                         *ngComponentOutlet="
                             node.component;
                             inputs: {
-                                data: node.data,
                                 node: node,
                             }
                         "

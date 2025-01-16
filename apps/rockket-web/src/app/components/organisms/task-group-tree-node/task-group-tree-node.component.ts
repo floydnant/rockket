@@ -14,6 +14,5 @@ export type TaskGroup = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskGroupTreeNodeComponent {
-    @Input({ required: true }) data!: TaskGroup & { id: string }
     @Input({ required: true }) node!: UiTreeNodeWithControlls<TaskGroup & { id: string }>
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
+import { UntilDestroy } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import {
     EntityPreviewRecursive,
@@ -9,7 +9,6 @@ import {
     TaskStatus,
 } from '@rockket/commons'
 import {
-    BehaviorSubject,
     ReplaySubject,
     Subject,
     combineLatest,
@@ -22,13 +21,12 @@ import {
     merge,
     mergeWith,
     shareReplay,
-    skip,
     startWith,
     withLatestFrom,
 } from 'rxjs'
 import { taskPriorityLabelMap, taskStatusLabelMap } from 'src/app/components/atoms/icons/icon/icons'
 import { EntityDescriptionComponent } from 'src/app/components/molecules/entity-description/entity-description.component'
-import { UiStateService, ViewSettings } from 'src/app/services/ui-state.service'
+import { UiStateService } from 'src/app/services/ui-state.service'
 import { taskPriorityColorMap, taskStatusColorMap } from 'src/app/shared/colors'
 import { getTaskPriorityMenuItems, getTaskStatusMenuItems } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
@@ -37,7 +35,6 @@ import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { getTaskById } from 'src/app/store/entities/utils'
 import { isNotNullish, moveToMacroQueue } from 'src/app/utils'
 import { ENTITY_VIEW_DATA, EntityViewData } from '../../entity-view.component'
-import { TaskSortingStrategyKey, sortingStrategies } from '../../shared/view-settings/task-sorting-strategies'
 
 @UntilDestroy()
 @Component({
@@ -136,26 +133,14 @@ export class TaskViewComponent {
         shareReplay({ bufferSize: 1, refCount: true }),
     )
 
-    viewSettings$ = new BehaviorSubject<ViewSettings>(this.uiState.mainViewUiState.viewSettings)
-    _onViewSettingsChanged = this.viewSettings$
-        .pipe(skip(1), untilDestroyed(this))
-        .subscribe(viewSettings => {
-            this.uiState.setViewSettings(viewSettings)
-        })
+    viewSettingsStore = this.uiState.viewSettingsStore
 
-    task$ = combineLatest([
-        this.taskEntity$,
-        this.store.select(entitiesSelectors.taskTreeMap),
-        this.viewSettings$,
-    ]).pipe(
-        map(([taskEntity, taskTreeMap, { sorting: activeSortingKey }]) => {
+    task$ = combineLatest([this.taskEntity$, this.store.select(entitiesSelectors.taskTreeMap)]).pipe(
+        map(([taskEntity, taskTreeMap]) => {
             if (!taskEntity || !taskTreeMap) return null
 
             const task = getTaskById(Object.values(taskTreeMap).flat(), taskEntity.id)
-            if (!task) return task
-
-            const children = sortingStrategies[activeSortingKey].sorter([...(task.children ?? [])])
-            return { ...task, children }
+            return task
         }),
         shareReplay({ bufferSize: 1, refCount: true }),
     )

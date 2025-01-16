@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
+import { UntilDestroy } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
-import { EntityType, TaskRecursive, TasklistDetail, isTruthy, keysOf } from '@rockket/commons'
-import { BehaviorSubject, Subject, combineLatest, merge } from 'rxjs'
+import { EntityType, TasklistDetail, isTruthy } from '@rockket/commons'
+import { Subject, combineLatest, merge } from 'rxjs'
 import {
-    combineLatestWith,
     distinctUntilChanged,
     distinctUntilKeyChanged,
     filter,
@@ -12,12 +11,10 @@ import {
     map,
     mergeWith,
     shareReplay,
-    skip,
     startWith,
     withLatestFrom,
 } from 'rxjs/operators'
-import { UiStateService, ViewSettings } from 'src/app/services/ui-state.service'
-import { flattenTree, groupItemsRecursive } from 'src/app/utils/tree.helpers'
+import { UiStateService } from 'src/app/services/ui-state.service'
 import { EntityDescriptionComponent } from '../../../../../components/molecules/entity-description/entity-description.component'
 import { AppState } from '../../../../../store'
 import { entitiesSelectors } from '../../../../../store/entities/entities.selectors'
@@ -25,19 +22,7 @@ import { listActions } from '../../../../../store/entities/list/list.actions'
 import { taskActions } from '../../../../../store/entities/task/task.actions'
 import { entitySortingCompareFns } from '../../../../../store/entities/utils'
 import { isNotNullish, moveToMacroQueue } from '../../../../../utils'
-import { UiTreeNode, mapGroupsToUiTreeNodes } from '../../../generic-tree/generic-tree.component'
-import {
-    TaskGroup,
-    TaskGroupTreeNodeComponent,
-} from '../../../task-group-tree-node/task-group-tree-node.component'
-import { TaskTreeNodeAdapterComponent } from '../../../task-tree-node-adapter/task-tree-node-adapter.component'
 import { ENTITY_VIEW_DATA, EntityViewData } from '../../entity-view.component'
-import {
-    NOOP_GROUP_KEY,
-    TaskGroupKey,
-    groupingStrategies,
-} from '../../shared/view-settings/task-grouping-strategies'
-import { sortingStrategies } from '../../shared/view-settings/task-sorting-strategies'
 
 @UntilDestroy()
 @Component({
@@ -137,17 +122,7 @@ export class TasklistViewComponent {
         })
     }
 
-    viewSettings$ = new BehaviorSubject<ViewSettings>(this.uiState.mainViewUiState.viewSettings)
-    _onViewSettingsChanged = this.viewSettings$
-        .pipe(skip(1), untilDestroyed(this))
-        .subscribe(viewSettings => {
-            this.uiState.setViewSettings(viewSettings)
-        })
-
-    // expandedMap = this.uiState.mainViewUiState.entityExpandedMap
-    // updateExpandedMapStorage() {
-    //     this.uiState.updateMainViewStorage()
-    // }
+    viewSettingsStore = this.uiState.viewSettingsStore
 
     tasks$ = combineLatest([this.store.select(entitiesSelectors.taskTreeMap), this.listEntity$]).pipe(
         map(([taskTreeMap, entity]) => {
@@ -155,52 +130,6 @@ export class TasklistViewComponent {
 
             return { tasks: taskTreeMap[entity.id] || [], parentId: entity.id }
         }),
-        // combineLatestWith(this.viewSettings$),
-        // map(([tasks, { sorting: activeSortingKey, grouping: activeGroupingKey, groupRecursive }]) => {
-        //     // if (!taskTreeMap || !entity) return null
-
-        //     // const tasks = taskTreeMap[entity.id]
-        //     if (!tasks) return { tasks: [], nodes: [] }
-
-        //     const sortedTasks = sortingStrategies[activeSortingKey].sorter([...tasks])
-
-        //     const seletedGroupingStrategy = groupingStrategies[activeGroupingKey]
-        //     const groupedTasks = groupItemsRecursive(sortedTasks, (task, level) => {
-        //         if (!groupRecursive && level > 0) return NOOP_GROUP_KEY
-
-        //         return seletedGroupingStrategy.groupBy(task)
-        //     })
-        //     const groupKeys = keysOf(seletedGroupingStrategy.groups || {}) as TaskGroupKey[]
-
-        //     const flattenedNodes = flattenTree(
-        //         mapGroupsToUiTreeNodes(
-        //             groupedTasks,
-        //             TaskTreeNodeAdapterComponent,
-        //             TaskGroupTreeNodeComponent,
-        //             (key, parentId) => {
-        //                 const groups = seletedGroupingStrategy.groups as Record<string, TaskGroup> | null
-        //                 if (!groups) return null
-        //                 if (key == NOOP_GROUP_KEY) return null
-
-        //                 return {
-        //                     id: parentId + '.group-' + key,
-        //                     label: groups[key]?.label,
-        //                     icon: groups[key]?.icon,
-        //                 }
-        //             },
-        //             entity.id + '-root',
-        //             0,
-        //             (a, b) => groupKeys.indexOf(a) - groupKeys.indexOf(b),
-        //         ),
-        //     ) satisfies UiTreeNode<Record<string, unknown>>[]
-
-        //     for (const node of flattenedNodes) {
-        //         node.indentationOffset = node.path.filter(id => id.includes('group')).length * -1
-        //     }
-
-        //     return { tasks, nodes: flattenedNodes }
-        // }),
-        shareReplay({ bufferSize: 1, refCount: true }),
     )
     createTask() {
         this.listEntity$.pipe(first()).subscribe(entity => {
