@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { filter, map, mergeWith, NEVER, Observable, of, shareReplay, Subject, take } from 'rxjs'
+import { EMPTY, filter, map, mergeWith, Observable, of, shareReplay, Subject, take } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { z } from 'zod'
 import {
@@ -265,15 +265,49 @@ export class KvStoreProxy<TKey extends string | number | void, TValue> {
 /**
  * Creates a self-contained store without backend, i.e. no side-effects.
  *
+ * **Key:** `void` (no key, only one value)
+ *
  * Useful for mock scenarios
  */
-export const createLocalKvStoreProxy = <TValue>(value: TValue) => {
+export const createLocalKvObjectStoreProxy = <TValue>(value: TValue) => {
     return new KvStoreProxy<void, TValue>({
         get: () => value,
         set: (_, value_) => {
             value = value_
         },
-        inputUpdatedNotifier$: NEVER,
+        inputUpdatedNotifier$: EMPTY,
+    })
+}
+
+/**
+ * Creates a self-contained store without backend, i.e. no side-effects.
+ *
+ * **Key:** `string`
+ *
+ * Useful for mock scenarios
+ */
+export const createLocalKvBooleanStoreProxy = (defaultValue = true) => {
+    const expandedTasks = new Set<string>()
+    return new KvStoreProxy<string, boolean>({
+        get: key => {
+            return expandedTasks.has(key) ? !defaultValue : defaultValue
+        },
+        set: (key, value) => {
+            if (value) {
+                if (defaultValue) {
+                    expandedTasks.delete(key)
+                } else {
+                    expandedTasks.add(key)
+                }
+            } else {
+                if (!defaultValue) {
+                    expandedTasks.delete(key)
+                } else {
+                    expandedTasks.add(key)
+                }
+            }
+        },
+        inputUpdatedNotifier$: EMPTY,
     })
 }
 

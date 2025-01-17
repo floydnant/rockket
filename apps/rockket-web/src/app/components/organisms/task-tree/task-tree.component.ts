@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { UntilDestroy } from '@ngneat/until-destroy'
 import { keysOf, TaskFlattend, TaskRecursive } from '@rockket/commons'
 import { combineLatestWith, map, ReplaySubject, shareReplay, switchMap } from 'rxjs'
-import { KvStoreProxy, UiStateService, ViewSettings } from 'src/app/services/ui-state.service'
+import { KvStoreProxy, ViewSettings } from 'src/app/services/ui-state.service'
 import { uiDefaults } from 'src/app/shared/defaults'
 import { flattenTree, groupItemsRecursive } from 'src/app/utils/tree.helpers'
 import {
@@ -41,8 +41,6 @@ export const convertToTaskTreeNode = (task: TaskFlattend, expand?: boolean): Tas
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskTreeComponent {
-    constructor(private uiState: UiStateService) {}
-
     tasks$ = new ReplaySubject<TaskRecursive[] | null>(1)
     @Input({ required: true }) set tasks(tasks: TaskRecursive[]) {
         this.tasks$.next(tasks)
@@ -55,11 +53,8 @@ export class TaskTreeComponent {
 
     @Input({ required: true }) parentId!: string
     @Input() highlightQuery = ''
-    @Input() expandAll?: boolean
     @Input() readonly = false
-
-    // @TODO: This needs to be overrideable from the outside
-    treeNodeExpandedStore = this.uiState.treeNodeExpandedStore
+    @Input({ required: true }) expandedStore!: KvStoreProxy<string, boolean>
 
     nodes$ = this.tasks$.pipe(
         combineLatestWith(this.viewSettingsStore$.pipe(switchMap(store => store.listen()))),

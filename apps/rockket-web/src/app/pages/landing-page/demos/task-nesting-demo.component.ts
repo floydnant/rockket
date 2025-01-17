@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { TaskPriority, TaskRecursive, TaskStatus } from '@rockket/commons'
-import { createLocalKvStoreProxy, defaultViewSettings } from 'src/app/services/ui-state.service'
+import {
+    createLocalKvBooleanStoreProxy,
+    createLocalKvObjectStoreProxy,
+    defaultViewSettings,
+} from 'src/app/services/ui-state.service'
 
 const listId = 'nesting-demo'
 const demoTasks: TaskRecursive[] = [
@@ -106,8 +110,8 @@ const demoTasks: TaskRecursive[] = [
         <app-task-tree
             [tasks]="tasks"
             [readonly]="true"
-            [expandAll]="true"
             [viewSettingsStore]="viewSettingsStore"
+            [expandedStore]="expandedStore"
             parentId="nesting-demo"
         ></app-task-tree>
     `,
@@ -115,5 +119,6 @@ const demoTasks: TaskRecursive[] = [
 })
 export class TaskNestingDemoComponent {
     tasks = demoTasks
-    viewSettingsStore = createLocalKvStoreProxy(defaultViewSettings)
+    viewSettingsStore = createLocalKvObjectStoreProxy(defaultViewSettings)
+    expandedStore = createLocalKvBooleanStoreProxy()
 }

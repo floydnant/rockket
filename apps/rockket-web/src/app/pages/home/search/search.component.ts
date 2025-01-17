@@ -5,7 +5,7 @@ import { Actions } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
 import { EntityPreview, EntityPreviewRecursive, EntityType, TaskRecursive } from '@rockket/commons'
 import { combineLatestWith, filter, map } from 'rxjs'
-import { UiStateService } from 'src/app/services/ui-state.service'
+import { createLocalKvBooleanStoreProxy, UiStateService } from 'src/app/services/ui-state.service'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { entitiesFeature } from 'src/app/store/entities/entities.selectors'
@@ -37,6 +37,7 @@ export class SearchComponent {
     ) {}
 
     viewSettingsStore = this.uiState.viewSettingsStore
+    expandedStore = createLocalKvBooleanStoreProxy()
 
     routeQuery$ = this.activatedRoute.queryParamMap.pipe(map(params => params.get('q') || ''))
     initialRouteQuery = this.router.parseUrl(this.router.url).queryParams['q'] || ''

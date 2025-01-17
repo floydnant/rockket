@@ -29,9 +29,9 @@
                 <app-task-tree
                     [tasks]="search.result.tasks"
                     [highlightQuery]="search.query"
-                    [expandAll]="true"
                     parentId="search"
                     [viewSettingsStore]="viewSettingsStore"
+                    [expandedStore]="expandedStore"
                 ></app-task-tree>
             </ng-container>
 

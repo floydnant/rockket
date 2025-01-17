@@ -153,6 +153,7 @@
         <app-task-tree
             [tasks]="task.children"
             [viewSettingsStore]="viewSettingsStore"
+            [expandedStore]="expandedStore"
             [parentId]="task.id"
         ></app-task-tree>
     </ng-container>
