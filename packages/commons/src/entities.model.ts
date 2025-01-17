@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { Tasklist } from './list/list.schema'
-import { Task, taskSchema } from './task/task.schema'
+import { tasklistSchema } from './list/list.schema'
+import { taskSchema } from './task/task.schema'
 
 export enum EntityType {
     Tasklist = 'TASKLIST',
@@ -40,7 +40,8 @@ export type EntityPreviewFlattend = Omit<EntityPreviewRecursive, 'children'> & {
     childrenCount: number | undefined
 }
 
-export type EntitiesSearchResultDto = Record<EntityType, unknown> & {
-    [EntityType.Task]: Task[]
-    [EntityType.Tasklist]: Tasklist[]
-}
+export const entitesSearchResultDtoSchema = z.object({
+    [EntityType.Task]: taskSchema.array(),
+    [EntityType.Tasklist]: tasklistSchema.array(),
+} satisfies Record<EntityType, z.Schema>)
+export type EntitiesSearchResultDto = z.infer<typeof entitesSearchResultDtoSchema>
