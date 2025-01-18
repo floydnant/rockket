@@ -106,6 +106,7 @@ const demoTasks: TaskRecursive[] = [
 
 @Component({
     selector: 'app-task-nesting-demo',
+    // @TODO: provide dummy interactivity
     template: `
         <app-task-tree
             [tasks]="tasks"

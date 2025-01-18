@@ -31,9 +31,8 @@
                     <ng-container
                         *ngComponentOutlet="
                             node.component;
-                            inputs: {
-                                node: node,
-                            }
+                            inputs: { node: node };
+                            injector: treeNodeInjector$ | push
                         "
                     ></ng-container>
                 </div>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { EntityType, TaskFlattend, TaskPriority, TaskStatus } from '@rockket/commons'
 import { distinctUntilChanged, ReplaySubject, switchMap } from 'rxjs'
@@ -9,6 +9,7 @@ import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { UiTreeNodeWithControlls } from '../generic-tree/generic-tree.component'
+import { taskTreeConfigInjectionToken } from '../task-tree/task-tree.component'
 
 @Component({
     selector: 'app-task-tree-node-adapter',
@@ -20,6 +21,8 @@ import { UiTreeNodeWithControlls } from '../generic-tree/generic-tree.component'
     },
 })
 export class TaskTreeNodeAdapterComponent {
+    config$ = inject(taskTreeConfigInjectionToken)
+
     constructor(
         private store: Store<AppState>,
         private loadingService: LoadingStateService,
@@ -42,6 +45,7 @@ export class TaskTreeNodeAdapterComponent {
 
     isDescriptionExpanded$ = this.node$.pipe(
         distinctUntilChanged((a, b) => a.data.id == b.data.id),
+        // @TODO: treeNodeDescriptionExpandedStore should be a passed in from the outside
         switchMap(node => this.uiStateService.treeNodeDescriptionExpandedStore.listen(node.data.id)),
     )
 

@@ -56,7 +56,7 @@
                     }"
                     [enableDebouncedUpdates]="false"
                     (update)="titleChange.emit($event || '')"
-                    [readonly]="readonly"
+                    [readonly]="readonly$ | push"
                     data-test-name="task-title"
                 ></app-inline-editor>
             </div>
@@ -202,7 +202,7 @@
                     'hover:ring-tinted-600': true,
                     '[.task.completed:not(.isActive)_&]:hover:ring-submit-700': true
                 }"
-                [editable]="!readonly"
+                [editable]="!(readonly$ | push)"
                 [searchTerm]="searchTerm$ | push"
                 [bind]="(bindConfig$ | push)!"
                 (isActive)="isDescriptionActive$.next($event)"

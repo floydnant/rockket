@@ -97,6 +97,7 @@ const demoTasks: TaskRecursive[] = [
 
 @Component({
     selector: 'app-task-status-demo',
+    // @TODO: provide dummy interactivity
     template: `
         <app-task-tree
             [tasks]="tasks"

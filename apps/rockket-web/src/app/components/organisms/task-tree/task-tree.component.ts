@@ -1,7 +1,15 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, InjectionToken, Input, Provider } from '@angular/core'
 import { UntilDestroy } from '@ngneat/until-destroy'
 import { keysOf, TaskFlattend, TaskRecursive } from '@rockket/commons'
-import { combineLatestWith, map, ReplaySubject, shareReplay, switchMap } from 'rxjs'
+import {
+    BehaviorSubject,
+    combineLatestWith,
+    map,
+    Observable,
+    ReplaySubject,
+    shareReplay,
+    switchMap,
+} from 'rxjs'
 import { KvStoreProxy, ViewSettings } from 'src/app/services/ui-state.service'
 import { uiDefaults } from 'src/app/shared/defaults'
 import { flattenTree, groupItemsRecursive } from 'src/app/utils/tree.helpers'
@@ -33,6 +41,14 @@ export const convertToTaskTreeNode = (task: TaskFlattend, expand?: boolean): Tas
     }
 }
 
+type TaskTreeConfig = {
+    readonly: boolean
+    highlightQuery: string
+}
+export const taskTreeConfigInjectionToken = new InjectionToken<Observable<TaskTreeConfig>>(
+    'taskTreeConfigInjectionToken',
+)
+
 @UntilDestroy()
 @Component({
     selector: 'app-task-tree',
@@ -52,9 +68,24 @@ export class TaskTreeComponent {
     }
 
     @Input({ required: true }) parentId!: string
-    @Input() highlightQuery = ''
-    @Input() readonly = false
+    @Input() set highlightQuery(value: string) {
+        this.taskTreeConfig$.next({ ...this.taskTreeConfig$.value, highlightQuery: value })
+    }
+    @Input() set readonly(value: boolean) {
+        this.taskTreeConfig$.next({ ...this.taskTreeConfig$.value, readonly: value })
+    }
     @Input({ required: true }) expandedStore!: KvStoreProxy<string, boolean>
+
+    taskTreeConfig$ = new BehaviorSubject<TaskTreeConfig>({
+        highlightQuery: '',
+        readonly: false,
+    })
+    treeNodeProviders: Provider[] = [
+        {
+            provide: taskTreeConfigInjectionToken,
+            useValue: this.taskTreeConfig$,
+        },
+    ]
 
     nodes$ = this.tasks$.pipe(
         combineLatestWith(this.viewSettingsStore$.pipe(switchMap(store => store.listen()))),

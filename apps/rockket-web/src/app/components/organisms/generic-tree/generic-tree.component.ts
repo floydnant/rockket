@@ -1,9 +1,17 @@
-import { ChangeDetectionStrategy, Component, Input, Type } from '@angular/core'
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Injector,
+    Input,
+    Provider,
+    StaticProvider,
+    Type,
+} from '@angular/core'
 import { UntilDestroy } from '@ngneat/until-destroy'
 import { entriesOf } from '@rockket/commons'
-import { map, mergeWith, Observable, of, ReplaySubject, shareReplay } from 'rxjs'
+import { map, mergeWith, Observable, of, ReplaySubject, shareReplay, startWith } from 'rxjs'
 import { KvStoreProxy } from 'src/app/services/ui-state.service'
-import { debugObserver } from 'src/app/utils/observable.helpers'
 import { GroupedItem } from 'src/app/utils/tree.helpers'
 
 type AnyRecord = Record<string, unknown>
@@ -138,7 +146,16 @@ export class GenericTreeComponent {
                 }
             })
         }),
-        debugObserver('nodes'),
+    )
+
+    providers$ = new ReplaySubject<(Provider | StaticProvider)[]>(1)
+    @Input({ alias: 'treeNodeProviders' }) set providersSetter(providers: (Provider | StaticProvider)[]) {
+        if (providers) this.providers$.next(providers)
+    }
+    private injector = inject(Injector)
+    treeNodeInjector$ = this.providers$.pipe(
+        map(providers => Injector.create({ parent: this.injector, providers })),
+        startWith(this.injector),
     )
 
     // @TODO: remove

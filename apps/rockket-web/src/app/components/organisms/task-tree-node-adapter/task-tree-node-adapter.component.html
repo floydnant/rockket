@@ -1,4 +1,5 @@
 <app-task
+    *rxLet="config$; let config; strategy: 'native'"
     [data]="{
         taskPreview: node.data,
         path: node.path,
@@ -9,6 +10,8 @@
     class="grow"
     [menuItems]="taskMenuItems"
     [isLoading]="(isLoadingMap$ | async)?.[node.data.id] || false"
+    [searchTerm]="config.highlightQuery"
+    [readonly]="config.readonly"
     (descriptionExpansionChange)="toggleDescriptionExpansion(node.data.id, $event)"
     (expansionChange)="node.expandedStore.set(node.id, $event)"
     (titleChange)="onTitleChange(node.data.id, $event)"
@@ -16,7 +19,3 @@
     (statusChange)="onStatusChange(node.data.id, $event)"
     (priorityChange)="onPriorityChange(node.data.id, $event)"
 ></app-task>
-
-<!-- @TODO: Implement these -->
-<!-- [searchTerm]="highlightQuery"
-    [readonly]="readonly" -->
