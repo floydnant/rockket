@@ -44,6 +44,7 @@ export const convertToTaskTreeNode = (task: TaskFlattend, expand?: boolean): Tas
 type TaskTreeConfig = {
     readonly: boolean
     highlightQuery: string
+    descriptionExpandedStore: KvStoreProxy<string, boolean>
 }
 export const taskTreeConfigInjectionToken = new InjectionToken<Observable<TaskTreeConfig>>(
     'taskTreeConfigInjectionToken',
@@ -75,10 +76,14 @@ export class TaskTreeComponent {
         this.taskTreeConfig$.next({ ...this.taskTreeConfig$.value, readonly: value })
     }
     @Input({ required: true }) expandedStore!: KvStoreProxy<string, boolean>
+    @Input({ required: true }) set descriptionExpandedStore(value: KvStoreProxy<string, boolean>) {
+        this.taskTreeConfig$.next({ ...this.taskTreeConfig$.value, descriptionExpandedStore: value })
+    }
 
     taskTreeConfig$ = new BehaviorSubject<TaskTreeConfig>({
         highlightQuery: '',
         readonly: false,
+        descriptionExpandedStore: this.descriptionExpandedStore,
     })
     treeNodeProviders: Provider[] = [
         {

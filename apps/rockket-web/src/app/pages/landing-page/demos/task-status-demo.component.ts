@@ -104,6 +104,7 @@ const demoTasks: TaskRecursive[] = [
             [readonly]="true"
             [viewSettingsStore]="viewSettingsStore"
             [expandedStore]="expandedStore"
+            [descriptionExpandedStore]="descriptionExpandedStore"
             parentId="nesting-demo"
         ></app-task-tree>
     `,
@@ -113,4 +114,5 @@ export class TaskStatusDemoComponent {
     tasks = demoTasks
     viewSettingsStore = createLocalKvObjectStoreProxy(defaultViewSettings)
     expandedStore = createLocalKvBooleanStoreProxy()
+    descriptionExpandedStore = createLocalKvBooleanStoreProxy(false)
 }

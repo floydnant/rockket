@@ -5,6 +5,7 @@ import {
     createLocalKvObjectStoreProxy,
     defaultViewSettings,
 } from 'src/app/services/ui-state.service'
+import { visitDescendants } from 'src/app/store/entities/utils'
 
 const listId = 'nesting-demo'
 const demoTasks: TaskRecursive[] = [
@@ -113,13 +114,23 @@ const demoTasks: TaskRecursive[] = [
             [readonly]="true"
             [viewSettingsStore]="viewSettingsStore"
             [expandedStore]="expandedStore"
+            [descriptionExpandedStore]="descriptionExpandedStore"
             parentId="nesting-demo"
         ></app-task-tree>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskNestingDemoComponent {
+    constructor() {
+        visitDescendants(demoTasks, task => {
+            if (task.description) {
+                this.descriptionExpandedStore.set(task.id, true)
+            }
+        })
+    }
+
     tasks = demoTasks
     viewSettingsStore = createLocalKvObjectStoreProxy(defaultViewSettings)
     expandedStore = createLocalKvBooleanStoreProxy()
+    descriptionExpandedStore = createLocalKvBooleanStoreProxy(false)
 }

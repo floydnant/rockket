@@ -124,6 +124,7 @@ export class TasklistViewComponent {
 
     viewSettingsStore = this.uiState.viewSettingsStore
     expandedStore = this.uiState.treeNodeExpandedStore
+    descriptionExpandedStore = this.uiState.treeNodeDescriptionExpandedStore
 
     tasks$ = combineLatest([this.store.select(entitiesSelectors.taskTreeMap), this.listEntity$]).pipe(
         map(([taskTreeMap, entity]) => {

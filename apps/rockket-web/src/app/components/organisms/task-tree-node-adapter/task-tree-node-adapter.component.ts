@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { EntityType, TaskFlattend, TaskPriority, TaskStatus } from '@rockket/commons'
-import { distinctUntilChanged, ReplaySubject, switchMap } from 'rxjs'
+import { distinctUntilChanged, ReplaySubject, switchMap, take } from 'rxjs'
 import { LoadingStateService } from 'src/app/services/loading-state.service'
-import { UiStateService } from 'src/app/services/ui-state.service'
 import { getEntityMenuItemsMap } from 'src/app/shared/entity-menu-items'
 import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
@@ -23,11 +22,8 @@ import { taskTreeConfigInjectionToken } from '../task-tree/task-tree.component'
 export class TaskTreeNodeAdapterComponent {
     config$ = inject(taskTreeConfigInjectionToken)
 
-    constructor(
-        private store: Store<AppState>,
-        private loadingService: LoadingStateService,
-        private uiStateService: UiStateService,
-    ) {}
+    // @TODO: Get rid of the store here
+    constructor(private store: Store<AppState>, private loadingService: LoadingStateService) {}
 
     node!: UiTreeNodeWithControlls<TaskFlattend>
     node$ = new ReplaySubject<UiTreeNodeWithControlls<TaskFlattend>>(1)
@@ -45,8 +41,9 @@ export class TaskTreeNodeAdapterComponent {
 
     isDescriptionExpanded$ = this.node$.pipe(
         distinctUntilChanged((a, b) => a.data.id == b.data.id),
-        // @TODO: treeNodeDescriptionExpandedStore should be a passed in from the outside
-        switchMap(node => this.uiStateService.treeNodeDescriptionExpandedStore.listen(node.data.id)),
+        switchMap(node =>
+            this.config$.pipe(switchMap(config => config.descriptionExpandedStore.listen(node.data.id))),
+        ),
     )
 
     onTitleChange(id: string, title: string) {
@@ -63,6 +60,8 @@ export class TaskTreeNodeAdapterComponent {
     }
 
     toggleDescriptionExpansion(id: string, isDescriptionExpanded: boolean) {
-        this.uiStateService.treeNodeDescriptionExpandedStore.set(id, isDescriptionExpanded)
+        this.config$.pipe(take(1)).subscribe(config => {
+            config.descriptionExpandedStore.set(id, isDescriptionExpanded)
+        })
     }
 }

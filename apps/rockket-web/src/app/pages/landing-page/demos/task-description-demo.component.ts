@@ -50,6 +50,7 @@ const demoTasks: TaskRecursive[] = [
             [readonly]="true"
             [viewSettingsStore]="viewSettingsStore"
             [expandedStore]="expandedStore"
+            [descriptionExpandedStore]="descriptionExpandedStore"
             parentId="description-demo"
         ></app-task-tree>
     `,
@@ -59,4 +60,5 @@ export class TaskDescriptionDemoComponent {
     tasks = demoTasks
     viewSettingsStore = createLocalKvObjectStoreProxy(defaultViewSettings)
     expandedStore = createLocalKvBooleanStoreProxy()
+    descriptionExpandedStore = createLocalKvBooleanStoreProxy()
 }

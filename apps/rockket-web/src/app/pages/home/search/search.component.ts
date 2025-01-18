@@ -10,14 +10,13 @@ import { AppState } from 'src/app/store'
 import { entitiesActions } from 'src/app/store/entities/entities.actions'
 import { entitiesFeature } from 'src/app/store/entities/entities.selectors'
 import { EntitiesState } from 'src/app/store/entities/entities.state'
+import { visitDescendants } from 'src/app/store/entities/utils'
 import { loadingUpdates } from 'src/app/utils/store.helpers'
 import { filterTree } from 'src/app/utils/tree.helpers'
 
-const matchQuery = (query: string) => {
-    return <T extends { title: string; description: string | null | undefined }>(entity: T) => {
-        const regex = new RegExp(query, 'i')
-        return Boolean(regex.test(entity.title) || (entity.description && regex.test(entity.description)))
-    }
+const isMatching = (query: RegExp | string, content: string | null | undefined) => {
+    const regex = query instanceof RegExp ? query : new RegExp(query, 'i')
+    return Boolean(content && regex.test(content))
 }
 
 @UntilDestroy()
@@ -38,6 +37,7 @@ export class SearchComponent {
 
     viewSettingsStore = this.uiState.viewSettingsStore
     expandedStore = createLocalKvBooleanStoreProxy()
+    descriptionExpandedStore = createLocalKvBooleanStoreProxy(false)
 
     routeQuery$ = this.activatedRoute.queryParamMap.pipe(map(params => params.get('q') || ''))
     initialRouteQuery = this.router.parseUrl(this.router.url).queryParams['q'] || ''
@@ -77,17 +77,28 @@ export class SearchComponent {
                     },
                 }
 
-            const matchEntity = matchQuery(query)
+            const regex = new RegExp(query, 'i')
 
             const taskTree = taskTreeMap ? Object.values(taskTreeMap).flat() : []
             const taskMatches = { matches: 0 }
-            const filteredTasks = filterTree(taskTree, matchEntity, taskMatches)
+            // @TODO: collapse tree nodes that don't match the query (and show a path to the matching node)
+            const filteredTasks = filterTree(
+                taskTree,
+                task => isMatching(regex, task.title) || isMatching(regex, task.description),
+                taskMatches,
+            )
+            visitDescendants(filteredTasks, task => {
+                this.descriptionExpandedStore.set(task.id, isMatching(regex, task.description), false)
+            })
 
             const entityMatches = { matches: 0 }
+            // @TODO: collapse tree nodes that don't match the query (and show a path to the matching node)
             const filteredEntities = entityTree
                 ? filterTree(
                       entityTree,
                       entity => {
+                          if (isMatching(regex, entity.title)) return true
+
                           const details = entityDetails[entity.entityType][entity.id]
                           // prettier-ignore
                           const description =
@@ -99,7 +110,7 @@ export class SearchComponent {
                                   ? details.description
                                   : null
 
-                          return matchEntity({ title: entity.title, description })
+                          return isMatching(regex, description)
                       },
                       entityMatches,
                   )
