@@ -1,4 +1,4 @@
-import { Content, Editor, EditorEvents, createDocument } from '@tiptap/core'
+import { Content, Editor, EditorEvents, EditorOptions, createDocument } from '@tiptap/core'
 import { ParseOptions } from 'prosemirror-model'
 import { EditorState } from 'prosemirror-state'
 import {
@@ -25,6 +25,17 @@ interface EditorStorage {
 }
 
 export class TipTapEditor extends Editor {
+    constructor(options?: Partial<EditorOptions>) {
+        super(options)
+        if (!options?.editable) {
+            const onCreate = () => {
+                this.view.dom.removeAttribute('tabIndex')
+                this.off('create', onCreate)
+            }
+            this.on('create', onCreate)
+        }
+    }
+
     destroy$ = fromEventPattern<EditorEvents['destroy']>(
         handler => this.on('destroy', handler),
         handler => this.off('destroy', handler),
@@ -32,6 +43,12 @@ export class TipTapEditor extends Editor {
 
     override get storage() {
         return super.storage as EditorStorage
+    }
+
+    override setEditable(editable: boolean, emitUpdate?: boolean): void {
+        super.setEditable(editable, emitUpdate)
+        if (editable) this.view.dom.tabIndex = 0
+        else this.view.dom.removeAttribute('tabIndex')
     }
 
     private getEventStream<T extends keyof EditorEvents>(eventName: T): Observable<EditorEvents[T]> {
