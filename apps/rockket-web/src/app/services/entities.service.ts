@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core'
 import {
-    EntitiesSearchResultDto,
+    entitesSearchResultDtoSchema,
     EntityEvent,
     entityPreviewSchema,
     EntityType,
@@ -104,6 +104,8 @@ export class EntitiesService {
     }
 
     search(query: string) {
-        return this.http.get<EntitiesSearchResultDto>(`/entities/search?q=${query}`)
+        return this.http
+            .get(`/entities/search?q=${query}`)
+            .pipe(parseWith(entitesSearchResultDtoSchema, fnNames(EntitiesService, this.search)))
     }
 }
