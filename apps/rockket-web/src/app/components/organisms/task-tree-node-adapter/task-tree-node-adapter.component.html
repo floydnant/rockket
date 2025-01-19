@@ -18,4 +18,6 @@
     (descriptionChange)="onDescriptionChange(node.data.id, $event)"
     (statusChange)="onStatusChange(node.data.id, $event)"
     (priorityChange)="onPriorityChange(node.data.id, $event)"
+    data-test-name="task-tree-node"
+    [attr.data-test-node-level]="node.path.length"
 ></app-task>

@@ -12,21 +12,43 @@ import { IconsModule } from '../../atoms/icons/icons.module'
 import { InlineEditorComponent } from '../../atoms/inline-editor/inline-editor.component'
 import { TaskComponent } from '../task/task.component'
 import { TaskTreeComponent } from './task-tree.component'
+import { GenericTreeComponent } from '../generic-tree/generic-tree.component'
+import { TaskTreeNodeAdapterComponent } from '../task-tree-node-adapter/task-tree-node-adapter.component'
+import {
+    createLocalKvBooleanStoreProxy,
+    createLocalKvObjectStoreProxy,
+    defaultViewSettings,
+} from 'src/app/services/ui-state.service'
 
 const setupComponent = (taskTree: TaskRecursive[]) => {
-    cy.mount(`<app-task-tree [tasks]="taskTree"></app-task-tree>`, {
-        componentProperties: { taskTree },
-        imports: [IconsModule, CdkMenuModule, RxModule, RichTextEditorModule, DropdownModule],
-        declarations: [
-            TaskTreeComponent,
-            TaskComponent,
-            InlineEditorComponent,
-            FocusableDirective,
-            MutationDirective,
-            HighlightPipe,
-        ],
-        providers: [storeMock, actionsMock],
-    })
+    cy.mount(
+        `<app-task-tree
+            [tasks]="taskTree"
+            [viewSettingsStore]="viewSettingsStore"
+            [expandedStore]="expandedStore"
+            [descriptionExpandedStore]="descriptionExpandedStore"
+        ></app-task-tree>`,
+        {
+            componentProperties: {
+                taskTree,
+                viewSettingsStore: createLocalKvObjectStoreProxy(defaultViewSettings),
+                expandedStore: createLocalKvBooleanStoreProxy(),
+                descriptionExpandedStore: createLocalKvBooleanStoreProxy(false),
+            },
+            imports: [IconsModule, CdkMenuModule, RxModule, RichTextEditorModule, DropdownModule],
+            declarations: [
+                GenericTreeComponent,
+                TaskTreeNodeAdapterComponent,
+                TaskTreeComponent,
+                TaskComponent,
+                InlineEditorComponent,
+                FocusableDirective,
+                MutationDirective,
+                HighlightPipe,
+            ],
+            providers: [storeMock, actionsMock],
+        },
+    )
 }
 
 const newTaskRecursive = (args?: { children: TaskRecursive[] }): TaskRecursive => ({
@@ -75,12 +97,12 @@ describe('TaskTreeComponent', () => {
     it('can toggle subtasks', () => {
         setupComponent(taskTreeFixture)
 
-        cy.get(testName('task-tree-node')).should('have.length', 12)
+        cy.get(testName('task-tree-node') + ':visible').should('have.length', 12)
 
         cy.get(testName('subtask-toggle')).first().click()
-        cy.get(testName('task-tree-node')).should('have.length', 10)
+        cy.get(testName('task-tree-node') + ':visible').should('have.length', 10)
 
         cy.get(testName('subtask-toggle')).first().click()
-        cy.get(testName('task-tree-node')).should('have.length', 12)
+        cy.get(testName('task-tree-node') + ':visible').should('have.length', 12)
     })
 })
