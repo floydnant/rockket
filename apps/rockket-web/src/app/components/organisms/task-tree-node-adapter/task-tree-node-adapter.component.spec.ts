@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { TaskTreeNodeAdapterComponent } from './task-tree-node-adapter.component'
+import { actionsMock, storeMock } from 'src/app/utils/unit-test.mocks'
+import { taskTreeConfigInjectionToken } from '../task-tree/task-tree.component'
 
 describe('TaskTreeNodeAdapterComponent', () => {
     let component: TaskTreeNodeAdapterComponent
@@ -7,6 +9,7 @@ describe('TaskTreeNodeAdapterComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [storeMock, actionsMock, { provide: taskTreeConfigInjectionToken, useValue: {} }],
             declarations: [TaskTreeNodeAdapterComponent],
         }).compileComponents()
 
