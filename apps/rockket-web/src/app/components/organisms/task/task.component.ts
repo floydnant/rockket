@@ -14,6 +14,7 @@ import { createDocument, getSchema } from '@tiptap/core'
 import {
     BehaviorSubject,
     Subject,
+    combineLatestWith,
     distinctUntilChanged,
     distinctUntilKeyChanged,
     filter,
@@ -75,6 +76,7 @@ const editorSchema = getSchema(editorFeatures.flatMap(feature => feature.extensi
 export class TaskComponent {
     constructor(private deviceService: DeviceService) {}
 
+    Object = Object
     EntityType = EntityType
     PLACEHOLDER = ENTITY_TITLE_DEFAULTS[EntityType.Task]
 
@@ -99,6 +101,11 @@ export class TaskComponent {
         this.searchTerm$.next(value)
     }
 
+    readonly$ = new BehaviorSubject(false)
+    @Input() set readonly(value: boolean) {
+        this.readonly$.next(value)
+    }
+
     task$ = new BehaviorSubject<TaskFlattend | null>(null)
     nodeData$ = new BehaviorSubject<Omit<TaskTreeNode, 'taskPreview'> | null>(null)
     @Input() set data({ taskPreview, ...data }: TaskTreeNode) {
@@ -111,8 +118,9 @@ export class TaskComponent {
     }
     menuItemsInput$ = new BehaviorSubject<MenuItem[] | null>(null)
     menuItems$ = this.menuItemsInput$.pipe(
-        map(items => {
-            if (this.readonly) return null
+        combineLatestWith(this.readonly$),
+        map(([items, readonly]) => {
+            if (readonly) return null
             if (!items || this.task$.value?.description) return items
 
             const descriptionItem: MenuItem = {
@@ -121,6 +129,7 @@ export class TaskComponent {
                 action: () => this.openDescription(),
             }
 
+            // @TODO: This is extremely fragile, find a better way
             const insertAfterIndex = items.findIndex(({ title }) => title && /Rename/.test(title))
             insertElementAfter(items, insertAfterIndex, descriptionItem)
 
@@ -131,14 +140,18 @@ export class TaskComponent {
     )
 
     statusMenuItems$ = this.menuItemsInput$.pipe(
-        map(items => {
-            if (this.readonly) return null
+        combineLatestWith(this.readonly$),
+        map(([items, readonly]) => {
+            if (readonly) return null
+            // @TODO: This is extremely fragile, find a better way
             return items?.find(({ title }) => title == 'Status')?.children
         }),
     )
     priorityMenuItems$ = this.menuItemsInput$.pipe(
-        map(items => {
-            if (this.readonly) return null
+        combineLatestWith(this.readonly$),
+        map(([items, readonly]) => {
+            if (readonly) return null
+            // @TODO: This is extremely fragile, find a better way
             return items?.find(({ title }) => title == 'Priority')?.children
         }),
     )
@@ -154,8 +167,6 @@ export class TaskComponent {
     get loading() {
         return this.isLoading ? EntityState.LOADING : false
     }
-
-    @Input() readonly = false
 
     isSelected = false
 

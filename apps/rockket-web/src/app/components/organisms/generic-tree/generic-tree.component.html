@@ -1,0 +1,42 @@
+<div class="flex w-full flex-col gap-2">
+    <div class="tree-container | flex flex-col">
+        <ng-container
+            *rxFor="
+                let node of nodesWithControlls$;
+                let nodeIndex = index;
+                trackBy: nodeTrackByFn;
+                strategy: 'native'
+            "
+        >
+            <!--
+                @TODO: Currently we keep all nodes rendered at all times to make expands snappier.
+                - Perhaps we can find a better way to achieve snappy expands without keeping all nodes rendered.
+                - Or if nothing helps, make this configurable and show a loading spinner when expanding.
+
+                Lets let this become a bigger problem before we solve it.
+            -->
+            <div
+                [class.hidden]="!(node.shouldRender$ | push)"
+                class="tree-node | flex h-fit"
+                data-test-name="tree-node"
+            >
+                <div
+                    class="indent-line"
+                    *rxFor="let line of node.lines$; strategy: 'native'; trackBy: indentLineTrackByFn"
+                    [class.isFirstInHierarchy]="line.isFirstInHierarchy"
+                    [class.isLastInHierarchy]="line.isLastInHierarchy"
+                ></div>
+
+                <div class="my-1 grow">
+                    <ng-container
+                        *ngComponentOutlet="
+                            node.component;
+                            inputs: { node: node };
+                            injector: treeNodeInjector$ | push
+                        "
+                    ></ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

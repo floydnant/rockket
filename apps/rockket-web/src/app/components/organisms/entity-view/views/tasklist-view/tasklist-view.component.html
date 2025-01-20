@@ -22,12 +22,7 @@
 </ng-container>
 
 <ng-template #createTaskButton>
-    <button
-        class="create-task-button | button-naked"
-        (click)="createTask()"
-        appTooltip="Create a new task"
-        data-test-name="create-task"
-    >
+    <button class="create-task-button | button-naked" (click)="createTask()" data-test-name="create-task">
         <app-icon icon="fas fa-plus"></app-icon>
         New task
     </button>
@@ -35,7 +30,6 @@
 <ng-template #createSublistButton>
     <button
         class="create-sublist-button | button-naked"
-        appTooltip="Create a new list inside this one"
         (click)="createSublist()"
         data-test-name="create-children"
     >
@@ -92,20 +86,26 @@
 
 <app-activity *rxLet="entityWithDetail$; let entity" [entity]="entity"></app-activity>
 
-<ng-container *ngIf="tasks$ | async as tasks; else loadingTasks">
-    <ng-container *ngIf="tasks.length">
+<ng-container *rxIf="tasks$; let tasks; else loadingTasks">
+    <ng-container *rxIf="tasks.tasks.length">
         <div class="spacer | h-5"></div>
         <p class="text-tinted-400 mb-1 text-lg font-semibold">Tasks</p>
 
-        <app-page-progress-bar [taskTree]="tasks"></app-page-progress-bar>
+        <app-page-progress-bar [taskTree]="tasks.tasks"></app-page-progress-bar>
 
-        <div class="options | mb-2 mt-1.5 flex gap-2">
+        <div class="options | mb-2 mt-1.5 flex flex-wrap items-center gap-2">
             <ng-container *ngTemplateOutlet="createTaskButton"></ng-container>
 
-            <app-sorting-dropdown [activeSorting$]="activeSorting$"></app-sorting-dropdown>
+            <app-view-settings [viewSettingsStore]="viewSettingsStore"></app-view-settings>
         </div>
 
-        <app-task-tree [tasks]="tasks"></app-task-tree>
+        <app-task-tree
+            [tasks]="tasks.tasks"
+            [viewSettingsStore]="viewSettingsStore"
+            [expandedStore]="expandedStore"
+            [descriptionExpandedStore]="descriptionExpandedStore"
+            [parentId]="tasks.parentId"
+        ></app-task-tree>
     </ng-container>
 </ng-container>
 

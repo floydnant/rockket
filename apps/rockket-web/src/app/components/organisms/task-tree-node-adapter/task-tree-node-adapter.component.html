@@ -1,0 +1,23 @@
+<app-task
+    *rxLet="config$; let config; strategy: 'native'"
+    [data]="{
+        taskPreview: node.data,
+        path: node.path,
+        hasChildren: node.hasChildren,
+        isExpanded: node.expandedStore.listen(node.data.id) | push,
+        isDescriptionExpanded: isDescriptionExpanded$ | push,
+    }"
+    class="grow"
+    [menuItems]="taskMenuItems"
+    [isLoading]="(isLoadingMap$ | async)?.[node.data.id] || false"
+    [searchTerm]="config.highlightQuery"
+    [readonly]="config.readonly"
+    (descriptionExpansionChange)="toggleDescriptionExpansion(node.data.id, $event)"
+    (expansionChange)="node.expandedStore.set(node.id, $event)"
+    (titleChange)="onTitleChange(node.data.id, $event)"
+    (descriptionChange)="onDescriptionChange(node.data.id, $event)"
+    (statusChange)="onStatusChange(node.data.id, $event)"
+    (priorityChange)="onPriorityChange(node.data.id, $event)"
+    data-test-name="task-tree-node"
+    [attr.data-test-node-level]="node.path.length"
+></app-task>

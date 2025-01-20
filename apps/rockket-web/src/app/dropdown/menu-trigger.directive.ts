@@ -37,7 +37,8 @@ type DropDownTemplateWrapperData<TData> = {
     template: `
         <ng-template #viewTemplate let-data>
             <app-drop-down
-                [items]="data.items$ | push"
+                *ngIf="data.items$ | push as items"
+                [items]="items"
                 [data]="data.data$ | push"
                 [onClose]="data.onClose$"
                 [onOpen]="data.onOpen$"

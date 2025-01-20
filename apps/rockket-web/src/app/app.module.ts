@@ -37,8 +37,12 @@ import { TaskParentTaskChangedEventComponent } from './components/organisms/enti
 import { TaskPriorityEventComponent } from './components/organisms/entity-view/shared/activity/event-views/task-priority-event.component'
 import { TaskStatusEventComponent } from './components/organisms/entity-view/shared/activity/event-views/task-status-event.component'
 import { TitleChangedEventComponent } from './components/organisms/entity-view/shared/activity/event-views/title-changed-event.component'
+import { ViewSettingsComponent } from './components/organisms/entity-view/shared/view-settings/view-settings.component'
 import { TaskViewComponent } from './components/organisms/entity-view/views/task-view/task-view.component'
 import { TasklistViewComponent } from './components/organisms/entity-view/views/tasklist-view/tasklist-view.component'
+import { GenericTreeComponent } from './components/organisms/generic-tree/generic-tree.component'
+import { TaskGroupTreeNodeComponent } from './components/organisms/task-group-tree-node/task-group-tree-node.component'
+import { TaskTreeNodeAdapterComponent } from './components/organisms/task-tree-node-adapter/task-tree-node-adapter.component'
 import { TaskTreeComponent } from './components/organisms/task-tree/task-tree.component'
 import { ElemContainerComponent, TaskComponent } from './components/organisms/task/task.component'
 import { UserMenuComponent } from './components/organisms/user-menu/user-menu.component'
@@ -85,7 +89,6 @@ import { RichTextEditorModule } from './rich-text-editor/rich-text-editor.module
 import { RxModule } from './rx/rx.module'
 import { effects, metaReducers, reducers } from './store'
 import { TooltipModule } from './tooltip/tooltip.module'
-import { SortingDropdownComponent } from './components/organisms/entity-view/shared/sorting/sorting-dropdown.component'
 
 @NgModule({
     declarations: [
@@ -148,7 +151,10 @@ import { SortingDropdownComponent } from './components/organisms/entity-view/sha
         EntityParentSelectorComponent,
         TaskParentTaskChangedEventComponent,
         ParentListChangedEventComponent,
-        SortingDropdownComponent,
+        GenericTreeComponent,
+        TaskTreeNodeAdapterComponent,
+        TaskGroupTreeNodeComponent,
+        ViewSettingsComponent,
     ],
     imports: [
         BrowserModule,

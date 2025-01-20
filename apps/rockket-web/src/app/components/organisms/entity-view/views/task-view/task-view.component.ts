@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core'
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy'
+import { UntilDestroy } from '@ngneat/until-destroy'
 import { Store } from '@ngrx/store'
 import {
     EntityPreviewRecursive,
@@ -9,7 +9,6 @@ import {
     TaskStatus,
 } from '@rockket/commons'
 import {
-    BehaviorSubject,
     ReplaySubject,
     Subject,
     combineLatest,
@@ -22,7 +21,6 @@ import {
     merge,
     mergeWith,
     shareReplay,
-    skip,
     startWith,
     withLatestFrom,
 } from 'rxjs'
@@ -37,7 +35,6 @@ import { taskActions } from 'src/app/store/entities/task/task.actions'
 import { getTaskById } from 'src/app/store/entities/utils'
 import { isNotNullish, moveToMacroQueue } from 'src/app/utils'
 import { ENTITY_VIEW_DATA, EntityViewData } from '../../entity-view.component'
-import { TaskSortingStrategyKey, sortingStrategies } from '../../shared/sorting/task-sorting-strategies'
 
 @UntilDestroy()
 @Component({
@@ -136,28 +133,16 @@ export class TaskViewComponent {
         shareReplay({ bufferSize: 1, refCount: true }),
     )
 
-    activeSorting$ = new BehaviorSubject<TaskSortingStrategyKey>(
-        this.uiState.mainViewUiState.taskSortingStrategy,
-    )
-    _onActiveSortingChanged = this.activeSorting$
-        .pipe(skip(1), untilDestroyed(this))
-        .subscribe(activeSortingKey => {
-            this.uiState.setTaskSortingStrategy(activeSortingKey)
-        })
+    viewSettingsStore = this.uiState.viewSettingsStore
+    expandedStore = this.uiState.treeNodeExpandedStore
+    descriptionExpandedStore = this.uiState.treeNodeDescriptionExpandedStore
 
-    task$ = combineLatest([
-        this.taskEntity$,
-        this.store.select(entitiesSelectors.taskTreeMap),
-        this.activeSorting$,
-    ]).pipe(
-        map(([taskEntity, taskTreeMap, activeSortingKey]) => {
+    task$ = combineLatest([this.taskEntity$, this.store.select(entitiesSelectors.taskTreeMap)]).pipe(
+        map(([taskEntity, taskTreeMap]) => {
             if (!taskEntity || !taskTreeMap) return null
 
             const task = getTaskById(Object.values(taskTreeMap).flat(), taskEntity.id)
-            if (!task) return task
-
-            const children = sortingStrategies[activeSortingKey].sorter([...(task.children ?? [])])
-            return { ...task, children }
+            return task
         }),
         shareReplay({ bufferSize: 1, refCount: true }),
     )

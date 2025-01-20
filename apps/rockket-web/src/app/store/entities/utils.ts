@@ -124,29 +124,18 @@ export const getEntityById = (
 }
 
 interface TaskToEntityPreviewMapperFn {
-    (task: Task): EntityPreview & Pick<Task, 'status' | 'priority'>
-    (task: TaskRecursive): EntityPreviewRecursive & Pick<Task, 'status' | 'priority'>
+    (task: Task): EntityPreview & Task
+    (task: TaskRecursive): EntityPreviewRecursive & Task
 }
 
 // @TODO: find a good spot for this
-export const mapTaskToEntityPreview: TaskToEntityPreviewMapperFn = ({
-    id,
-    listId,
-    parentTaskId,
-    title,
-    status,
-    priority,
-    ...rest
-}) => ({
+export const mapTaskToEntityPreview: TaskToEntityPreviewMapperFn = ({ id, parentTaskId, listId, ...rest }) => ({
     ...rest,
     id,
-    entityType: EntityType.Task,
-    parentId: parentTaskId || listId,
     parentTaskId,
     listId,
-    title,
-    status,
-    priority,
+    entityType: EntityType.Task,
+    parentId: parentTaskId || listId,
     children: 'children' in rest ? rest.children?.map(mapTaskToEntityPreview) : undefined,
 })
 
@@ -253,16 +242,19 @@ export const applySortersRecursive = (
     return compareFns.reduce((acc, compareFn) => acc.sort(compareFn), mappedTree)
 }
 
-export const applyMapperRecursive = (
-    taskTree: TaskRecursive[],
-    mapper: (tasks: TaskRecursive[]) => TaskRecursive[],
-): TaskRecursive[] => {
-    return mapper(taskTree).map(task => {
-        if (!task.children) return task
+export const applyMapperRecursive = <
+    TInput extends { children?: TInput[] | null },
+    TOutput extends { children?: TInput[] | null },
+>(
+    tree: TInput[],
+    mapper: (items: TInput[]) => TOutput[],
+): TOutput[] => {
+    return mapper(tree).map<TOutput>(item => {
+        if (!item.children) return item
 
         return {
-            ...task,
-            children: applyMapperRecursive(task.children, mapper),
+            ...item,
+            children: applyMapperRecursive(item.children, mapper),
         }
     })
 }
@@ -306,14 +298,13 @@ export const flattenEntityTreeIncludingTasks = (
     path: string[] = [],
 ): EntityPreviewFlattend[] => {
     return entityTree.flatMap(entity => {
-        const { children, ...rest } = entity
         const tasks = taskTreeMap[entity.id]?.map(mapTaskToEntityPreview) || []
-        const flatEntity = { ...rest, path, childrenCount: (children?.length || 0) + tasks.length }
+        const flatEntity = { ...entity, path, childrenCount: (entity.children?.length || 0) + tasks.length }
         const subpath = [...path, entity.id]
 
         return [
             flatEntity,
-            ...flattenEntityTreeIncludingTasks(children || [], taskTreeMap, subpath),
+            ...flattenEntityTreeIncludingTasks(entity.children || [], taskTreeMap, subpath),
             ...flattenEntityTree(tasks, subpath),
             // ...flattenTaskTree(taskTreeMap[list.id].map(convertTaskToEntity)),
         ]

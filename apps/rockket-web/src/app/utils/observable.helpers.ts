@@ -42,3 +42,10 @@ export const debugObserver = <T>(
         complete: !complete ? undefined : () => console.log(`✅ %ccomplete %c${name}`, 'color:gray', ''),
         finalize: !finalize ? undefined : () => console.log(`🏁 %cfinalize %c${name}`, 'color:gray', ''),
     })
+
+export const idleCallback$ = new Observable<void>(subscriber => {
+    requestIdleCallback(() => {
+        subscriber.next()
+        subscriber.complete()
+    })
+})

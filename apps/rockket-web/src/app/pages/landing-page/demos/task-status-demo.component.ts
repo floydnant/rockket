@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { TaskRecursive, TaskPriority, TaskStatus } from '@rockket/commons'
+import { TaskPriority, TaskRecursive, TaskStatus } from '@rockket/commons'
+import {
+    createLocalBooleanMapStoreProxy,
+    createLocalSingleValueStoreProxy,
+    defaultViewSettings,
+} from 'src/app/services/ui-state.service'
 
 const listId = 'status-demo'
 
@@ -92,9 +97,22 @@ const demoTasks: TaskRecursive[] = [
 
 @Component({
     selector: 'app-task-status-demo',
-    template: `<app-task-tree [tasks]="tasks" [readonly]="true"></app-task-tree>`,
+    // @TODO: provide dummy interactivity
+    template: `
+        <app-task-tree
+            [tasks]="tasks"
+            [readonly]="true"
+            [viewSettingsStore]="viewSettingsStore"
+            [expandedStore]="expandedStore"
+            [descriptionExpandedStore]="descriptionExpandedStore"
+            parentId="nesting-demo"
+        ></app-task-tree>
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskStatusDemoComponent {
     tasks = demoTasks
+    viewSettingsStore = createLocalSingleValueStoreProxy(defaultViewSettings)
+    expandedStore = createLocalBooleanMapStoreProxy()
+    descriptionExpandedStore = createLocalBooleanMapStoreProxy(false)
 }

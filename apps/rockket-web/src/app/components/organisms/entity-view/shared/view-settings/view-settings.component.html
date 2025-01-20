@@ -1,0 +1,72 @@
+<div *rxLet="viewSettingsStore.listen(); let viewSettings" class="flex flex-wrap gap-2">
+    <ng-container *ngIf="compactLayout">
+        <button
+            class="icon-btn | not-hover:text-tinted-300"
+            [class.view-settings--isActive]="viewSettings.sorting != defaultSortingStrategyKey"
+            [appMenu]="sortOptionsMenuItems"
+            [appMenuData]="viewSettings"
+            appTooltip="Sorting Options"
+            data-test-name="sort-tasks-button"
+        >
+            <app-icon icon="sort"></app-icon>
+
+        </button>
+
+        <button
+            class="icon-btn | not-hover:text-tinted-300"
+            [class.view-settings--isActive]="viewSettings.grouping != defaultGroupingStrategyKey"
+            [appMenu]="groupingOptionsMenuItems"
+            [appMenuData]="viewSettings"
+            appTooltip="Grouping Options"
+            data-test-name="group-tasks-button"
+        >
+            <app-icon icon="group"></app-icon>
+        </button>
+    </ng-container>
+
+    <ng-container *ngIf="!compactLayout">
+        <button
+            class="button-naked"
+            [appMenu]="sortOptionsMenuItems"
+            [appMenuData]="viewSettings"
+            [class.view-settings--isActive]="viewSettings.sorting != defaultSortingStrategyKey"
+            data-test-name="sort-tasks-button"
+        >
+            <app-icon
+                [icon]="
+                    viewSettings.sorting != defaultSortingStrategyKey
+                        ? getSortingStrategy(viewSettings.sorting).icon
+                        : 'sort'
+                "
+            ></app-icon>
+            Sort{{
+                viewSettings.sorting != defaultSortingStrategyKey
+                    ? 'ing by ' + getSortingStrategy(viewSettings.sorting).shortLabel
+                    : ''
+            }}
+            <app-icon icon="caretDown"></app-icon>
+        </button>
+
+        <button
+            class="button-naked"
+            [appMenu]="groupingOptionsMenuItems"
+            [appMenuData]="viewSettings"
+            [class.view-settings--isActive]="viewSettings.grouping != defaultGroupingStrategyKey"
+            data-test-name="group-tasks-button"
+        >
+            <app-icon
+                [icon]="
+                    viewSettings.grouping != defaultGroupingStrategyKey
+                        ? getGroupingStrategy(viewSettings.grouping).icon
+                        : 'group'
+                "
+            ></app-icon>
+            Group{{
+                viewSettings.grouping != defaultGroupingStrategyKey
+                    ? 'ing by ' + getGroupingStrategy(viewSettings.grouping).label
+                    : ' By'
+            }}
+            <app-icon icon="caretDown"></app-icon>
+        </button>
+    </ng-container>
+</div>
