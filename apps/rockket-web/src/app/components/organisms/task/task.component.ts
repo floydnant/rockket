@@ -76,6 +76,7 @@ const editorSchema = getSchema(editorFeatures.flatMap(feature => feature.extensi
 export class TaskComponent {
     constructor(private deviceService: DeviceService) {}
 
+    Object = Object
     EntityType = EntityType
     PLACEHOLDER = ENTITY_TITLE_DEFAULTS[EntityType.Task]
 

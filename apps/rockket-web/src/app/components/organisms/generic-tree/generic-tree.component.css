@@ -1,7 +1,6 @@
 /* Indent line gradients */
 .indent-line {
-    /* --line-color: theme(colors.tinted.700); */
-    --line-color: hsl(262.79999999999995, 19.8%, 22%);
+    --line-color: theme(colors.tinted.750);
     @apply relative mr-6;
 }
 .indent-line::before {
@@ -16,10 +15,6 @@
         to-[var(--line-color)];
 }
 .indent-line.isFirstInHierarchy::before {
-    /* @apply mt-2
-        h-[calc(100%-0.5rem)]
-        from-transparent
-        to-[var(--line-color)]; */
     @apply 
         h-[calc(100%-0)]
         from-transparent

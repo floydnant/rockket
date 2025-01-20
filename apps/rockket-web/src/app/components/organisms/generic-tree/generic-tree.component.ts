@@ -11,7 +11,7 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy'
 import { entriesOf } from '@rockket/commons'
 import { map, mergeWith, Observable, of, ReplaySubject, shareReplay, startWith } from 'rxjs'
-import { KvStoreProxy } from 'src/app/services/ui-state.service'
+import { ReactiveStoreProxy } from 'src/app/services/ui-state.service'
 import { GroupedItem } from 'src/app/utils/tree.helpers'
 
 type AnyRecord = Record<string, unknown>
@@ -27,7 +27,7 @@ export type UiTreeNode<T extends Record<string, unknown>> = {
 
 export type UiTreeNodeWithControlls<T extends Record<string, unknown>> = UiTreeNode<T> & {
     /** A store that knows if nodes are expanded or not. */
-    expandedStore: KvStoreProxy<string, boolean>
+    expandedStore: ReactiveStoreProxy<string, boolean>
     shouldRender$: Observable<boolean>
 }
 
@@ -98,7 +98,7 @@ const range = (number: number) => {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GenericTreeComponent {
-    @Input({ required: true }) expandedStore!: KvStoreProxy<string, boolean>
+    @Input({ required: true }) expandedStore!: ReactiveStoreProxy<string, boolean>
     @Input() enableIndentLineGradient = true
 
     nodes$ = new ReplaySubject<UiTreeNode<AnyRecord>[]>(1)

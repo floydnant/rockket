@@ -15,8 +15,8 @@ import { TaskTreeComponent } from './task-tree.component'
 import { GenericTreeComponent } from '../generic-tree/generic-tree.component'
 import { TaskTreeNodeAdapterComponent } from '../task-tree-node-adapter/task-tree-node-adapter.component'
 import {
-    createLocalKvBooleanStoreProxy,
-    createLocalKvObjectStoreProxy,
+    createLocalBooleanMapStoreProxy,
+    createLocalSingleValueStoreProxy,
     defaultViewSettings,
 } from 'src/app/services/ui-state.service'
 
@@ -31,9 +31,9 @@ const setupComponent = (taskTree: TaskRecursive[]) => {
         {
             componentProperties: {
                 taskTree,
-                viewSettingsStore: createLocalKvObjectStoreProxy(defaultViewSettings),
-                expandedStore: createLocalKvBooleanStoreProxy(),
-                descriptionExpandedStore: createLocalKvBooleanStoreProxy(false),
+                viewSettingsStore: createLocalSingleValueStoreProxy(defaultViewSettings),
+                expandedStore: createLocalBooleanMapStoreProxy(),
+                descriptionExpandedStore: createLocalBooleanMapStoreProxy(false),
             },
             imports: [IconsModule, CdkMenuModule, RxModule, RichTextEditorModule, DropdownModule],
             declarations: [

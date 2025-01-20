@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { of } from 'rxjs'
-import { createLocalKvBooleanStoreProxy } from 'src/app/services/ui-state.service'
+import { createLocalBooleanMapStoreProxy } from 'src/app/services/ui-state.service'
 import { TaskGroupTreeNodeComponent } from './task-group-tree-node.component'
 
 describe('TaskGroupTreeNodeComponent', () => {
@@ -24,7 +24,7 @@ describe('TaskGroupTreeNodeComponent', () => {
             path: [],
             shouldRender$: of(true),
             indentationOffset: 0,
-            expandedStore: createLocalKvBooleanStoreProxy(),
+            expandedStore: createLocalBooleanMapStoreProxy(),
         }
         fixture.detectChanges()
     })

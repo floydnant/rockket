@@ -26,6 +26,10 @@
                 <h2 id="tasks">
                     {{ search.result.taskMatches }} Task{{ search.result.taskMatches == 1 ? '' : 's' }}
                 </h2>
+                <app-view-settings [viewSettingsStore]="viewSettingsStore"></app-view-settings>
+
+                <div class="spacer | mb-2"></div>
+
                 <app-task-tree
                     [tasks]="search.result.tasks"
                     [highlightQuery]="search.query"

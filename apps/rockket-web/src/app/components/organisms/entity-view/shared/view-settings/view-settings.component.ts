@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { entriesOf } from '@rockket/commons'
 import { MenuItem } from 'src/app/dropdown/drop-down/drop-down.component'
 import { separator } from 'src/app/rich-text-editor/editor.types'
-import { KvStoreProxy, ViewSettings } from 'src/app/services/ui-state.service'
+import { ReactiveStoreProxy, ViewSettings } from 'src/app/services/ui-state.service'
 import {
     DEFAULT_TASK_GROUPING_STRATEGY_KEY,
     TaskGroupingStrategyKey,
@@ -20,15 +20,15 @@ import {
     styles: [
         `
             button.view-settings--isActive {
-                /* @apply !bg-primary-700 hover:!bg-primary-600 text-primary-200 font-bold; */
-                @apply text-primary-300;
+                @apply text-primary-300 hover:text-primary-200;
             }
         `,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewSettingsComponent {
-    @Input({ required: true }) viewSettingsStore!: KvStoreProxy<void, ViewSettings>
+    @Input({ required: true }) viewSettingsStore!: ReactiveStoreProxy<void, ViewSettings>
+    @Input() compactLayout = false
 
     getGroupingStrategy = (key: string) => groupingStrategies[key as TaskGroupingStrategyKey]
     defaultGroupingStrategyKey = DEFAULT_TASK_GROUPING_STRATEGY_KEY

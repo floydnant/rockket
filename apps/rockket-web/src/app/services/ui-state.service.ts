@@ -53,7 +53,7 @@ const parseEntityIdFromUiEntryId = (id: string) => id.replace(/\..+$/, '')
     providedIn: 'root',
 })
 export class UiStateService {
-    // @TODO: migrate to new reactive store helper
+    // @TODO: migrate to new reactive store proxy
     private sidebarUiState_ = new StorageItem('rockket-sidebar-ui-state', {
         schema: sidebarUiStateSchema.catch(defaultSidebarUiState),
     })
@@ -62,7 +62,7 @@ export class UiStateService {
         return this.sidebarUiState_.value
     }
 
-    // @TODO: migrate to new reactive store helper
+    // @TODO: migrate to new reactive store proxy
     private mainViewUiState_ = new StorageItem('rockket-main-ui-state', {
         schema: mainViewUiStateSchema.catch(defaultMainViewUIState),
     })
@@ -152,7 +152,7 @@ export class UiStateService {
             return currentValue
         },
     })
-    treeNodeExpandedStore = new KvStoreProxy<string, boolean>({
+    treeNodeExpandedStore = new ReactiveStoreProxy<string, boolean>({
         get: key => !this.treeUiState.value.treeNodeCollapsedByIdSet.has(key),
         set: (key, isExpanded) => {
             if (isExpanded) {
@@ -164,7 +164,7 @@ export class UiStateService {
         },
         inputUpdatedNotifier$: this.treeUiState.storageChangedNotifier$.pipe(map(() => null)),
     })
-    viewSettingsStore = new KvStoreProxy<void, ViewSettings>({
+    viewSettingsStore = new ReactiveStoreProxy<void, ViewSettings>({
         get: () => this.treeUiState.value.viewSettings,
         set: (_, value) => {
             this.treeUiState.value.viewSettings = value
@@ -172,7 +172,7 @@ export class UiStateService {
         },
         inputUpdatedNotifier$: this.treeUiState.storageChangedNotifier$.pipe(map(() => null)),
     })
-    treeNodeDescriptionExpandedStore = new KvStoreProxy<string, boolean>({
+    treeNodeDescriptionExpandedStore = new ReactiveStoreProxy<string, boolean>({
         get: key => this.treeUiState.value.treeNodeDescriptionCollapsedByIdSet.has(key),
         set: (key, isExpanded) => {
             if (isExpanded) {
@@ -186,7 +186,7 @@ export class UiStateService {
     })
 }
 
-interface KvStoreAdapter<TKey extends string | number | void, TValue> {
+interface ReactiveStoreAdapter<TKey extends string | number | void, TValue> {
     get(key: TKey): TValue
     set(key: TKey, value: TValue): void
     inputUpdatedNotifier$: Observable<TKey | null>
@@ -195,8 +195,8 @@ interface KvStoreAdapter<TKey extends string | number | void, TValue> {
 /**
  * A reactive proxy for a key-value store that allows for listening to changes on specific keys or all keys.
  */
-export class KvStoreProxy<TKey extends string | number | void, TValue> {
-    constructor(private adapter: KvStoreAdapter<TKey, TValue>, private cacheObservables = true) {}
+export class ReactiveStoreProxy<TKey extends string | number | void, TValue> {
+    constructor(private adapter: ReactiveStoreAdapter<TKey, TValue>, private cacheObservables = true) {}
 
     get(key: TKey): TValue {
         return this.adapter.get(key)
@@ -267,10 +267,10 @@ export class KvStoreProxy<TKey extends string | number | void, TValue> {
  *
  * **Key:** `void` (no key, only one value)
  *
- * Useful for mock scenarios
+ * Useful for mock scenarios, or when you only temporarily need a store and don't want to persist it.
  */
-export const createLocalKvObjectStoreProxy = <TValue>(value: TValue) => {
-    return new KvStoreProxy<void, TValue>({
+export const createLocalSingleValueStoreProxy = <TValue>(value: TValue) => {
+    return new ReactiveStoreProxy<void, TValue>({
         get: () => value,
         set: (_, value_) => {
             value = value_
@@ -284,11 +284,11 @@ export const createLocalKvObjectStoreProxy = <TValue>(value: TValue) => {
  *
  * **Key:** `string`
  *
- * Useful for mock scenarios
+ * Useful for mock scenarios, or when you only temporarily need a store and don't want to persist it.
  */
-export const createLocalKvBooleanStoreProxy = (defaultValue = true) => {
+export const createLocalBooleanMapStoreProxy = (defaultValue = true) => {
     const expandedTasks = new Set<string>()
-    return new KvStoreProxy<string, boolean>({
+    return new ReactiveStoreProxy<string, boolean>({
         get: key => {
             return expandedTasks.has(key) ? !defaultValue : defaultValue
         },

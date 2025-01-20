@@ -9,7 +9,7 @@
         descriptionIsActive: isDescriptionActive$ | push
     }"
     [appContextMenu]="menuItems$ | push"
-    [appMenuData]="{ id: task.id, entityType: EntityType.Task, status: task.status, priority: task.priority }"
+    [appMenuData]="Object.assign({ entityType: EntityType.Task }, task)"
     (isMenuOpen)="isSelected = $event"
 >
     <div class="mb-1 box-border flex items-center justify-between gap-2 px-2">
@@ -37,7 +37,7 @@
                     <app-drop-down
                         *ngIf="statusMenuItems$ | push as items"
                         [items]="items"
-                        [data]="{ id: task.id, status: task.status, priority: task.priority }"
+                        [data]="task"
                     ></app-drop-down>
                 </ng-template>
 
@@ -134,12 +134,7 @@
             <button
                 class="icon-btn | text-tinted-200 absolute right-0 top-[50%] translate-y-[-50%] transition-opacity"
                 [appMenu]="menuItems$ | push"
-                [appMenuData]="{
-                    id: task.id,
-                    entityType: EntityType.Task,
-                    status: task.status,
-                    priority: task.priority
-                }"
+                [appMenuData]="Object.assign({ entityType: EntityType.Task }, task)"
                 (isMenuOpen)="isSelected = $event"
                 data-test-name="task-menu-button"
             >
@@ -168,7 +163,7 @@
             <app-drop-down
                 *ngIf="priorityMenuItems$ | push as items"
                 [items]="items"
-                [data]="{ id: task.id, status: task.status, priority: task.priority }"
+                [data]="task"
             ></app-drop-down>
         </ng-template>
     </ng-template>

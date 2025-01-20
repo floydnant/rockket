@@ -10,7 +10,7 @@ import {
     shareReplay,
     switchMap,
 } from 'rxjs'
-import { KvStoreProxy, ViewSettings } from 'src/app/services/ui-state.service'
+import { ReactiveStoreProxy, ViewSettings } from 'src/app/services/ui-state.service'
 import { uiDefaults } from 'src/app/shared/defaults'
 import { flattenTree, groupItemsRecursive } from 'src/app/utils/tree.helpers'
 import {
@@ -44,7 +44,7 @@ export const convertToTaskTreeNode = (task: TaskFlattend, expand?: boolean): Tas
 type TaskTreeConfig = {
     readonly: boolean
     highlightQuery: string
-    descriptionExpandedStore: KvStoreProxy<string, boolean>
+    descriptionExpandedStore: ReactiveStoreProxy<string, boolean>
 }
 export const taskTreeConfigInjectionToken = new InjectionToken<Observable<TaskTreeConfig>>(
     'taskTreeConfigInjectionToken',
@@ -63,8 +63,10 @@ export class TaskTreeComponent {
         this.tasks$.next(tasks)
     }
 
-    viewSettingsStore$ = new ReplaySubject<KvStoreProxy<void, ViewSettings>>(1)
-    @Input({ required: true }) set viewSettingsStore(viewSettingsStore: KvStoreProxy<void, ViewSettings>) {
+    viewSettingsStore$ = new ReplaySubject<ReactiveStoreProxy<void, ViewSettings>>(1)
+    @Input({ required: true }) set viewSettingsStore(
+        viewSettingsStore: ReactiveStoreProxy<void, ViewSettings>,
+    ) {
         this.viewSettingsStore$.next(viewSettingsStore)
     }
 
@@ -75,8 +77,8 @@ export class TaskTreeComponent {
     @Input() set readonly(value: boolean) {
         this.taskTreeConfig$.next({ ...this.taskTreeConfig$.value, readonly: value })
     }
-    @Input({ required: true }) expandedStore!: KvStoreProxy<string, boolean>
-    @Input({ required: true }) set descriptionExpandedStore(value: KvStoreProxy<string, boolean>) {
+    @Input({ required: true }) expandedStore!: ReactiveStoreProxy<string, boolean>
+    @Input({ required: true }) set descriptionExpandedStore(value: ReactiveStoreProxy<string, boolean>) {
         this.taskTreeConfig$.next({ ...this.taskTreeConfig$.value, descriptionExpandedStore: value })
     }
 
@@ -97,10 +99,10 @@ export class TaskTreeComponent {
         map(([tasks, viewSettings]) => {
             if (!tasks) return []
 
-            // @TODO: do we need to spread here?                                 v
             const sortedTasks = sortingStrategies[viewSettings.sorting].sorter([...tasks])
             const selectedGroupingStrategy = groupingStrategies[viewSettings.grouping]
             const groupedTasks = groupItemsRecursive(sortedTasks, (task, level) => {
+                // @TODO: If we only need to group the root elements, we should skip recursing down the tree
                 if (!viewSettings.groupRecursive && level > 0) return NOOP_GROUP_KEY
 
                 return selectedGroupingStrategy.groupBy(task)

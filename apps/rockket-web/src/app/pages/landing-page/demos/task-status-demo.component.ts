@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { TaskPriority, TaskRecursive, TaskStatus } from '@rockket/commons'
 import {
-    createLocalKvBooleanStoreProxy,
-    createLocalKvObjectStoreProxy,
+    createLocalBooleanMapStoreProxy,
+    createLocalSingleValueStoreProxy,
     defaultViewSettings,
 } from 'src/app/services/ui-state.service'
 
@@ -112,7 +112,7 @@ const demoTasks: TaskRecursive[] = [
 })
 export class TaskStatusDemoComponent {
     tasks = demoTasks
-    viewSettingsStore = createLocalKvObjectStoreProxy(defaultViewSettings)
-    expandedStore = createLocalKvBooleanStoreProxy()
-    descriptionExpandedStore = createLocalKvBooleanStoreProxy(false)
+    viewSettingsStore = createLocalSingleValueStoreProxy(defaultViewSettings)
+    expandedStore = createLocalBooleanMapStoreProxy()
+    descriptionExpandedStore = createLocalBooleanMapStoreProxy(false)
 }
