@@ -6,7 +6,7 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/f010880f-6648-4146-9d82-b7e050e637ce/deploy-status?branch=main)](https://app.netlify.com/sites/rockket/deploys)
 [![Build, Run linter and tests](https://github.com/floydnant/rockket/actions/workflows/tests.yml/badge.svg)](https://github.com/floydnant/rockket/actions/workflows/tests.yml)
 
-A small, carefully crafted todo app with a focus on user experience, built with ❤️ and angular.
+A consciously over-engineered task manager with a focus on developer experience, built with ❤️ and angular.
 
 </div>
 
