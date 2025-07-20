@@ -44,7 +44,7 @@ export const debugObserver = <T>(
     })
 
 export const idleCallback$ = new Observable<void>(subscriber => {
-    requestIdleCallback(() => {
+    ;('requestIdleCallback' in globalThis ? requestIdleCallback : setTimeout)(() => {
         subscriber.next()
         subscriber.complete()
     })

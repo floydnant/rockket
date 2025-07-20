@@ -97,7 +97,7 @@ export class UiStateService {
     }
 
     scheduleGarbageCollection(getIds: () => Observable<Set<string>>) {
-        requestIdleCallback(() => {
+        ;('requestIdleCallback' in globalThis ? requestIdleCallback : setTimeout)(() => {
             const now = new Date()
             const lastGarbageCollectedAt = this.treeUiState.value.lastGarbageCollectedAt
             if (lastGarbageCollectedAt) {
