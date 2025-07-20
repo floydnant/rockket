@@ -25,8 +25,8 @@ export const sortingStrategies = {
                 return [...notClosedTasks, ...closedTasks]
             }),
     },
-    statusGroupAndPriority: {
-        label: 'Status Groups and Priority',
+    statusCategoryAndPriority: {
+        label: 'Status Categories and Priority',
         shortLabel: 'Status',
         icon: 'status',
         sorter: tasks =>

@@ -30,7 +30,8 @@
         </ng-template>
 
         <ng-template #tooltip>
-            <span class="text-tinted-300">Type: </span><span>{{ entity.entityType }}</span>
+            <span class="text-tinted-300">Type: </span
+            ><span>{{ entityTypeLabelMap[entity.entityType] }}</span>
             <ng-container *ngIf="entity.entityType == EntityType.Task">
                 <span class="text-tinted-300">, Status: </span>
                 <span [class]="taskStatusColorMap[entity.status].text">{{

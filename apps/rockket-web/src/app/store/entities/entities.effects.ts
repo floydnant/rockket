@@ -3,7 +3,7 @@ import { Router } from '@angular/router'
 import { HotToastService } from '@ngneat/hot-toast'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { EntityType } from '@rockket/commons'
+import { EntityType, entityTypeLabelMap } from '@rockket/commons'
 import { catchError, concatMap, first, from, map, mergeMap, of, switchMap, tap } from 'rxjs'
 import { HttpServerErrorResponse } from 'src/app/http/types'
 import { DialogService } from 'src/app/modal/dialog.service'
@@ -112,7 +112,10 @@ export class EntitiesEffects {
                             const entity = getEntityByIdIncludingTasks(entityTree, taskTreeMap, id)
                             if (!entity) return entitiesActions.abortRenameDialog()
 
-                            const title = prompt(`Rename the ${entityType}`, entity.title)?.trim()
+                            const title = prompt(
+                                `Rename the ${entityTypeLabelMap[entityType]}`,
+                                entity.title,
+                            )?.trim()
                             if (!title) return entitiesActions.abortRenameDialog()
 
                             return entitiesActions.rename({ id, entityType, title, showToast: true })
@@ -131,8 +134,8 @@ export class EntitiesEffects {
                 return res$.pipe(
                     showToast
                         ? this.toast.observe({
-                              loading: `Renaming ${entityType}...`,
-                              success: `Renamed ${entityType}`,
+                              loading: `Renaming ${entityTypeLabelMap[entityType]}...`,
+                              success: `Renamed ${entityTypeLabelMap[entityType]}`,
                               error: getMessageFromHttpError,
                           })
                         : tap(),
@@ -199,10 +202,10 @@ export class EntitiesEffects {
                             } as Record<EntityType, string>
 
                             const closed$ = this.dialogService.confirm({
-                                title: `Delete this ${entityType}?`,
+                                title: `Delete this ${entityTypeLabelMap[entityType]}?`,
                                 text:
                                     messages[entityType] ||
-                                    `Are you sure you want to delete the ${entityType} '${entity.title}'?`,
+                                    `Are you sure you want to delete the ${entityTypeLabelMap[entityType]} '${entity.title}'?`,
                                 buttons: [
                                     { text: 'Cancel' },
                                     { text: 'Delete', className: 'button--danger' },
@@ -230,7 +233,7 @@ export class EntitiesEffects {
 
                 return res$.pipe(
                     this.toast.observe({
-                        loading: `Deleting ${entityType}...`,
+                        loading: `Deleting ${entityTypeLabelMap[entityType]}...`,
                         success: res => res.successMessage,
                         error: getMessageFromHttpError,
                     }),
