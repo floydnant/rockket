@@ -44,8 +44,8 @@ export const groupingStrategies = {
         groupBy: () => NOOP_GROUP_KEY,
         groups: null,
     }),
-    statusGroup: defineGroupingStrategy({
-        label: 'Status Groups',
+    statusCategory: defineGroupingStrategy({
+        label: 'Status Categories',
         icon: 'status',
         groupBy: task => taskStatusGroupMap[task.status],
         groups: {

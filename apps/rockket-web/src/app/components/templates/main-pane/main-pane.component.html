@@ -60,7 +60,7 @@
 
                 <aside
                     #sidepanel
-                    class="side-panel | [&.isResizing]:bg-tinted-850 [&.isResizing]:border-tinted-700 sticky top-0 h-[calc(100dvh-50px)] h-[calc(100vh-50px)] shrink-0 overflow-y-auto border-r border-transparent pb-56 pl-2 pr-4 transition-colors"
+                    class="side-panel | sticky top-0 h-[calc(100dvh-50px)] h-[calc(100vh-50px)] shrink-0 overflow-y-auto pb-56 pl-2 pr-4"
                     [style.width]="(sidepanelWidth$ | push) + 'px'"
                     [style.min-width]="minSidepanelWidth + 'px'"
                     [style.max-width]="maxSidepanelWidth + 'px'"

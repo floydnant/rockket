@@ -9,6 +9,11 @@ export enum EntityType {
     // VIEW = 'View',
 }
 
+export const entityTypeLabelMap: Record<EntityType, string> = {
+    [EntityType.Tasklist]: 'Tasklist',
+    [EntityType.Task]: 'Task',
+}
+
 const baseEntitySchema = z.object({
     id: z.string(),
     entityType: z.nativeEnum(EntityType),
