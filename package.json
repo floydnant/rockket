@@ -28,7 +28,7 @@
         "@microsoft/applicationinsights-web": "^2.8.11",
         "@nestjs/common": "^10.0.2",
         "@nestjs/config": "^3.1.1",
-        "@nestjs/core": "^10.0.2",
+        "@nestjs/core": "^10.4.6",
         "@nestjs/jwt": "^10.2.0",
         "@nestjs/passport": "^10.0.2",
         "@nestjs/platform-express": "^10.4.6",
