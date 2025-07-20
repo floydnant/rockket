@@ -1,5 +1,5 @@
 [build]
-buildCommand = 'npx nx build rockket-backend:production'
+buildCommand = 'npx nx run rockket-backend:build:production'
 
 [deploy]
 preDeployCommand = ["npx nx run rockket-backend:db:migrate:deploy"]
