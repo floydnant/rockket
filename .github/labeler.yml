@@ -72,10 +72,12 @@ config:
         - '**/railway.toml'
 
 dependencies:
-  - all:
+  - any:
     - changed-files:
       - any-glob-to-any-file:
-        - 'package.json'
+        - 'package-lock.json'
+    - head-branch:
+      - '^dependabot'
 
 env-updated:
   - all:
