@@ -2,10 +2,12 @@
 
 author=$(git log -1 --pretty=format:"%an")
 
+echo "Author of the last commit: $author"
+
 # Check if the author is "dependabot[bot]"
 if [ "$author" == "dependabot[bot]" ]; then
-    echo "Author is dependabot[bot]. Exiting with code 1."
-    exit 1
+    echo "Author is dependabot[bot]. Exiting with code 0."
+    exit 0
 fi
 
 # Set the owner and repository name
@@ -22,8 +24,8 @@ output=$(echo "$response" | jq '.labels | map(select(.name == "dependencies")) |
 
 # Check the output and exit with the appropriate exit code
 if [ "$output" -eq 0 ]; then
-    echo "PR has dependencies label. Exiting with code 1."
     exit 1
 else
+    echo "PR has dependencies label. Exiting with code 0."
     exit 0
 fi
