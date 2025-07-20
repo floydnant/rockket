@@ -24,8 +24,8 @@ output=$(echo "$response" | jq '.labels | map(select(.name == "dependencies")) |
 
 # Check the output and exit with the appropriate exit code
 if [ "$output" -eq 0 ]; then
+    exit 1
+else
     echo "PR has dependencies label. Exiting with code 0."
     exit 0
-else
-    exit 1
 fi
