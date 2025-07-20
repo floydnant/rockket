@@ -1,3 +1,9 @@
+[build]
+buildCommand = 'npx nx build rockket-backend:production'
+
+[deploy]
+preDeployCommand = ["npx nx run rockket-backend:db:migrate:deploy"]
+
 [environments.production.deploy]
 startCommand = 'DATABASE_URL=$DATABASE_BASE_URL/prod npx nx run rockket-backend:serve-production'
 
