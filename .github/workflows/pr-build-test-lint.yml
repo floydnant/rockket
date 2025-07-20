@@ -39,7 +39,7 @@ jobs:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
             - name: Upload component test artifacts
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               if: failure()
               with:
                   name: rockket-web component test artifacts
@@ -100,7 +100,7 @@ jobs:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
             - name: Upload e2e test artifacts
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               if: failure()
               with:
                   name: rockket-web-e2e e2e test artifacts
