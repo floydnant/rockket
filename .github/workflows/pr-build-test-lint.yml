@@ -115,4 +115,4 @@ jobs:
             - name: 'Dependency Review'
               uses: actions/dependency-review-action@v3
               with:
-                fail-on-severity: critical
+                  fail-on-severity: critical

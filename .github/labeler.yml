@@ -89,9 +89,3 @@ db-schema-updated:
       - any-glob-to-any-file:
         - '**/schema.prisma'
         - '**/prisma/migrations/**'
-
-refactor:
-  - any:
-    - head-branch:
-      - '^refactor'
-      - '^refactro'
