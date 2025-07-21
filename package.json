@@ -25,7 +25,7 @@
         "@angular/platform-browser-dynamic": "^16.2.10",
         "@angular/router": "^16.2.10",
         "@microsoft/applicationinsights-angularplugin-js": "^3.0.1",
-        "@microsoft/applicationinsights-web": "^2.8.11",
+        "@microsoft/applicationinsights-web": "^3.3.9",
         "@nestjs/common": "^10.0.2",
         "@nestjs/config": "^3.1.1",
         "@nestjs/core": "^10.4.6",
